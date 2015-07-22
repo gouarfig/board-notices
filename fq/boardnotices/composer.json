@@ -9,7 +9,7 @@
    "authors": [{
       "name": "Fred Quointeau",
       "email": "frederic.quointeau@gmail.com",
-      "homepage": "",
+      "homepage": "https://github.com/gouarfig/board-notices",
       "role": "Developer"
    }],
    "require": {
