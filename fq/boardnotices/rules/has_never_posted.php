@@ -11,7 +11,7 @@
 
 namespace fq\boardnotices\rules;
 
-class in_usergroup implements rule
+class has_never_posted implements rule
 {
 	private $user;
 	
@@ -22,22 +22,8 @@ class in_usergroup implements rule
 	public function isTrue($conditions) {
 		$valid = false;
 		$data_layer = $this->getDataLayer();
-		$groups = @unserialize($conditions);
-		if ($groups === false)
-		{
-			// There's only one group
-			$groups = array((int)$conditions);
-		}
-		if (!empty($groups))
-		{
-			foreach ($groups as $group_id) {
-				$valid = $data_layer->isUserInGroupId($group_id);
-				if (!$valid)
-				{
-					break;
-				}
-			}
-		}
+		$posts = $data_layer->nonDeletedUserPosts();
+		$valid = ($posts == 0);
 		return $valid;
 	}
 	

@@ -33,6 +33,7 @@ class create_tables extends \phpbb\db\migration\migration
 						'message_bgcolor'	=> array('VCHAR:6', ''),
 						'active'			=> array('UINT:1', 0),
 						'persistent'		=> array('UINT:1', 1),
+						'dismissable'		=> array('UINT:1', 0),
 						'last'				=> array('UINT:1', 0),
 						'left_id'			=> array('UINT', 1),
 						'right_id'			=> array('UINT', 2),

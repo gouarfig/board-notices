@@ -7,6 +7,7 @@ services:
         class: fq\boardnotices\datalayer
         arguments:
             - @dbal.conn
+            - @user
             - %tables.boardnotices.notices%
             - %tables.boardnotices.notices_rules%
 
@@ -23,7 +24,17 @@ services:
         arguments:
             - @user
 
+    fq.boardnotices.rules.in_default_usergroup:
+        class: fq\boardnotices\rules\in_default_usergroup
+        arguments:
+            - @user
+
     fq.boardnotices.rules.in_usergroup:
         class: fq\boardnotices\rules\in_usergroup
+        arguments:
+            - @user
+
+    fq.boardnotices.rules.has_never_posted:
+        class: fq\boardnotices\rules\has_never_posted
         arguments:
             - @user

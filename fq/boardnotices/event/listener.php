@@ -60,6 +60,7 @@ class listener implements EventSubscriberInterface
 	public function display_board_notices()
 	{
 		$notices = array();
+		$template_vars = $this->getDefaultTemplateVars();
 
 		$data_layer = $this->getDataLayer();
 		$raw_notices = $data_layer->getActiveNotices();
@@ -83,12 +84,15 @@ class listener implements EventSubscriberInterface
 					$notice->getMessageBitfield(),
 					$notice->getMessageOptions()
 				);
+				$template_vars = array_merge($template_vars, $notice->getTemplateVars());
 				break;
 			}
 		}
 		
 		if (!empty($notice_message))
 		{
+			$notice_message = $this->setTemplateVars($notice_message, $template_vars);
+			
 			// Output board announcement to the template
 			$this->template->assign_vars(array(
 				'S_BOARD_NOTICE'		=> true,
@@ -97,5 +101,24 @@ class listener implements EventSubscriberInterface
 				'BOARD_NOTICE_BGCOLOR'	=> $notice_bgcolor,
 			));
 		}
+	}
+	
+	private function getDefaultTemplateVars()
+	{
+		$template_vars = array(
+			'USERNAME'	=> $this->user->data['username'],
+		);
+		return $template_vars;
+	}
+	
+	private function setTemplateVars($notice_message, $template_vars)
+	{
+		if (!empty($template_vars))
+		{
+			foreach ($template_vars as $key => $value) {
+				$notice_message = str_replace('{' . $key . '}', $value, $notice_message);
+			}
+		}
+		return $notice_message;
 	}
 }

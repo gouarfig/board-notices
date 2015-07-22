@@ -15,6 +15,7 @@ class notice
 {
 	private $properties = array();
 	private $rules = array();
+	private $template_vars = array();
 	
 	public function __construct($properties, $rules) {
 		$this->properties = $properties;
@@ -51,6 +52,9 @@ class notice
 		if (!is_null($rule))
 		{
 			$valid = $rule->isTrue($rule_details['conditions']);
+			if ($valid) {
+				$this->template_vars = array_merge($this->template_vars, $rule->getTemplateVars());
+			}
 		}
 		return $valid;
 	}
@@ -94,5 +98,10 @@ class notice
 	public function getMessageOptions()
 	{
 		return $this->properties['message_options'];
+	}
+	
+	public function getTemplateVars()
+	{
+		return $this->template_vars;
 	}
 }

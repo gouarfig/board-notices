@@ -13,4 +13,5 @@ namespace fq\boardnotices\rules;
 
 interface rule {
 	public function isTrue($conditions);
+	public function getTemplateVars();
 }
