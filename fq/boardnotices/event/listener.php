@@ -36,7 +36,6 @@ class listener implements EventSubscriberInterface
 	{
 		$this->user = $user;
 		$this->template = $template;
-		//$this->datalayer = new \fq\boardnotices\core\datalayer($db, $notices_table, $notices_rules_table)
 	}
 
 	protected function getDataLayer()
@@ -71,7 +70,7 @@ class listener implements EventSubscriberInterface
 		}
 		unset($raw_notices);
 
-		$notice_message = 'test: found ' . count($notices) . ' notices';
+		$notice_message = '';
 		$notice_bgcolor = '';
 
 		foreach ($notices as $notice) {

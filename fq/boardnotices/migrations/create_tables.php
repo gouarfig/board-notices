@@ -34,6 +34,7 @@ class create_tables extends \phpbb\db\migration\migration
 						'active'			=> array('UINT:1', 0),
 						'persistent'		=> array('UINT:1', 1),
 						'dismissable'		=> array('UINT:1', 0),
+						'reset_after'		=> array('UINT', 0),
 						'last'				=> array('UINT:1', 0),
 						'left_id'			=> array('UINT', 1),
 						'right_id'			=> array('UINT', 2),
@@ -56,7 +57,25 @@ class create_tables extends \phpbb\db\migration\migration
 						'nid'		=> array('INDEX', 'notice_id'),
 					),
 				),
+				$this->table_prefix . 'notices_seen' => array(
+					'COLUMNS'		=> array(
+						'notice_id'			=> array('UINT', 0),
+						'user_id'			=> array('UINT', 0),
+						'seen'				=> array('UINT', 0),
+					),
+				),
 			)
+		);
+	}
+	
+	public function revert_schema()
+	{
+		return array(
+			'drop_tables'		=> array(
+				$this->table_prefix . 'notices',
+				$this->table_prefix . 'notices_rules',
+				$this->table_prefix . 'notices_seen',
+			),
 		);
 	}
 }
