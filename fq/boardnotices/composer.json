@@ -2,7 +2,7 @@
    "name": "fq/boardnotices",
    "type": "phpbb-extension",
    "description": "With this extension, you can manage all sorts of notices for your board",
-   "homepage": "",
+   "homepage": "https://github.com/gouarfig/board-notices",
    "version": "0.0.3",
    "time": "2015-07-22",
    "license": "GPL-2.0",
