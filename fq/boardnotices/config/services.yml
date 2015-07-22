@@ -38,3 +38,8 @@ services:
         class: fq\boardnotices\rules\has_never_posted
         arguments:
             - @user
+
+    fq.boardnotices.rules.not_logged_in:
+        class: fq\boardnotices\rules\not_logged_in
+        arguments:
+            - @user
