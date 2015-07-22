@@ -1,0 +1,29 @@
+parameters:
+    tables.boardnotices.notices: %core.table_prefix%notices
+    tables.boardnotices.notices_rules: %core.table_prefix%notices_rules
+
+services:
+    fq.boardnotices.datalayer:
+        class: fq\boardnotices\datalayer
+        arguments:
+            - @dbal.conn
+            - %tables.boardnotices.notices%
+            - %tables.boardnotices.notices_rules%
+
+    fq.boardnotices.listener:
+        class: fq\boardnotices\event\listener
+        arguments:
+            - @user
+            - @template
+        tags:
+            - { name: event.listener }
+
+    fq.boardnotices.rules.birthday:
+        class: fq\boardnotices\rules\birthday
+        arguments:
+            - @user
+
+    fq.boardnotices.rules.in_usergroup:
+        class: fq\boardnotices\rules\in_usergroup
+        arguments:
+            - @user
