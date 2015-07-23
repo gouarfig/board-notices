@@ -36,13 +36,12 @@ class create_tables extends \phpbb\db\migration\migration
 						'dismissable'		=> array('UINT:1', 0),
 						'reset_after'		=> array('UINT', 0),
 						'last'				=> array('UINT:1', 0),
-						'left_id'			=> array('UINT', 1),
-						'right_id'			=> array('UINT', 2),
+						'notice_order'		=> array('UINT', 1),
 					),
 					'PRIMARY_KEY'	=> 'notice_id',
 					'KEYS'		=> array(
 						'active_index'		=> array('INDEX', 'active'),
-						'lid'				=> array('INDEX', 'left_id'),
+						'oid'				=> array('INDEX', 'notice_order'),
 					),
 				),
 				$this->table_prefix . 'notices_rules' => array(
@@ -68,14 +67,14 @@ class create_tables extends \phpbb\db\migration\migration
 		);
 	}
 	
-	public function revert_schema()
-	{
-		return array(
-			'drop_tables'		=> array(
-				$this->table_prefix . 'notices',
-				$this->table_prefix . 'notices_rules',
-				$this->table_prefix . 'notices_seen',
-			),
-		);
-	}
+//	public function revert_schema()
+//	{
+//		return array(
+//			'drop_tables'		=> array(
+//				$this->table_prefix . 'notices',
+//				$this->table_prefix . 'notices_rules',
+//				$this->table_prefix . 'notices_seen',
+//			),
+//		);
+//	}
 }

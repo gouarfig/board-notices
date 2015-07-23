@@ -38,5 +38,9 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'LOG_BOARD_NOTICE_ERROR'		=> '<strong>Error while creating board notice</strong><br />» Error in %1$s on line %2$s: %3$s',
+	'L_ACP_BOARD_NOTICES_MANAGER'			=> 'Board Notices manager',
+	'L_ACP_BOARD_NOTICES_MANAGER_EXPLAIN'	=> "Board Notices manager: Add, Edit or Delete your notices<br />Please note that only one notice will be displayed at a time. It's the first one that fills the conditions that will be displayed.",
+	
+	'L_TITLE'								=> 'Board Notices',
+	'L_ADD'									=> 'Add new notice',
 ));

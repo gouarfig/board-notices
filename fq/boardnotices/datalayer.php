@@ -15,6 +15,7 @@ class datalayer
 {
 	private $db;
 	private $user;
+	private $cache;
 	private $notices_table;
 	private $notices_rules_table;
 	private $notices_loaded = false;
@@ -27,10 +28,11 @@ class datalayer
 	private $usergroups_loaded = false;
 	private $usergroups = array();
 
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, $notices_table, $notices_rules_table)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\cache\service $cache, $notices_table, $notices_rules_table)
 	{
 		$this->db = $db;
 		$this->user = $user;
+		$this->cache = $cache;
 		$this->notices_table = $notices_table;
 		$this->notices_rules_table = $notices_rules_table;
 	}
@@ -42,7 +44,7 @@ class datalayer
 			'SELECT'		=> 'n.*',
 			'FROM'			=> array($this->notices_table => 'n'),
 			'WHERE'			=> $active_only ? 'n.active=1' : '',
-			'ORDER BY'		=> 'n.left_id',
+			'ORDER_BY'		=> 'n.notice_order',
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 
@@ -192,5 +194,49 @@ class datalayer
 	public function nonDeletedUserPosts()
 	{
 		return $this->loadNonDeletedUserPosts();
+	}
+	
+	public function moveNotice($action, $notice_id)
+	{
+		// Get current order id...
+		$sql = "SELECT notice_order as current_order
+			FROM {$this->notices_table}
+			WHERE notice_id = $notice_id";
+		$result = $this->db->sql_query($sql);
+		$current_order = (int) $this->db->sql_fetchfield('current_order');
+		$this->db->sql_freeresult($result);
+
+		if ($current_order == 0 && $action == 'move_up')
+		{
+			return;
+		}
+
+		// on move_down, switch position with next order_id...
+		// on move_up, switch position with previous order_id...
+		$switch_order_id = ($action == 'move_down') ? $current_order + 1 : $current_order - 1;
+
+		//
+		$sql = "UPDATE $this->notices_table
+			SET notice_order = $current_order
+			WHERE notice_order = $switch_order_id
+				AND notice_id <> $notice_id";
+		$this->db->sql_query($sql);
+		$move_executed = (bool) $this->db->sql_affectedrows();
+
+		// Only update the other entry too if the previous entry got updated
+		if ($move_executed)
+		{
+			$sql = "UPDATE $this->notices_table
+				SET notice_order = $switch_order_id
+				WHERE notice_order = $current_order
+					AND notice_id = $notice_id";
+			$this->db->sql_query($sql);
+		}
+
+		$this->notices_loaded = false;
+		$this->cache->destroy('_notices');
+		$this->cache->destroy('sql', $this->notices_table);
+		
+		return $move_executed;
 	}
 }

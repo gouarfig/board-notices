@@ -1,0 +1,67 @@
+<!-- INCLUDE overall_header.html -->
+
+<a id="maincontent"></a>
+
+<h1>{L_ACP_BOARD_NOTICES_MANAGER}</h1>
+
+<p>{L_ACP_BOARD_NOTICES_MANAGER_EXPLAIN}</p>
+
+<!-- IF NOTICE -->
+	<div class="successbox">
+		<h3>{L_NOTIFY}</h3>
+		<p>{NOTICE}</p>
+	</div>
+<!-- ENDIF -->
+
+<form id="acp_icons" method="post" action="{U_ACTION}">
+
+<fieldset class="tabulated">
+
+<legend>{L_TITLE}</legend>
+
+<table class="table1 zebra-table">
+<thead>
+<tr>
+	<th>{L_TITLE}</th>
+	<th>{L_ACTIVE}</th>
+	<th>{L_OPTIONS}</th>
+</tr>
+</thead>
+<tbody>
+<!-- BEGIN items -->
+	<!-- IF items.S_SPACER -->
+		<tr>
+			<td class="row3" colspan="{COLSPAN}" style="text-align: center;">{L_NOT_DISPLAYED}</td>
+		</tr>
+	<!-- ENDIF -->
+	<tr>
+		<td>{items.TITLE}</td>
+		<td style="text-align: center;">{items.ACTIVE}</td>
+		<td class="actions" style="text-align: right;">
+			<span class="up-disabled" style="display:none;">{ICON_MOVE_UP_DISABLED}</span>
+			<span class="up"><a href="{items.U_MOVE_UP}" data-ajax="row_up">{ICON_MOVE_UP}</a></span>
+			<span class="down-disabled" style="display:none;">{ICON_MOVE_DOWN_DISABLED}</span>
+			<span class="down"><a href="{items.U_MOVE_DOWN}" data-ajax="row_down">{ICON_MOVE_DOWN}</a></span>
+			<a href="{items.U_EDIT}">{ICON_EDIT}</a> <a href="{items.U_DELETE}" data-ajax="row_delete">{ICON_DELETE}</a>
+		</td>
+	</tr>
+<!-- BEGINELSE -->
+	<tr class="row3">
+		<td colspan="{COLSPAN}">{L_ACP_NO_ITEMS}</td>
+	</tr>
+<!-- END items -->
+</tbody>
+</table>
+<div class="pagination">
+<!-- IF .pagination -->
+	<!-- INCLUDE pagination.html -->
+<!-- ENDIF -->
+</div>
+<p class="quick">
+	<input class="button2" name="add" type="submit" value="{L_ICON_ADD}" />
+</p>
+{S_FORM_TOKEN}
+</fieldset>
+</form>
+
+<!-- INCLUDE overall_footer.html -->
