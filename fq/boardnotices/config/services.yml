@@ -39,7 +39,22 @@ services:
         arguments:
             - @user
 
+    fq.boardnotices.rules.not_logged_in:
+        class: fq\boardnotices\rules\not_logged_in
+        arguments:
+            - @user
+
     fq.boardnotices.rules.style:
         class: fq\boardnotices\rules\style
+        arguments:
+            - @user
+
+    fq.boardnotices.rules.language:
+        class: fq\boardnotices\rules\language
+        arguments:
+            - @user
+
+    fq.boardnotices.rules.rank:
+        class: fq\boardnotices\rules\rank
         arguments:
             - @user

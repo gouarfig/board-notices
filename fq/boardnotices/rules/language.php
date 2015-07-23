@@ -11,7 +11,7 @@
 
 namespace fq\boardnotices\rules;
 
-class style implements rule
+class language implements rule
 {
 	private $user;
 	
@@ -21,16 +21,16 @@ class style implements rule
 	
 	public function isTrue($conditions) {
 		$valid = false;
-		$styles = @unserialize($conditions);
-		if ($styles === false)
+		$languages = @unserialize($conditions);
+		if ($languages === false)
 		{
-			// There's only one style
-			$styles = array((int)$conditions);
+			// There's only one language
+			$languages = array($conditions);
 		}
-		if (!empty($styles))
+		if (!empty($languages))
 		{
-			foreach ($styles as $style_id) {
-				$valid = ($this->user->data['user_style'] == $style_id);
+			foreach ($languages as $language_id) {
+				$valid = ($this->user->data['user_lang'] == $language_id);
 				if (!$valid)
 				{
 					break;
