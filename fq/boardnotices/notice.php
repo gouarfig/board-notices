@@ -27,7 +27,6 @@ class notice
 		global $phpbb_container, $phpbb_log, $user;
 		
 		$valid = false;
-		$this->properties['message'] .= " rule: {$rule_details['rule']}";
 		try
 		{
 			$rule = $phpbb_container->get("fq.boardnotices.rules.{$rule_details['rule']}");
