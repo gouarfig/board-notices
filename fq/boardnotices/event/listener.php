@@ -83,6 +83,7 @@ class listener implements EventSubscriberInterface
 					$notice->getMessageBitfield(),
 					$notice->getMessageOptions()
 				);
+				$notice_bgcolor = $notice->getMessageBgColor();
 				$template_vars = array_merge($template_vars, $notice->getTemplateVars());
 				break;
 			}
@@ -105,6 +106,7 @@ class listener implements EventSubscriberInterface
 	private function getDefaultTemplateVars()
 	{
 		$template_vars = array(
+			'USERID'	=> $this->user->data['user_id'],
 			'USERNAME'	=> $this->user->data['username'],
 		);
 		return $template_vars;

@@ -99,6 +99,11 @@ class notice
 		return $this->properties['message_options'];
 	}
 	
+	public function getMessageBgColor()
+	{
+		return $this->properties['message_bgcolor'];
+	}
+	
 	public function getTemplateVars()
 	{
 		return $this->template_vars;
