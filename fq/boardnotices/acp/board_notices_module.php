@@ -196,29 +196,6 @@ class board_notices_module
 		if ($this->request->is_set_post('preview'))
 		{
 			$error = $this->validateNoticeForm($data);
-
-			// Store the announcement text and settings if submitted with no errors
-			if (empty($error) && $this->request->is_set_post('submit'))
-			{
-				// Store the config enable/disable state
-//				$this->config->set('board_announcements_enable', $enable_announcements);
-
-				// Store the announcement settings to the config_table in the database
-//				$this->config_text->set_array(array(
-//					'announcement_text'			=> $data['announcement_text'],
-//					'announcement_uid'			=> $data['announcement_uid'],
-//					'announcement_bitfield'		=> $data['announcement_bitfield'],
-//					'announcement_options'		=> $data['announcement_options'],
-//					'announcement_bgcolor'		=> $data['announcement_bgcolor'],
-//					'announcement_timestamp'	=> time(),
-//				));
-
-				// Log the announcement update
-				$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'BOARD_ANNOUNCEMENTS_UPDATED_LOG');
-
-				// Output message to user for the announcement update
-				trigger_error($this->user->lang('BOARD_ANNOUNCEMENTS_UPDATED') . adm_back_link($this->u_action));
-			}
 		}
 
 		// Prepare a fresh announcement preview
@@ -240,6 +217,7 @@ class board_notices_module
 
 		// Output data to the template
 		$this->template->assign_vars(array(
+			'S_BOARD_NOTICES'				=> true,
 			'ERRORS'						=> $error,
 			'NOTICE_ID'						=> $data['notice_id'] ? $data['notice_id'] : '',
 			'BOARD_NOTICE_ACTIVE'			=> $data['active'],
@@ -334,6 +312,9 @@ class board_notices_module
 	{
 		$error = '';
 		
+		// Add the board announcements ACP lang file
+		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+		
 		// Test if form key is valid
 		if (!check_form_key($this->notice_form_name))
 		{
@@ -377,13 +358,29 @@ class board_notices_module
 	
 	private function saveNewNotice(&$data)
 	{
+		// Add the board announcements ACP lang file
+		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+
 		$data_layer = $this->getDataLayer();
 		$data_layer->saveNewNotice($data);
+
+		// Log the new notice
+		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BOARD_NOTICES_ADDED', time(), array($data['title']));
+		// Output message to user for the update
+		trigger_error($this->user->lang('BOARD_NOTICE_SAVED') . adm_back_link($this->u_action));
 	}
 	
 	private function saveNotice($notice_id, &$data)
 	{
+		// Add the board announcements ACP lang file
+		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+
 		$data_layer = $this->getDataLayer();
 		$data_layer->saveNotice($notice_id, $data);
+
+		// Log the update
+		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BOARD_NOTICES_UPDATED', time(), array($data['title']));
+		// Output message to user for the update
+		trigger_error($this->user->lang('BOARD_NOTICE_SAVED') . adm_back_link($this->u_action));
 	}
 }

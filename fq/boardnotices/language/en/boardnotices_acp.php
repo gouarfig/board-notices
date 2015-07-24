@@ -46,4 +46,9 @@ $lang = array_merge($lang, array(
 	
 	'L_TITLE'								=> 'Board Notices',
 	'L_ADD'									=> 'Add new notice',
+	
+	'BOARD_NOTICE_SAVED'					=> 'Board notice has been saved.',
+	
+	'ERROR_EMPTY_TITLE'						=> '<strong>Title</strong> cannot be empty.',
+	'ERROR_EMPTY_MESSAGE'					=> '<strong>Message</strong> cannot be empty.',
 ));

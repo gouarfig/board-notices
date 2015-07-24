@@ -44,4 +44,6 @@ $lang = array_merge($lang, array(
 
 	// ACP Logs
 	'LOG_BOARD_NOTICE_ERROR'		=> '<strong>Error while creating board notice</strong><br />» Error in %1$s on line %2$s: %3$s',
+	'LOG_BOARD_NOTICES_ADDED'		=> "<strong>Board notice '%s' added</strong>",
+	'LOG_BOARD_NOTICES_UPDATED'		=> "<strong>Board notice '%s' updated</strong>",
 ));
