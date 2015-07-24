@@ -41,6 +41,9 @@ $lang = array_merge($lang, array(
 	'L_ACP_BOARD_NOTICES_MANAGER'			=> 'Board Notices manager',
 	'L_ACP_BOARD_NOTICES_MANAGER_EXPLAIN'	=> "Board Notices manager: Add, Edit or Delete your notices<br />Please note that only one notice will be displayed at a time. It's the first one that fills the conditions that will be displayed.",
 	
+	'L_BOARD_NOTICES_SETTINGS'				=> 'Board Notice settings',
+	'L_BOARD_NOTICES_SETTINGS_EXPLAIN'		=> 'Please fill-in the notice information',
+	
 	'L_TITLE'								=> 'Board Notices',
 	'L_ADD'									=> 'Add new notice',
 ));

@@ -24,4 +24,25 @@ class acp_module extends \phpbb\db\migration\migration
 			)),
 		);
 	}
+	
+	public function revert_data()
+	{
+		return array(
+			array('module.remove', array(
+				'acp',
+				'ACP_BOARD_NOTICES',
+				array(
+					'module_basename'       => '\fq\boardnotices\acp\board_notices_module',
+					'modes'                 => array('manage'),
+				),
+			)),
+
+			// Remove a new category named ACP_CAT_TEST_MOD to ACP_CAT_DOT_MODS
+			array('module.remove', array(
+				'acp',
+				'ACP_CAT_DOT_MODS',
+				'ACP_BOARD_NOTICES'
+			)),
+		);
+	}
 }

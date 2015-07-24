@@ -79,6 +79,26 @@ class datalayer
 		return $this->getNotices(true);
 	}
 	
+	public function getNoticeFromId($notice_id)
+	{
+		$notice = null;
+		$load_active_only = false;
+		if (!$this->notices_loaded || ($this->active_notices_loaded != $load_active_only))
+		{
+			$this->notices = $this->loadNotices($load_active_only);
+			$this->notices_loaded = true;
+			$this->active_notices_loaded = $load_active_only;
+		}
+		foreach ($this->notices as $row) {
+			if ($row['notice_id'] == $notice_id)
+			{
+				$notice = $row;
+				break;
+			}
+		}
+		return $notice;
+	}
+	
 	private function loadRules()
 	{
 		$rules = array();
@@ -196,6 +216,13 @@ class datalayer
 		return $this->loadNonDeletedUserPosts();
 	}
 	
+	private function cleanNotices()
+	{
+		$this->notices_loaded = false;
+		$this->cache->destroy('_notices');
+		$this->cache->destroy('sql', $this->notices_table);
+	}
+	
 	public function moveNotice($action, $notice_id)
 	{
 		// Get current order id...
@@ -232,11 +259,54 @@ class datalayer
 					AND notice_id = $notice_id";
 			$this->db->sql_query($sql);
 		}
+		$this->cleanNotices();		
 
-		$this->notices_loaded = false;
-		$this->cache->destroy('_notices');
-		$this->cache->destroy('sql', $this->notices_table);
-		
 		return $move_executed;
+	}
+
+	private function getNextNoticeOrder()
+	{
+		$next_order = 0;
+		$load_active_only = false;
+		if (!$this->notices_loaded || ($this->active_notices_loaded != $load_active_only))
+		{
+			$this->notices = $this->loadNotices($load_active_only);
+			$this->notices_loaded = true;
+			$this->active_notices_loaded = $load_active_only;
+		}
+		foreach ($this->notices as $row) {
+			if ($row['notice_order'] > $next_order)
+			{
+				$next_order = $row['notice_order'];
+			}
+		}
+		return $next_order +1;
+	}
+	
+	public function saveNewNotice(&$data)
+	{
+		if (!isset($data['notice_order']))
+		{
+			$data['notice_order'] = $this->getNextNoticeOrder();
+		}
+		$sql = "INSERT INTO {$this->notices_table} " . $this->db->sql_build_array('INSERT', $data);
+		$this->db->sql_query($sql);
+		$this->cleanNotices();
+	}
+	
+	public function saveNotice($notice_id, &$data)
+	{
+		$notice_id = (int)$notice_id;
+		if ($notice_id > 0)
+		{
+			unset($data['notice_id']);
+			unset($data['notice_order']);
+			
+			$sql = "UPDATE {$this->notices_table}
+				SET " . $this->db->sql_build_array('UPDATE', $data) . "
+				WHERE notice_id = " . $notice_id;
+			$this->db->sql_query($sql);
+			$this->cleanNotices();
+		}
 	}
 }
