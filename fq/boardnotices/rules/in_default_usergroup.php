@@ -14,18 +14,33 @@ namespace fq\boardnotices\rules;
 class in_default_usergroup implements rule
 {
 	private $user;
-	
+
 	public function __construct(\phpbb\user $user) {
 		$this->user = $user;
 	}
-	
+
+	public function getDisplayName()
+	{
+		return "User default group is";
+	}
+
+	public function getType()
+	{
+		return 'list';
+	}
+
+	public function getPossibleValues()
+	{
+		return null;
+	}
+
 	public function isTrue($conditions) {
 		$valid = false;
 		$group_id = (int)$conditions;
 		$valid = $this->user->data['group_id'] == $group_id;
 		return $valid;
 	}
-	
+
 	public function getTemplateVars()
 	{
 		return array();

@@ -14,11 +14,26 @@ namespace fq\boardnotices\rules;
 class style implements rule
 {
 	private $user;
-	
+
 	public function __construct(\phpbb\user $user) {
 		$this->user = $user;
 	}
-	
+
+	public function getDisplayName()
+	{
+		return "User style is";
+	}
+
+	public function getType()
+	{
+		return 'multiple choice';
+	}
+
+	public function getPossibleValues()
+	{
+		return null;
+	}
+
 	public function isTrue($conditions) {
 		$valid = false;
 		$styles = @unserialize($conditions);
@@ -39,7 +54,7 @@ class style implements rule
 		}
 		return $valid;
 	}
-	
+
 	public function getTemplateVars()
 	{
 		return array();

@@ -10,9 +10,9 @@
 
 <a id="maincontent"></a>
 <a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
-<h1>{L_BOARD_NOTICES_SETTINGS}</h1>
+<h1>{BOARD_NOTICE_SETTINGS}</h1>
 
-<p>{L_BOARD_NOTICES_SETTINGS_EXPLAIN}</p>
+<p>{BOARD_NOTICE_SETTINGS_EXPLAIN}</p>
 
 <!-- IF ERRORS -->
 	<div class="errorbox">
@@ -28,31 +28,31 @@
 	<fieldset>
 		<legend>{L_GENERAL_OPTIONS}</legend>
 		<dl>
-			<dt><label for="board_notice_enable">{L_BOARD_NOTICE_ACTIVE}{L_COLON}</label></dt>
+			<dt><label for="board_notice_enable">{LABEL_BOARD_NOTICE_ACTIVE}{L_COLON}</label></dt>
 			<dd>
 				<label><input type="radio" class="radio" id="board_notice_active" name="board_notice_active" value="1"<!-- IF BOARD_NOTICE_ACTIVE --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 				<label><input type="radio" class="radio" name="board_notice_active" value="0"<!-- IF not BOARD_NOTICE_ACTIVE --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="board_notice_title">{L_BOARD_NOTICE_TITLE}{L_COLON}</label><br /><span>{L_BOARD_NOTICE_TITLE_EXPLAIN}</span></dt>
+			<dt><label for="board_notice_title">{LABEL_BOARD_NOTICE_TITLE}{L_COLON}</label><br /><span>{BOARD_NOTICE_TITLE_EXPLAIN}</span></dt>
 			<dd>
 				<input name="board_notice_title" type="text" id="board_notice_title" value="{BOARD_NOTICE_TITLE}" size="50" maxlength="50" />
 			</dd>
 		</dl>
 	</fieldset>
 
-	<!-- IF L_BOARD_NOTICE_PREVIEW -->
+	<!-- IF BOARD_NOTICE_PREVIEW -->
 		<fieldset>
-			<legend>{L_BOARD_NOTICE_PREVIEW}</legend>
+			<legend>{LABEL_BOARD_NOTICE_PREVIEW}</legend>
 			<div style="padding:10px; font-size:1.0em; overflow: auto; <!-- IF BOARD_NOTICE_BGCOLOR -->background-color:#{BOARD_NOTICE_BGCOLOR}<!-- ENDIF -->">{BOARD_NOTICE_PREVIEW}</div>
 		</fieldset>
 	<!-- ENDIF -->
 
 	<fieldset>
-		<legend>{L_BOARD_NOTICE_TEXT}</legend>
+		<legend>{LABEL_BOARD_NOTICE_TEXT}</legend>
 		<dl>
-			<dt><label for="board_notice_bgcolor">{L_BOARD_NOTICE_BGCOLOR}{L_COLON}</label><br /><span>{L_BOARD_NOTICE_BGCOLOR_EXPLAIN}</span></dt>
+			<dt><label for="board_notice_bgcolor">{LABEL_BOARD_NOTICE_BGCOLOR}{L_COLON}</label><br /><span>{LABEL_BOARD_NOTICE_BGCOLOR_EXPLAIN}</span></dt>
 			<dd>
 				<input name="board_notice_bgcolor" type="text" id="board_notice_bgcolor" value="{BOARD_NOTICE_BGCOLOR}" size="6" maxlength="6" <!-- IF BOARD_NOTICE_BGCOLOR -->style="border-right:20px solid #{BOARD_NOTICE_BGCOLOR}"<!-- ENDIF --> />
 			</dd>

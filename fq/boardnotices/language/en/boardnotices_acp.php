@@ -38,17 +38,33 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'L_ACP_BOARD_NOTICES_MANAGER'			=> 'Board Notices manager',
-	'L_ACP_BOARD_NOTICES_MANAGER_EXPLAIN'	=> "Board Notices manager: Add, Edit or Delete your notices<br />Please note that only one notice will be displayed at a time. It's the first one that fills the conditions that will be displayed.",
-	
-	'L_BOARD_NOTICES_SETTINGS'				=> 'Board Notice settings',
-	'L_BOARD_NOTICES_SETTINGS_EXPLAIN'		=> 'Please fill-in the notice information',
-	
-	'L_TITLE'								=> 'Board Notices',
-	'L_ADD'									=> 'Add new notice',
-	
+	'ACP_BOARD_NOTICES_MANAGER'				=> 'Board Notices manager',
+	'ACP_BOARD_NOTICES_MANAGER_EXPLAIN'		=> "Add, edit or delete your board notices<br />"
+											. "Please note that only one board notice can be displayed to the user at a time: It's the first one that fills the conditions that will be displayed.<br />"
+											. "Please click on the notice name to edit the conditions the message should be displayed.",
+
+	'ACP_BOARD_NOTICE_SETTINGS'				=> 'Board Notice settings',
+	'ACP_BOARD_NOTICE_SETTINGS_EXPLAIN'		=> 'Please fill-in the board notice information',
+
+	'ACP_BOARD_NOTICE_RULES'				=> 'Board Notice conditions',
+	'ACP_BOARD_NOTICE_RULES_EXPLAIN'		=> 'Edit the conditions for the message to be displayed. Please note that <strong>all conditions should be met</strong>.',
+
+	'BOARD_NOTICE_TITLE'					=> 'Board Notices',
+	'BOARD_NOTICE_RULES'					=> 'Conditions',
+	'BOARD_NOTICE_ADD'						=> 'Add new notice',
+	'BOARD_NOTICE_RULE_ADD'					=> 'Add new rule',
+
+	'LABEL_BOARD_NOTICE_ACTIVE'				=> 'Board notice is enabled',
+	'LABEL_BOARD_NOTICE_TITLE'				=> 'Board notice name',
+	'LABEL_BOARD_NOTICE_PREVIEW'			=> 'Message preview',
+	'LABEL_BOARD_NOTICE_TEXT'				=> 'Message displayed when conditions are met',
+	'LABEL_BOARD_NOTICE_BGCOLOR'			=> 'Background color of the message',
+
+	'BOARD_NOTICE_RULE_NAME'				=> 'Rule',
+	'BOARD_NOTICE_RULE_VALUE'				=> 'Conditions',
+
 	'BOARD_NOTICE_SAVED'					=> 'Board notice has been saved.',
-	
+
 	'ERROR_EMPTY_TITLE'						=> '<strong>Title</strong> cannot be empty.',
 	'ERROR_EMPTY_MESSAGE'					=> '<strong>Message</strong> cannot be empty.',
 ));

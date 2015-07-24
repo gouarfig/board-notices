@@ -14,17 +14,17 @@ namespace fq\boardnotices\rules;
 class rank implements rule
 {
 	private $user;
-	
+
 	public function __construct(\phpbb\user $user) {
 		$this->user = $user;
 	}
-	
+
 	private function calculateUserRank($user_posts)
 	{
 		global $cache;
 		$user_rank = 0;
 		$ranks = $cache->obtain_ranks();
-		
+
 		if (!empty($ranks['normal']))
 		{
 			foreach ($ranks['normal'] as $rank_id => $rank)
@@ -38,10 +38,25 @@ class rank implements rule
 		}
 		return $user_rank;
 	}
-	
+
+	public function getDisplayName()
+	{
+		return "User rank is";
+	}
+
+	public function getType()
+	{
+		return 'list';
+	}
+
+	public function getPossibleValues()
+	{
+		return null;
+	}
+
 	public function isTrue($conditions) {
 		$valid = false;
-		
+
 		$user_rank = (int)$this->user->data['user_rank'];
 		if ($user_rank == 0)
 		{
@@ -65,7 +80,7 @@ class rank implements rule
 		}
 		return $valid;
 	}
-	
+
 	public function getTemplateVars()
 	{
 		$user_rank = phpbb_get_user_rank($this->user->data, ($this->user->data['user_id'] == ANONYMOUS) ? false : $this->user->data['user_posts']);

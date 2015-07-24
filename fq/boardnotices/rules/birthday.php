@@ -15,11 +15,11 @@ class birthday implements rule
 {
 	private $user;
 	private $template_vars = array();
-	
+
 	public function __construct(\phpbb\user $user) {
 		$this->user = $user;
 	}
-	
+
 	private function getUserBirthday()
 	{
 		return isset($this->user->data['user_birthday']) ? $this->user->data['user_birthday'] : '';
@@ -47,14 +47,29 @@ class birthday implements rule
 		}
 		return $age;
 	}
-	
+
 	private function setTemplateVars($age)
 	{
 		$this->template_vars = array(
 			'AGE' => $age
 		);
 	}
-	
+
+	public function getDisplayName()
+	{
+		return "Today is user's birthday";
+	}
+
+	public function getType()
+	{
+		return 'n/a';
+	}
+
+	public function getPossibleValues()
+	{
+		return null;
+	}
+
 	public function isTrue($conditions) {
 		$valid = false;
 		$user_birthday = $this->getUserBirthday();
@@ -68,7 +83,7 @@ class birthday implements rule
 		}
 		return $valid;
 	}
-	
+
 	public function getTemplateVars()
 	{
 		return $this->template_vars;

@@ -20,6 +20,11 @@ services:
         tags:
             - { name: event.listener }
 
+    fq.boardnotices.domain.rules:
+        class: fq\boardnotices\domain\rules
+        arguments:
+            - %core.root_path%
+
     fq.boardnotices.rules.birthday:
         class: fq\boardnotices\rules\birthday
         arguments:

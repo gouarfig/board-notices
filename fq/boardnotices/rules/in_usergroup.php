@@ -14,11 +14,26 @@ namespace fq\boardnotices\rules;
 class in_usergroup implements rule
 {
 	private $user;
-	
+
 	public function __construct(\phpbb\user $user) {
 		$this->user = $user;
 	}
-	
+
+	public function getDisplayName()
+	{
+		return "User is in group";
+	}
+
+	public function getType()
+	{
+		return 'multiple choice';
+	}
+
+	public function getPossibleValues()
+	{
+		return null;
+	}
+
 	public function isTrue($conditions) {
 		$valid = false;
 		$data_layer = $this->getDataLayer();
@@ -40,7 +55,7 @@ class in_usergroup implements rule
 		}
 		return $valid;
 	}
-	
+
 	public function getTemplateVars()
 	{
 		return array();
@@ -57,5 +72,5 @@ class in_usergroup implements rule
 		}
 		return $data_layer;
 	}
-	
+
 }

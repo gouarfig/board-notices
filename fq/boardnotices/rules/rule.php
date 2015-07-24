@@ -12,6 +12,9 @@
 namespace fq\boardnotices\rules;
 
 interface rule {
+	public function getDisplayName();
+	public function getType();
+	public function getPossibleValues();
 	public function isTrue($conditions);
 	public function getTemplateVars();
 }
