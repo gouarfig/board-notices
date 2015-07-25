@@ -1,18 +1,20 @@
 <?php
+
 /**
-*
-* Board Notices Manager
-*
-* @version 1.0.0
-* @copyright (c) 2015 Fred Quointeau
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Board Notices Manager
+ *
+ * @version 1.0.0
+ * @copyright (c) 2015 Fred Quointeau
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 namespace fq\boardnotices;
 
 class datalayer
 {
+
 	private $db;
 	private $user;
 	private $cache;
@@ -41,10 +43,10 @@ class datalayer
 	{
 		$notices = array();
 		$sql_array = array(
-			'SELECT'		=> 'n.*',
-			'FROM'			=> array($this->notices_table => 'n'),
-			'WHERE'			=> $active_only ? 'n.active=1' : '',
-			'ORDER_BY'		=> 'n.notice_order',
+			'SELECT' => 'n.*',
+			'FROM' => array($this->notices_table => 'n'),
+			'WHERE' => $active_only ? 'n.active=1' : '',
+			'ORDER_BY' => 'n.notice_order',
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 
@@ -57,7 +59,7 @@ class datalayer
 
 		return $notices;
 	}
-	
+
 	public function getNotices($active_only = true)
 	{
 		if (!$this->notices_loaded || ($this->active_notices_loaded != $active_only))
@@ -78,7 +80,7 @@ class datalayer
 	{
 		return $this->getNotices(true);
 	}
-	
+
 	public function getNoticeFromId($notice_id)
 	{
 		$notice = null;
@@ -89,7 +91,8 @@ class datalayer
 			$this->notices_loaded = true;
 			$this->active_notices_loaded = $load_active_only;
 		}
-		foreach ($this->notices as $row) {
+		foreach ($this->notices as $row)
+		{
 			if ($row['notice_id'] == $notice_id)
 			{
 				$notice = $row;
@@ -98,13 +101,13 @@ class datalayer
 		}
 		return $notice;
 	}
-	
+
 	private function loadRules()
 	{
 		$rules = array();
 		$sql_array = array(
-			'SELECT'		=> 'r.*',
-			'FROM'			=> array($this->notices_rules_table => 'r'),
+			'SELECT' => 'r.*',
+			'FROM' => array($this->notices_rules_table => 'r'),
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 
@@ -117,7 +120,7 @@ class datalayer
 
 		return $rules;
 	}
-	
+
 	public function getRulesFor($notice_id)
 	{
 		if (!$this->rules_loaded)
@@ -132,19 +135,19 @@ class datalayer
 	{
 		$user = array();
 		$sql_array = array(
-			'SELECT'		=> 'u.*',
-			'FROM'			=> array(USERS_TABLE => 'u'),
-			'WHERE'			=> 'u.user_id=' . (int) $this->user->data['user_id'],
+			'SELECT' => 'u.*',
+			'FROM' => array(USERS_TABLE => 'u'),
+			'WHERE' => 'u.user_id=' . (int) $this->user->data['user_id'],
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 
 		$result = $this->db->sql_query($sql);
 		$user = $this->db->sql_fetchrow($result);
 		$this->db->sql_freeresult($result);
-		
+
 		return $user;
 	}
-	
+
 	public function getUserInfo($field_name)
 	{
 		if (!$this->user_loaded)
@@ -154,29 +157,29 @@ class datalayer
 		}
 		return isset($this->user_row[$field_name]) ? $this->user_row[$field_name] : null;
 	}
-	
+
 	private function loadUserGroups()
 	{
 		$usergroups = array();
 		$sql_array = array(
-			'SELECT'		=> 'g.group_id, g.group_name, g.group_type',
-			'FROM'			=> array(GROUPS_TABLE => 'g', USER_GROUP_TABLE => 'ug'),
-			'WHERE'			=> 'ug.user_id=' . (int) $this->user->data['user_id']
-								. ' AND g.group_id = ug.group_id'
-								. ' AND ug.user_pending = 0',
+			'SELECT' => 'g.group_id, g.group_name, g.group_type',
+			'FROM' => array(GROUPS_TABLE => 'g', USER_GROUP_TABLE => 'ug'),
+			'WHERE' => 'ug.user_id=' . (int) $this->user->data['user_id']
+			. ' AND g.group_id = ug.group_id'
+			. ' AND ug.user_pending = 0',
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$usergroups[(int)$row['group_id']] = $row;
+			$usergroups[(int) $row['group_id']] = $row;
 		}
 		$this->db->sql_freeresult($result);
-		
+
 		return $usergroups;
 	}
-	
+
 	public function isUserInGroupId($group_id)
 	{
 		if (!$this->usergroups_loaded)
@@ -186,15 +189,15 @@ class datalayer
 		}
 		return isset($this->usergroups[$group_id]) ? true : false;
 	}
-	
+
 	private function loadNonDeletedUserPosts()
 	{
 		$userposts = 0;
 		$sql_array = array(
-			'SELECT'		=> 'count(p.post_id) AS count',
-			'FROM'			=> array(POSTS_TABLE => 'p'),
-			'WHERE'			=> 'p.poster_id=' . (int) $this->user->data['user_id']
-								. ' AND p.post_visibility < 2',
+			'SELECT' => 'count(p.post_id) AS count',
+			'FROM' => array(POSTS_TABLE => 'p'),
+			'WHERE' => 'p.poster_id=' . (int) $this->user->data['user_id']
+			. ' AND p.post_visibility < 2',
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 
@@ -204,10 +207,10 @@ class datalayer
 			$userposts = (int) $row['count'];
 		}
 		$this->db->sql_freeresult($result);
-		
+
 		return $userposts;
 	}
-	
+
 	/**
 	 * Number of posts, INCLUDING waiting for approval ones
 	 */
@@ -215,14 +218,14 @@ class datalayer
 	{
 		return $this->loadNonDeletedUserPosts();
 	}
-	
+
 	private function cleanNotices()
 	{
 		$this->notices_loaded = false;
 		$this->cache->destroy('_notices');
 		$this->cache->destroy('sql', $this->notices_table);
 	}
-	
+
 	public function moveNotice($action, $notice_id)
 	{
 		// Get current order id...
@@ -259,7 +262,7 @@ class datalayer
 					AND notice_id = $notice_id";
 			$this->db->sql_query($sql);
 		}
-		$this->cleanNotices();		
+		$this->cleanNotices();
 
 		return $move_executed;
 	}
@@ -274,15 +277,16 @@ class datalayer
 			$this->notices_loaded = true;
 			$this->active_notices_loaded = $load_active_only;
 		}
-		foreach ($this->notices as $row) {
+		foreach ($this->notices as $row)
+		{
 			if ($row['notice_order'] > $next_order)
 			{
 				$next_order = $row['notice_order'];
 			}
 		}
-		return $next_order +1;
+		return $next_order + 1;
 	}
-	
+
 	public function saveNewNotice(&$data)
 	{
 		if (!isset($data['notice_order']))
@@ -293,15 +297,15 @@ class datalayer
 		$this->db->sql_query($sql);
 		$this->cleanNotices();
 	}
-	
+
 	public function saveNotice($notice_id, &$data)
 	{
-		$notice_id = (int)$notice_id;
+		$notice_id = (int) $notice_id;
 		if ($notice_id > 0)
 		{
 			unset($data['notice_id']);
 			unset($data['notice_order']);
-			
+
 			$sql = "UPDATE {$this->notices_table}
 				SET " . $this->db->sql_build_array('UPDATE', $data) . "
 				WHERE notice_id = " . $notice_id;
@@ -309,4 +313,5 @@ class datalayer
 			$this->cleanNotices();
 		}
 	}
+
 }

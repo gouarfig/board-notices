@@ -15,7 +15,8 @@ class style implements rule
 {
 	private $user;
 
-	public function __construct(\phpbb\user $user) {
+	public function __construct(\phpbb\user $user)
+	{
 		$this->user = $user;
 	}
 
@@ -34,17 +35,19 @@ class style implements rule
 		return null;
 	}
 
-	public function isTrue($conditions) {
+	public function isTrue($conditions)
+	{
 		$valid = false;
 		$styles = @unserialize($conditions);
 		if ($styles === false)
 		{
 			// There's only one style
-			$styles = array((int)$conditions);
+			$styles = array((int) $conditions);
 		}
 		if (!empty($styles))
 		{
-			foreach ($styles as $style_id) {
+			foreach ($styles as $style_id)
+			{
 				$valid = ($this->user->data['user_style'] == $style_id);
 				if (!$valid)
 				{

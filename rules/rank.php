@@ -15,7 +15,8 @@ class rank implements rule
 {
 	private $user;
 
-	public function __construct(\phpbb\user $user) {
+	public function __construct(\phpbb\user $user)
+	{
 		$this->user = $user;
 	}
 
@@ -54,10 +55,11 @@ class rank implements rule
 		return null;
 	}
 
-	public function isTrue($conditions) {
+	public function isTrue($conditions)
+	{
 		$valid = false;
 
-		$user_rank = (int)$this->user->data['user_rank'];
+		$user_rank = (int) $this->user->data['user_rank'];
 		if ($user_rank == 0)
 		{
 			$user_rank = $this->calculateUserRank($this->user->data['user_posts']);
@@ -66,11 +68,12 @@ class rank implements rule
 		if ($ranks === false)
 		{
 			// There's only one rank
-			$ranks = array((int)$conditions);
+			$ranks = array((int) $conditions);
 		}
 		if (!empty($ranks))
 		{
-			foreach ($ranks as $rank_id) {
+			foreach ($ranks as $rank_id)
+			{
 				$valid = ($user_rank == $rank_id);
 				if (!$valid)
 				{

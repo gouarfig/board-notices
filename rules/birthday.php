@@ -1,22 +1,25 @@
 <?php
+
 /**
-*
-* Board Notices Manager
-*
-* @version 1.0.0
-* @copyright (c) 2015 Fred Quointeau
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Board Notices Manager
+ *
+ * @version 1.0.0
+ * @copyright (c) 2015 Fred Quointeau
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 namespace fq\boardnotices\rules;
 
 class birthday implements rule
 {
+
 	private $user;
 	private $template_vars = array();
 
-	public function __construct(\phpbb\user $user) {
+	public function __construct(\phpbb\user $user)
+	{
 		$this->user = $user;
 	}
 
@@ -37,8 +40,7 @@ class birthday implements rule
 			if ($diff == 0)
 			{
 				$diff = ($now['mday'] - $bday_day < 0) ? 1 : 0;
-			}
-			else
+			} else
 			{
 				$diff = ($diff < 0) ? 1 : 0;
 			}
@@ -70,7 +72,8 @@ class birthday implements rule
 		return null;
 	}
 
-	public function isTrue($conditions) {
+	public function isTrue($conditions)
+	{
 		$valid = false;
 		$user_birthday = $this->getUserBirthday();
 		list($bday_day, $bday_month, $bday_year) = array_map('intval', explode('-', $user_birthday));
@@ -88,4 +91,5 @@ class birthday implements rule
 	{
 		return $this->template_vars;
 	}
+
 }
