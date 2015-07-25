@@ -16,6 +16,8 @@ class rules
 {
 
 	private $root_path;
+	private $rules;
+	private $rules_loaded = false;
 
 	public function __construct($root_path)
 	{
@@ -46,11 +48,11 @@ class rules
 		return $classes;
 	}
 
-	public function getDefinedRules()
+	private function loadRules()
 	{
 		global $phpbb_container;
 
-		$rules = array();
+		$this->rules = array();
 		$folder = $this->getRulesFolder();
 		if (is_dir($folder))
 		{
@@ -60,17 +62,51 @@ class rules
 				try
 				{
 					$rule = $phpbb_container->get("fq.boardnotices.rules.$entry");
-					$rules[$entry] = $rule->getDisplayName();
+					$this->rules[$entry] = $rule;
 				} catch (\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException $exc)
 				{
 					// The installation is obviously corrupted, but should we bother the user with it?
 				}
 			}
-		} else
-		{
-			$rules = array("Cannot list files under folder " . $folder);
+			$this->rules_loaded = true;
+			ksort($this->rules);
 		}
-		return $rules;
+	}
+
+	public function getDefinedRules()
+	{
+		$rule_names = array();
+		if (!$this->rules_loaded)
+		{
+			$this->loadRules();
+		}
+
+		foreach ($this->rules as $name => $rule)
+		{
+			$rule_names[$name] = $rule->getDisplayName();
+		}
+
+		return $rule_names;
+	}
+
+	public function getRuleType($rule_name)
+	{
+		if (!$this->rules_loaded)
+		{
+			$this->loadRules();
+		}
+
+		return isset($this->rules[$rule_name]) ? $this->rules[$rule_name]->getType() : '';
+	}
+
+	public function getRuleValues($rule_name)
+	{
+		if (!$this->rules_loaded)
+		{
+			$this->loadRules();
+		}
+
+		return isset($this->rules[$rule_name]) ? $this->rules[$rule_name]->getPossibleValues() : '';
 	}
 
 }

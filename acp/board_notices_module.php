@@ -292,7 +292,8 @@ class board_notices_module
 			$this->template->assign_block_vars('items', array(
 				'RULE_ID' => $rule['notice_rule_id'],
 				'RULE_NAME' => $rule['rule'],
-				'RULE_CONDITIONS' => $rule['conditions'],
+				'RULE_CONDITIONS' => $this->getDisplayConditions(
+						$rules_manager->getRuleType($rule['rule']), $rules_manager->getRuleValues($rule['rule']), $rule['conditions']),
 			));
 			foreach ($all_rules as $key => $value)
 			{
@@ -303,6 +304,34 @@ class board_notices_module
 				));
 			}
 		}
+	}
+
+	private function getDisplayConditions($type, $values, $selected)
+	{
+		$display = '';
+		if (!is_array($selected))
+		{
+			$selected = array($selected);
+		}
+		switch ($type)
+		{
+			case 'list':
+			case 'multiple choice':
+				$display .= '<select' . (($type == 'multiple choice') ? ' multiple="multiple"' : '') . ' size="10">';
+				if (is_array($values) && !empty($values))
+				{
+					foreach ($values as $key => $value)
+					{
+						$display .= '<option value="' . $key . '"' . (in_array($key, $selected) ? ' selected' : '') . '>' . $value . '</option>';
+					}
+				}
+				$display .= "</select>";
+				break;
+
+			default:
+				break;
+		}
+		return $display;
 	}
 
 	public function moveNotice($action, $notice_id)

@@ -29,6 +29,8 @@ class datalayer
 	private $user_row = array();
 	private $usergroups_loaded = false;
 	private $usergroups = array();
+	private $allgroups_loaded = false;
+	private $allgroups = array();
 
 	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\cache\service $cache, $notices_table, $notices_rules_table)
 	{
@@ -312,6 +314,37 @@ class datalayer
 			$this->db->sql_query($sql);
 			$this->cleanNotices();
 		}
+	}
+
+	private function loadAllGroups()
+	{
+		$groups = array();
+		$sql_array = array(
+			'SELECT' => 'g.group_id, g.group_name',
+			'FROM' => array(GROUPS_TABLE => 'g'),
+			'ORDER_BY' => 'g.group_id',
+		);
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$row['group_name'] = $this->user->lang($row['group_name']);
+			$groups[$row['group_id']] = $row['group_name'];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $groups;
+	}
+
+	public function getAllGroups()
+	{
+		if (!$this->allgroups_loaded)
+		{
+			$this->allgroups = $this->loadAllGroups();
+			$this->allgroups_loaded = true;
+		}
+		return $this->allgroups;
 	}
 
 }

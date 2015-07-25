@@ -34,7 +34,8 @@ class in_default_usergroup implements rule
 
 	public function getPossibleValues()
 	{
-		return null;
+		$data_layer = $this->getDataLayer();
+		return $data_layer->getAllGroups();
 	}
 
 	public function isTrue($conditions)
