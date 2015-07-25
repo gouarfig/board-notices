@@ -1,22 +1,25 @@
 <?php
+
 /**
-*
-* Board Notices Manager
-*
-* @version 1.0.0
-* @copyright (c) 2015 Fred Quointeau
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Board Notices Manager
+ *
+ * @version 1.0.0
+ * @copyright (c) 2015 Fred Quointeau
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 namespace fq\boardnotices\rules;
 
 class in_forum implements rule
 {
+
 	private $user;
 	private $request;
 
-	public function __construct(\phpbb\user $user, \phpbb\request\request $request) {
+	public function __construct(\phpbb\user $user, \phpbb\request\request $request)
+	{
 		$this->user = $user;
 		$this->request = $request;
 	}
@@ -36,7 +39,8 @@ class in_forum implements rule
 		return null;
 	}
 
-	public function isTrue($conditions) {
+	public function isTrue($conditions)
+	{
 		$valid = false;
 		$current_forum_id = $this->request->variable('f', '', false, \phpbb\request\request_interface::REQUEST);
 		if (empty($current_forum_id))
@@ -48,11 +52,12 @@ class in_forum implements rule
 		if ($forums === false)
 		{
 			// There's only one group
-			$forums = array((int)$conditions);
+			$forums = array((int) $conditions);
 		}
 		if (!empty($forums))
 		{
-			foreach ($forums as $forum_id) {
+			foreach ($forums as $forum_id)
+			{
 				$valid = ($current_forum_id == $forum_id);
 				if ($valid)
 				{
@@ -67,4 +72,5 @@ class in_forum implements rule
 	{
 		return array();
 	}
+
 }

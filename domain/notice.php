@@ -40,7 +40,7 @@ class notice
 			$user_id = (empty($user->data)) ? ANONYMOUS : $user->data['user_id'];
 			$user_ip = (empty($user->ip)) ? '' : $user->ip;
 			$log_operation = "LOG_BOARD_NOTICE_ERROR";
-			$additional_data = Array(
+			$additional_data = array(
 				phpbb_filter_root_path($exc->getFile()),
 				$exc->getLine(),
 				phpbb_filter_root_path($exc->getMessage())

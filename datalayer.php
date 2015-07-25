@@ -128,7 +128,7 @@ class datalayer
 			$this->rules = $this->loadRules();
 			$this->rules_loaded = true;
 		}
-		return !empty($this->rules[$notice_id]) ? $this->rules[$notice_id] : Array();
+		return !empty($this->rules[$notice_id]) ? $this->rules[$notice_id] : array();
 	}
 
 	private function loadUser()

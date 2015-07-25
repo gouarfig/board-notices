@@ -13,7 +13,6 @@
 namespace fq\boardnotices\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use fq\boardnotices\core;
 
 class listener implements EventSubscriberInterface
 {
