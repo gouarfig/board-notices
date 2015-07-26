@@ -65,6 +65,7 @@ services:
         class: fq\boardnotices\rules\rank
         arguments:
             - @user
+            - @fq.boardnotices.datalayer
 
     fq.boardnotices.rules.in_forum:
         class: fq\boardnotices\rules\in_forum

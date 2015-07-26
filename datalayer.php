@@ -348,7 +348,8 @@ class datalayer
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			if ($row['group_type'] == GROUP_SPECIAL) {
+			if ($row['group_type'] == GROUP_SPECIAL)
+			{
 				$row['group_name'] = $this->user->lang['G_' . $row['group_name']];
 			}
 			$groups[$row['group_id']] = $row['group_name'];
@@ -417,5 +418,22 @@ class datalayer
 		$this->db->sql_freeresult($result);
 
 		return $styles;
+	}
+
+	function getRanks()
+	{
+		$sql = 'SELECT rank_id, rank_title
+			FROM ' . RANKS_TABLE . '
+			ORDER BY rank_special DESC, rank_min ASC, rank_title ASC';
+		$result = $this->db->sql_query($sql);
+
+		$ranks = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$ranks[$row['rank_id']] = $row['rank_title'];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $ranks;
 	}
 }

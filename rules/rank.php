@@ -14,10 +14,12 @@ namespace fq\boardnotices\rules;
 class rank implements rule
 {
 	private $user;
+	private $data_layer;
 
-	public function __construct(\phpbb\user $user)
+	public function __construct(\phpbb\user $user, \fq\boardnotices\datalayer $data_layer)
 	{
 		$this->user = $user;
+		$this->data_layer = $data_layer;
 	}
 
 	private function calculateUserRank($user_posts)
@@ -52,7 +54,7 @@ class rank implements rule
 
 	public function getPossibleValues()
 	{
-		return null;
+		return $this->data_layer->getRanks();
 	}
 
 	public function isTrue($conditions)
