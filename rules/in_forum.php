@@ -31,7 +31,7 @@ class in_forum implements rule
 
 	public function getType()
 	{
-		return 'multiple choice';
+		return 'forums';
 	}
 
 	public function getPossibleValues()
@@ -42,12 +42,8 @@ class in_forum implements rule
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$current_forum_id = $this->request->variable('f', '', false, \phpbb\request\request_interface::REQUEST);
-		if (empty($current_forum_id))
-		{
-			// @TODO: session_forum_id is set after this code is running. That's quite annoying
-			$current_forum_id = $this->user->data['session_forum_id'];
-		}
+		$current_forum_id = $this->request->variable('f', 0);
+
 		$forums = @unserialize($conditions);
 		if ($forums === false)
 		{

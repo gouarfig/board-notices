@@ -25,6 +25,7 @@
 	<th>{BOARD_NOTICE_TITLE}</th>
 	<th>{BOARD_NOTICE_RULES}</th>
 	<th>{L_ACTIVE}</th>
+	<th></th>
 	<th>{L_OPTIONS}</th>
 </tr>
 </thead>
@@ -39,6 +40,7 @@
 		<td><a href="{items.EDIT_RULES_LINK}">{items.TITLE}</a></td>
 		<td style="text-align: right;">{items.RULES}</td>
 		<td style="text-align: center;">{items.ACTIVE}</td>
+		<td style="white-space: nowrap; text-align: center; vertical-align: middle;">&nbsp;<!-- IF items.ENABLED --><a href="{items.U_DISABLE}">{L_DISABLE}</a><!-- ELSE --><a href="{items.U_ENABLE}">{L_ENABLE}</a><!-- ENDIF -->&nbsp;</td>
 		<td class="actions" style="text-align: right;">
 			<span class="up-disabled" style="display:none;">{ICON_MOVE_UP_DISABLED}</span>
 			<span class="up"><a href="{items.U_MOVE_UP}" data-ajax="row_up">{ICON_MOVE_UP}</a></span>

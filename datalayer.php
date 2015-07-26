@@ -269,6 +269,22 @@ class datalayer
 		return $move_executed;
 	}
 
+	public function enableNotice($action, $notice_id)
+	{
+		$query_done = 0;
+		if ($notice_id > 0)
+		{
+			$sql = "UPDATE {$this->notices_table}"
+					. " SET active=" . (($action == 'enable') ? '1' : '0')
+					. " WHERE notice_id={$notice_id}";
+			$this->db->sql_query($sql);
+			$query_done = (bool) $this->db->sql_affectedrows();
+
+			$this->cleanNotices();
+		}
+		return $query_done;
+	}
+
 	private function getNextNoticeOrder()
 	{
 		$next_order = 0;
@@ -345,6 +361,21 @@ class datalayer
 			$this->allgroups_loaded = true;
 		}
 		return $this->allgroups;
+	}
+
+	public function getForumIdFromTopicId($topic_id)
+	{
+		$sql_array = array(
+			'SELECT' => 't.forum_id',
+			'FROM' => array(TOPICS_TABLE => 't'),
+			'WHERE' => 't.topic_id = ' . (int) $topic_id,
+		);
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$result = $db->sql_query($sql);
+		$forum_id = (int) $db->sql_fetchfield('forum_id');
+		$db->sql_freeresult($result);
+
+		return $forum_id;
 	}
 
 }

@@ -116,6 +116,12 @@ class board_notices_module
 					}
 					break;
 
+				case 'enable':
+				case 'disable':
+					$this->enableNotice($action, $notice_id);
+					$this->displayManager();
+					break;
+
 				case 'move_up':
 				case 'move_down':
 					$this->moveNotice($action, $notice_id);
@@ -167,6 +173,9 @@ class board_notices_module
 				'TITLE' => $notice['title'],
 				'RULES' => count($rules),
 				'ACTIVE' => $notice['active'] ? 'Yes' : 'No',
+				'ENABLED' => $notice['active'] ? true : false,
+				'U_ENABLE' => $this->u_action . '&amp;action=enable&amp;id=' . $notice['notice_id'],
+				'U_DISABLE' => $this->u_action . '&amp;action=disable&amp;id=' . $notice['notice_id'],
 				'U_EDIT' => $this->u_action . '&amp;action=edit&amp;id=' . $notice['notice_id'],
 				'U_DELETE' => $this->u_action . '&amp;action=delete&amp;id=' . $notice['notice_id'],
 				'U_MOVE_UP' => $this->u_action . '&amp;action=move_up&amp;id=' . $notice['notice_id'],
@@ -328,6 +337,12 @@ class board_notices_module
 				$display .= "</select>";
 				break;
 
+			case 'forums':
+				$display .= '<select multiple="multiple" size="10">';
+				$display .= make_forum_select($selected, false, false, true);
+				$display .= "</select>";
+				break;
+
 			default:
 				break;
 		}
@@ -346,6 +361,22 @@ class board_notices_module
 			$json_response = new \phpbb\json_response;
 			$json_response->send(array(
 				'success' => $move_executed,
+			));
+		}
+	}
+
+	public function enableNotice($action, $notice_id)
+	{
+		/** @var \fq\boardnotices\datalayer */
+		$data_layer = $this->getDataLayer();
+
+		$executed = $data_layer->enableNotice($action, $notice_id);
+
+		if ($this->request->is_ajax())
+		{
+			$json_response = new \phpbb\json_response;
+			$json_response->send(array(
+				'success' => $executed,
 			));
 		}
 	}
