@@ -14,7 +14,7 @@
 	</div>
 <!-- ENDIF -->
 
-<form id="acp_icons" method="post" action="{U_ACTION}">
+<form id="acp_board_notice_rules" method="post" action="{U_ACTION}">
 
 <fieldset class="tabulated">
 
@@ -37,7 +37,7 @@
 	<!-- ENDIF -->
 	<tr>
 		<td style="text-align: right;">
-			<select>
+			<select name="rule_name[{items.RULE_ID}]">
 				<option value="">Please choose a rule...</option>
 				<!-- BEGIN items.allrules -->
 				<option value="{items.allrules.COMBO_RULE_ID}" <!-- IF items.allrules.COMBO_RULE_SELECTED -->selected<!-- ENDIF -->>{items.allrules.COMBO_RULE_NAME}</option>
@@ -67,6 +67,9 @@
 </p>
 {S_FORM_TOKEN}
 </fieldset>
+	<fieldset class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />
+	</fieldset>
 </form>
 
 <!-- INCLUDE overall_footer.html -->

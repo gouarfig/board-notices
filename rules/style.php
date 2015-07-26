@@ -14,10 +14,12 @@ namespace fq\boardnotices\rules;
 class style implements rule
 {
 	private $user;
+	private $data_layer;
 
-	public function __construct(\phpbb\user $user)
+	public function __construct(\phpbb\user $user, \fq\boardnotices\datalayer $data_layer)
 	{
 		$this->user = $user;
+		$this->data_layer = $data_layer;
 	}
 
 	public function getDisplayName()
@@ -32,8 +34,7 @@ class style implements rule
 
 	public function getPossibleValues()
 	{
-		$data_layer = $this->getDataLayer();
-		return $data_layer->getStyles();
+		return $this->data_layer->getStyles();
 	}
 
 	public function isTrue($conditions)
@@ -64,15 +65,4 @@ class style implements rule
 		return array();
 	}
 
-	protected function getDataLayer()
-	{
-		global $phpbb_container;
-		static $data_layer = null;
-
-		if (is_null($data_layer))
-		{
-			$data_layer = $phpbb_container->get('fq.boardnotices.datalayer');
-		}
-		return $data_layer;
-	}
 }

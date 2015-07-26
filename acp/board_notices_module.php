@@ -15,6 +15,7 @@ class board_notices_module
 {
 
 	private $notice_form_name = 'acp_board_notice';
+	private $notice_rules_form_name = 'acp_board_notice_rules';
 
 	/** @var \phpbb\config\config */
 	protected $config;
@@ -280,6 +281,9 @@ class board_notices_module
 		// Set the page title for our ACP page
 		$this->page_title = $this->user->lang('ACP_BOARD_NOTICE_RULES');
 
+		// Define the name of the form for use as a form key
+		add_form_key($this->notice_rules_form_name);
+
 		// Output data to the template
 		$this->template->assign_vars(array(
 			'ACP_BOARD_NOTICE_RULES' => $this->user->lang('ACP_BOARD_NOTICE_RULES'),
@@ -302,7 +306,7 @@ class board_notices_module
 				'RULE_ID' => $rule['notice_rule_id'],
 				'RULE_NAME' => $rule['rule'],
 				'RULE_CONDITIONS' => $this->getDisplayConditions(
-						$rules_manager->getRuleType($rule['rule']), $rules_manager->getRuleValues($rule['rule']), $rule['conditions']),
+						$rules_manager->getRuleType($rule['rule']), $rules_manager->getRuleValues($rule['rule']), $rule['conditions'], $rule['notice_rule_id']),
 			));
 			foreach ($all_rules as $key => $value)
 			{
@@ -315,7 +319,7 @@ class board_notices_module
 		}
 	}
 
-	private function getDisplayConditions($type, $values, $selected)
+	private function getDisplayConditions($type, $values, $selected, $rule_id)
 	{
 		$display = '';
 		if (!is_array($selected))
@@ -327,7 +331,7 @@ class board_notices_module
 			case 'list':
 			case 'multiple choice':
 				$size = (count($values) < 10) ? count($values) : 10;
-				$display .= '<select' . (($type == 'multiple choice') ? ' multiple="multiple"' : '') . ' size="' . $size . '">';
+				$display .= '<select' . (($type == 'multiple choice') ? ' multiple="multiple"' : '') . ' size="' . $size . '" name="conditions[' . $rule_id . ']">';
 				if (is_array($values) && !empty($values))
 				{
 					foreach ($values as $key => $value)
@@ -339,7 +343,7 @@ class board_notices_module
 				break;
 
 			case 'forums':
-				$display .= '<select multiple="multiple" size="10">';
+				$display .= '<select multiple="multiple" size="10" name="conditions[' . $rule_id . ']">';
 				$display .= make_forum_select($selected, false, false, true);
 				$display .= "</select>";
 				break;

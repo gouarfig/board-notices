@@ -16,10 +16,12 @@ class in_usergroup implements rule
 {
 
 	private $user;
+	private $data_layer;
 
-	public function __construct(\phpbb\user $user)
+	public function __construct(\phpbb\user $user, \fq\boardnotices\datalayer $data_layer)
 	{
 		$this->user = $user;
+		$this->data_layer = $data_layer;
 	}
 
 	public function getDisplayName()
@@ -34,14 +36,13 @@ class in_usergroup implements rule
 
 	public function getPossibleValues()
 	{
-		$data_layer = $this->getDataLayer();
-		return $data_layer->getAllGroups();
+		return $this->data_layer->getAllGroups();
 	}
 
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$data_layer = $this->getDataLayer();
+
 		$groups = @unserialize($conditions);
 		if ($groups === false)
 		{
@@ -52,7 +53,7 @@ class in_usergroup implements rule
 		{
 			foreach ($groups as $group_id)
 			{
-				$valid = $data_layer->isUserInGroupId($group_id);
+				$valid = $this->data_layer->isUserInGroupId($group_id);
 				if (!$valid)
 				{
 					break;
@@ -65,18 +66,6 @@ class in_usergroup implements rule
 	public function getTemplateVars()
 	{
 		return array();
-	}
-
-	protected function getDataLayer()
-	{
-		global $phpbb_container;
-		static $data_layer = null;
-
-		if (is_null($data_layer))
-		{
-			$data_layer = $phpbb_container->get('fq.boardnotices.datalayer');
-		}
-		return $data_layer;
 	}
 
 }

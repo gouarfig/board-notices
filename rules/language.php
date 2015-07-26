@@ -16,10 +16,12 @@ class language implements rule
 {
 
 	private $user;
+	private $data_layer;
 
-	public function __construct(\phpbb\user $user)
+	public function __construct(\phpbb\user $user, \fq\boardnotices\datalayer $data_layer)
 	{
 		$this->user = $user;
+		$this->data_layer = $data_layer;
 	}
 
 	public function getDisplayName()
@@ -34,8 +36,7 @@ class language implements rule
 
 	public function getPossibleValues()
 	{
-		$data_layer = $this->getDataLayer();
-		return $data_layer->getLanguages();
+		return $this->data_layer->getLanguages();
 	}
 
 	public function isTrue($conditions)
@@ -64,18 +65,6 @@ class language implements rule
 	public function getTemplateVars()
 	{
 		return array();
-	}
-
-	protected function getDataLayer()
-	{
-		global $phpbb_container;
-		static $data_layer = null;
-
-		if (is_null($data_layer))
-		{
-			$data_layer = $phpbb_container->get('fq.boardnotices.datalayer');
-		}
-		return $data_layer;
 	}
 
 }
