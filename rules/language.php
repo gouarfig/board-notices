@@ -34,7 +34,8 @@ class language implements rule
 
 	public function getPossibleValues()
 	{
-		return null;
+		$data_layer = $this->getDataLayer();
+		return $data_layer->getLanguages();
 	}
 
 	public function isTrue($conditions)
@@ -63,6 +64,18 @@ class language implements rule
 	public function getTemplateVars()
 	{
 		return array();
+	}
+
+	protected function getDataLayer()
+	{
+		global $phpbb_container;
+		static $data_layer = null;
+
+		if (is_null($data_layer))
+		{
+			$data_layer = $phpbb_container->get('fq.boardnotices.datalayer');
+		}
+		return $data_layer;
 	}
 
 }

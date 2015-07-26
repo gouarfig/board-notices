@@ -160,7 +160,7 @@ class board_notices_module
 			'BOARD_NOTICE_TITLE' => $this->user->lang('BOARD_NOTICE_TITLE'),
 			'BOARD_NOTICE_RULES' => $this->user->lang('BOARD_NOTICE_RULES'),
 			'BOARD_NOTICE_ADD' => $this->user->lang('BOARD_NOTICE_ADD'),
-			'COLSPAN' => 4,
+			'COLSPAN' => 5,
 		));
 
 		$notices = $data_layer->getAllNotices();
@@ -326,7 +326,8 @@ class board_notices_module
 		{
 			case 'list':
 			case 'multiple choice':
-				$display .= '<select' . (($type == 'multiple choice') ? ' multiple="multiple"' : '') . ' size="10">';
+				$size = (count($values) < 10) ? count($values) : 10;
+				$display .= '<select' . (($type == 'multiple choice') ? ' multiple="multiple"' : '') . ' size="' . $size . '">';
 				if (is_array($values) && !empty($values))
 				{
 					foreach ($values as $key => $value)

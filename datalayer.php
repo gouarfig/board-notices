@@ -18,6 +18,7 @@ class datalayer
 	private $db;
 	private $user;
 	private $cache;
+	private $config;
 	private $notices_table;
 	private $notices_rules_table;
 	private $notices_loaded = false;
@@ -32,11 +33,12 @@ class datalayer
 	private $allgroups_loaded = false;
 	private $allgroups = array();
 
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\cache\service $cache, $notices_table, $notices_rules_table)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\cache\service $cache, \phpbb\config\config $config, $notices_table, $notices_rules_table)
 	{
 		$this->db = $db;
 		$this->user = $user;
 		$this->cache = $cache;
+		$this->config = $config;
 		$this->notices_table = $notices_table;
 		$this->notices_rules_table = $notices_rules_table;
 	}
@@ -336,16 +338,19 @@ class datalayer
 	{
 		$groups = array();
 		$sql_array = array(
-			'SELECT' => 'g.group_id, g.group_name',
+			'SELECT' => 'g.group_id, g.group_name, g.group_type',
 			'FROM' => array(GROUPS_TABLE => 'g'),
-			'ORDER_BY' => 'g.group_id',
+			'WHERE' => (!$this->config['coppa_enable']) ? "group_name <> 'REGISTERED_COPPA'" : '',
+			'ORDER_BY' => 'g.group_type DESC, g.group_name ASC',
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
-			$row['group_name'] = $this->user->lang($row['group_name']);
+			if ($row['group_type'] == GROUP_SPECIAL) {
+				$row['group_name'] = $this->user->lang['G_' . $row['group_name']];
+			}
 			$groups[$row['group_id']] = $row['group_name'];
 		}
 		$this->db->sql_freeresult($result);
@@ -378,4 +383,39 @@ class datalayer
 		return $forum_id;
 	}
 
+	function getLanguages()
+	{
+		$sql = 'SELECT lang_iso, lang_local_name
+			FROM ' . LANG_TABLE . '
+			ORDER BY lang_english_name';
+		$result = $this->db->sql_query($sql);
+
+		$languages = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$languages[$row['lang_iso']] = $row['lang_local_name'];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $languages;
+	}
+
+	function getStyles($all = false)
+	{
+		$sql_where = (!$all) ? 'WHERE style_active = 1 ' : '';
+		$sql = 'SELECT style_id, style_name
+			FROM ' . STYLES_TABLE . "
+			$sql_where
+			ORDER BY style_name";
+		$result = $this->db->sql_query($sql);
+
+		$styles = array();
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$styles[$row['style_id']] = $row['style_name'];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $styles;
+	}
 }

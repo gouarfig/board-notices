@@ -9,6 +9,7 @@ services:
             - @dbal.conn
             - @user
             - @cache
+            - @config
             - %tables.boardnotices.notices%
             - %tables.boardnotices.notices_rules%
 
