@@ -337,7 +337,7 @@ class datalayer
 		$sql = "INSERT INTO {$this->notices_table} " . $this->db->sql_build_array('INSERT', $data);
 		$this->db->sql_query($sql);
 		$this->cleanNotices();
-		
+
 		return $data['notice_id'];
 	}
 
@@ -459,7 +459,7 @@ class datalayer
 
 		return $ranks;
 	}
-	
+
 	private function cleanRules()
 	{
 		$this->rules_loaded = false;
@@ -476,10 +476,10 @@ class datalayer
 		$sql = "DELETE FROM " . $this->notices_rules_table . " WHERE notice_rule_id IN (" . implode(',', $rules) . ")";
 		$result = $this->db->sql_query($sql);
 		$this->cleanRules();
-		
+
 		return $result;
 	}
-	
+
 	public function updateRules($rules)
 	{
 		if (!is_array($rules))
@@ -490,7 +490,7 @@ class datalayer
 		{
 			$notice_rule_id = $rule['notice_rule_id'];
 			unset($rule['notice_rule_id']);
-			
+
 			$sql = "UPDATE {$this->notices_rules_table}
 				SET " . $this->db->sql_build_array('UPDATE', $rule) . "
 				WHERE notice_rule_id = " . $notice_rule_id;
@@ -498,7 +498,7 @@ class datalayer
 		}
 		$this->cleanRules();
 	}
-	
+
 	public function insertRules($rules)
 	{
 		if (!is_array($rules))
@@ -512,4 +512,5 @@ class datalayer
 		}
 		$this->cleanRules();
 	}
+
 }
