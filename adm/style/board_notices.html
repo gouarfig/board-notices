@@ -31,13 +31,8 @@
 </thead>
 <tbody>
 <!-- BEGIN items -->
-	<!-- IF items.S_SPACER -->
-		<tr>
-			<td class="row3" colspan="{COLSPAN}" style="text-align: center;">{L_NOT_DISPLAYED}</td>
-		</tr>
-	<!-- ENDIF -->
 	<tr>
-		<td><a href="{items.EDIT_RULES_LINK}">{items.TITLE}</a></td>
+		<td>{items.TITLE}</td>
 		<td style="text-align: right;">{items.RULES}</td>
 		<td style="text-align: center;">{items.ACTIVE}</td>
 		<td style="white-space: nowrap; text-align: center; vertical-align: middle;">&nbsp;<!-- IF items.ENABLED --><a href="{items.U_DISABLE}">{L_DISABLE}</a><!-- ELSE --><a href="{items.U_ENABLE}">{L_ENABLE}</a><!-- ENDIF -->&nbsp;</td>

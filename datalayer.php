@@ -287,6 +287,26 @@ class datalayer
 		return $query_done;
 	}
 
+	private function getNextNoticeId()
+	{
+		$next_id = 0;
+		$load_active_only = false;
+		if (!$this->notices_loaded || ($this->active_notices_loaded != $load_active_only))
+		{
+			$this->notices = $this->loadNotices($load_active_only);
+			$this->notices_loaded = true;
+			$this->active_notices_loaded = $load_active_only;
+		}
+		foreach ($this->notices as $row)
+		{
+			if ($row['notice_id'] > $next_id)
+			{
+				$next_id = $row['notice_id'];
+			}
+		}
+		return $next_id + 1;
+	}
+
 	private function getNextNoticeOrder()
 	{
 		$next_order = 0;
@@ -313,9 +333,12 @@ class datalayer
 		{
 			$data['notice_order'] = $this->getNextNoticeOrder();
 		}
+		$data['notice_id'] = $this->getNextNoticeId();
 		$sql = "INSERT INTO {$this->notices_table} " . $this->db->sql_build_array('INSERT', $data);
 		$this->db->sql_query($sql);
 		$this->cleanNotices();
+		
+		return $data['notice_id'];
 	}
 
 	public function saveNotice($notice_id, &$data)
@@ -435,5 +458,58 @@ class datalayer
 		$this->db->sql_freeresult($result);
 
 		return $ranks;
+	}
+	
+	private function cleanRules()
+	{
+		$this->rules_loaded = false;
+		$this->cache->destroy('_rules');
+		$this->cache->destroy('sql', $this->notices_rules_table);
+	}
+
+	public function deleteRules($rules)
+	{
+		if (!is_array($rules))
+		{
+			$rules = array($rules);
+		}
+		$sql = "DELETE FROM " . $this->notices_rules_table . " WHERE notice_rule_id IN (" . implode(',', $rules) . ")";
+		$result = $this->db->sql_query($sql);
+		$this->cleanRules();
+		
+		return $result;
+	}
+	
+	public function updateRules($rules)
+	{
+		if (!is_array($rules))
+		{
+			$rules = array($rules);
+		}
+		foreach ($rules as $rule)
+		{
+			$notice_rule_id = $rule['notice_rule_id'];
+			unset($rule['notice_rule_id']);
+			
+			$sql = "UPDATE {$this->notices_rules_table}
+				SET " . $this->db->sql_build_array('UPDATE', $rule) . "
+				WHERE notice_rule_id = " . $notice_rule_id;
+			$this->db->sql_query($sql);
+		}
+		$this->cleanRules();
+	}
+	
+	public function insertRules($rules)
+	{
+		if (!is_array($rules))
+		{
+			$rules = array($rules);
+		}
+		foreach ($rules as $rule)
+		{
+			$sql = "INSERT INTO {$this->notices_rules_table} " . $this->db->sql_build_array('INSERT', $rule);
+			$this->db->sql_query($sql);
+		}
+		$this->cleanRules();
 	}
 }

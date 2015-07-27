@@ -43,6 +43,12 @@ services:
             - @user
             - @fq.boardnotices.datalayer
 
+    fq.boardnotices.rules.not_in_usergroup:
+        class: fq\boardnotices\rules\not_in_usergroup
+        arguments:
+            - @user
+            - @fq.boardnotices.datalayer
+
     fq.boardnotices.rules.has_never_posted:
         class: fq\boardnotices\rules\has_never_posted
         arguments:

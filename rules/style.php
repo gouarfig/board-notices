@@ -24,7 +24,7 @@ class style implements rule
 
 	public function getDisplayName()
 	{
-		return "User style is";
+		return "User style is either one of these selected styles";
 	}
 
 	public function getType()
@@ -50,9 +50,9 @@ class style implements rule
 		{
 			foreach ($styles as $style_id)
 			{
-				$valid = ($this->user->data['user_style'] == $style_id);
-				if (!$valid)
+				if ($this->user->data['user_style'] == $style_id)
 				{
+					$valid = true;
 					break;
 				}
 			}

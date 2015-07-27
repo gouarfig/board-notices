@@ -12,7 +12,7 @@
 
 namespace fq\boardnotices\rules;
 
-class in_default_usergroup implements rule
+class not_in_usergroup implements rule
 {
 
 	private $user;
@@ -26,12 +26,12 @@ class in_default_usergroup implements rule
 
 	public function getDisplayName()
 	{
-		return "User default group is";
+		return "User does not belong to all these selected groups";
 	}
 
 	public function getType()
 	{
-		return 'list';
+		return 'multiple choice';
 	}
 
 	public function getPossibleValues()
@@ -42,8 +42,24 @@ class in_default_usergroup implements rule
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$group_id = (int) $conditions;
-		$valid = $this->user->data['group_id'] == $group_id;
+
+		$groups = @unserialize($conditions);
+		if ($groups === false)
+		{
+			// There's only one group
+			$groups = array((int) $conditions);
+		}
+		if (!empty($groups))
+		{
+			foreach ($groups as $group_id)
+			{
+				$valid = !$this->data_layer->isUserInGroupId($group_id);
+				if (!$valid)
+				{
+					break;
+				}
+			}
+		}
 		return $valid;
 	}
 

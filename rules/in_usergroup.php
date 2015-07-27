@@ -26,7 +26,7 @@ class in_usergroup implements rule
 
 	public function getDisplayName()
 	{
-		return "User is in group";
+		return "User belongs to either one of these selected groups";
 	}
 
 	public function getType()
@@ -53,9 +53,9 @@ class in_usergroup implements rule
 		{
 			foreach ($groups as $group_id)
 			{
-				$valid = $this->data_layer->isUserInGroupId($group_id);
-				if (!$valid)
+				if ($this->data_layer->isUserInGroupId($group_id))
 				{
+					$valid = true;
 					break;
 				}
 			}

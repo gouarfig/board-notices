@@ -59,7 +59,7 @@ class birthday implements rule
 
 	public function getDisplayName()
 	{
-		return "Today is user's birthday";
+		return "On user's birthday";
 	}
 
 	public function getType()

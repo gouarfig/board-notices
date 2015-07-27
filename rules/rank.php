@@ -44,12 +44,12 @@ class rank implements rule
 
 	public function getDisplayName()
 	{
-		return "User rank is";
+		return "User rank is any of these selected ranks";
 	}
 
 	public function getType()
 	{
-		return 'list';
+		return 'multiple choice';
 	}
 
 	public function getPossibleValues()
@@ -77,7 +77,7 @@ class rank implements rule
 			foreach ($ranks as $rank_id)
 			{
 				$valid = ($user_rank == $rank_id);
-				if (!$valid)
+				if ($valid)
 				{
 					break;
 				}

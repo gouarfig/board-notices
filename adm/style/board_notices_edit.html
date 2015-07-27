@@ -81,6 +81,38 @@
 			<dd style="margin-{S_CONTENT_FLOW_BEGIN}: 90px; margin-top: 10px;"><strong>{L_OPTIONS}{L_COLON} </strong>{BBCODE_STATUS} :: {IMG_STATUS} :: {FLASH_STATUS} :: {URL_STATUS} :: {SMILIES_STATUS}</dd>
 		</dl>
 	</fieldset>
+	
+	<h1>{ACP_BOARD_NOTICE_RULES}</h1>
+
+	<p>{ACP_BOARD_NOTICE_RULES_EXPLAIN}</p>
+
+	<table class="table1 zebra-table">
+	<thead>
+	<tr>
+		<th>{BOARD_NOTICE_RULE_ACTIVE}</th>
+		<th>{BOARD_NOTICE_RULE_NAME}</th>
+		<th>{BOARD_NOTICE_RULE_VALUE}</th>
+	</tr>
+	</thead>
+	<tbody>
+	<!-- BEGIN allrules -->
+		<tr>
+			<td style="text-align: right;">
+				<input type="hidden" name="notice_rule_id[{allrules.RULE_NAME}]" value="{allrules.NOTICE_RULE_ID}" />
+				<input type="checkbox" name="notice_rule_checked[{allrules.RULE_NAME}]" value="1"<!-- IF allrules.NOTICE_RULE_CHECKED --> checked<!-- ENDIF -->/>
+			</td>
+			<td style="text-align: right;">
+				<strong>{allrules.RULE_DESCRIPTION}</strong>
+			</td>
+			<td>{allrules.RULE_CONDITIONS}</td>
+		</tr>
+	<!-- BEGINELSE -->
+		<tr class="row3">
+			<td colspan="{ALLRULES_COLSPAN}">{L_ACP_NO_ITEMS}</td>
+		</tr>
+	<!-- END allrules -->
+	</tbody>
+	</table>
 
 	<fieldset class="submit-buttons">
 		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;

@@ -26,7 +26,7 @@ class in_forum implements rule
 
 	public function getDisplayName()
 	{
-		return "User is currently browsing forum(s)";
+		return "User is currently browsing one of these forum(s)";
 	}
 
 	public function getType()

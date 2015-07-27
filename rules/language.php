@@ -26,7 +26,7 @@ class language implements rule
 
 	public function getDisplayName()
 	{
-		return "User language is";
+		return "User language is either one of these selected languages";
 	}
 
 	public function getType()
@@ -53,7 +53,7 @@ class language implements rule
 			foreach ($languages as $language_id)
 			{
 				$valid = ($this->user->data['user_lang'] == $language_id);
-				if (!$valid)
+				if ($valid)
 				{
 					break;
 				}

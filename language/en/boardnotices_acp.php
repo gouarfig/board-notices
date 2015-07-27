@@ -40,8 +40,7 @@ if (empty($lang) || !is_array($lang))
 $lang = array_merge($lang, array(
 	'ACP_BOARD_NOTICES_MANAGER'				=> 'Board Notices manager',
 	'ACP_BOARD_NOTICES_MANAGER_EXPLAIN'		=> "Add, edit or delete your board notices<br />"
-											. "Please note that only one board notice can be displayed to the user at a time: It's the first one that fills the conditions that will be displayed.<br />"
-											. "Please click on the notice name to edit the conditions the message should be displayed.",
+											. "Please note that only one board notice can be displayed to the user at a time: It's the first one that fills the conditions that will be displayed.<br />",
 
 	'ACP_BOARD_NOTICE_SETTINGS'				=> 'Board Notice settings',
 	'ACP_BOARD_NOTICE_SETTINGS_EXPLAIN'		=> 'Please fill-in the board notice information',

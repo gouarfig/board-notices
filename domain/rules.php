@@ -18,6 +18,18 @@ class rules
 	private $root_path;
 	private $rules;
 	private $rules_loaded = false;
+	private $default_order = array(
+		'not_logged_in',
+		'birthday',
+		'has_never_posted',
+		'in_forum',
+		'language',
+		'style',
+		'rank',
+		'in_default_usergroup',
+		'in_usergroup',
+		'not_in_usergroup',
+	);
 
 	public function __construct($root_path)
 	{
@@ -69,7 +81,6 @@ class rules
 				}
 			}
 			$this->rules_loaded = true;
-			ksort($this->rules);
 		}
 	}
 
@@ -81,9 +92,17 @@ class rules
 			$this->loadRules();
 		}
 
+		foreach ($this->default_order as $rule_name)
+		{
+			$rule_names[$rule_name] = $this->rules[$rule_name]->getDisplayName();
+		}
+		// Add the remaining ones not on the order list
 		foreach ($this->rules as $name => $rule)
 		{
-			$rule_names[$name] = $rule->getDisplayName();
+			if (!isset($rule_names[$name]))
+			{
+				$rule_names[$name] = $rule->getDisplayName();
+			}
 		}
 
 		return $rule_names;
