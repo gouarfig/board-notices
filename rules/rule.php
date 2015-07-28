@@ -16,5 +16,6 @@ interface rule {
 	public function getType();
 	public function getPossibleValues();
 	public function isTrue($conditions);
+	public function getAvailableVars();
 	public function getTemplateVars();
 }

@@ -18,6 +18,8 @@ services:
         arguments:
             - @user
             - @template
+            - @request
+            - @fq.boardnotices.datalayer
         tags:
             - { name: event.listener }
 

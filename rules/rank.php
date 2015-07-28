@@ -86,6 +86,11 @@ class rank implements rule
 		return $valid;
 	}
 
+	public function getAvailableVars()
+	{
+		return array('RANK');
+	}
+
 	public function getTemplateVars()
 	{
 		$user_rank = phpbb_get_user_rank($this->user->data, ($this->user->data['user_id'] == ANONYMOUS) ? false : $this->user->data['user_posts']);

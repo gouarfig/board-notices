@@ -80,11 +80,14 @@ class birthday implements rule
 		$now = $this->user->create_datetime();
 		$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset());
 		$valid = (($bday_day == $now['mday']) && ($bday_month == $now['mon']));
-		if ($valid)
-		{
-			$this->setTemplateVars($this->age($bday_day, $bday_month, $bday_year));
-		}
+		// We create the 'age' variable in all cases (so it can be displayed in preview mode)
+		$this->setTemplateVars($this->age($bday_day, $bday_month, $bday_year));
 		return $valid;
+	}
+
+	public function getAvailableVars()
+	{
+		return array('AGE');
 	}
 
 	public function getTemplateVars()

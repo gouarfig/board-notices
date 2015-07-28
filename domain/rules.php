@@ -128,4 +128,26 @@ class rules
 		return isset($this->rules[$rule_name]) ? $this->rules[$rule_name]->getPossibleValues() : '';
 	}
 
+	public function getAvailableVars($rule_name)
+	{
+		if (!$this->rules_loaded)
+		{
+			$this->loadRules();
+		}
+
+		$available_vars = array();
+		if (isset($this->rules[$rule_name]))
+		{
+			$vars = $this->rules[$rule_name]->getAvailableVars();
+			if (!empty($vars))
+			{
+				foreach ($vars as $variable)
+				{
+					$available_vars[] = '{' . $variable . '}';
+				}
+			}
+		}
+		return $available_vars;
+	}
+
 }

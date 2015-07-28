@@ -19,6 +19,8 @@ class listener implements EventSubscriberInterface
 
 	protected $user = null;
 	protected $template = '';
+	protected $request;
+	protected $data_layer;
 
 	static public function getSubscribedEvents()
 	{
@@ -32,22 +34,12 @@ class listener implements EventSubscriberInterface
 	 *
 	 * @param \phpbb\user $user
 	 */
-	public function __construct(\phpbb\user $user, \phpbb\template\template $template)
+	public function __construct(\phpbb\user $user, \phpbb\template\template $template, \phpbb\request\request $request, \fq\boardnotices\datalayer $data_layer)
 	{
 		$this->user = $user;
 		$this->template = $template;
-	}
-
-	protected function getDataLayer()
-	{
-		global $phpbb_container;
-		static $data_layer = null;
-
-		if (is_null($data_layer))
-		{
-			$data_layer = $phpbb_container->get('fq.boardnotices.datalayer');
-		}
-		return $data_layer;
+		$this->request = $request;
+		$this->data_layer = $data_layer;
 	}
 
 	/**
@@ -61,22 +53,39 @@ class listener implements EventSubscriberInterface
 		$notices = array();
 		$template_vars = $this->getDefaultTemplateVars();
 
-		$data_layer = $this->getDataLayer();
-		$raw_notices = $data_layer->getActiveNotices();
-		foreach ($raw_notices as $raw_notice)
+		$preview_key = $this->request->variable('bnpk', '');
+		$preview_id = $this->request->variable('bnid', 0);
+		if (!empty($preview_key) && !empty($preview_id))
 		{
-			$rules = $data_layer->getRulesFor($raw_notice['notice_id']);
+			// Force the preview of a notice
+			$raw_notice = $this->data_layer->getNoticeFromId($preview_id);
+			$rules = $this->data_layer->getRulesFor($preview_id);
 			$notices[] = new \fq\boardnotices\domain\notice($raw_notice, $rules);
 			unset($rules);
+			$force_all_rules = true;
+			$preview = true;
 		}
-		unset($raw_notices);
+		else
+		{
+			// Normal notices mode
+			$raw_notices = $this->data_layer->getActiveNotices();
+			foreach ($raw_notices as $raw_notice)
+			{
+				$rules = $this->data_layer->getRulesFor($raw_notice['notice_id']);
+				$notices[] = new \fq\boardnotices\domain\notice($raw_notice, $rules);
+				unset($rules);
+			}
+			unset($raw_notices);
+			$force_all_rules = false;
+			$preview = false;
+		}
 
 		$notice_message = '';
 		$notice_bgcolor = '';
 
 		foreach ($notices as $notice)
 		{
-			if ($notice->hasValidatedAllRules())
+			if ($notice->hasValidatedAllRules($force_all_rules, $preview))
 			{
 				// Prepare board announcement message for display
 				$notice_message = generate_text_for_display(
@@ -104,6 +113,7 @@ class listener implements EventSubscriberInterface
 	private function getDefaultTemplateVars()
 	{
 		$template_vars = array(
+			'SESSIONID' => $this->user->data['session_id'],
 			'USERID' => $this->user->data['user_id'],
 			'USERNAME' => $this->user->data['username'],
 		);

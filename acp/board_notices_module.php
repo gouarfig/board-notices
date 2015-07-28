@@ -146,6 +146,8 @@ class board_notices_module
 
 	public function displayManager()
 	{
+		global $phpbb_root_path, $phpEx;
+
 		/** @var \fq\boardnotices\datalayer */
 		$data_layer = $this->getDataLayer();
 
@@ -165,7 +167,7 @@ class board_notices_module
 			'BOARD_NOTICE_TITLE' => $this->user->lang('BOARD_NOTICE_TITLE'),
 			'BOARD_NOTICE_RULES' => $this->user->lang('BOARD_NOTICE_RULES'),
 			'BOARD_NOTICE_ADD' => $this->user->lang('BOARD_NOTICE_ADD'),
-			'COLSPAN' => 5,
+			'COLSPAN' => 6,
 		));
 
 		$notices = $data_layer->getAllNotices();
@@ -175,6 +177,7 @@ class board_notices_module
 			$this->template->assign_block_vars('items', array(
 				'S_SPACER' => false,
 				'TITLE' => $notice['title'],
+				'PREVIEW_LINK' => append_sid("{$phpbb_root_path}index.$phpEx") . "&bnpk=" . $this->config['boardnotices_previewkey'] . "&bnid={$notice['notice_id']}",
 				'RULES' => count($rules),
 				'ACTIVE' => $notice['active'] ? 'Yes' : 'No',
 				'ENABLED' => $notice['active'] ? true : false,
@@ -250,7 +253,7 @@ class board_notices_module
 			'S_BBCODE_DISABLE_CHECKED' => !$notice_text_edit['allow_bbcode'],
 			'S_SMILIES_DISABLE_CHECKED' => !$notice_text_edit['allow_smilies'],
 			'S_MAGIC_URL_DISABLE_CHECKED' => !$notice_text_edit['allow_urls'],
-			'BBCODE_STATUS' => $this->user->lang('BBCODE_IS_ON'),
+			'BBCODE_STATUS' => $this->user->lang('BBCODE_IS_ON', '', ''),
 			'SMILIES_STATUS' => $this->user->lang('SMILIES_ARE_ON'),
 			'IMG_STATUS' => $this->user->lang('IMAGES_ARE_ON'),
 			'FLASH_STATUS' => $this->user->lang('FLASH_IS_ON'),
@@ -260,13 +263,16 @@ class board_notices_module
 			'S_BBCODE_IMG' => true,
 			'S_BBCODE_FLASH' => true,
 			'S_LINKS_ALLOWED' => true,
+			'L_INFO' => $this->user->lang('L_INFORMATION'),
+			'VARIABLES_EXPLAIN' => $this->user->lang('VARIABLES_EXPLAIN'),
 			'U_BACK' => $this->u_action,
 			'U_ACTION' => $this->u_action . '&amp;action=' . $action,
-			'ALLRULES_COLSPAN' => 3,
+			'ALLRULES_COLSPAN' => 4,
 			'ACP_BOARD_NOTICE_RULES' => $this->user->lang('ACP_BOARD_NOTICE_RULES'),
 			'ACP_BOARD_NOTICE_RULES_EXPLAIN' => $this->user->lang('ACP_BOARD_NOTICE_RULES_EXPLAIN'),
 			'BOARD_NOTICE_RULE_NAME' => $this->user->lang('BOARD_NOTICE_RULE_NAME'),
 			'BOARD_NOTICE_RULE_VALUE' => $this->user->lang('BOARD_NOTICE_RULE_VALUE'),
+			'BOARD_NOTICE_RULE_VARIABLES' => $this->user->lang('BOARD_NOTICE_RULE_VARIABLES'),
 		));
 
 		// Assigning custom bbcodes
@@ -283,6 +289,7 @@ class board_notices_module
 				'RULE_CONDITIONS' => $this->getDisplayConditions(
 						$this->rules_manager->getRuleType($rule_name), $this->rules_manager->getRuleValues($rule_name), isset($data['notice_rule_conditions'][$rule_name]) ? $data['notice_rule_conditions'][$rule_name] : array(), "notice_rule_conditions[{$rule_name}]"
 				),
+				'RULE_VARIABLES' => implode(', ', $this->rules_manager->getAvailableVars($rule_name)),
 			));
 		}
 	}

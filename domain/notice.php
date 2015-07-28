@@ -25,7 +25,7 @@ class notice
 		$this->rules = $rules;
 	}
 
-	private function validateRule($rule_details)
+	private function validateRule($rule_details, $preview = false)
 	{
 		global $phpbb_container, $phpbb_log, $user;
 
@@ -53,7 +53,7 @@ class notice
 		if (!is_null($rule))
 		{
 			$valid = $rule->isTrue($rule_details['conditions']);
-			if ($valid)
+			if ($valid || $preview)
 			{
 				$this->template_vars = array_merge($this->template_vars, $rule->getTemplateVars());
 			}
@@ -61,21 +61,24 @@ class notice
 		return $valid;
 	}
 
-	public function hasValidatedAllRules()
+	public function hasValidatedAllRules($force_all_rules = false, $preview = false)
 	{
 		$valid = true;
 		if (!empty($this->rules))
 		{
 			foreach ($this->rules as $rule)
 			{
-				if (!$this->validateRule($rule))
+				if (!$this->validateRule($rule, $preview))
 				{
 					$valid = false;
-					break;
+					if (!$force_all_rules)
+					{
+						break;
+					}
 				}
 			}
 		}
-		return $valid;
+		return $valid || $preview;
 	}
 
 	public function isLastNotice()

@@ -62,6 +62,11 @@ class language implements rule
 		return $valid;
 	}
 
+	public function getAvailableVars()
+	{
+		return array();
+	}
+
 	public function getTemplateVars()
 	{
 		return array();
