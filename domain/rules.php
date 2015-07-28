@@ -22,6 +22,7 @@ class rules
 		'not_logged_in',
 		'birthday',
 		'anniversary',
+		'date',
 		'has_never_posted',
 		'has_not_posted_for',
 		'in_forum',
