@@ -28,6 +28,11 @@ services:
         arguments:
             - %core.root_path%
 
+    fq.boardnotices.rules.anniversary:
+        class: fq\boardnotices\rules\anniversary
+        arguments:
+            - @user
+
     fq.boardnotices.rules.birthday:
         class: fq\boardnotices\rules\birthday
         arguments:
@@ -87,3 +92,11 @@ services:
         arguments:
             - @user
             - @request
+
+    fq.boardnotices.rules.has_not_posted_for:
+        class: fq\boardnotices\rules\has_not_posted_for
+        arguments:
+            - @user
+
+    fq.boardnotices.rules.date:
+        class: fq\boardnotices\rules\date

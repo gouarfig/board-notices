@@ -61,7 +61,7 @@ $lang = array_merge($lang, array(
 
 	'L_INFORMATION'							=> 'Information',
 	'VARIABLES_EXPLAIN'						=> 'You may include the following special variables in your text:<br />'
-												. '{SESSIONID}, {USERID}, {USERNAME} and some other when you activate a particuliar rule. Check the rules to see which variables are available.',
+												. '{SESSIONID}, {USERID}, {USERNAME}, {LASTVISIT}, {LASTPOST}, {REGISTERED} and some other when you activate a particuliar rule. Check the rules to see which variables are available.',
 
 	'BOARD_NOTICE_RULE_NAME'				=> 'Rule',
 	'BOARD_NOTICE_RULE_VALUE'				=> 'Conditions',

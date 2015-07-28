@@ -21,7 +21,9 @@ class rules
 	private $default_order = array(
 		'not_logged_in',
 		'birthday',
+		'anniversary',
 		'has_never_posted',
+		'has_not_posted_for',
 		'in_forum',
 		'language',
 		'style',

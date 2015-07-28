@@ -116,6 +116,9 @@ class listener implements EventSubscriberInterface
 			'SESSIONID' => $this->user->data['session_id'],
 			'USERID' => $this->user->data['user_id'],
 			'USERNAME' => $this->user->data['username'],
+			'LASTVISIT' => $this->user->format_date($this->user->data['user_lastvisit']),
+			'LASTPOST' => $this->user->format_date($this->user->data['user_lastpost_time']),
+			'REGISTERED' => $this->user->format_date($this->user->data['user_regdate']),
 		);
 		return $template_vars;
 	}

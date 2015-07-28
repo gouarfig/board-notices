@@ -15,6 +15,7 @@ class rank implements rule
 {
 	private $user;
 	private $data_layer;
+	private $user_rank = null;
 
 	public function __construct(\phpbb\user $user, \fq\boardnotices\datalayer $data_layer)
 	{
@@ -42,6 +43,19 @@ class rank implements rule
 		return $user_rank;
 	}
 
+	private function getUserRank()
+	{
+		if (is_null($this->user_rank))
+		{
+			$this->user_rank = (int) $this->user->data['user_rank'];
+			if ($this->user_rank == 0)
+			{
+				$this->user_rank = $this->calculateUserRank($this->user->data['user_posts']);
+			}
+		}
+		return $this->user_rank;
+	}
+
 	public function getDisplayName()
 	{
 		return "User rank is any of these selected ranks";
@@ -61,11 +75,7 @@ class rank implements rule
 	{
 		$valid = false;
 
-		$user_rank = (int) $this->user->data['user_rank'];
-		if ($user_rank == 0)
-		{
-			$user_rank = $this->calculateUserRank($this->user->data['user_posts']);
-		}
+		$user_rank = $this->getUserRank();
 		$ranks = @unserialize($conditions);
 		if ($ranks === false)
 		{
@@ -88,13 +98,14 @@ class rank implements rule
 
 	public function getAvailableVars()
 	{
-		return array('RANK');
+		return array('RANKID', 'RANK');
 	}
 
 	public function getTemplateVars()
 	{
 		$user_rank = phpbb_get_user_rank($this->user->data, ($this->user->data['user_id'] == ANONYMOUS) ? false : $this->user->data['user_posts']);
 		return array(
+			'RANKID' => $this->getUserRank(),
 			'RANK' => $user_rank['title'],
 		);
 	}

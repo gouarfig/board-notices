@@ -310,6 +310,37 @@ class board_notices_module
 		}
 		switch ($type)
 		{
+			case 'int':
+				$display .= '<input type="text" maxlength="5" size="10" name="' . $input_name . '[]" value="' . $selected[0] . '">';
+				break;
+
+			case 'date':
+				$display .= $this->user->lang('DAY') . $this->user->lang('COLON');
+				$display .= '&nbsp;<select name="' . $input_name . '[0]">';
+				$display .= '<option value="0">---</option>';
+				for ($i = 1; $i <= 31; $i++)
+				{
+					$display .= '<option value="' . $i . '"' . (($selected[0] == $i) ? ' selected' : '') . '>' . $i . '</option>';
+				}
+				$display .= '</select>&nbsp;';
+				$display .= $this->user->lang('MONTH') . $this->user->lang('COLON');
+				$display .= '&nbsp;<select name="' . $input_name . '[1]">';
+				$display .= '<option value="0">---</option>';
+				for ($i = 1; $i <= 12; $i++)
+				{
+					$display .= '<option value="' . $i . '"' . (($selected[1] == $i) ? ' selected' : '') . '>' . $i . '</option>';
+				}
+				$display .= '</select>&nbsp;';
+				$display .= $this->user->lang('YEAR') . $this->user->lang('COLON');
+				$display .= '&nbsp;<select name="' . $input_name . '[2]">';
+				$display .= '<option value="0">---</option>';
+				for ($i = 2015; $i <= 2038; $i++)
+				{
+					$display .= '<option value="' . $i . '"' . (($selected[2] == $i) ? ' selected' : '') . '>' . $i . '</option>';
+				}
+				$display .= '</select>&nbsp;';
+				break;
+
 			case 'list':
 			case 'multiple choice':
 				$size = (count($values) < 10) ? count($values) : 10;
