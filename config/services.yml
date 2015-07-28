@@ -65,6 +65,8 @@ services:
         arguments:
             - @user
             - @fq.boardnotices.datalayer
+            - @request
+            - @config
 
     fq.boardnotices.rules.language:
         class: fq\boardnotices\rules\language

@@ -15,11 +15,15 @@ class style implements rule
 {
 	private $user;
 	private $data_layer;
+	private $request;
+	private $config;
 
-	public function __construct(\phpbb\user $user, \fq\boardnotices\datalayer $data_layer)
+	public function __construct(\phpbb\user $user, \fq\boardnotices\datalayer $data_layer, \phpbb\request\request $request, \phpbb\config\config $config)
 	{
 		$this->user = $user;
 		$this->data_layer = $data_layer;
+		$this->request = $request;
+		$this->config = $config;
 	}
 
 	public function getDisplayName()
@@ -40,6 +44,16 @@ class style implements rule
 	public function isTrue($conditions)
 	{
 		$valid = false;
+		
+		if ($this->user->data['user_id'] == ANONYMOUS)
+		{
+			$user_style = $this->request_cookie(intval($this->user->data['user_style']));
+		}
+		else
+		{
+			$user_style = $this->user->data['user_style'];
+		}
+		
 		$styles = @unserialize($conditions);
 		if ($styles === false)
 		{
@@ -50,7 +64,7 @@ class style implements rule
 		{
 			foreach ($styles as $style_id)
 			{
-				if ($this->user->data['user_style'] == $style_id)
+				if ($user_style == $style_id)
 				{
 					$valid = true;
 					break;
@@ -63,6 +77,13 @@ class style implements rule
 	public function getTemplateVars()
 	{
 		return array();
+	}
+	
+	private function request_cookie($default = null)
+	{
+		$name = $this->config['cookie_name'] . '_style';
+
+		return $this->request->variable($name, $default, false, \phpbb\request\request_interface::COOKIE);
 	}
 
 }
