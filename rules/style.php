@@ -1,18 +1,20 @@
 <?php
+
 /**
-*
-* Board Notices Manager
-*
-* @version 1.0.0
-* @copyright (c) 2015 Fred Quointeau
-* @license GNU General Public License, version 2 (GPL-2.0)
-*
-*/
+ *
+ * Board Notices Manager
+ *
+ * @version 1.0.0
+ * @copyright (c) 2015 Fred Quointeau
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ *
+ */
 
 namespace fq\boardnotices\rules;
 
 class style implements rule
 {
+
 	private $user;
 	private $data_layer;
 	private $request;
@@ -44,7 +46,7 @@ class style implements rule
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		
+
 		if ($this->user->data['user_id'] == ANONYMOUS)
 		{
 			$user_style = $this->request_cookie(intval($this->user->data['user_style']));
@@ -53,7 +55,7 @@ class style implements rule
 		{
 			$user_style = $this->user->data['user_style'];
 		}
-		
+
 		$styles = @unserialize($conditions);
 		if ($styles === false)
 		{
@@ -78,7 +80,7 @@ class style implements rule
 	{
 		return array();
 	}
-	
+
 	private function request_cookie($default = null)
 	{
 		$name = $this->config['cookie_name'] . '_style';
