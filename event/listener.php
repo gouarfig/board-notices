@@ -18,6 +18,7 @@ class listener implements EventSubscriberInterface
 {
 
 	protected $user = null;
+	protected $config = null;
 	protected $template = '';
 	protected $request;
 	protected $data_layer;
@@ -34,9 +35,10 @@ class listener implements EventSubscriberInterface
 	 *
 	 * @param \phpbb\user $user
 	 */
-	public function __construct(\phpbb\user $user, \phpbb\template\template $template, \phpbb\request\request $request, \fq\boardnotices\datalayer $data_layer)
+	public function __construct(\phpbb\user $user, \phpbb\config\config $config, \phpbb\template\template $template, \phpbb\request\request $request, \fq\boardnotices\datalayer $data_layer)
 	{
 		$this->user = $user;
+		$this->config = $config;
 		$this->template = $template;
 		$this->request = $request;
 		$this->data_layer = $data_layer;
@@ -55,7 +57,7 @@ class listener implements EventSubscriberInterface
 
 		$preview_key = $this->request->variable('bnpk', '');
 		$preview_id = $this->request->variable('bnid', 0);
-		if (!empty($preview_key) && !empty($preview_id))
+		if (!empty($preview_key) && !empty($preview_id) && ($preview_key == $this->config['boardnotices_previewkey']))
 		{
 			// Force the preview of a notice
 			$raw_notice = $this->data_layer->getNoticeFromId($preview_id);

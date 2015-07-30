@@ -21,6 +21,7 @@ class datalayer
 	private $config;
 	private $notices_table;
 	private $notices_rules_table;
+	private $notices_seen_table;
 	private $notices_loaded = false;
 	private $active_notices_loaded = false;
 	private $notices = array();
@@ -33,7 +34,7 @@ class datalayer
 	private $allgroups_loaded = false;
 	private $allgroups = array();
 
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\cache\service $cache, \phpbb\config\config $config, $notices_table, $notices_rules_table)
+	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\cache\service $cache, \phpbb\config\config $config, $notices_table, $notices_rules_table, $notices_seen_table)
 	{
 		$this->db = $db;
 		$this->user = $user;
@@ -41,6 +42,7 @@ class datalayer
 		$this->config = $config;
 		$this->notices_table = $notices_table;
 		$this->notices_rules_table = $notices_rules_table;
+		$this->notices_seen_table = $notices_seen_table;
 	}
 
 	private function loadNotices($active_only = true)
@@ -269,6 +271,31 @@ class datalayer
 		$this->cleanNotices();
 
 		return $move_executed;
+	}
+
+	public function deleteNotice($notice_id)
+	{
+		$deleted = false;
+		$notice = $this->getNoticeFromId($notice_id);
+		if (!is_null($notice))
+		{
+			$sql = "DELETE FROM {$this->notices_seen_table} WHERE notice_id=" . (int) $notice_id;
+			$this->db->sql_query($sql);
+
+			$sql = "DELETE FROM {$this->notices_rules_table} WHERE notice_id=" . (int) $notice_id;
+			$this->db->sql_query($sql);
+
+			$sql = "DELETE FROM {$this->notices_table} WHERE notice_id=" . (int) $notice_id;
+			$this->db->sql_query($sql);
+
+			if ($notice['notice_order'] > 0)
+			{
+				$sql = "UPDATE {$this->notices_table} SET notice_order=notice_order-1 WHERE notice_order>=" . (int) $notice['notice_order'];
+				$this->db->sql_query($sql);
+			}
+			$deleted = true;
+		}
+		return $deleted;
 	}
 
 	public function enableNotice($action, $notice_id)

@@ -1,6 +1,7 @@
 parameters:
     tables.boardnotices.notices: %core.table_prefix%notices
     tables.boardnotices.notices_rules: %core.table_prefix%notices_rules
+    tables.boardnotices.notices_seen: %core.table_prefix%notices_seen
 
 services:
     fq.boardnotices.datalayer:
@@ -12,11 +13,13 @@ services:
             - @config
             - %tables.boardnotices.notices%
             - %tables.boardnotices.notices_rules%
+            - %tables.boardnotices.notices_seen%
 
     fq.boardnotices.listener:
         class: fq\boardnotices\event\listener
         arguments:
             - @user
+            - @config
             - @template
             - @request
             - @fq.boardnotices.datalayer

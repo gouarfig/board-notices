@@ -132,6 +132,16 @@ class board_notices_module
 					$this->moveNotice($action, $notice_id);
 					break;
 
+				case 'move_first':
+					break;
+
+				case 'move_last':
+					break;
+
+				case 'delete':
+					$this->deleteNotice($notice_id);
+					break;
+
 				case 'edit_rules':
 					$this->displayEditRulesForm($notice_id);
 					break;
@@ -187,6 +197,14 @@ class board_notices_module
 				'U_DELETE' => $this->u_action . '&amp;action=delete&amp;id=' . $notice['notice_id'],
 				'U_MOVE_UP' => $this->u_action . '&amp;action=move_up&amp;id=' . $notice['notice_id'],
 				'U_MOVE_DOWN' => $this->u_action . '&amp;action=move_down&amp;id=' . $notice['notice_id'],
+
+				'U_MOVE_FIRST' => $this->u_action . '&amp;action=move_first&amp;id=' . $notice['notice_id'],
+				'U_MOVE_LAST' => $this->u_action . '&amp;action=move_last&amp;id=' . $notice['notice_id'],
+
+				'ICON_MOVE_FIRST'				=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first.gif" alt="' . $user->lang['MOVE_UP'] . '" title="' . $user->lang['MOVE_UP'] . '" />',
+				'ICON_MOVE_FIRST_DISABLED'		=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first_disabled.gif" alt="' . $user->lang['MOVE_UP'] . '" title="' . $user->lang['MOVE_UP'] . '" />',
+				'ICON_MOVE_LAST'			=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last.gif" alt="' . $user->lang['MOVE_DOWN'] . '" title="' . $user->lang['MOVE_DOWN'] . '" />',
+				'ICON_MOVE_LAST_DISABLED'	=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last_disabled.gif" alt="' . $user->lang['MOVE_DOWN'] . '" title="' . $user->lang['MOVE_DOWN'] . '" />',
 			));
 			unset($rules);
 		}
@@ -361,6 +379,9 @@ class board_notices_module
 				$display .= "</select>";
 				break;
 
+			case 'yesno':
+				break;
+
 			default:
 				break;
 		}
@@ -379,6 +400,22 @@ class board_notices_module
 			$json_response = new \phpbb\json_response;
 			$json_response->send(array(
 				'success' => $move_executed,
+			));
+		}
+	}
+
+	public function deleteNotice($notice_id)
+	{
+		/** @var \fq\boardnotices\datalayer */
+		$data_layer = $this->getDataLayer();
+
+		$delete_executed = $data_layer->deleteNotice($notice_id);
+
+		if ($this->request->is_ajax())
+		{
+			$json_response = new \phpbb\json_response;
+			$json_response->send(array(
+				'success' => $delete_executed,
 			));
 		}
 	}

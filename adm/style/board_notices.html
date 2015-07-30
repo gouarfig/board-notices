@@ -39,11 +39,16 @@
 		<td style="text-align: center;">{items.ACTIVE}</td>
 		<td style="white-space: nowrap; text-align: center; vertical-align: middle;">&nbsp;<!-- IF items.ENABLED --><a href="{items.U_DISABLE}">{L_DISABLE}</a><!-- ELSE --><a href="{items.U_ENABLE}">{L_ENABLE}</a><!-- ENDIF -->&nbsp;</td>
 		<td class="actions" style="text-align: right;">
+			<span class="first-disabled" style="display:none;">{ICON_MOVE_FIRST_DISABLED}</span>
+			<span class="first"><a href="{items.U_MOVE_FIRST}" data-ajax="row_first">{ICON_MOVE_FIRST}</a></span>
 			<span class="up-disabled" style="display:none;">{ICON_MOVE_UP_DISABLED}</span>
 			<span class="up"><a href="{items.U_MOVE_UP}" data-ajax="row_up">{ICON_MOVE_UP}</a></span>
 			<span class="down-disabled" style="display:none;">{ICON_MOVE_DOWN_DISABLED}</span>
 			<span class="down"><a href="{items.U_MOVE_DOWN}" data-ajax="row_down">{ICON_MOVE_DOWN}</a></span>
-			<a href="{items.U_EDIT}">{ICON_EDIT}</a> <a href="{items.U_DELETE}" data-ajax="row_delete">{ICON_DELETE}</a>
+			<span class="last-disabled" style="display:none;">{ICON_MOVE_LAST_DISABLED}</span>
+			<span class="last"><a href="{items.U_MOVE_LAST}" data-ajax="row_last">{ICON_MOVE_LAST}</a></span>
+			<a href="{items.U_EDIT}">{ICON_EDIT}</a>
+			<a href="{items.U_DELETE}" data-ajax="row_delete">{ICON_DELETE}</a>
 		</td>
 	</tr>
 <!-- BEGINELSE -->
