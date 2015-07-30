@@ -133,9 +133,11 @@ class board_notices_module
 					break;
 
 				case 'move_first':
+					$this->moveNoticeFirst($notice_id);
 					break;
 
 				case 'move_last':
+					$this->moveNoticeLast($notice_id);
 					break;
 
 				case 'delete':
@@ -172,12 +174,18 @@ class board_notices_module
 
 		// Output data to the template
 		$this->template->assign_vars(array(
+			'BOARD_NOTICES_ENABLED' => true,
 			'ACP_BOARD_NOTICES_MANAGER' => $this->user->lang('ACP_BOARD_NOTICES_MANAGER'),
 			'ACP_BOARD_NOTICES_MANAGER_EXPLAIN' => $this->user->lang('ACP_BOARD_NOTICES_MANAGER_EXPLAIN'),
 			'BOARD_NOTICE_TITLE' => $this->user->lang('BOARD_NOTICE_TITLE'),
 			'BOARD_NOTICE_RULES' => $this->user->lang('BOARD_NOTICE_RULES'),
 			'BOARD_NOTICE_ADD' => $this->user->lang('BOARD_NOTICE_ADD'),
 			'COLSPAN' => 6,
+
+			'ICON_MOVE_FIRST'			=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first.gif" alt="' . $this->user->lang['MOVE_FIRST'] . '" title="' . $this->user->lang['MOVE_FIRST'] . '" />',
+			'ICON_MOVE_FIRST_DISABLED'	=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first_disabled.gif" alt="' . $this->user->lang['MOVE_FIRST'] . '" title="' . $this->user->lang['MOVE_FIRST'] . '" />',
+			'ICON_MOVE_LAST'			=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last.gif" alt="' . $this->user->lang['MOVE_LAST'] . '" title="' . $this->user->lang['MOVE_LAST'] . '" />',
+			'ICON_MOVE_LAST_DISABLED'	=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last_disabled.gif" alt="' . $this->user->lang['MOVE_LAST'] . '" title="' . $this->user->lang['MOVE_LAST'] . '" />',
 		));
 
 		$notices = $data_layer->getAllNotices();
@@ -200,11 +208,6 @@ class board_notices_module
 
 				'U_MOVE_FIRST' => $this->u_action . '&amp;action=move_first&amp;id=' . $notice['notice_id'],
 				'U_MOVE_LAST' => $this->u_action . '&amp;action=move_last&amp;id=' . $notice['notice_id'],
-
-				'ICON_MOVE_FIRST'				=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first.gif" alt="' . $user->lang['MOVE_UP'] . '" title="' . $user->lang['MOVE_UP'] . '" />',
-				'ICON_MOVE_FIRST_DISABLED'		=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first_disabled.gif" alt="' . $user->lang['MOVE_UP'] . '" title="' . $user->lang['MOVE_UP'] . '" />',
-				'ICON_MOVE_LAST'			=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last.gif" alt="' . $user->lang['MOVE_DOWN'] . '" title="' . $user->lang['MOVE_DOWN'] . '" />',
-				'ICON_MOVE_LAST_DISABLED'	=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last_disabled.gif" alt="' . $user->lang['MOVE_DOWN'] . '" title="' . $user->lang['MOVE_DOWN'] . '" />',
 			));
 			unset($rules);
 		}
@@ -394,6 +397,38 @@ class board_notices_module
 		$data_layer = $this->getDataLayer();
 
 		$move_executed = $data_layer->moveNotice($action, $notice_id);
+
+		if ($this->request->is_ajax())
+		{
+			$json_response = new \phpbb\json_response;
+			$json_response->send(array(
+				'success' => $move_executed,
+			));
+		}
+	}
+
+	public function moveNoticeFirst($notice_id)
+	{
+		/** @var \fq\boardnotices\datalayer */
+		$data_layer = $this->getDataLayer();
+
+		$move_executed = $data_layer->moveNoticeFirst($notice_id);
+
+		if ($this->request->is_ajax())
+		{
+			$json_response = new \phpbb\json_response;
+			$json_response->send(array(
+				'success' => $move_executed,
+			));
+		}
+	}
+
+	public function moveNoticeLast($notice_id)
+	{
+		/** @var \fq\boardnotices\datalayer */
+		$data_layer = $this->getDataLayer();
+
+		$move_executed = $data_layer->moveNoticeLast($notice_id);
 
 		if ($this->request->is_ajax())
 		{

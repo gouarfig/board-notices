@@ -273,6 +273,53 @@ class datalayer
 		return $move_executed;
 	}
 
+	public function moveNoticeFirst($notice_id)
+	{
+		$move_executed = false;
+		$notice = $this->getNoticeFromId($notice_id);
+		if (!is_null($notice) && ($notice['notice_order'] > 1))
+		{
+			$sql = "UPDATE $this->notices_table
+				SET notice_order = notice_order +1
+				WHERE notice_order < {$notice['notice_order']}";
+			$this->db->sql_query($sql);
+			$move_executed = ($this->db->sql_affectedrows() > 0) ? true : false;
+
+			if ($move_executed)
+			{
+				$sql = "UPDATE $this->notices_table
+					SET notice_order = 1
+					WHERE notice_id = $notice_id";
+				$this->db->sql_query($sql);
+			}
+		}
+		return $move_executed;
+	}
+
+	public function moveNoticeLast($notice_id)
+	{
+		$move_executed = false;
+		$last_order = $this->getNextNoticeOrder() -1;
+		$notice = $this->getNoticeFromId($notice_id);
+		if (!is_null($notice) && ($notice['notice_order'] > 0) && ($notice['notice_order'] < $last_order))
+		{
+			$sql = "UPDATE {$this->notices_table}
+				SET notice_order = notice_order -1
+				WHERE notice_order > {$notice['notice_order']}";
+			$this->db->sql_query($sql);
+			$move_executed = ($this->db->sql_affectedrows() > 0) ? true : false;
+
+			if ($move_executed)
+			{
+				$sql = "UPDATE {$this->notices_table}
+					SET notice_order = {$last_order}
+					WHERE notice_id = {$notice_id}";
+				$this->db->sql_query($sql);
+			}
+		}
+		return $move_executed;
+	}
+
 	public function deleteNotice($notice_id)
 	{
 		$deleted = false;
@@ -287,13 +334,13 @@ class datalayer
 
 			$sql = "DELETE FROM {$this->notices_table} WHERE notice_id=" . (int) $notice_id;
 			$this->db->sql_query($sql);
+			$deleted = $this->db->sql_affectedrows() ? true : false;
 
-			if ($notice['notice_order'] > 0)
+			if ($deleted && ($notice['notice_order'] > 0))
 			{
 				$sql = "UPDATE {$this->notices_table} SET notice_order=notice_order-1 WHERE notice_order>=" . (int) $notice['notice_order'];
 				$this->db->sql_query($sql);
 			}
-			$deleted = true;
 		}
 		return $deleted;
 	}

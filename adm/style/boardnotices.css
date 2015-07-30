@@ -1,0 +1,7 @@
+table tr:first-child td.actions .first, table tr:last-child td.actions .last {
+	display: none;
+}
+
+table tr:first-child td.actions .first-disabled, table tr:last-child td.actions .last-disabled {
+	display: inline !important;
+}

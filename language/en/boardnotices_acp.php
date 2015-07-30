@@ -71,4 +71,7 @@ $lang = array_merge($lang, array(
 
 	'ERROR_EMPTY_TITLE'						=> '<strong>Title</strong> cannot be empty.',
 	'ERROR_EMPTY_MESSAGE'					=> '<strong>Message</strong> cannot be empty.',
+
+	'MOVE_FIRST'							=> 'Move to first position',
+	'MOVE_LAST'								=> 'Move to last position',
 ));
