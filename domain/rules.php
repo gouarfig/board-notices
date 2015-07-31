@@ -19,7 +19,7 @@ class rules
 	private $rules;
 	private $rules_loaded = false;
 	private $default_order = array(
-		'not_logged_in',
+		'logged_in',
 		'birthday',
 		'anniversary',
 		'date',
@@ -32,6 +32,10 @@ class rules
 		'in_default_usergroup',
 		'in_usergroup',
 		'not_in_usergroup',
+	);
+	// Hide obsolete rules
+	private $hide = array(
+		'not_logged_in',
 	);
 
 	public function __construct($root_path)
@@ -74,13 +78,16 @@ class rules
 			$classes = $this->getRulesClassesList($folder);
 			foreach ($classes as $entry)
 			{
-				try
+				if (!in_array($entry, $this->hide))
 				{
-					$rule = $phpbb_container->get("fq.boardnotices.rules.$entry");
-					$this->rules[$entry] = $rule;
-				} catch (\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException $exc)
-				{
-					// The installation is obviously corrupted, but should we bother the user with it?
+					try
+					{
+						$rule = $phpbb_container->get("fq.boardnotices.rules.$entry");
+						$this->rules[$entry] = $rule;
+					} catch (\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException $exc)
+					{
+						// The installation is obviously corrupted, but should we bother the user with it?
+					}
 				}
 			}
 			$this->rules_loaded = true;

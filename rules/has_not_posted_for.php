@@ -40,15 +40,18 @@ class has_not_posted_for implements rule
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$conditions = unserialize($conditions);
-		if (is_array($conditions))
+		$days = unserialize($conditions);
+		if ($days === false)
 		{
-			$conditions = $conditions[0];
+			$days = $confitions;
 		}
-		$conditions = (int) $conditions;
+		if (is_array($days))
+		{
+			$days = (int) $days[0];
+		}
 		if ($this->user->data['user_lastpost_time'] > 0)
 		{
-			$valid = ((time() - $this->user->data['user_lastpost_time']) >= ($conditions * 24 * 60 * 60));
+			$valid = ((time() - $this->user->data['user_lastpost_time']) >= ($days * 24 * 60 * 60));
 		}
 		return $valid;
 	}

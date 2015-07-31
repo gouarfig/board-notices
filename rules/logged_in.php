@@ -12,46 +12,45 @@
 
 namespace fq\boardnotices\rules;
 
-class in_default_usergroup implements rule
+class logged_in implements rule
 {
 
 	private $user;
-	private $data_layer;
 
-	public function __construct(\phpbb\user $user, \fq\boardnotices\datalayer $data_layer)
+	public function __construct(\phpbb\user $user)
 	{
 		$this->user = $user;
-		$this->data_layer = $data_layer;
 	}
 
 	public function getDisplayName()
 	{
-		return "User default group is";
+		return "Is user logged in";
 	}
 
 	public function getType()
 	{
-		return 'list';
+		return 'yesno';
 	}
 
 	public function getPossibleValues()
 	{
-		return $this->data_layer->getAllGroups();
+		return null;
 	}
 
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$group_id = @unserialize($conditions);
-		if ($group_id === false)
+		$logged_in_conditions = unserialize($conditions);
+		if ($logged_in_conditions === false)
 		{
-			$group_id = (int) $conditions;
+			$logged_in_conditions = $conditions;
 		}
-		if (is_array($group_id))
+		if (is_array($logged_in_conditions))
 		{
-			$group_id = (int) $group_id[0];
+			$logged_in_conditions = $logged_in_conditions[0];
 		}
-		$valid = $this->user->data['group_id'] == $group_id;
+		$logged_in = ($this->user->data['user_type'] != USER_IGNORE);
+		$valid = ($logged_in_conditions && $logged_in) || (!$logged_in_conditions && !$logged_in);
 		return $valid;
 	}
 

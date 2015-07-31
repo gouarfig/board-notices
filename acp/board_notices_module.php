@@ -383,6 +383,8 @@ class board_notices_module
 				break;
 
 			case 'yesno':
+				$display .= '<label><input type="radio" class="radio" id="' . $input_name . '" name="' . $input_name . '[0]" value="1"' . ($selected[0] ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['YES'] . '</label>';
+				$display .= '<label><input type="radio" class="radio" name="' . $input_name . '[0]" value="0"' . (!$selected[0] ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['NO_GUEST_OR_BOT'] . '</label>';
 				break;
 
 			default:

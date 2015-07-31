@@ -40,7 +40,7 @@ class not_logged_in implements rule
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$valid = ($this->user->data['user_id'] == ANONYMOUS);
+		$valid = ($this->user->data['user_type'] == USER_IGNORE);
 		return $valid;
 	}
 
