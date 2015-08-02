@@ -75,12 +75,12 @@ class anniversary implements rule
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$user_regdate = $this->getUserRegistrationDate();
+		$user_regdate = date('r', $this->getUserRegistrationDate());
 		$now = $this->user->create_datetime();
 		$regdate = $this->user->create_datetime($user_regdate);
 		$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset());
 		$regdate = phpbb_gmgetdate($regdate->getTimestamp() + $regdate->getOffset());
-		$valid = (($regdate['mday'] == $now['mday']) && ($regdate['mon'] == $now['mon']));
+		$valid = (($regdate['mday'] == $now['mday']) && ($regdate['mon'] == $now['mon']) && ($regdate['year'] < $now['year']));
 		// We create the 'anniversary' variable in all cases (so it can be displayed in preview mode)
 		$this->setTemplateVars($this->anniversary($now, $regdate));
 		return $valid;

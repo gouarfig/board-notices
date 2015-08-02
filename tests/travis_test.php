@@ -1,4 +1,8 @@
 <?php
+
+/**
+ * This is a simple test to make sure the platform is working
+ */
 class TravisTest extends PHPUnit_Framework_TestCase
 {
     public function testTravis()
