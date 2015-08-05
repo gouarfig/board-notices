@@ -47,11 +47,12 @@ class style implements rule
 	{
 		$valid = false;
 
+		$user_style = null;
 		if ($this->user->data['user_id'] == ANONYMOUS)
 		{
 			$user_style = $this->request_cookie(intval($this->user->data['user_style']));
 		}
-		else
+		if (empty($user_style))
 		{
 			$user_style = $this->user->data['user_style'];
 		}

@@ -11,6 +11,8 @@ class birthday_test extends \phpbb_test_case
 	public function testInstance()
 	{
 		$user = new \phpbb\user('\phpbb\datetime');
+		$lang = &$user->lang;
+		include 'phpBB/ext/fq/boardnotices/language/en/boardnotices_acp.php';
 		$rule = new birthday($user);
 		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
 
@@ -24,7 +26,7 @@ class birthday_test extends \phpbb_test_case
 	public function testGetDisplayName($rule)
 	{
 		$display = $rule->getDisplayName();
-		$this->assertTrue(strpos($display, "birthday") !== false);
+		$this->assertTrue((strpos($display, "birthday") !== false), "Wrong DisplayName: '{$display}'");
 	}
 
 	/**
@@ -75,64 +77,56 @@ class birthday_test extends \phpbb_test_case
 	}
 
 	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
+	 *
+	 * @return anniversary
 	 */
-	public function testTodayIsFalse($timezone)
+	private function buildRuleWithBirthdayYesterday()
 	{
-		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
-		$user->data['user_birthday'] = time();
+		$now = $user->create_datetime();
+		$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset() - 24*60*60);
+		$user->data['user_birthday'] = sprintf('%2d-%2d-%4d', $now['mday'], $now['mon'], '1974');
 		$rule = new birthday($user);
-		$this->assertFalse($rule->isTrue(null));
-	}
-
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testOneHourBeforeTodayIsFalse($timezone)
-	{
-		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
-		$user->data['user_birthday'] = time() - (60*60);
-		$rule = new birthday($user);
-		$this->assertFalse($rule->isTrue(null));
-	}
-
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testTodayPlusOneHourIsFalse($timezone)
-	{
-		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
-		$user->data['user_birthday'] = time() + (60*60);
-		$rule = new birthday($user);
-		$this->assertFalse($rule->isTrue(null));
+		return array($user, $rule);
 	}
 
 	/**
 	 *
 	 * @return anniversary
 	 */
-	private function buildRuleWithLastYearUserRegistration()
+	private function buildRuleWithBirthdayTomorrow()
 	{
 		$user = new \phpbb\user('\phpbb\datetime');
-		$user->data['user_birthday'] = strtotime('last year') - (60*60);
+		$now = $user->create_datetime();
+		$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset() + 24*60*60);
+		$user->data['user_birthday'] = sprintf('%2d-%2d-%4d', $now['mday'], $now['mon'], '1974');
 		$rule = new birthday($user);
 		return array($user, $rule);
 	}
+
+	/**
+	 *
+	 * @return anniversary
+	 */
+	private function buildRuleWithBirthdayToday()
+	{
+		$user = new \phpbb\user('\phpbb\datetime');
+		$now = $user->create_datetime();
+		$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset());
+		$user->data['user_birthday'] = sprintf('%2d-%2d-%4d', $now['mday'], $now['mon'], '1974');
+		$rule = new birthday($user);
+		return array($user, $rule);
+	}
+
 	/**
 	 * @dataProvider getTimezones
 	 * @param string $timezone
 	 */
-	public function ___testLastYearIsTrue($timezone)
+	public function testBirthdayIsTrue($timezone)
 	{
 		date_default_timezone_set($timezone);
-		list($user, $rule) = $this->buildRuleWithLastYearUserRegistration();
-		$this->assertTrue($rule->isTrue(null), date('r', $user->data['user_birthday']) . ' is not last year!');
+		list($user, $rule) = $this->buildRuleWithBirthdayToday();
+		$this->assertTrue($rule->isTrue(null), $user->data['user_birthday'] . ' birthday is not today!');
 		return $rule;
 	}
 
@@ -140,13 +134,23 @@ class birthday_test extends \phpbb_test_case
 	 * @dataProvider getTimezones
 	 * @param string $timezone
 	 */
-	public function ___testOneYearAfter($timezone)
+	public function testBirthdayYesterdayIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		list($user, $rule) = $this->buildRuleWithLastYearUserRegistration();
-		// Run the rule to calculate the anniversary
-		$rule->isTrue(null);
-		$vars = $rule->getTemplateVars();
-		$this->assertEquals(1, $vars['AGE']);
+		list($user, $rule) = $this->buildRuleWithBirthdayYesterday();
+		$this->assertFalse($rule->isTrue(null), $user->data['user_birthday'] . ' birthday is not today!');
+		return $rule;
+	}
+
+	/**
+	 * @dataProvider getTimezones
+	 * @param string $timezone
+	 */
+	public function testBirthdayTomorrowIsFalse($timezone)
+	{
+		date_default_timezone_set($timezone);
+		list($user, $rule) = $this->buildRuleWithBirthdayTomorrow();
+		$this->assertFalse($rule->isTrue(null), $user->data['user_birthday'] . ' birthday is not today!');
+		return $rule;
 	}
 }

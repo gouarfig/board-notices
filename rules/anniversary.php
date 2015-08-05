@@ -56,7 +56,7 @@ class anniversary implements rule
 
 	public function getDisplayName()
 	{
-		return "On user's registration anniversary";
+		return $this->user->lang['RULE_ANNIVERSARY'];
 	}
 
 	public function getType()

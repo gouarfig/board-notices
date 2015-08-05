@@ -14,14 +14,16 @@ namespace fq\boardnotices\rules;
 
 class date implements rule
 {
+	private $user;
 
-	public function __construct()
+	public function __construct(\phpbb\user $user)
 	{
+		$this->user = $user;
 	}
 
 	public function getDisplayName()
 	{
-		return "The date is";
+		return $this->user->lang['RULE_DATE'];
 	}
 
 	public function getType()
@@ -37,7 +39,15 @@ class date implements rule
 	public function isTrue($conditions)
 	{
 		$valid = false;
+		if (is_null($conditions))
+		{
+			return false;
+		}
 		$conditions = unserialize($conditions);
+		if (is_null($conditions))
+		{
+			return false;
+		}
 		$now = getdate();
 		$valid = ((($conditions[0] == 0) || ($now['mday'] == $conditions[0]))
 				&& (($conditions[1] == 0) || ($now['mon'] == $conditions[1]))

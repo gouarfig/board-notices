@@ -76,4 +76,9 @@ $lang = array_merge($lang, array(
 
 	'MOVE_FIRST'							=> 'Move to first position',
 	'MOVE_LAST'								=> 'Move to last position',
+
+	// Rule names
+	'RULE_ANNIVERSARY'						=> "On user's registration anniversary",
+	'RULE_BIRTHDAY'							=> "On user's birthday",
+	'RULE_DATE'								=> "The date is",
 ));

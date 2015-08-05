@@ -163,7 +163,7 @@ class board_notices_module
 		/** @var \fq\boardnotices\datalayer */
 		$data_layer = $this->getDataLayer();
 
-		// Add the board announcements ACP lang file
+		// Add the board notices ACP lang file
 		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
 
 		// Load a template from adm/style for our ACP page
@@ -218,7 +218,7 @@ class board_notices_module
 		// Add the posting lang file needed by BBCodes
 		$this->user->add_lang(array('posting'));
 
-		// Add the board announcements ACP lang file
+		// Add the board notices ACP lang file
 		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
 
 		// Load a template from adm/style for our ACP page
@@ -242,7 +242,7 @@ class board_notices_module
 			$error = $this->validateNoticeForm($data);
 		}
 		//var_dump($data);
-		// Prepare a fresh announcement preview
+		// Prepare a fresh notice preview
 		$notice_text_preview = '';
 		if ($this->request->is_set_post('preview'))
 		{
@@ -250,7 +250,7 @@ class board_notices_module
 					$data['message'], $data['message_uid'], $data['message_bitfield'], $data['message_options']);
 		}
 
-		// prepare the announcement text for editing inside the textbox
+		// prepare the notice text for editing inside the textbox
 		$notice_text_edit = generate_text_for_edit(
 				$data['message'], $data['message_uid'], $data['message_options']);
 
@@ -536,7 +536,7 @@ class board_notices_module
 	{
 		$error = '';
 
-		// Add the board announcements ACP lang file
+		// Add the board notices ACP lang file
 		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
 
 		// Test if form key is valid
@@ -554,7 +554,7 @@ class board_notices_module
 		// Get config options from the form
 		$data['active'] = $this->request->variable('board_notice_active', false);
 
-		// Prepare announcement text for storage
+		// Prepare notice text for storage
 		generate_text_for_storage(
 				$data['message'], $data['message_uid'], $data['message_bitfield'], $data['message_options'], !$this->request->variable('disable_bbcode', false), !$this->request->variable('disable_magic_url', false), !$this->request->variable('disable_smilies', false)
 		);
@@ -659,7 +659,7 @@ class board_notices_module
 
 	private function saveNewNotice(&$data)
 	{
-		// Add the board announcements ACP lang file
+		// Add the board notices ACP lang file
 		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
 
 		$rules_data = array(
@@ -686,7 +686,7 @@ class board_notices_module
 
 	private function saveNotice($notice_id, &$data)
 	{
-		// Add the board announcements ACP lang file
+		// Add the board notices ACP lang file
 		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
 
 		$rules_data = array(

@@ -59,7 +59,7 @@ class birthday implements rule
 
 	public function getDisplayName()
 	{
-		return "On user's birthday";
+		return $this->user->lang['RULE_BIRTHDAY'];
 	}
 
 	public function getType()

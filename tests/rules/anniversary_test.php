@@ -11,6 +11,8 @@ class anniversary_test extends \phpbb_test_case
 	public function testInstance()
 	{
 		$user = new \phpbb\user('\phpbb\datetime');
+		$lang = &$user->lang;
+		include 'phpBB/ext/fq/boardnotices/language/en/boardnotices_acp.php';
 		$rule = new anniversary($user);
 		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
 
@@ -24,7 +26,7 @@ class anniversary_test extends \phpbb_test_case
 	public function testGetDisplayName($rule)
 	{
 		$display = $rule->getDisplayName();
-		$this->assertTrue(strpos($display, "anniversary") !== false);
+		$this->assertTrue((strpos($display, "anniversary") !== false), "Wrong DisplayName: '{$display}'");
 	}
 
 	/**

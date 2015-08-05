@@ -41,6 +41,11 @@ services:
         arguments:
             - @user
 
+    fq.boardnotices.rules.date:
+        class: fq\boardnotices\rules\date
+        arguments:
+            - @user
+
     fq.boardnotices.rules.in_default_usergroup:
         class: fq\boardnotices\rules\in_default_usergroup
         arguments:
@@ -105,6 +110,3 @@ services:
         class: fq\boardnotices\rules\has_not_posted_for
         arguments:
             - @user
-
-    fq.boardnotices.rules.date:
-        class: fq\boardnotices\rules\date
