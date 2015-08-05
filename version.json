@@ -1,0 +1,20 @@
+{
+    "stable": {
+        "0.1": {
+            "current": "0.1.7",
+            "announcement": "https://www.phpbb.com/community/viewtopic.php?f=456&t=2327616",
+            "download": "https://github.com/gouarfig/board-notices/archive/master.zip",
+            "eol": null,
+            "security": false
+        }
+    },
+    "unstable": {
+        "0.1": {
+            "current": "0.1.7",
+            "announcement": "https://www.phpbb.com/community/viewtopic.php?f=456&t=2327616",
+            "download": "https://github.com/gouarfig/board-notices/archive/master.zip",
+            "eol": null,
+            "security": false
+        }
+    }
+}
