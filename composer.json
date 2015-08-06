@@ -1,30 +1,30 @@
 {
-   "name": "fq/boardnotices",
-   "type": "phpbb-extension",
-   "description": "With this extension, you can manage all sorts of notices for your board",
-   "homepage": "https://github.com/gouarfig/board-notices",
-   "version": "0.1.7",
-   "time": "2015-08-05",
-   "license": "GPL-2.0",
-   "authors": [{
-      "name": "Fred Quointeau",
-      "email": "frederic.quointeau@gmail.com",
-      "homepage": "https://github.com/gouarfig/board-notices",
-      "role": "Developer"
-   }],
-   "require": {
-      "php": ">=5.3.3",
-      "composer/installers": "~1.0"
-   },
-   "extra": {
-      "display-name": "Board Notices Manager",
-      "soft-require" : {
-         "phpbb/phpbb": ">=3.1.2,<3.2.*@dev"
-      },
+	"name": "fq/boardnotices",
+	"type": "phpbb-extension",
+	"description": "With this extension, you can manage all sorts of notices for your board",
+	"homepage": "https://github.com/gouarfig/board-notices",
+	"version": "0.1.7",
+	"time": "2015-08-05",
+	"license": "GPL-2.0",
+	"authors": [{
+			"name": "Fred Quointeau",
+			"email": "frederic.quointeau@gmail.com",
+			"homepage": "https://github.com/gouarfig/board-notices",
+			"role": "Developer"
+		}],
+	"require": {
+		"php": ">=5.3.3",
+		"composer/installers": "~1.0"
+	},
+	"extra": {
+		"display-name": "Board Notices Manager",
+		"soft-require": {
+			"phpbb/phpbb": ">=3.1.2,<3.2.*@dev"
+		},
 		"version-check": {
-			"host": "raw.githubusercontent.com/",
-			"directory": "/gouarfig/board-notices/master/",
+			"host": "gouarfig.github.io",
+			"directory": "/boardnotices/",
 			"filename": "version.json"
 		}
-   }
+	}
 }
