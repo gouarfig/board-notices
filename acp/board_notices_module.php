@@ -17,6 +17,8 @@ class board_notices_module
 	private $notice_form_name = 'acp_board_notice';
 	private $rules_manager = null;
 
+	protected $p_master;
+
 	/** @var \phpbb\config\config */
 	protected $config;
 
@@ -49,6 +51,18 @@ class board_notices_module
 
 	/** @var string */
 	public $u_action;
+
+	/**
+	 * I find it rather annoying that this class won't be instanciated on the common phpBB/Symfony model,
+	 * but with this unique (and useless) parameter instead.
+	 * => No dependency injection is possible here
+	 *
+	 * @param type $p_master
+	 */
+	public function __construct(&$p_master)
+	{
+		$this->p_master = &$p_master;
+	}
 
 	public function main($id, $mode)
 	{

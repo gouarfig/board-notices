@@ -12,7 +12,9 @@
 
 namespace fq\boardnotices;
 
-class datalayer
+use fq\boardnotices\dac\datalayer_interface;
+
+class datalayer implements datalayer_interface
 {
 
 	private $db;

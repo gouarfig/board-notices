@@ -81,4 +81,5 @@ $lang = array_merge($lang, array(
 	'RULE_ANNIVERSARY'						=> "On user's registration anniversary",
 	'RULE_BIRTHDAY'							=> "On user's birthday",
 	'RULE_DATE'								=> "The date is",
+	'RULE_HAS_NEVER_POSTED'					=> "User has never posted (takes into account posts waiting for approval)",
 ));

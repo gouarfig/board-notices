@@ -18,7 +18,7 @@ class has_never_posted implements rule
 	private $user;
 	private $data_layer;
 
-	public function __construct(\phpbb\user $user, \fq\boardnotices\datalayer $data_layer)
+	public function __construct(\phpbb\user $user, \fq\boardnotices\dac\datalayer_interface $data_layer)
 	{
 		$this->user = $user;
 		$this->data_layer = $data_layer;
@@ -26,7 +26,7 @@ class has_never_posted implements rule
 
 	public function getDisplayName()
 	{
-		return "User has never posted";
+		return $this->user->lang['RULE_HAS_NEVER_POSTED'];
 	}
 
 	public function getType()

@@ -122,7 +122,7 @@ class anniversary_test extends \phpbb_test_case
 	private function buildRuleWithLastYearUserRegistration()
 	{
 		$user = new \phpbb\user('\phpbb\datetime');
-		$user->data['user_regdate'] = strtotime('last year') - (60*60);
+		$user->data['user_regdate'] = strtotime('last year');
 		$rule = new anniversary($user);
 		return array($user, $rule);
 	}
