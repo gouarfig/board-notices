@@ -54,5 +54,5 @@ script:
   'mysqli' ]; then phpBB/ext/$EXTNAME/vendor/bin/EPV.php run --dir='phpBB/ext/$EXTNAME/';
   fi"
 after_success:
- - ./travis/update-gh-pages.sh
+ - travis/update-gh-pages.sh
 
