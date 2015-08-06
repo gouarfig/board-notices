@@ -24,7 +24,7 @@ class has_not_posted_for implements rule
 
 	public function getDisplayName()
 	{
-		return "User has not posted for this number of days or more (but has posted previously)";
+		return $this->user->lang['RULE_HAS_NOT_POSTED_FOR'];
 	}
 
 	public function getType()
@@ -43,7 +43,7 @@ class has_not_posted_for implements rule
 		$days = unserialize($conditions);
 		if ($days === false)
 		{
-			$days = $confitions;
+			$days = $conditions;
 		}
 		if (is_array($days))
 		{
