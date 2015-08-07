@@ -2,7 +2,7 @@ sudo: required
 language: php
 matrix:
   include:
-  - php: 5.3
+  - php: 5.3.3
     env: DB=mysqli
   - php: 5.3
     env: DB=mysql
@@ -36,6 +36,7 @@ branches:
   - master
   - /^(3\.[1-9]|[4-9]\.\d)\.x$/
 install:
+- phpenv versions
 - composer install --dev --no-interaction --prefer-source
 - travis/prepare-phpbb.sh $EXTNAME $PHPBB_BRANCH
 - cd ../../phpBB3
