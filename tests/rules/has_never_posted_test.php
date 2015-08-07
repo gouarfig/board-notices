@@ -62,6 +62,16 @@ class has_never_posted_test extends \phpbb_test_case
 		$this->assertEquals(0, count($vars));
 	}
 
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\rules\date $rule
+	 */
+	public function testGetTemplateVars($rule)
+	{
+		$vars = $rule->getTemplateVars();
+		$this->assertEquals(0, count($vars));
+	}
+
 	public function testRuleTrue()
 	{
 		$user = new \phpbb\user('\phpbb\datetime');

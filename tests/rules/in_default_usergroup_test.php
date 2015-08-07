@@ -4,9 +4,10 @@ namespace fq\boardnotices\tests\rules;
 
 include_once 'phpBB/includes/functions.php';
 
-use \fq\boardnotices\rules\has_not_posted_for;
+use \fq\boardnotices\rules\in_default_usergroup;
+use \fq\boardnotices\tests\mock\datalayer_mock;
 
-class has_not_posted_for_test extends \phpbb_test_case
+class in_default_usergroup_test extends \phpbb_test_case
 {
 	public function testInstance()
 	{
@@ -14,7 +15,8 @@ class has_not_posted_for_test extends \phpbb_test_case
 		$lang = &$user->lang;
 		include 'phpBB/ext/fq/boardnotices/language/en/boardnotices_acp.php';
 
-		$rule = new has_not_posted_for($user);
+		$datalayer = new datalayer_mock();
+		$rule = new in_default_usergroup($user, $datalayer);
 		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
 
 		return array($user, $rule);
@@ -29,7 +31,7 @@ class has_not_posted_for_test extends \phpbb_test_case
 	{
 		list($user, $rule) = $args;
 		$display = $rule->getDisplayName();
-		$this->assertTrue((strpos($display, "not posted") !== false), "Wrong DisplayName: '{$display}'");
+		$this->assertTrue((strpos($display, "Default user group") !== false), "Wrong DisplayName: '{$display}'");
 	}
 
 	/**
@@ -41,7 +43,7 @@ class has_not_posted_for_test extends \phpbb_test_case
 	{
 		list($user, $rule) = $args;
 		$type = $rule->getType();
-		$this->assertThat($type, $this->equalTo('int'));
+		$this->assertThat($type, $this->equalTo('list'));
 	}
 
 	/**
@@ -85,13 +87,12 @@ class has_not_posted_for_test extends \phpbb_test_case
 	 * @param \phpbb\user $user
 	 * @param has_not_posted_for $rule
 	 */
-	public function testRuleTodayTrue($args)
+	public function testRuleEmpty($args)
 	{
 		list($user, $rule) = $args;
-		$user->data['user_lastpost_time'] = time();
+		$user->data['group_id'] = 10;
 
-		$days = serialize(array(0));
-		$this->assertTrue($rule->isTrue($days));
+		$this->assertFalse($rule->isTrue(null));
 	}
 
 	/**
@@ -99,12 +100,13 @@ class has_not_posted_for_test extends \phpbb_test_case
 	 * @param \phpbb\user $user
 	 * @param has_not_posted_for $rule
 	 */
-	public function testRuleTodayFalse($args)
+	public function testRuleNotInGroup($args)
 	{
 		list($user, $rule) = $args;
-		$user->data['user_lastpost_time'] = time();
-		$days = serialize(array(1));
-		$this->assertFalse($rule->isTrue($days));
+		$user->data['group_id'] = 10;
+
+		$groups = serialize(array(11));
+		$this->assertFalse($rule->isTrue($groups));
 	}
 
 	/**
@@ -112,13 +114,13 @@ class has_not_posted_for_test extends \phpbb_test_case
 	 * @param \phpbb\user $user
 	 * @param has_not_posted_for $rule
 	 */
-	public function testRuleYesterdayTrue($args)
+	public function testRuleInGroup($args)
 	{
 		list($user, $rule) = $args;
-		$user->data['user_lastpost_time'] = time() - 24*60*60;
+		$user->data['group_id'] = 10;
 
-		$days = serialize(array(1));
-		$this->assertTrue($rule->isTrue($days));
+		$groups = serialize(array(10));
+		$this->assertTrue($rule->isTrue($groups));
 	}
 
 	/**
@@ -126,12 +128,13 @@ class has_not_posted_for_test extends \phpbb_test_case
 	 * @param \phpbb\user $user
 	 * @param has_not_posted_for $rule
 	 */
-	public function testRuleYesterdayFalse($args)
+	public function testRuleInGroupNotArray($args)
 	{
 		list($user, $rule) = $args;
-		$user->data['user_lastpost_time'] = time() - 24*60*60;
-		$days = serialize(array(2));
-		$this->assertFalse($rule->isTrue($days));
+		$user->data['group_id'] = 10;
+
+		$groups = 10;
+		$this->assertTrue($rule->isTrue($groups));
 	}
 
 	/**
@@ -139,13 +142,13 @@ class has_not_posted_for_test extends \phpbb_test_case
 	 * @param \phpbb\user $user
 	 * @param has_not_posted_for $rule
 	 */
-	public function testRuleYesterdayWithNoSerializeTrue($args)
+	public function testRuleNotInGroupNotArray($args)
 	{
 		list($user, $rule) = $args;
-		$user->data['user_lastpost_time'] = time() - 24*60*60;
+		$user->data['group_id'] = 10;
 
-		$days = 1;
-		$this->assertTrue($rule->isTrue($days));
+		$groups = 11;
+		$this->assertFalse($rule->isTrue($groups));
 	}
 
 	/**
@@ -153,12 +156,13 @@ class has_not_posted_for_test extends \phpbb_test_case
 	 * @param \phpbb\user $user
 	 * @param has_not_posted_for $rule
 	 */
-	public function testRuleYesterdayWithNoSerializeFalse($args)
+	public function testRuleInGroupNotArraySerialize($args)
 	{
 		list($user, $rule) = $args;
-		$user->data['user_lastpost_time'] = time() - 24*60*60;
-		$days = 2;
-		$this->assertFalse($rule->isTrue($days));
+		$user->data['group_id'] = 10;
+
+		$groups = serialize(10);
+		$this->assertTrue($rule->isTrue($groups));
 	}
 
 	/**
@@ -166,26 +170,13 @@ class has_not_posted_for_test extends \phpbb_test_case
 	 * @param \phpbb\user $user
 	 * @param has_not_posted_for $rule
 	 */
-	public function testRuleYesterdayWithNoArrayTrue($args)
+	public function testRuleNotInGroupNotArraySerialize($args)
 	{
 		list($user, $rule) = $args;
-		$user->data['user_lastpost_time'] = time() - 24*60*60;
+		$user->data['group_id'] = 10;
 
-		$days = serialize(1);
-		$this->assertTrue($rule->isTrue($days));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_not_posted_for $rule
-	 */
-	public function testRuleYesterdayWithNoArrayFalse($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['user_lastpost_time'] = time() - 24*60*60;
-		$days = serialize(2);
-		$this->assertFalse($rule->isTrue($days));
+		$groups = serialize(11);
+		$this->assertFalse($rule->isTrue($groups));
 	}
 
 }

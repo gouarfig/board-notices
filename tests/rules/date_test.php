@@ -63,6 +63,16 @@ class date_test extends \phpbb_test_case
 	 * @depends testInstance
 	 * @param \fq\boardnotices\rules\date $rule
 	 */
+	public function testGetTemplateVars($rule)
+	{
+		$vars = $rule->getTemplateVars();
+		$this->assertEquals(0, count($vars));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\rules\date $rule
+	 */
 	public function testIsFalseWithNullConditions($rule)
 	{
 		$this->assertFalse($rule->isTrue(null));
