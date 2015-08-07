@@ -13,6 +13,7 @@
 namespace fq\boardnotices\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
+use \fq\boardnotices\domain\notice;
 
 class listener implements EventSubscriberInterface
 {
@@ -54,32 +55,26 @@ class listener implements EventSubscriberInterface
 	{
 		$notices = array();
 		$template_vars = $this->getDefaultTemplateVars();
+		$force_all_rules = false;
 
-		$preview_key = $this->request->variable('bnpk', '');
-		$preview_id = $this->request->variable('bnid', 0);
-		if (!empty($preview_key) && !empty($preview_id) && ($preview_key == $this->config['boardnotices_previewkey']))
+		$preview = $this->isPreview();
+		if ($preview)
 		{
 			// Force the preview of a notice
+			$preview_id = $this->getPreviewId();
 			$raw_notice = $this->data_layer->getNoticeFromId($preview_id);
-			$rules = $this->data_layer->getRulesFor($preview_id);
-			$notices[] = new \fq\boardnotices\domain\notice($raw_notice, $rules);
-			unset($rules);
+			$notices[] = $this->getNotice($raw_notice);
 			$force_all_rules = true;
-			$preview = true;
 		}
-		else
+		else if ($this->extensionEnabled())
 		{
 			// Normal notices mode
 			$raw_notices = $this->data_layer->getActiveNotices();
 			foreach ($raw_notices as $raw_notice)
 			{
-				$rules = $this->data_layer->getRulesFor($raw_notice['notice_id']);
-				$notices[] = new \fq\boardnotices\domain\notice($raw_notice, $rules);
-				unset($rules);
+				$notices[] = $this->getNotice($raw_notice);
 			}
 			unset($raw_notices);
-			$force_all_rules = false;
-			$preview = false;
 		}
 
 		$notice_message = '';
@@ -101,7 +96,7 @@ class listener implements EventSubscriberInterface
 
 		if (!empty($notice_message))
 		{
-			$notice_message = $this->setTemplateVars($notice_message, $template_vars);
+			$notice_message = $this->replaceTemplateVars($notice_message, $template_vars);
 
 			// Output board announcement to the template
 			$this->template->assign_vars(array(
@@ -125,7 +120,7 @@ class listener implements EventSubscriberInterface
 		return $template_vars;
 	}
 
-	private function setTemplateVars($notice_message, $template_vars)
+	private function replaceTemplateVars($notice_message, $template_vars)
 	{
 		if (!empty($template_vars))
 		{
@@ -137,4 +132,27 @@ class listener implements EventSubscriberInterface
 		return $notice_message;
 	}
 
+	private function extensionEnabled()
+	{
+		return $this->config['boardnotices_enabled'] ? true : false;
+	}
+
+	private function isPreview()
+	{
+		$preview_key = $this->request->variable('bnpk', '');
+		$preview_id = $this->request->variable('bnid', 0);
+		return (!empty($preview_key) && !empty($preview_id) && ($preview_key == $this->config['boardnotices_previewkey']));
+	}
+
+	private function getPreviewId()
+	{
+		$preview_id = $this->request->variable('bnid', 0);
+		return $preview_id;
+	}
+
+	private function getNotice($raw_notice)
+	{
+		$rules = $this->data_layer->getRulesFor($raw_notice['notice_id']);
+		return new notice($raw_notice, $rules);
+	}
 }

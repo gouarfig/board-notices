@@ -110,123 +110,6 @@ class datalayer implements datalayer_interface
 		return $notice;
 	}
 
-	private function loadRules()
-	{
-		$rules = array();
-		$sql_array = array(
-			'SELECT' => 'r.*',
-			'FROM' => array($this->notices_rules_table => 'r'),
-		);
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
-
-		$result = $this->db->sql_query($sql);
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$rules[$row['notice_id']][] = $row;
-		}
-		$this->db->sql_freeresult($result);
-
-		return $rules;
-	}
-
-	public function getRulesFor($notice_id)
-	{
-		if (!$this->rules_loaded)
-		{
-			$this->rules = $this->loadRules();
-			$this->rules_loaded = true;
-		}
-		return !empty($this->rules[$notice_id]) ? $this->rules[$notice_id] : array();
-	}
-
-	private function loadUser()
-	{
-		$user = array();
-		$sql_array = array(
-			'SELECT' => 'u.*',
-			'FROM' => array(USERS_TABLE => 'u'),
-			'WHERE' => 'u.user_id=' . (int) $this->user->data['user_id'],
-		);
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
-
-		$result = $this->db->sql_query($sql);
-		$user = $this->db->sql_fetchrow($result);
-		$this->db->sql_freeresult($result);
-
-		return $user;
-	}
-
-	public function getUserInfo($field_name)
-	{
-		if (!$this->user_loaded)
-		{
-			$this->user_row = $this->loadUser();
-			$this->user_loaded = true;
-		}
-		return isset($this->user_row[$field_name]) ? $this->user_row[$field_name] : null;
-	}
-
-	private function loadUserGroups()
-	{
-		$usergroups = array();
-		$sql_array = array(
-			'SELECT' => 'g.group_id, g.group_name, g.group_type',
-			'FROM' => array(GROUPS_TABLE => 'g', USER_GROUP_TABLE => 'ug'),
-			'WHERE' => 'ug.user_id=' . (int) $this->user->data['user_id']
-			. ' AND g.group_id = ug.group_id'
-			. ' AND ug.user_pending = 0',
-		);
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
-
-		$result = $this->db->sql_query($sql);
-		while ($row = $this->db->sql_fetchrow($result))
-		{
-			$usergroups[(int) $row['group_id']] = $row;
-		}
-		$this->db->sql_freeresult($result);
-
-		return $usergroups;
-	}
-
-	public function isUserInGroupId($group_id)
-	{
-		if (!$this->usergroups_loaded)
-		{
-			$this->usergroups = $this->loadUserGroups();
-			$this->usergroups_loaded = true;
-		}
-		return isset($this->usergroups[$group_id]) ? true : false;
-	}
-
-	private function loadNonDeletedUserPosts()
-	{
-		$userposts = 0;
-		$sql_array = array(
-			'SELECT' => 'count(p.post_id) AS count',
-			'FROM' => array(POSTS_TABLE => 'p'),
-			'WHERE' => 'p.poster_id=' . (int) $this->user->data['user_id']
-			. ' AND p.post_visibility < 2',
-		);
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
-
-		$result = $this->db->sql_query($sql);
-		if ($row = $this->db->sql_fetchrow($result))
-		{
-			$userposts = (int) $row['count'];
-		}
-		$this->db->sql_freeresult($result);
-
-		return $userposts;
-	}
-
-	/**
-	 * Number of posts, INCLUDING waiting for approval ones
-	 */
-	public function nonDeletedUserPosts()
-	{
-		return $this->loadNonDeletedUserPosts();
-	}
-
 	private function cleanNotices()
 	{
 		$this->notices_loaded = false;
@@ -433,6 +316,176 @@ class datalayer implements datalayer_interface
 		}
 	}
 
+	private function loadRules()
+	{
+		$rules = array();
+		$sql_array = array(
+			'SELECT' => 'r.*',
+			'FROM' => array($this->notices_rules_table => 'r'),
+		);
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$rules[$row['notice_id']][] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		return $rules;
+	}
+
+	public function getRulesFor($notice_id)
+	{
+		if (!$this->rules_loaded)
+		{
+			$this->rules = $this->loadRules();
+			$this->rules_loaded = true;
+		}
+		return !empty($this->rules[$notice_id]) ? $this->rules[$notice_id] : array();
+	}
+
+	private function cleanRules()
+	{
+		$this->rules_loaded = false;
+		$this->cache->destroy('_rules');
+		$this->cache->destroy('sql', $this->notices_rules_table);
+	}
+
+	public function deleteRules($rules)
+	{
+		if (!is_array($rules))
+		{
+			$rules = array($rules);
+		}
+		$sql = "DELETE FROM " . $this->notices_rules_table . " WHERE notice_rule_id IN (" . implode(',', $rules) . ")";
+		$result = $this->db->sql_query($sql);
+		$this->cleanRules();
+
+		return $result;
+	}
+
+	public function updateRules($rules)
+	{
+		if (!is_array($rules))
+		{
+			$rules = array($rules);
+		}
+		foreach ($rules as $rule)
+		{
+			$notice_rule_id = $rule['notice_rule_id'];
+			unset($rule['notice_rule_id']);
+
+			$sql = "UPDATE {$this->notices_rules_table}
+				SET " . $this->db->sql_build_array('UPDATE', $rule) . "
+				WHERE notice_rule_id = " . $notice_rule_id;
+			$this->db->sql_query($sql);
+		}
+		$this->cleanRules();
+	}
+
+	public function insertRules($rules)
+	{
+		if (!is_array($rules))
+		{
+			$rules = array($rules);
+		}
+		foreach ($rules as $rule)
+		{
+			$sql = "INSERT INTO {$this->notices_rules_table} " . $this->db->sql_build_array('INSERT', $rule);
+			$this->db->sql_query($sql);
+		}
+		$this->cleanRules();
+	}
+
+	private function loadUser()
+	{
+		$user = array();
+		$sql_array = array(
+			'SELECT' => 'u.*',
+			'FROM' => array(USERS_TABLE => 'u'),
+			'WHERE' => 'u.user_id=' . (int) $this->user->data['user_id'],
+		);
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+
+		$result = $this->db->sql_query($sql);
+		$user = $this->db->sql_fetchrow($result);
+		$this->db->sql_freeresult($result);
+
+		return $user;
+	}
+
+	public function getUserInfo($field_name)
+	{
+		if (!$this->user_loaded)
+		{
+			$this->user_row = $this->loadUser();
+			$this->user_loaded = true;
+		}
+		return isset($this->user_row[$field_name]) ? $this->user_row[$field_name] : null;
+	}
+
+	private function loadUserGroups()
+	{
+		$usergroups = array();
+		$sql_array = array(
+			'SELECT' => 'g.group_id, g.group_name, g.group_type',
+			'FROM' => array(GROUPS_TABLE => 'g', USER_GROUP_TABLE => 'ug'),
+			'WHERE' => 'ug.user_id=' . (int) $this->user->data['user_id']
+			. ' AND g.group_id = ug.group_id'
+			. ' AND ug.user_pending = 0',
+		);
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+
+		$result = $this->db->sql_query($sql);
+		while ($row = $this->db->sql_fetchrow($result))
+		{
+			$usergroups[(int) $row['group_id']] = $row;
+		}
+		$this->db->sql_freeresult($result);
+
+		return $usergroups;
+	}
+
+	public function isUserInGroupId($group_id)
+	{
+		if (!$this->usergroups_loaded)
+		{
+			$this->usergroups = $this->loadUserGroups();
+			$this->usergroups_loaded = true;
+		}
+		return isset($this->usergroups[$group_id]) ? true : false;
+	}
+
+	private function loadNonDeletedUserPosts()
+	{
+		$userposts = 0;
+		$sql_array = array(
+			'SELECT' => 'count(p.post_id) AS count',
+			'FROM' => array(POSTS_TABLE => 'p'),
+			'WHERE' => 'p.poster_id=' . (int) $this->user->data['user_id']
+			. ' AND p.post_visibility < 2',
+		);
+		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+
+		$result = $this->db->sql_query($sql);
+		if ($row = $this->db->sql_fetchrow($result))
+		{
+			$userposts = (int) $row['count'];
+		}
+		$this->db->sql_freeresult($result);
+
+		return $userposts;
+	}
+
+	/**
+	 * Number of posts, INCLUDING waiting for approval ones
+	 */
+	public function nonDeletedUserPosts()
+	{
+		return $this->loadNonDeletedUserPosts();
+	}
+
 	private function loadAllGroups()
 	{
 		$groups = array();
@@ -534,59 +587,6 @@ class datalayer implements datalayer_interface
 		$this->db->sql_freeresult($result);
 
 		return $ranks;
-	}
-
-	private function cleanRules()
-	{
-		$this->rules_loaded = false;
-		$this->cache->destroy('_rules');
-		$this->cache->destroy('sql', $this->notices_rules_table);
-	}
-
-	public function deleteRules($rules)
-	{
-		if (!is_array($rules))
-		{
-			$rules = array($rules);
-		}
-		$sql = "DELETE FROM " . $this->notices_rules_table . " WHERE notice_rule_id IN (" . implode(',', $rules) . ")";
-		$result = $this->db->sql_query($sql);
-		$this->cleanRules();
-
-		return $result;
-	}
-
-	public function updateRules($rules)
-	{
-		if (!is_array($rules))
-		{
-			$rules = array($rules);
-		}
-		foreach ($rules as $rule)
-		{
-			$notice_rule_id = $rule['notice_rule_id'];
-			unset($rule['notice_rule_id']);
-
-			$sql = "UPDATE {$this->notices_rules_table}
-				SET " . $this->db->sql_build_array('UPDATE', $rule) . "
-				WHERE notice_rule_id = " . $notice_rule_id;
-			$this->db->sql_query($sql);
-		}
-		$this->cleanRules();
-	}
-
-	public function insertRules($rules)
-	{
-		if (!is_array($rules))
-		{
-			$rules = array($rules);
-		}
-		foreach ($rules as $rule)
-		{
-			$sql = "INSERT INTO {$this->notices_rules_table} " . $this->db->sql_build_array('INSERT', $rule);
-			$this->db->sql_query($sql);
-		}
-		$this->cleanRules();
 	}
 
 }
