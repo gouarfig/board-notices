@@ -84,6 +84,7 @@ class anniversary_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = time();
 		$rule = new anniversary($user);
 		$this->assertFalse($rule->isTrue(null));
@@ -97,6 +98,7 @@ class anniversary_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = time() - (60*60);
 		$rule = new anniversary($user);
 		$this->assertFalse($rule->isTrue(null));
@@ -110,6 +112,7 @@ class anniversary_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = time() + (60*60);
 		$rule = new anniversary($user);
 		$this->assertFalse($rule->isTrue(null));
@@ -119,9 +122,10 @@ class anniversary_test extends \phpbb_test_case
 	 *
 	 * @return anniversary
 	 */
-	private function buildRuleWithLastYearUserRegistration()
+	private function buildRuleWithLastYearUserRegistration($timezone)
 	{
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = strtotime('last year');
 		$rule = new anniversary($user);
 		return array($user, $rule);
@@ -133,7 +137,7 @@ class anniversary_test extends \phpbb_test_case
 	public function testLastYearIsTrue($timezone)
 	{
 		date_default_timezone_set($timezone);
-		list($user, $rule) = $this->buildRuleWithLastYearUserRegistration();
+		list($user, $rule) = $this->buildRuleWithLastYearUserRegistration($timezone);
 		$this->assertTrue($rule->isTrue(null), date('r', $user->data['user_regdate']) . ' is not last year!');
 		return $rule;
 	}
@@ -145,7 +149,7 @@ class anniversary_test extends \phpbb_test_case
 	public function testOneYearAfter($timezone)
 	{
 		date_default_timezone_set($timezone);
-		list($user, $rule) = $this->buildRuleWithLastYearUserRegistration();
+		list($user, $rule) = $this->buildRuleWithLastYearUserRegistration($timezone);
 		// Run the rule to calculate the anniversary
 		$rule->isTrue(null);
 		$vars = $rule->getTemplateVars();
