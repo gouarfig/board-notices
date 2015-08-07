@@ -145,6 +145,7 @@ class date_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now);
@@ -159,6 +160,7 @@ class date_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0);
@@ -173,6 +175,7 @@ class date_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, null, 0);
@@ -187,6 +190,7 @@ class date_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, null, null, 0);
@@ -201,6 +205,7 @@ class date_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, 0);
@@ -215,6 +220,7 @@ class date_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, null, 0);
@@ -229,6 +235,7 @@ class date_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, null, 0, 0);
@@ -243,6 +250,7 @@ class date_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, 0, 0);
@@ -257,6 +265,7 @@ class date_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, -1, 0, 0);
@@ -274,6 +283,7 @@ class date_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 1, 0, 0);
@@ -291,6 +301,7 @@ class date_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, -1, 0);
@@ -308,6 +319,7 @@ class date_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, 1, 0);
@@ -325,6 +337,7 @@ class date_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, 0, -1);
@@ -342,6 +355,7 @@ class date_test extends \phpbb_test_case
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, 0, 1);

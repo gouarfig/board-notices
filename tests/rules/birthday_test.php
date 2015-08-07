@@ -80,9 +80,10 @@ class birthday_test extends \phpbb_test_case
 	 *
 	 * @return anniversary
 	 */
-	private function buildRuleWithBirthdayYesterday()
+	private function buildRuleWithBirthdayYesterday($timezone)
 	{
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$now = $user->create_datetime();
 		$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset() - 24*60*60);
 		$user->data['user_birthday'] = sprintf('%2d-%2d-%4d', $now['mday'], $now['mon'], '1974');
@@ -94,9 +95,10 @@ class birthday_test extends \phpbb_test_case
 	 *
 	 * @return anniversary
 	 */
-	private function buildRuleWithBirthdayTomorrow()
+	private function buildRuleWithBirthdayTomorrow($timezone)
 	{
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$now = $user->create_datetime();
 		$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset() + 24*60*60);
 		$user->data['user_birthday'] = sprintf('%2d-%2d-%4d', $now['mday'], $now['mon'], '1974');
@@ -108,9 +110,10 @@ class birthday_test extends \phpbb_test_case
 	 *
 	 * @return anniversary
 	 */
-	private function buildRuleWithBirthdayToday()
+	private function buildRuleWithBirthdayToday($timezone)
 	{
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
 		$now = $user->create_datetime();
 		$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset());
 		$user->data['user_birthday'] = sprintf('%2d-%2d-%4d', $now['mday'], $now['mon'], '1974');
@@ -125,7 +128,7 @@ class birthday_test extends \phpbb_test_case
 	public function testBirthdayIsTrue($timezone)
 	{
 		date_default_timezone_set($timezone);
-		list($user, $rule) = $this->buildRuleWithBirthdayToday();
+		list($user, $rule) = $this->buildRuleWithBirthdayToday($timezone);
 		$this->assertTrue($rule->isTrue(null), $user->data['user_birthday'] . ' birthday is not today!');
 		return $rule;
 	}
@@ -137,7 +140,7 @@ class birthday_test extends \phpbb_test_case
 	public function testBirthdayYesterdayIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		list($user, $rule) = $this->buildRuleWithBirthdayYesterday();
+		list($user, $rule) = $this->buildRuleWithBirthdayYesterday($timezone);
 		$this->assertFalse($rule->isTrue(null), $user->data['user_birthday'] . ' birthday is not today!');
 		return $rule;
 	}
@@ -149,7 +152,7 @@ class birthday_test extends \phpbb_test_case
 	public function testBirthdayTomorrowIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		list($user, $rule) = $this->buildRuleWithBirthdayTomorrow();
+		list($user, $rule) = $this->buildRuleWithBirthdayTomorrow($timezone);
 		$this->assertFalse($rule->isTrue(null), $user->data['user_birthday'] . ' birthday is not today!');
 		return $rule;
 	}
