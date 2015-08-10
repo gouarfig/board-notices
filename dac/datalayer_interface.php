@@ -33,7 +33,8 @@ interface datalayer_interface
 
 	function getUserInfo($field_name);
 	function isUserInGroupId($group_id);
-	function nonDeletedUserPosts();
+	function nonDeletedUserPosts($in_forums = array());
+	function approvedUserPosts($in_forums = array());
 
 	function getAllGroups();
 	function getForumIdFromTopicId($topic_id);

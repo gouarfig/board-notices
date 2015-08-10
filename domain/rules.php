@@ -25,6 +25,8 @@ class rules
 		'date',
 		'has_never_posted',
 		'has_not_posted_for',
+		'has_never_posted_in_forum',
+		'has_posted_in_forum',
 		'in_forum',
 		'language',
 		'style',

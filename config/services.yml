@@ -70,6 +70,18 @@ services:
             - @user
             - @fq.boardnotices.datalayer
 
+    fq.boardnotices.rules.has_never_posted_in_forum:
+        class: fq\boardnotices\rules\has_never_posted_in_forum
+        arguments:
+            - @user
+            - @fq.boardnotices.datalayer
+
+    fq.boardnotices.rules.has_posted_in_forum:
+        class: fq\boardnotices\rules\has_posted_in_forum
+        arguments:
+            - @user
+            - @fq.boardnotices.datalayer
+
     fq.boardnotices.rules.not_logged_in:
         class: fq\boardnotices\rules\not_logged_in
         arguments:

@@ -4,8 +4,8 @@ namespace fq\boardnotices\tests\rules;
 
 include_once 'phpBB/includes/functions.php';
 
-use \fq\boardnotices\rules\in_default_usergroup;
-use \fq\boardnotices\tests\mock\datalayer_mock;
+use fq\boardnotices\rules\in_default_usergroup;
+use fq\boardnotices\dac\datalayer_interface;
 
 class in_default_usergroup_test extends \phpbb_test_case
 {
@@ -15,7 +15,7 @@ class in_default_usergroup_test extends \phpbb_test_case
 		$lang = &$user->lang;
 		include 'phpBB/ext/fq/boardnotices/language/en/boardnotices_acp.php';
 
-		$datalayer = new datalayer_mock();
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\dac\datalayer_interface')->getMock();
 		$rule = new in_default_usergroup($user, $datalayer);
 		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
 

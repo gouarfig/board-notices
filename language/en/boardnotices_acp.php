@@ -82,6 +82,8 @@ $lang = array_merge($lang, array(
 	'RULE_BIRTHDAY'							=> "On user's birthday",
 	'RULE_DATE'								=> "The date is",
 	'RULE_HAS_NEVER_POSTED'					=> "User has never posted (takes into account posts waiting for approval)",
+	'RULE_HAS_NEVER_POSTED_IN_FORUM'		=> "User has never posted in any of these forums (including posts waiting for approval)",
 	'RULE_HAS_NOT_POSTED_FOR'				=> "User has not posted for this number of days or more (but has posted previously)",
+	'RULE_HAS_POSTED_IN_FORUM'				=> "User has posted in at least one of these forums (<strong>not</strong> including posts waiting for approval)",
 	'RULE_IN_DEFAULT_USERGROUP'				=> 'Default user group is',
 ));

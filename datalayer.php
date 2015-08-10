@@ -457,14 +457,15 @@ class datalayer implements datalayer_interface
 		return isset($this->usergroups[$group_id]) ? true : false;
 	}
 
-	private function loadNonDeletedUserPosts()
+	private function loadUserPosts($include_waiting_for_approval = false, $in_forums = array())
 	{
 		$userposts = 0;
 		$sql_array = array(
 			'SELECT' => 'count(p.post_id) AS count',
 			'FROM' => array(POSTS_TABLE => 'p'),
 			'WHERE' => 'p.poster_id=' . (int) $this->user->data['user_id']
-			. ' AND p.post_visibility < 2',
+			. (($include_waiting_for_approval) ? ' AND p.post_visibility < 2' : ' AND p.post_visibility = 1')
+			. ((!empty($in_forums)) ? ' AND p.forum_id IN (' . implode(',', $in_forums) . ')' : ''),
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 
@@ -481,9 +482,17 @@ class datalayer implements datalayer_interface
 	/**
 	 * Number of posts, INCLUDING waiting for approval ones
 	 */
-	public function nonDeletedUserPosts()
+	public function nonDeletedUserPosts($in_forums = array())
 	{
-		return $this->loadNonDeletedUserPosts();
+		return $this->loadUserPosts(true, $in_forums);
+	}
+
+	/**
+	 * Number of posts, NOT including waiting for approval ones
+	 */
+	public function approvedUserPosts($in_forums = array())
+	{
+		return $this->loadUserPosts(false, $in_forums);
 	}
 
 	private function loadAllGroups()
