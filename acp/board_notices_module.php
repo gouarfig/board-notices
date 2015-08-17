@@ -80,94 +80,116 @@ class board_notices_module
 
 		if ($mode == "manage")
 		{
-			$action = request_var('action', '');
-			if ($this->request->is_set_post('add'))
-			{
-				$action = 'add';
-			}
-			if ($this->request->is_set_post('edit'))
-			{
-				$action = 'edit';
-			}
-			$notice_id = request_var('id', 0);
-
-			switch ($action)
-			{
-				case 'add':
-					$error = '';
-					$data = $this->newBlankNotice();
-					if ($this->request->is_set_post('submit'))
-					{
-						$error = $this->validateNoticeForm($data, true);
-						if (empty($error))
-						{
-							$this->saveNewNotice($data);
-						}
-						else
-						{
-							$this->displayNoticeForm($action, $data, $error);
-						}
-					}
-					else
-					{
-						$this->displayNoticeForm($action, $data);
-					}
-					break;
-
-				case 'edit':
-					$error = '';
-					$data = $this->loadNotice($notice_id);
-					if ($this->request->is_set_post('submit'))
-					{
-						$error = $this->validateNoticeForm($data, true);
-						if (empty($error))
-						{
-							$this->saveNotice($notice_id, $data);
-						}
-						else
-						{
-							$this->displayNoticeForm($action, $data, $error);
-						}
-					}
-					else
-					{
-						$this->displayNoticeForm($action, $data);
-					}
-					break;
-
-				case 'enable':
-				case 'disable':
-					$this->enableNotice($action, $notice_id);
-					$this->displayManager();
-					break;
-
-				case 'move_up':
-				case 'move_down':
-					$this->moveNotice($action, $notice_id);
-					break;
-
-				case 'move_first':
-					$this->moveNoticeFirst($notice_id);
-					break;
-
-				case 'move_last':
-					$this->moveNoticeLast($notice_id);
-					break;
-
-				case 'delete':
-					$this->deleteNotice($notice_id);
-					break;
-
-				case 'edit_rules':
-					$this->displayEditRulesForm($notice_id);
-					break;
-
-				default :
-					$this->displayManager();
-					break;
-			}
-			return;
+			return $this->manage_module($id, $mode);
 		}
+		else if ($mode == "settings")
+		{
+			return $this->settings_module($id, $mode);
+		}
+	}
+
+	public function manage_module($id, $mode)
+	{
+		$action = request_var('action', '');
+		if ($this->request->is_set_post('add'))
+		{
+			$action = 'add';
+		}
+		if ($this->request->is_set_post('edit'))
+		{
+			$action = 'edit';
+		}
+		$notice_id = request_var('id', 0);
+
+		switch ($action)
+		{
+			case 'add':
+				$error = '';
+				$data = $this->newBlankNotice();
+				if ($this->request->is_set_post('submit'))
+				{
+					$error = $this->validateNoticeForm($data, true);
+					if (empty($error))
+					{
+						$this->saveNewNotice($data);
+					}
+					else
+					{
+						$this->displayNoticeForm($action, $data, $error);
+					}
+				}
+				else
+				{
+					$this->displayNoticeForm($action, $data);
+				}
+				break;
+
+			case 'edit':
+				$error = '';
+				$data = $this->loadNotice($notice_id);
+				if ($this->request->is_set_post('submit'))
+				{
+					$error = $this->validateNoticeForm($data, true);
+					if (empty($error))
+					{
+						$this->saveNotice($notice_id, $data);
+					}
+					else
+					{
+						$this->displayNoticeForm($action, $data, $error);
+					}
+				}
+				else
+				{
+					$this->displayNoticeForm($action, $data);
+				}
+				break;
+
+			case 'enable':
+			case 'disable':
+				$this->enableNotice($action, $notice_id);
+				$this->displayManager();
+				break;
+
+			case 'move_up':
+			case 'move_down':
+				$this->moveNotice($action, $notice_id);
+				break;
+
+			case 'move_first':
+				$this->moveNoticeFirst($notice_id);
+				break;
+
+			case 'move_last':
+				$this->moveNoticeLast($notice_id);
+				break;
+
+			case 'delete':
+				$this->deleteNotice($notice_id);
+				break;
+
+			case 'edit_rules':
+				$this->displayEditRulesForm($notice_id);
+				break;
+
+			default :
+				$this->displayManager();
+				break;
+		}
+		return;
+	}
+
+	public function settings_module($id, $mode)
+	{
+		if ($this->request->is_set_post('submit'))
+		{
+			$this->saveSettings();
+		}
+		else
+		{
+			$this->displaySettingsForm();
+		}
+		return;
 	}
 
 	public function displayManager()
@@ -327,6 +349,29 @@ class board_notices_module
 				'RULE_VARIABLES' => implode(', ', $this->rules_manager->getAvailableVars($rule_name)),
 			));
 		}
+	}
+
+	public function displaySettingsForm()
+	{
+		/** @var \fq\boardnotices\datalayer */
+		$data_layer = $this->getDataLayer();
+
+		// Add the board notices ACP lang file
+		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+
+		// Load a template from adm/style for our ACP page
+		$this->tpl_name = 'board_notices_settings';
+
+		// Set the page title for our ACP page
+		$this->page_title = $this->user->lang('ACP_BOARD_NOTICES_MANAGER');
+
+		// Output data to the template
+		$this->template->assign_vars(array(
+			'BOARD_NOTICES_SETTINGS' => $this->user->lang('ACP_BOARD_NOTICES_SETTINGS'),
+			'BOARD_NOTICES_SETTINGS_EXPLAIN' => $this->user->lang('ACP_BOARD_NOTICES_SETTINGS_EXPLAIN'),
+			'LABEL_BOARD_NOTICES_ACTIVE' => $this->user->lang('LABEL_BOARD_NOTICES_ACTIVE'),
+			'BOARD_NOTICES_ACTIVE' => $this->config['boardnotices_enabled'] ? true : false,
+		));
 	}
 
 	private function getDisplayConditions($type, $values, $selected, $input_name)
@@ -734,4 +779,22 @@ class board_notices_module
 		return $all_rules;
 	}
 
+	private function saveSettings()
+	{
+		$data = array();
+
+		// Add the board notices ACP lang file
+		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+
+		// Get config options from the form
+		$data['enabled'] = $this->request->variable('board_notices_active', true);
+
+		// Save data to the config
+		$this->config->set('boardnotices_enabled', ($data['enabled'] ? true : false));
+
+		// Logs the settings update
+		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BOARD_NOTICES_SETTINGS', time(), array());
+		// Output message to user for the update
+		trigger_error($this->user->lang('BOARD_NOTICES_SETTINGS_SAVED') . adm_back_link($this->u_action));
+	}
 }

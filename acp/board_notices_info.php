@@ -18,6 +18,11 @@ class board_notices_info
 			'filename'	=> '\phpbb\boardnotices\acp\board_notices_module',
 			'title'		=> 'ACP_BOARD_NOTICES',
 			'modes'		=> array(
+				'settings'	=> array(
+					'title' => 'ACP_BOARD_NOTICES_SETTINGS',
+					'auth' => 'ext_fq/boardnotices && acl_a_board',
+					'cat' => array('ACP_BOARD_NOTICES')
+				),
 				'manage'	=> array(
 					'title' => 'ACP_BOARD_NOTICES_MANAGE',
 					'auth' => 'ext_fq/boardnotices && acl_a_board',

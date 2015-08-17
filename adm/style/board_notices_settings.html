@@ -1,0 +1,40 @@
+<!-- INCLUDE overall_header.html -->
+
+<script>
+	var form_name = 'acp_board_notices_settings';
+</script>
+
+<a id="maincontent"></a>
+<h1>{BOARD_NOTICES_SETTINGS}</h1>
+
+<p>{BOARD_NOTICES_SETTINGS_EXPLAIN}</p>
+
+<!-- IF ERRORS -->
+	<div class="errorbox">
+		<h3>{L_WARNING}</h3>
+		<p>{ERRORS}</p>
+	</div>
+<!-- ENDIF -->
+
+<form id="acp_board_notices_settings" method="post" action="{U_ACTION}">
+<!-- IF NOTICE_ID -->
+<input type="hidden" name="id" value="{NOTICE_ID}" />
+<!-- ENDIF -->
+	<fieldset>
+		<legend>{L_GENERAL_OPTIONS}</legend>
+		<dl>
+			<dt><label for="board_notices_enabled">{LABEL_BOARD_NOTICES_ACTIVE}{L_COLON}</label></dt>
+			<dd>
+				<label><input type="radio" class="radio" id="board_notices_active" name="board_notices_active" value="1"<!-- IF BOARD_NOTICES_ACTIVE --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="board_notices_active" value="0"<!-- IF not BOARD_NOTICES_ACTIVE --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset class="submit-buttons">
+		<input class="button1" type="submit" id="submit" name="submit" value="{L_SUBMIT}" />&nbsp;
+		{S_FORM_TOKEN}
+	</fieldset>
+</form>
+
+<!-- INCLUDE overall_footer.html -->
