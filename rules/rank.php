@@ -103,10 +103,21 @@ class rank implements rule
 
 	public function getTemplateVars()
 	{
+		if (!function_exists('phpbb_get_user_rank'))
+		{
+			$this->includeDisplayFunctions();
+		}
 		$user_rank = phpbb_get_user_rank($this->user->data, ($this->user->data['user_id'] == ANONYMOUS) ? false : $this->user->data['user_posts']);
 		return array(
 			'RANKID' => $this->getUserRank(),
 			'RANK' => $user_rank['title'],
 		);
+	}
+
+	private function includeDisplayFunctions()
+	{
+		global $phpbb_root_path, $phpEx;
+
+		include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
 	}
 }
