@@ -12,6 +12,7 @@ class in_default_usergroup_test extends \phpbb_test_case
 	public function testInstance()
 	{
 		$user = new \phpbb\user('\phpbb\datetime');
+		$user->data['group_id'] = 10;
 		$lang = &$user->lang;
 		include 'phpBB/ext/fq/boardnotices/language/en/boardnotices_acp.php';
 
@@ -67,7 +68,8 @@ class in_default_usergroup_test extends \phpbb_test_case
 	{
 		list($user, $rule) = $args;
 		$vars = $rule->getAvailableVars();
-		$this->assertEquals(0, count($vars));
+		$this->assertContains('GROUPID', $vars);
+		$this->assertContains('GROUPNAME', $vars);
 	}
 
 	/**
@@ -77,9 +79,12 @@ class in_default_usergroup_test extends \phpbb_test_case
 	 */
 	public function testGetTemplateVars($args)
 	{
+		include 'phpBB/ext/fq/boardnotices/tests/functions.php';
+
 		list($user, $rule) = $args;
 		$vars = $rule->getTemplateVars();
-		$this->assertEquals(0, count($vars));
+		$this->assertEquals(10, $vars['GROUPID']);
+		$this->assertEquals('Group Name', $vars['GROUPNAME']);
 	}
 
 	/**

@@ -122,3 +122,18 @@ services:
         class: fq\boardnotices\rules\has_not_posted_for
         arguments:
             - @user
+
+    fq.boardnotices.rules.has_posted_exactly:
+        class: fq\boardnotices\rules\has_posted_exactly
+        arguments:
+            - @user
+
+    fq.boardnotices.rules.has_posted_less:
+        class: fq\boardnotices\rules\has_posted_less
+        arguments:
+            - @user
+
+    fq.boardnotices.rules.has_posted_more:
+        class: fq\boardnotices\rules\has_posted_more
+        arguments:
+            - @user

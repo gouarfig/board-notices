@@ -108,12 +108,40 @@ class anniversary_test extends \phpbb_test_case
 	 * @dataProvider getTimezones
 	 * @param string $timezone
 	 */
+	public function testOneMonthBeforeTodayIsFalse($timezone)
+	{
+		date_default_timezone_set($timezone);
+		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
+		$user->data['user_regdate'] = time() - (60*60*24*32);
+		$rule = new anniversary($user);
+		$this->assertFalse($rule->isTrue(null));
+	}
+
+	/**
+	 * @dataProvider getTimezones
+	 * @param string $timezone
+	 */
 	public function testTodayPlusOneHourIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
 		$user = new \phpbb\user('\phpbb\datetime');
 		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = time() + (60*60);
+		$rule = new anniversary($user);
+		$this->assertFalse($rule->isTrue(null));
+	}
+
+	/**
+	 * @dataProvider getTimezones
+	 * @param string $timezone
+	 */
+	public function testTodayPlusOneMonthIsFalse($timezone)
+	{
+		date_default_timezone_set($timezone);
+		$user = new \phpbb\user('\phpbb\datetime');
+		$user->timezone = new \DateTimeZone($timezone);
+		$user->data['user_regdate'] = time() + (60*60*24*32);
 		$rule = new anniversary($user);
 		$this->assertFalse($rule->isTrue(null));
 	}

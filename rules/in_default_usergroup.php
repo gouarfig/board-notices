@@ -57,12 +57,26 @@ class in_default_usergroup implements rule
 
 	public function getAvailableVars()
 	{
-		return array();
+		return array('GROUPID', 'GROUPNAME');
 	}
 
 	public function getTemplateVars()
 	{
-		return array();
+		if (!function_exists('get_group_name'))
+		{
+			$this->includeUserFunctions();
+		}
+		return array(
+			'GROUPID' => $this->user->data['group_id'],
+			'GROUPNAME' => get_group_name($this->user->data['group_id']),
+		);
+	}
+
+	private function includeUserFunctions()
+	{
+		global $phpbb_root_path, $phpEx;
+
+		include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 	}
 
 }

@@ -78,45 +78,14 @@ class birthday_test extends \phpbb_test_case
 
 	/**
 	 *
-	 * @return anniversary
 	 */
-	private function buildRuleWithBirthdayYesterday($timezone)
+	private function buildRuleWithBirthday($timezone, $seconds_added = 0, $age_added = 30)
 	{
 		$user = new \phpbb\user('\phpbb\datetime');
 		$user->timezone = new \DateTimeZone($timezone);
-		$now = $user->create_datetime();
-		$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset() - 24*60*60);
-		$user->data['user_birthday'] = sprintf('%2d-%2d-%4d', $now['mday'], $now['mon'], '1974');
-		$rule = new birthday($user);
-		return array($user, $rule);
-	}
-
-	/**
-	 *
-	 * @return anniversary
-	 */
-	private function buildRuleWithBirthdayTomorrow($timezone)
-	{
-		$user = new \phpbb\user('\phpbb\datetime');
-		$user->timezone = new \DateTimeZone($timezone);
-		$now = $user->create_datetime();
-		$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset() + 24*60*60);
-		$user->data['user_birthday'] = sprintf('%2d-%2d-%4d', $now['mday'], $now['mon'], '1974');
-		$rule = new birthday($user);
-		return array($user, $rule);
-	}
-
-	/**
-	 *
-	 * @return anniversary
-	 */
-	private function buildRuleWithBirthdayToday($timezone)
-	{
-		$user = new \phpbb\user('\phpbb\datetime');
-		$user->timezone = new \DateTimeZone($timezone);
-		$now = $user->create_datetime();
-		$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset());
-		$user->data['user_birthday'] = sprintf('%2d-%2d-%4d', $now['mday'], $now['mon'], $now['year'] -30);
+		$birthday = $user->create_datetime();
+		$birthday = phpbb_gmgetdate($birthday->getTimestamp() + $birthday->getOffset() + $seconds_added);
+		$user->data['user_birthday'] = sprintf('%2d-%2d-%4d', $birthday['mday'], $birthday['mon'], $birthday['year'] - $age_added);
 		$rule = new birthday($user);
 		return array($user, $rule);
 	}
@@ -128,8 +97,19 @@ class birthday_test extends \phpbb_test_case
 	public function testBirthdayIsTrue($timezone)
 	{
 		date_default_timezone_set($timezone);
-		list($user, $rule) = $this->buildRuleWithBirthdayToday($timezone);
+		list($user, $rule) = $this->buildRuleWithBirthday($timezone, 0);
 		$this->assertTrue($rule->isTrue(null), $user->data['user_birthday'] . ' birthday is not today!');
+	}
+
+	/**
+	 * @dataProvider getTimezones
+	 * @param string $timezone
+	 */
+	public function testBirthdayLastMonthIsFalse($timezone)
+	{
+		date_default_timezone_set($timezone);
+		list($user, $rule) = $this->buildRuleWithBirthday($timezone, -(24*60*60*32));
+		$this->assertFalse($rule->isTrue(null), $user->data['user_birthday'] . ' birthday is not today!');
 	}
 
 	/**
@@ -139,7 +119,7 @@ class birthday_test extends \phpbb_test_case
 	public function testBirthdayYesterdayIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		list($user, $rule) = $this->buildRuleWithBirthdayYesterday($timezone);
+		list($user, $rule) = $this->buildRuleWithBirthday($timezone, -(24*60*60));
 		$this->assertFalse($rule->isTrue(null), $user->data['user_birthday'] . ' birthday is not today!');
 	}
 
@@ -150,7 +130,18 @@ class birthday_test extends \phpbb_test_case
 	public function testBirthdayTomorrowIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		list($user, $rule) = $this->buildRuleWithBirthdayTomorrow($timezone);
+		list($user, $rule) = $this->buildRuleWithBirthday($timezone, 24*60*60);
+		$this->assertFalse($rule->isTrue(null), $user->data['user_birthday'] . ' birthday is not today!');
+	}
+
+	/**
+	 * @dataProvider getTimezones
+	 * @param string $timezone
+	 */
+	public function testBirthdayNextMonthIsFalse($timezone)
+	{
+		date_default_timezone_set($timezone);
+		list($user, $rule) = $this->buildRuleWithBirthday($timezone, 24*60*60*32);
 		$this->assertFalse($rule->isTrue(null), $user->data['user_birthday'] . ' birthday is not today!');
 	}
 
@@ -161,7 +152,7 @@ class birthday_test extends \phpbb_test_case
 	public function testAge($timezone)
 	{
 		date_default_timezone_set($timezone);
-		list($user, $rule) = $this->buildRuleWithBirthdayToday($timezone);
+		list($user, $rule) = $this->buildRuleWithBirthday($timezone, 0, 30);
 		$rule->isTrue(null);
 		$age = $rule->getTemplateVars();
 		$this->assertTrue($age['AGE'] == 30, "Age is not 30 but {$age['AGE']}");
