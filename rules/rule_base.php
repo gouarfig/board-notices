@@ -13,7 +13,7 @@ namespace fq\boardnotices\rules;
 
 abstract class rule_base {
 
-	protected function validateUniqueCondition($conditions = NULL)
+	protected function validateUniqueCondition($conditions = null)
 	{
 		$value = false;
 		if (!is_null($conditions) && is_string($conditions))
@@ -31,7 +31,7 @@ abstract class rule_base {
 		return $value;
 	}
 
-	protected function validateConditions($conditions = NULL)
+	protected function validateConditions($conditions = null)
 	{
 		$values = false;
 		if (!is_null($conditions) && is_string($conditions))
