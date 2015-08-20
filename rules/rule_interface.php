@@ -11,7 +11,7 @@
 
 namespace fq\boardnotices\rules;
 
-interface rule {
+interface rule_interface {
 	public function getDisplayName();
 	public function getType();
 	public function getPossibleValues();

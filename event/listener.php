@@ -36,7 +36,7 @@ class listener implements EventSubscriberInterface
 	 *
 	 * @param \phpbb\user $user
 	 */
-	public function __construct(\phpbb\user $user, \phpbb\config\config $config, \phpbb\template\template $template, \phpbb\request\request $request, \fq\boardnotices\datalayer $data_layer)
+	public function __construct(\phpbb\user $user, \phpbb\config\config $config, \phpbb\template\template $template, \phpbb\request\request $request, \fq\boardnotices\dac\datalayer_interface $data_layer)
 	{
 		$this->user = $user;
 		$this->config = $config;

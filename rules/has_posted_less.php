@@ -12,7 +12,7 @@
 
 namespace fq\boardnotices\rules;
 
-class has_posted_less implements rule
+class has_posted_less extends rule_base implements rule_interface
 {
 
 	private $user;

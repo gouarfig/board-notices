@@ -12,7 +12,7 @@
 
 namespace fq\boardnotices\rules;
 
-class has_not_posted_for implements rule
+class has_not_posted_for extends rule_base implements rule_interface
 {
 
 	private $user;
@@ -40,15 +40,7 @@ class has_not_posted_for implements rule
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$days = unserialize($conditions);
-		if ($days === false)
-		{
-			$days = $conditions;
-		}
-		if (is_array($days))
-		{
-			$days = (int) $days[0];
-		}
+		$days = $this->validateUniqueCondition($conditions);
 		if ($this->user->data['user_lastpost_time'] > 0)
 		{
 			$valid = ((time() - $this->user->data['user_lastpost_time']) >= ($days * 24 * 60 * 60));

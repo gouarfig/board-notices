@@ -12,7 +12,7 @@
 
 namespace fq\boardnotices\rules;
 
-class birthday implements rule
+class birthday extends rule_base implements rule_interface
 {
 
 	private $user;

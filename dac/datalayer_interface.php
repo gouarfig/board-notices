@@ -42,4 +42,6 @@ interface datalayer_interface
 	function getStyles($all = false);
 	function getRanks();
 
+	function getForumLastReadTime($user_id, $forum_id);
+
 }

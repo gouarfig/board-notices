@@ -12,7 +12,7 @@
 
 namespace fq\boardnotices\rules;
 
-class date implements rule
+class date extends rule_base implements rule_interface
 {
 	private $user;
 
@@ -39,19 +39,15 @@ class date implements rule
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		if (is_null($conditions))
-		{
-			return false;
-		}
-		$conditions = unserialize($conditions);
-		if (is_null($conditions))
+		$date = $this->validateArrayOfConditions($conditions);
+		if (is_null($date) || !is_array($date) || (count($date) != 3))
 		{
 			return false;
 		}
 		$now = getdate();
-		$valid = ((($conditions[0] == 0) || ($now['mday'] == $conditions[0]))
-				&& (($conditions[1] == 0) || ($now['mon'] == $conditions[1]))
-				&& (($conditions[2] == 0) || ($now['year'] == $conditions[2])));
+		$valid = ((($date[0] == 0) || ($now['mday'] == $date[0]))
+				&& (($date[1] == 0) || ($now['mon'] == $date[1]))
+				&& (($date[2] == 0) || ($now['year'] == $date[2])));
 		return $valid;
 	}
 

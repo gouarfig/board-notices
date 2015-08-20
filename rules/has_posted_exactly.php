@@ -12,7 +12,7 @@
 
 namespace fq\boardnotices\rules;
 
-class has_posted_exactly implements rule
+class has_posted_exactly extends rule_base implements rule_interface
 {
 
 	private $user;

@@ -12,7 +12,7 @@
 
 namespace fq\boardnotices\rules;
 
-class in_default_usergroup implements rule
+class in_default_usergroup extends rule_base implements rule_interface
 {
 
 	private $user;
@@ -42,15 +42,7 @@ class in_default_usergroup implements rule
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$group_id = @unserialize($conditions);
-		if ($group_id === false)
-		{
-			$group_id = (int) $conditions;
-		}
-		if (is_array($group_id))
-		{
-			$group_id = (int) $group_id[0];
-		}
+		$group_id = $this->validateUniqueCondition($conditions);
 		$valid = $this->user->data['group_id'] == $group_id;
 		return $valid;
 	}

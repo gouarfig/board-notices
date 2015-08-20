@@ -12,7 +12,7 @@
 
 namespace fq\boardnotices\rules;
 
-class in_forum implements rule
+class in_forum extends rule_base implements rule_interface
 {
 
 	private $user;

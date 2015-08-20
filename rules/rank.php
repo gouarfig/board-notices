@@ -11,7 +11,7 @@
 
 namespace fq\boardnotices\rules;
 
-class rank implements rule
+class rank extends rule_base implements rule_interface
 {
 	private $user;
 	private $data_layer;

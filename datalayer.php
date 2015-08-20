@@ -598,4 +598,29 @@ class datalayer implements datalayer_interface
 		return $ranks;
 	}
 
+	private function loadForumLastReadTime($user_id)
+	{
+		static $forums = array();
+
+		if (!isset($forums[$user_id]))
+		{
+			$forums[$user_id] = array();
+			$sql = 'SELECT forum_id, mark_time'
+					. ' FROM ' . FORUMS_TRACK_TABLE
+					. ' WHERE user_id=' . (int) $user_id;
+			$result = $this->db->sql_query($sql);
+			while ($row = $this->db->sql_fetchrow($result))
+			{
+				$forums[$user_id][$row['forum_id']] = $row['mark_time'];
+			}
+			$this->db->sql_freeresult($result);
+		}
+		return $forums[$user_id];
+	}
+
+	function getForumLastReadTime($user_id, $forum_id)
+	{
+		$forums = $this->loadForumLastReadTime($user_id);
+		return (isset($forums[$forum_id]) ? $forums[$forum_id] : null);
+	}
 }

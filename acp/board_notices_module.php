@@ -196,7 +196,7 @@ class board_notices_module
 	{
 		global $phpbb_root_path, $phpEx;
 
-		/** @var \fq\boardnotices\datalayer */
+		/** @var \fq\boardnotices\dac\datalayer_interface */
 		$data_layer = $this->getDataLayer();
 
 		// Add the board notices ACP lang file
@@ -388,67 +388,104 @@ class board_notices_module
 				$selected = array();
 			}
 		}
-		switch ($type)
+		$types = explode('|', $type);
+		foreach ($types as $single_type)
 		{
-			case 'int':
-				$display .= '<input type="text" maxlength="5" size="10" name="' . $input_name . '[]" value="' . $selected[0] . '">';
-				break;
+			switch ($single_type)
+			{
+				case 'int':
+					$display .= $this->getDisplayIntConditions($input_name, $selected[0]);
+					break;
 
-			case 'date':
-				$display .= $this->user->lang('DAY') . $this->user->lang('COLON');
-				$display .= '&nbsp;<select name="' . $input_name . '[0]">';
-				$display .= '<option value="0">---</option>';
-				for ($i = 1; $i <= 31; $i++)
-				{
-					$display .= '<option value="' . $i . '"' . (($selected[0] == $i) ? ' selected' : '') . '>' . $i . '</option>';
-				}
-				$display .= '</select>&nbsp;';
-				$display .= $this->user->lang('MONTH') . $this->user->lang('COLON');
-				$display .= '&nbsp;<select name="' . $input_name . '[1]">';
-				$display .= '<option value="0">---</option>';
-				for ($i = 1; $i <= 12; $i++)
-				{
-					$display .= '<option value="' . $i . '"' . (($selected[1] == $i) ? ' selected' : '') . '>' . $i . '</option>';
-				}
-				$display .= '</select>&nbsp;';
-				$display .= $this->user->lang('YEAR') . $this->user->lang('COLON');
-				$display .= '&nbsp;<select name="' . $input_name . '[2]">';
-				$display .= '<option value="0">---</option>';
-				for ($i = 2015; $i <= 2038; $i++)
-				{
-					$display .= '<option value="' . $i . '"' . (($selected[2] == $i) ? ' selected' : '') . '>' . $i . '</option>';
-				}
-				$display .= '</select>&nbsp;';
-				break;
+				case 'date':
+					$display .= $this->getDisplayDateConditions($input_name, $selected);
+					break;
 
-			case 'list':
-			case 'multiple choice':
-				$size = (count($values) < 10) ? count($values) : 10;
-				$display .= '<select' . (($type == 'multiple choice') ? ' multiple="multiple"' : '') . ' size="' . $size . '" name="' . $input_name . '[]">';
-				if (is_array($values) && !empty($values))
-				{
-					foreach ($values as $key => $value)
-					{
-						$display .= '<option value="' . $key . '"' . (in_array($key, $selected) ? ' selected' : '') . '>' . $value . '</option>';
-					}
-				}
-				$display .= "</select>";
-				break;
+				case 'list':
+				case 'multiple choice':
+					$display .= $this->getDisplayListConditions($single_type, $input_name, $values, $selected);
+					break;
 
-			case 'forums':
-				$display .= '<select multiple="multiple" size="10" name="' . $input_name . '[]">';
-				$display .= make_forum_select($selected, false, false, true);
-				$display .= "</select>";
-				break;
+				case 'forums':
+					$display .= $this->getDisplayForumsConditions($input_name, $selected);
+					break;
 
-			case 'yesno':
-				$display .= '<label><input type="radio" class="radio" id="' . $input_name . '" name="' . $input_name . '[0]" value="1"' . ($selected[0] ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['YES'] . '</label>';
-				$display .= '<label><input type="radio" class="radio" name="' . $input_name . '[0]" value="0"' . (!$selected[0] ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['NO_GUEST_OR_BOT'] . '</label>';
-				break;
+				case 'yesno':
+					$display .= $this->getDisplayYesNoConditions($input_name, $selected[0]);
+					break;
 
-			default:
-				break;
+				default:
+					break;
+			}
 		}
+		return $display;
+	}
+
+	private function getDisplayIntConditions($input_name, $selected)
+	{
+		return '<input type="text" maxlength="5" size="10" name="' . $input_name . '[]" value="' . $selected . '">';
+	}
+
+	private function getDisplayDateConditions($input_name, $selected)
+	{
+		$display = '';
+		$display .= $this->user->lang('DAY') . $this->user->lang('COLON');
+		$display .= '&nbsp;<select name="' . $input_name . '[0]">';
+		$display .= '<option value="0">---</option>';
+		for ($i = 1; $i <= 31; $i++)
+		{
+			$display .= '<option value="' . $i . '"' . (($selected[0] == $i) ? ' selected' : '') . '>' . $i . '</option>';
+		}
+		$display .= '</select>&nbsp;';
+		$display .= $this->user->lang('MONTH') . $this->user->lang('COLON');
+		$display .= '&nbsp;<select name="' . $input_name . '[1]">';
+		$display .= '<option value="0">---</option>';
+		for ($i = 1; $i <= 12; $i++)
+		{
+			$display .= '<option value="' . $i . '"' . (($selected[1] == $i) ? ' selected' : '') . '>' . $i . '</option>';
+		}
+		$display .= '</select>&nbsp;';
+		$display .= $this->user->lang('YEAR') . $this->user->lang('COLON');
+		$display .= '&nbsp;<select name="' . $input_name . '[2]">';
+		$display .= '<option value="0">---</option>';
+		for ($i = 2015; $i <= 2038; $i++)
+		{
+			$display .= '<option value="' . $i . '"' . (($selected[2] == $i) ? ' selected' : '') . '>' . $i . '</option>';
+		}
+		$display .= '</select>&nbsp;';
+		return $display;
+	}
+
+	private function getDisplayListConditions($type, $input_name, $values, $selected)
+	{
+		$display = '';
+		$size = (count($values) < 10) ? count($values) : 10;
+		$display .= '<select' . (($type == 'multiple choice') ? ' multiple="multiple"' : '') . ' size="' . $size . '" name="' . $input_name . '[]">';
+		if (is_array($values) && !empty($values))
+		{
+			foreach ($values as $key => $value)
+			{
+				$display .= '<option value="' . $key . '"' . (in_array($key, $selected) ? ' selected' : '') . '>' . $value . '</option>';
+			}
+		}
+		$display .= "</select>";
+		return $display;
+	}
+
+	private function getDisplayForumsConditions($input_name, $selected)
+	{
+		$display = '';
+		$display .= '<select multiple="multiple" size="10" name="' . $input_name . '[]">';
+		$display .= make_forum_select($selected, false, false, true);
+		$display .= "</select>";
+		return $display;
+	}
+
+	private function getDisplayYesNoConditions($input_name, $selected)
+	{
+		$display = '';
+		$display .= '<label><input type="radio" class="radio" id="' . $input_name . '" name="' . $input_name . '[0]" value="1"' . ($selected[0] ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['YES'] . '</label>';
+		$display .= '<label><input type="radio" class="radio" name="' . $input_name . '[0]" value="0"' . (!$selected[0] ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['NO_GUEST_OR_BOT'] . '</label>';
 		return $display;
 	}
 

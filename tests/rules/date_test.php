@@ -105,7 +105,7 @@ class date_test extends \phpbb_test_case
 
 	public function buildConditions($now, $day = null, $month = null, $year = null)
 	{
-		$conditions = array(0 ,0, 0);
+		$conditions = array(0, 0, 0);
 		if (!is_null($day))
 		{
 			$day = intval($day);
@@ -159,7 +159,7 @@ class date_test extends \phpbb_test_case
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 	}
 
 	/**
@@ -174,7 +174,7 @@ class date_test extends \phpbb_test_case
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 	}
 
 	/**
@@ -189,7 +189,7 @@ class date_test extends \phpbb_test_case
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, null, 0);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 	}
 
 	/**
@@ -204,7 +204,7 @@ class date_test extends \phpbb_test_case
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, null, null, 0);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 	}
 
 	/**
@@ -219,7 +219,7 @@ class date_test extends \phpbb_test_case
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, 0);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 	}
 
 	/**
@@ -234,7 +234,7 @@ class date_test extends \phpbb_test_case
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, null, 0);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 	}
 
 	/**
@@ -249,7 +249,7 @@ class date_test extends \phpbb_test_case
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, null, 0, 0);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 	}
 
 	/**
@@ -264,7 +264,7 @@ class date_test extends \phpbb_test_case
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, 0, 0);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 	}
 
 	/**
@@ -279,10 +279,10 @@ class date_test extends \phpbb_test_case
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, -1, 0, 0);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 
 		$conditions = $this->buildConditions($now, -1, null, null);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 	}
 
 	/**
@@ -297,10 +297,10 @@ class date_test extends \phpbb_test_case
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 1, 0, 0);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 
 		$conditions = $this->buildConditions($now, 1, null, null);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 	}
 
 	/**
@@ -315,10 +315,10 @@ class date_test extends \phpbb_test_case
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, -1, 0);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 
 		$conditions = $this->buildConditions($now, null, -1, null);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 	}
 
 	/**
@@ -333,10 +333,10 @@ class date_test extends \phpbb_test_case
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, 1, 0);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 
 		$conditions = $this->buildConditions($now, null, 1, null);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 	}
 
 	/**
@@ -351,10 +351,10 @@ class date_test extends \phpbb_test_case
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, 0, -1);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 
 		$conditions = $this->buildConditions($now, null, null, -1);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 	}
 
 	/**
@@ -369,9 +369,9 @@ class date_test extends \phpbb_test_case
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, 0, 1);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 
 		$conditions = $this->buildConditions($now, null, null, 1);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 	}
 }

@@ -12,7 +12,7 @@
 
 namespace fq\boardnotices\rules;
 
-class has_never_posted_in_forum implements rule
+class has_never_posted_in_forum extends rule_base implements rule_interface
 {
 
 	private $user;
@@ -42,20 +42,8 @@ class has_never_posted_in_forum implements rule
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$forums = array();
-		if (!empty($conditions))
-		{
-			$forums = @unserialize($conditions);
-			if ($forums === false)
-			{
-				// There's only one forum
-				$forums = array((int) $conditions);
-			}
-			else if (!is_array($forums) && !empty($forums))
-			{
-				$forums = array((int) $forums);
-			}
-		}
+		$forums = $this->validateArrayOfConditions($conditions);
+		$forums = $this->cleanEmptyStringsFromArray($forums);
 		$posts = $this->data_layer->nonDeletedUserPosts($forums);
 		$valid = ($posts == 0);
 		return $valid;
