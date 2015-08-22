@@ -56,4 +56,20 @@ class database_migration_test extends \phpbb_database_test_case
 	{
 		$this->assertTrue($this->db_tools->sql_table_exists($this->table_prefix . 'notices_seen'), 'Asserting that column "' . $this->table_prefix . 'notices_seen" does not exist');
 	}
+
+	public function _test_preview_key_generated()
+	{
+		$db = $this->new_dbal();
+		$sql = "SELECT config_name, config_value FROM {$this->table_prefix}config";
+		$result = $db->sql_query($sql);
+
+		$config = array();
+		while ($row = $db->sql_fetchrow($result))
+		{
+			$config[$row['config_name']] = $row['config_value'];
+		}
+		$db->sql_freeresult($result);
+
+		$this->assertEquals(10, strlen($config['boardnotices_previewkey']));
+	}
 }

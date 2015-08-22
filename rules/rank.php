@@ -103,10 +103,12 @@ class rank extends rule_base implements rule_interface
 
 	public function getTemplateVars()
 	{
+		// @codeCoverageIgnoreStart
 		if (!function_exists('phpbb_get_user_rank'))
 		{
 			$this->includeDisplayFunctions();
 		}
+		// @codeCoverageIgnoreEnd
 		$user_rank = phpbb_get_user_rank($this->user->data, ($this->user->data['user_id'] == ANONYMOUS) ? false : $this->user->data['user_posts']);
 		return array(
 			'RANKID' => $this->getUserRank(),
@@ -114,10 +116,4 @@ class rank extends rule_base implements rule_interface
 		);
 	}
 
-	private function includeDisplayFunctions()
-	{
-		global $phpbb_root_path, $phpEx;
-
-		include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-	}
 }

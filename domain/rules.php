@@ -18,6 +18,13 @@ class rules
 	private $root_path;
 	private $rules;
 	private $rules_loaded = false;
+	private $not_rule_files = array(
+		'.',
+		'..',
+		'rule.php',
+		'rule_base.php',
+		'rule_interface.php',
+	);
 	private $default_order = array(
 		'logged_in',
 		'birthday',
@@ -61,7 +68,7 @@ class rules
 		{
 			while (false !== ($entry = readdir($handle)))
 			{
-				if ($entry != "." && $entry != ".." && $entry != "rule.php")
+				if (!in_array($entry, $this->not_rule_files))
 				{
 					$entry = str_replace('.php', '', $entry);
 					$classes[] = $entry;
@@ -109,7 +116,10 @@ class rules
 
 		foreach ($this->default_order as $rule_name)
 		{
-			$rule_names[$rule_name] = $this->rules[$rule_name]->getDisplayName();
+			if (isset($this->rules[$rule_name]))
+			{
+				$rule_names[$rule_name] = $this->rules[$rule_name]->getDisplayName();
+			}
 		}
 		// Add the remaining ones not on the order list
 		foreach ($this->rules as $name => $rule)

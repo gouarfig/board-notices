@@ -73,4 +73,25 @@ abstract class rule_base {
 		}
 		return $new_array;
 	}
+
+	/**
+	 * @codeCoverageIgnore
+	 */
+	protected function includeDisplayFunctions()
+	{
+		global $phpbb_root_path, $phpEx;
+
+		include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+	}
+
+	/**
+	 * @codeCoverageIgnore
+	 */
+	protected function includeUserFunctions()
+	{
+		global $phpbb_root_path, $phpEx;
+
+		include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+	}
+
 }

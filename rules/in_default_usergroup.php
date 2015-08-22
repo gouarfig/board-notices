@@ -54,21 +54,16 @@ class in_default_usergroup extends rule_base implements rule_interface
 
 	public function getTemplateVars()
 	{
+		// @codeCoverageIgnoreStart
 		if (!function_exists('get_group_name'))
 		{
 			$this->includeUserFunctions();
 		}
+		// @codeCoverageIgnoreEnd
 		return array(
 			'GROUPID' => $this->user->data['group_id'],
 			'GROUPNAME' => get_group_name($this->user->data['group_id']),
 		);
-	}
-
-	private function includeUserFunctions()
-	{
-		global $phpbb_root_path, $phpEx;
-
-		include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 	}
 
 }
