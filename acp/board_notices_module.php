@@ -398,7 +398,7 @@ class board_notices_module
 			$i = 0;
 			foreach ($types as $single_type)
 			{
-				$display .= $this->getSingleDisplayConditions($single_type, $input_name, $selected, $values, $i);
+				$display .= $this->getSingleDisplayConditions($single_type, $input_name, $selected[$i], $values[$i], $i);
 				$i++;
 			}
 		}
@@ -408,6 +408,12 @@ class board_notices_module
 	private function getSingleDisplayConditions($type, $input_name, $selected, $values, $index = 0)
 	{
 		$display = '';
+
+		if ($index > 0)
+		{
+			$input_name .= $index;
+		}
+
 		switch ($type)
 		{
 			case 'int':
