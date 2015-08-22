@@ -16,7 +16,7 @@ class configuration extends \phpbb\db\migration\migration
 
 	public function effectively_installed()
 	{
-		return isset($this->config['boardnotices_previewkey']);
+		return (isset($this->config['boardnotices_previewkey']) && !empty($this->config['boardnotices_previewkey']));
 	}
 
 	public function update_data()

@@ -388,35 +388,51 @@ class board_notices_module
 				$selected = array();
 			}
 		}
-		$types = explode('|', $type);
-		foreach ($types as $single_type)
+		if (strpos($type, '|') === false)
 		{
-			switch ($single_type)
+			$display .= $this->getSingleDisplayConditions($type, $input_name, $selected, $values);
+		}
+		else
+		{
+			$types = explode('|', $type);
+			$i = 0;
+			foreach ($types as $single_type)
 			{
-				case 'int':
-					$display .= $this->getDisplayIntConditions($input_name, $selected[0]);
-					break;
-
-				case 'date':
-					$display .= $this->getDisplayDateConditions($input_name, $selected);
-					break;
-
-				case 'list':
-				case 'multiple choice':
-					$display .= $this->getDisplayListConditions($single_type, $input_name, $values, $selected);
-					break;
-
-				case 'forums':
-					$display .= $this->getDisplayForumsConditions($input_name, $selected);
-					break;
-
-				case 'yesno':
-					$display .= $this->getDisplayYesNoConditions($input_name, $selected[0]);
-					break;
-
-				default:
-					break;
+				$display .= $this->getSingleDisplayConditions($single_type, $input_name, $selected, $values, $i);
+				$i++;
 			}
+		}
+		return $display;
+	}
+
+	private function getSingleDisplayConditions($type, $input_name, $selected, $values, $index = 0)
+	{
+		$display = '';
+		switch ($type)
+		{
+			case 'int':
+				$display .= $this->getDisplayIntConditions($input_name, $selected[0]);
+				break;
+
+			case 'date':
+				$display .= $this->getDisplayDateConditions($input_name, $selected);
+				break;
+
+			case 'list':
+			case 'multiple choice':
+				$display .= $this->getDisplayListConditions($type, $input_name, $values, $selected);
+				break;
+
+			case 'forums':
+				$display .= $this->getDisplayForumsConditions($input_name, $selected);
+				break;
+
+			case 'yesno':
+				$display .= $this->getDisplayYesNoConditions($input_name, $selected[0]);
+				break;
+
+			default:
+				break;
 		}
 		return $display;
 	}
