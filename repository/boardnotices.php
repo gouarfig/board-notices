@@ -292,7 +292,8 @@ class boardnotices implements boardnotices_interface
 	public function saveNewNotice(&$data)
 	{
 		$new_id = null;
-		if (is_array($data) && !empty($data)) {
+		if (is_array($data) && !empty($data))
+		{
 			$data['notice_id'] = $this->getNextNoticeId();
 			$data['notice_order'] = $this->getNextNoticeOrder();
 			$sql = "INSERT INTO {$this->notices_table} " . $this->db->sql_build_array('INSERT', $data);
