@@ -13,6 +13,8 @@
 
 namespace fq\boardnotices\tests\repository;
 
+define('BOARDNOTICES_DEBUG', false);
+
 use fq\boardnotices\repository\boardnotices;
 
 class boardnotices_test extends \phpbb_database_test_case
@@ -123,7 +125,8 @@ class boardnotices_test extends \phpbb_database_test_case
 	public function testMoveUpFirstNotice()
 	{
 		$dac = $this->getBoardNoticesInstance();
-		$dac->moveNotice('move_up', 1);
+		$moved = $dac->moveNotice('move_up', 1);
+		$this->assertFalse($moved);
 
 		// Order shouldn't have changed
 		$notice = $dac->getNoticeFromId(1);
@@ -132,13 +135,11 @@ class boardnotices_test extends \phpbb_database_test_case
 		$this->assertThat($notice['notice_order'], $this->equalTo(2));
 	}
 
-	/**
-	 * @depends testMoveUpFirstNotice
-	 */
 	public function testMoveUpSecondNotice()
 	{
 		$dac = $this->getBoardNoticesInstance();
-		$dac->moveNotice('move_up', 2);
+		$moved = $dac->moveNotice('move_up', 2);
+		$this->assertTrue($moved);
 
 		// Order should have changed
 		$notice = $dac->getNoticeFromId(1);
@@ -147,44 +148,38 @@ class boardnotices_test extends \phpbb_database_test_case
 		$this->assertThat($notice['notice_order'], $this->equalTo(1));
 	}
 
-	/**
-	 * @depends testMoveUpSecondNotice
-	 */
 	public function testMoveDownLastNotice()
 	{
 		$dac = $this->getBoardNoticesInstance();
-		// Last notice is 1
-		$dac->moveNotice('move_down', 1);
+		$notices = $dac->getAllNotices();
+		$moved = $dac->moveNotice('move_down', 2);
+		$this->assertFalse($moved);
 
 		// Order shouldn't have changed
 		$notice = $dac->getNoticeFromId(1);
-		$this->assertThat($notice['notice_order'], $this->equalTo(2));
-		$notice = $dac->getNoticeFromId(2);
 		$this->assertThat($notice['notice_order'], $this->equalTo(1));
+		$notice = $dac->getNoticeFromId(2);
+		$this->assertThat($notice['notice_order'], $this->equalTo(2));
 	}
 
-	/**
-	 * @depends testMoveDownLastNotice
-	 */
 	public function testMoveDownFirstNotice()
 	{
 		$dac = $this->getBoardNoticesInstance();
-		$dac->moveNotice('move_down', 2);
+		$moved = $dac->moveNotice('move_down', 1);
+		$this->assertTrue($moved);
 
 		// Order should have changed
 		$notice = $dac->getNoticeFromId(1);
-		$this->assertThat($notice['notice_order'], $this->equalTo(1));
-		$notice = $dac->getNoticeFromId(2);
 		$this->assertThat($notice['notice_order'], $this->equalTo(2));
+		$notice = $dac->getNoticeFromId(2);
+		$this->assertThat($notice['notice_order'], $this->equalTo(1));
 	}
 
-	/**
-	 * @depends testMoveDownFirstNotice
-	 */
 	public function testMoveFirstFirstNotice()
 	{
 		$dac = $this->getBoardNoticesInstance();
-		$dac->moveNoticeFirst(1);
+		$moved = $dac->moveNoticeFirst(1);
+		$this->assertFalse($moved);
 
 		// Order shouldn't have changed
 		$notice = $dac->getNoticeFromId(1);
@@ -193,13 +188,11 @@ class boardnotices_test extends \phpbb_database_test_case
 		$this->assertThat($notice['notice_order'], $this->equalTo(2));
 	}
 
-	/**
-	 * @depends testMoveFirstFirstNotice
-	 */
 	public function testMoveFirstSecondNotice()
 	{
 		$dac = $this->getBoardNoticesInstance();
-		$dac->moveNoticeFirst(2);
+		$moved = $dac->moveNoticeFirst(2);
+		$this->assertTrue($moved);
 
 		// Order should have changed
 		$notice = $dac->getNoticeFromId(1);
@@ -208,30 +201,24 @@ class boardnotices_test extends \phpbb_database_test_case
 		$this->assertThat($notice['notice_order'], $this->equalTo(1));
 	}
 
-	/**
-	 * @depends testMoveFirstSecondNotice
-	 */
 	public function testMoveLastFirstNotice()
 	{
 		$dac = $this->getBoardNoticesInstance();
-		// First one is now 2
-		$dac->moveNoticeLast(2);
+		$moved = $dac->moveNoticeLast(1);
+		$this->assertTrue($moved);
 
 		// Order should have changed
 		$notice = $dac->getNoticeFromId(1);
-		$this->assertThat($notice['notice_order'], $this->equalTo(1));
-		$notice = $dac->getNoticeFromId(2);
 		$this->assertThat($notice['notice_order'], $this->equalTo(2));
+		$notice = $dac->getNoticeFromId(2);
+		$this->assertThat($notice['notice_order'], $this->equalTo(1));
 	}
 
-	/**
-	 * @depends testMoveLastFirstNotice
-	 */
-	public function testMoveLastSecondNotice()
+	function testMoveLastSecondNotice()
 	{
 		$dac = $this->getBoardNoticesInstance();
-		// Last one is now 2
-		$dac->moveNoticeLast(2);
+		$moved = $dac->moveNoticeLast(2);
+		$this->assertFalse($moved);
 
 		// Order shouldn't have changed
 		$notice = $dac->getNoticeFromId(1);
@@ -239,6 +226,7 @@ class boardnotices_test extends \phpbb_database_test_case
 		$notice = $dac->getNoticeFromId(2);
 		$this->assertThat($notice['notice_order'], $this->equalTo(2));
 	}
+
 	/**
 	 * @depends testMoveLastSecondNotice
 	 */
@@ -261,8 +249,8 @@ class boardnotices_test extends \phpbb_database_test_case
 		);
 		$dac->saveNewNotice($data1);
 		$data2 = array(
-			'title' => 'New notice 1',
-			'message' => 'New notice 1',
+			'title' => 'New notice 2',
+			'message' => 'New notice 2',
 			'message_uid' => '',
 			'message_bitfield' => '',
 			'message_options' => 0,
@@ -280,5 +268,58 @@ class boardnotices_test extends \phpbb_database_test_case
 
 		$notice = $dac->getNoticeFromId(4);
 		$this->assertThat($notice['notice_order'], $this->equalTo(4));
+
+		$moved = $dac->moveNoticeFirst(4);
+		$this->assertTrue($moved);
+
+		// Order should have changed
+		$notice = $dac->getNoticeFromId(4);
+		$this->assertThat($notice['notice_order'], $this->equalTo(1));
+		$notice = $dac->getNoticeFromId(1);
+		$this->assertThat($notice['notice_order'], $this->equalTo(2));
+		$notice = $dac->getNoticeFromId(2);
+		$this->assertThat($notice['notice_order'], $this->equalTo(3));
+		$notice = $dac->getNoticeFromId(3);
+		$this->assertThat($notice['notice_order'], $this->equalTo(4));
+
+		$moved = $dac->moveNoticeLast(4);
+		$this->assertTrue($moved);
+
+		// Order should have changed
+		$notice = $dac->getNoticeFromId(1);
+		$this->assertThat($notice['notice_order'], $this->equalTo(1));
+		$notice = $dac->getNoticeFromId(2);
+		$this->assertThat($notice['notice_order'], $this->equalTo(2));
+		$notice = $dac->getNoticeFromId(3);
+		$this->assertThat($notice['notice_order'], $this->equalTo(3));
+		$notice = $dac->getNoticeFromId(4);
+		$this->assertThat($notice['notice_order'], $this->equalTo(4));
+
+		$moved = $dac->moveNotice('move_up', 3);
+		$this->assertTrue($moved);
+
+		// Order should have changed
+		$notice = $dac->getNoticeFromId(1);
+		$this->assertThat($notice['notice_order'], $this->equalTo(1));
+		$notice = $dac->getNoticeFromId(3);
+		$this->assertThat($notice['notice_order'], $this->equalTo(2));
+		$notice = $dac->getNoticeFromId(2);
+		$this->assertThat($notice['notice_order'], $this->equalTo(3));
+		$notice = $dac->getNoticeFromId(4);
+		$this->assertThat($notice['notice_order'], $this->equalTo(4));
+
+		$moved = $dac->moveNotice('move_down', 3);
+		$this->assertTrue($moved);
+
+		// Order should have changed
+		$notice = $dac->getNoticeFromId(1);
+		$this->assertThat($notice['notice_order'], $this->equalTo(1));
+		$notice = $dac->getNoticeFromId(2);
+		$this->assertThat($notice['notice_order'], $this->equalTo(2));
+		$notice = $dac->getNoticeFromId(3);
+		$this->assertThat($notice['notice_order'], $this->equalTo(3));
+		$notice = $dac->getNoticeFromId(4);
+		$this->assertThat($notice['notice_order'], $this->equalTo(4));
 	}
+
 }

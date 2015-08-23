@@ -39,6 +39,18 @@ class boardnotices implements boardnotices_interface
 		$this->notices_seen_table = $notices_seen_table;
 	}
 
+	/**
+	 * @codeCoverageIgnore
+	 * @param string $message
+	 */
+	private function debug($message)
+	{
+		if (defined('BOARDNOTICES_DEBUG') && BOARDNOTICES_DEBUG)
+		{
+			echo "<br />{$message}<br />\n";
+		}
+	}
+
 	private function loadNotices($active_only = true)
 	{
 		$notices = array();
@@ -62,6 +74,8 @@ class boardnotices implements boardnotices_interface
 
 	public function getNotices($active_only = true)
 	{
+		$this->debug("getNotices(active_only: {$active_only})");
+
 		if (!$this->notices_loaded || ($this->active_notices_loaded != $active_only))
 		{
 			$this->notices = $this->loadNotices($active_only);
@@ -83,6 +97,8 @@ class boardnotices implements boardnotices_interface
 
 	public function getNoticeFromId($notice_id)
 	{
+		$this->debug("getNoticeFromId(notice_id: {$notice_id})");
+
 		$notice = null;
 		$load_active_only = false;
 		if (!$this->notices_loaded || ($this->active_notices_loaded != $load_active_only))
@@ -112,6 +128,8 @@ class boardnotices implements boardnotices_interface
 
 	public function moveNotice($action, $notice_id)
 	{
+		$move_executed = false;
+
 		// Get current order id...
 		$sql = "SELECT notice_order as current_order
 			FROM {$this->notices_table}
@@ -123,20 +141,20 @@ class boardnotices implements boardnotices_interface
 		// First order is 1
 		if ($current_order <= 1 && $action == 'move_up')
 		{
-			return;
+			return false;
 		}
 
 		// on move_down, switch position with next order_id...
 		// on move_up, switch position with previous order_id...
-		$switch_order_id = ($action == 'move_down') ? $current_order + 1 : $current_order - 1;
+		$switch_order_id = (($action == 'move_down') ? ($current_order + 1) : ($current_order - 1));
 
 		//
-		$sql = "UPDATE $this->notices_table
+		$sql = "UPDATE {$this->notices_table}
 			SET notice_order = $current_order
 			WHERE notice_order = $switch_order_id
 				AND notice_id <> $notice_id";
 		$this->db->sql_query($sql);
-		$move_executed = (bool) $this->db->sql_affectedrows();
+		$move_executed = ($this->db->sql_affectedrows() > 0) ? true : false;
 
 		// Only update the other entry too if the previous entry got updated
 		if ($move_executed)
