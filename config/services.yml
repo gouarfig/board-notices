@@ -15,6 +15,16 @@ services:
             - %tables.boardnotices.notices_rules%
             - %tables.boardnotices.notices_seen%
 
+    fq.boardnotices.repository.boardnotices:
+        class: fq\boardnotices\repository\boardnotices
+        arguments:
+            - @dbal.conn
+            - @user
+            - @cache
+            - %tables.boardnotices.notices%
+            - %tables.boardnotices.notices_rules%
+            - %tables.boardnotices.notices_seen%
+
     fq.boardnotices.listener:
         class: fq\boardnotices\event\listener
         arguments:
@@ -22,7 +32,7 @@ services:
             - @config
             - @template
             - @request
-            - @fq.boardnotices.datalayer
+            - @fq.boardnotices.repository.boardnotices
         tags:
             - { name: event.listener }
 

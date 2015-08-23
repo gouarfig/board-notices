@@ -22,7 +22,7 @@ class listener implements EventSubscriberInterface
 	protected $config = null;
 	protected $template = '';
 	protected $request;
-	protected $data_layer;
+	protected $repository;
 
 	static public function getSubscribedEvents()
 	{
@@ -36,13 +36,13 @@ class listener implements EventSubscriberInterface
 	 *
 	 * @param \phpbb\user $user
 	 */
-	public function __construct(\phpbb\user $user, \phpbb\config\config $config, \phpbb\template\template $template, \phpbb\request\request $request, \fq\boardnotices\dac\datalayer_interface $data_layer)
+	public function __construct(\phpbb\user $user, \phpbb\config\config $config, \phpbb\template\template $template, \phpbb\request\request $request, \fq\boardnotices\repository\boardnotices_interface $repository)
 	{
 		$this->user = $user;
 		$this->config = $config;
 		$this->template = $template;
 		$this->request = $request;
-		$this->data_layer = $data_layer;
+		$this->repository = $repository;
 	}
 
 	/**
@@ -62,14 +62,14 @@ class listener implements EventSubscriberInterface
 		{
 			// Force the preview of a notice
 			$preview_id = $this->getPreviewId();
-			$raw_notice = $this->data_layer->getNoticeFromId($preview_id);
+			$raw_notice = $this->repository->getNoticeFromId($preview_id);
 			$notices[] = $this->getNotice($raw_notice);
 			$force_all_rules = true;
 		}
 		else if ($this->extensionEnabled())
 		{
 			// Normal notices mode
-			$raw_notices = $this->data_layer->getActiveNotices();
+			$raw_notices = $this->repository->getActiveNotices();
 			foreach ($raw_notices as $raw_notice)
 			{
 				$notices[] = $this->getNotice($raw_notice);
@@ -152,7 +152,7 @@ class listener implements EventSubscriberInterface
 
 	private function getNotice($raw_notice)
 	{
-		$rules = $this->data_layer->getRulesFor($raw_notice['notice_id']);
+		$rules = $this->repository->getRulesFor($raw_notice['notice_id']);
 		return new notice($raw_notice, $rules);
 	}
 }

@@ -54,7 +54,7 @@ class boardnotices_test extends \phpbb_database_test_case
 	}
 
 	/**
-	 * I don't know what's happening inside phpunit or phpbb tests but I can't build an instance once for all and reuse it.
+	 * A new clean database is re-created on each test
 	 *
 	 * @return boardnotices
 	 */
