@@ -4,7 +4,7 @@
 	"description": "With this extension, you can manage all sorts of notices for your board",
 	"homepage": "https://github.com/gouarfig/board-notices",
 	"version": "0.2.6",
-	"time": "2015-08-22",
+	"time": "2015-08-23",
 	"license": "GPL-2.0",
 	"authors": [{
 			"name": "Fred Quointeau",

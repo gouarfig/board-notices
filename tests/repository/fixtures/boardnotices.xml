@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<dataset>
+    <table name="phpbb_notices">
+        <column>notice_id</column>
+        <column>title</column>
+        <column>message</column>
+        <column>message_uid</column>
+        <column>message_bitfield</column>
+        <column>message_options</column>
+        <column>message_bgcolor</column>
+        <column>active</column>
+        <column>persistent</column>
+        <column>dismissable</column>
+        <column>reset_after</column>
+        <column>last</column>
+        <column>notice_order</column>
+		<row>
+			<value>1</value>
+			<value>Is Administrator</value>
+			<value>Hello Administrator!</value>
+			<value></value>
+			<value></value>
+			<value>0</value>
+			<value>E5EEF5</value>
+			<value>1</value>
+			<value>0</value>
+			<value>0</value>
+			<value>0</value>
+			<value>1</value>
+			<value>1</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>Rule inactive</value>
+			<value>Rule inactive!</value>
+			<value></value>
+			<value></value>
+			<value>0</value>
+			<value>E5EEF5</value>
+			<value>0</value>
+			<value>0</value>
+			<value>0</value>
+			<value>0</value>
+			<value>0</value>
+			<value>2</value>
+		</row>
+    </table>
+</dataset>
