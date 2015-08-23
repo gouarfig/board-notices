@@ -74,8 +74,6 @@ class boardnotices implements boardnotices_interface
 
 	public function getNotices($active_only = true)
 	{
-		$this->debug("getNotices(active_only: {$active_only})");
-
 		if (!$this->notices_loaded || ($this->active_notices_loaded != $active_only))
 		{
 			$this->notices = $this->loadNotices($active_only);
@@ -97,16 +95,9 @@ class boardnotices implements boardnotices_interface
 
 	public function getNoticeFromId($notice_id)
 	{
-		$this->debug("getNoticeFromId(notice_id: {$notice_id})");
-
 		$notice = null;
-		$load_active_only = false;
-		if (!$this->notices_loaded || ($this->active_notices_loaded != $load_active_only))
-		{
-			$this->notices = $this->loadNotices($load_active_only);
-			$this->notices_loaded = true;
-			$this->active_notices_loaded = $load_active_only;
-		}
+		$notice_id = intval($notice_id);
+		$this->getAllNotices();
 		foreach ($this->notices as $row)
 		{
 			if ($row['notice_id'] == $notice_id)
@@ -129,6 +120,7 @@ class boardnotices implements boardnotices_interface
 	public function moveNotice($action, $notice_id)
 	{
 		$move_executed = false;
+		$notice_id = intval($notice_id);
 
 		// Get current order id...
 		$sql = "SELECT notice_order as current_order
@@ -174,6 +166,7 @@ class boardnotices implements boardnotices_interface
 	public function moveNoticeFirst($notice_id)
 	{
 		$move_executed = false;
+		$notice_id = intval($notice_id);
 		$notice = $this->getNoticeFromId($notice_id);
 		if (!is_null($notice) && ($notice['notice_order'] > 1))
 		{
@@ -199,6 +192,7 @@ class boardnotices implements boardnotices_interface
 	public function moveNoticeLast($notice_id)
 	{
 		$move_executed = false;
+		$notice_id = intval($notice_id);
 		$last_order = $this->getNextNoticeOrder() -1;
 		$notice = $this->getNoticeFromId($notice_id);
 		if (!is_null($notice) && ($notice['notice_order'] > 0) && ($notice['notice_order'] < $last_order))
@@ -225,6 +219,7 @@ class boardnotices implements boardnotices_interface
 	public function deleteNotice($notice_id)
 	{
 		$deleted = false;
+		$notice_id = intval($notice_id);
 		$notice = $this->getNoticeFromId($notice_id);
 		if (!is_null($notice))
 		{
@@ -251,14 +246,15 @@ class boardnotices implements boardnotices_interface
 
 	public function enableNotice($action, $notice_id)
 	{
-		$query_done = 0;
+		$query_done = false;
+		$notice_id = intval($notice_id);
 		if ($notice_id > 0)
 		{
 			$sql = "UPDATE {$this->notices_table}"
 					. " SET active=" . (($action == 'enable') ? '1' : '0')
 					. " WHERE notice_id={$notice_id}";
 			$this->db->sql_query($sql);
-			$query_done = (bool) $this->db->sql_affectedrows();
+			$query_done = ($this->db->sql_affectedrows() > 0) ? true : false;
 
 			$this->cleanNotices();
 		}
@@ -268,13 +264,7 @@ class boardnotices implements boardnotices_interface
 	private function getNextNoticeId()
 	{
 		$next_id = 0;
-		$load_active_only = false;
-		if (!$this->notices_loaded || ($this->active_notices_loaded != $load_active_only))
-		{
-			$this->notices = $this->loadNotices($load_active_only);
-			$this->notices_loaded = true;
-			$this->active_notices_loaded = $load_active_only;
-		}
+		$this->getAllNotices();
 		foreach ($this->notices as $row)
 		{
 			if ($row['notice_id'] > $next_id)
@@ -288,13 +278,7 @@ class boardnotices implements boardnotices_interface
 	private function getNextNoticeOrder()
 	{
 		$next_order = 0;
-		$load_active_only = false;
-		if (!$this->notices_loaded || ($this->active_notices_loaded != $load_active_only))
-		{
-			$this->notices = $this->loadNotices($load_active_only);
-			$this->notices_loaded = true;
-			$this->active_notices_loaded = $load_active_only;
-		}
+		$this->getAllNotices();
 		foreach ($this->notices as $row)
 		{
 			if ($row['notice_order'] > $next_order)
@@ -307,22 +291,25 @@ class boardnotices implements boardnotices_interface
 
 	public function saveNewNotice(&$data)
 	{
-		if (!isset($data['notice_order']))
-		{
+		$new_id = null;
+		if (is_array($data) && !empty($data)) {
+			$data['notice_id'] = $this->getNextNoticeId();
 			$data['notice_order'] = $this->getNextNoticeOrder();
-		}
-		$data['notice_id'] = $this->getNextNoticeId();
-		$sql = "INSERT INTO {$this->notices_table} " . $this->db->sql_build_array('INSERT', $data);
-		$this->db->sql_query($sql);
-		$this->cleanNotices();
+			$sql = "INSERT INTO {$this->notices_table} " . $this->db->sql_build_array('INSERT', $data);
+			$this->db->sql_query($sql);
 
-		return $data['notice_id'];
+			$new_id = $data['notice_id'];
+			$this->cleanNotices();
+		}
+
+		return $new_id;
 	}
 
 	public function saveNotice($notice_id, &$data)
 	{
-		$notice_id = (int) $notice_id;
-		if ($notice_id > 0)
+		$saved = false;
+		$notice_id = intval($notice_id);
+		if (($notice_id > 0) && is_array($data) && !empty($data))
 		{
 			unset($data['notice_id']);
 			unset($data['notice_order']);
@@ -331,8 +318,11 @@ class boardnotices implements boardnotices_interface
 				SET " . $this->db->sql_build_array('UPDATE', $data) . "
 				WHERE notice_id = " . $notice_id;
 			$this->db->sql_query($sql);
+			$saved = ($this->db->sql_affectedrows() == 1) ? true : false;
+
 			$this->cleanNotices();
 		}
+		return $saved;
 	}
 
 	private function loadRules()
@@ -356,6 +346,7 @@ class boardnotices implements boardnotices_interface
 
 	public function getRulesFor($notice_id)
 	{
+		$notice_id = intval($notice_id);
 		if (!$this->rules_loaded)
 		{
 			$this->rules = $this->loadRules();

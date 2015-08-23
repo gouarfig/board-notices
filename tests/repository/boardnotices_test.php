@@ -227,9 +227,6 @@ class boardnotices_test extends \phpbb_database_test_case
 		$this->assertThat($notice['notice_order'], $this->equalTo(2));
 	}
 
-	/**
-	 * @depends testMoveLastSecondNotice
-	 */
 	public function testSaveNewNotice()
 	{
 		$dac = $this->getBoardNoticesInstance();
@@ -247,7 +244,9 @@ class boardnotices_test extends \phpbb_database_test_case
 			'last' => 0,
 			'notice_order' => 3,
 		);
-		$dac->saveNewNotice($data1);
+		$new_id = $dac->saveNewNotice($data1);
+		$this->assertEquals(3, $new_id);
+
 		$data2 = array(
 			'title' => 'New notice 2',
 			'message' => 'New notice 2',
@@ -261,7 +260,8 @@ class boardnotices_test extends \phpbb_database_test_case
 			'reset_after' => 0,
 			'last' => 0,
 		);
-		$dac->saveNewNotice($data2);
+		$new_id = $dac->saveNewNotice($data2);
+		$this->assertEquals(4, $new_id);
 
 		$notices = $dac->getAllNotices();
 		$this->assertThat(count($notices), $this->equalTo(4));
@@ -322,4 +322,152 @@ class boardnotices_test extends \phpbb_database_test_case
 		$this->assertThat($notice['notice_order'], $this->equalTo(4));
 	}
 
+	public function testEnableDisableNotice()
+	{
+		$dac = $this->getBoardNoticesInstance();
+		$data = array(
+			'title' => 'New notice',
+			'message' => 'New notice',
+			'message_uid' => '',
+			'message_bitfield' => '',
+			'message_options' => 0,
+			'message_bgcolor' => '',
+			'active' => 0,
+			'persistent' => 0,
+			'dismissable' => 0,
+			'reset_after' => 0,
+			'last' => 0,
+			'notice_order' => 3,
+		);
+		$new_id = $dac->saveNewNotice($data);
+		$this->assertEquals(3, $new_id);
+
+		$notices = $dac->getActiveNotices();
+		$this->assertThat(count($notices), $this->equalTo(1));
+
+		$dac->enableNotice('enable', 3);
+
+		$notices = $dac->getActiveNotices();
+		$this->assertThat(count($notices), $this->equalTo(2));
+
+		$dac->enableNotice('disable', 3);
+
+		$notices = $dac->getActiveNotices();
+		$this->assertThat(count($notices), $this->equalTo(1));
+	}
+
+	public function testDeleteNotices()
+	{
+		$dac = $this->getBoardNoticesInstance();
+
+		$delete = $dac->deleteNotice(3);
+		$this->assertFalse($delete);
+
+		$data = array(
+			'title' => 'New notice',
+			'message' => 'New notice',
+			'message_uid' => '',
+			'message_bitfield' => '',
+			'message_options' => 0,
+			'message_bgcolor' => '',
+			'active' => 0,
+			'persistent' => 0,
+			'dismissable' => 0,
+			'reset_after' => 0,
+			'last' => 0,
+			'notice_order' => 3,
+		);
+		$new_id = $dac->saveNewNotice($data);
+		$this->assertEquals(3, $new_id);
+
+		$notices = $dac->getAllNotices();
+		$this->assertThat(count($notices), $this->equalTo(3));
+
+		$delete = $dac->deleteNotice(2);
+		$this->assertTrue($delete);
+
+		$notices = $dac->getAllNotices();
+		$this->assertThat(count($notices), $this->equalTo(2));
+
+		$delete = $dac->deleteNotice(3);
+		$this->assertTrue($delete);
+
+		$notices = $dac->getAllNotices();
+		$this->assertThat(count($notices), $this->equalTo(1));
+
+		$delete = $dac->deleteNotice(1);
+		$this->assertTrue($delete);
+
+		$notices = $dac->getAllNotices();
+		$this->assertThat(count($notices), $this->equalTo(0));
+
+		$delete = $dac->deleteNotice(1);
+		$this->assertFalse($delete);
+	}
+
+	public function testSaveNotice()
+	{
+		$dac = $this->getBoardNoticesInstance();
+
+		$data = array(
+			'title' => 'New notice',
+			'message' => 'New notice',
+			'message_uid' => '',
+			'message_bitfield' => '',
+			'message_options' => 0,
+			'message_bgcolor' => '',
+			'active' => 0,
+			'persistent' => 0,
+			'dismissable' => 0,
+			'reset_after' => 0,
+			'last' => 0,
+			'notice_order' => 4,
+		);
+		$new_id = $dac->saveNewNotice($data);
+
+		$notice = $dac->getNoticeFromId($new_id);
+		$this->assertEquals('New notice', $notice['title']);
+		$this->assertEquals(3, $notice['notice_order']);
+
+		$data['title'] = 'Other name';
+
+		$dac->saveNotice($new_id, $data);
+
+		$notice = $dac->getNoticeFromId($new_id);
+		$this->assertEquals('Other name', $notice['title']);
+		$this->assertEquals(3, $notice['notice_order']);
+	}
+
+	public function testInvalidIds()
+	{
+		$dac = $this->getBoardNoticesInstance();
+
+		$deleted = $dac->deleteNotice('invalid id');
+		$this->assertFalse($deleted, 'deleteNotice didn\'t return false');
+
+		$enabled = $dac->enableNotice('something', 'invalid id');
+		$this->assertFalse($enabled, 'enableNotice didn\'t return false');
+
+		$notice = $dac->getNoticeFromId('invalid id');
+		$this->assertNull($notice, 'getNoticeFromId didn\'t return null');
+
+		$moved1 = $dac->moveNotice('something', 'invalid id');
+		$this->assertFalse($moved1, 'moveNotice didn\'t return false');
+
+		$moved2 = $dac->moveNoticeFirst('invalid id');
+		$this->assertFalse($moved2, 'moveNoticeFirst didn\'t return false');
+
+		$moved3 = $dac->moveNoticeLast('invalid id');
+		$this->assertFalse($moved3, 'moveNoticeLast didn\'t return false');
+
+		$new_notice = array();
+		$saved = $dac->saveNotice('invalid id', $new_notice);
+		$this->assertFalse($saved, 'saveNotice(1) didn\'t return false');
+
+		$saved = $dac->saveNotice(1, $new_notice);
+		$this->assertFalse($saved, 'saveNotice(2) didn\'t return false');
+
+		$saved = $dac->saveNewNotice($new_notice);
+		$this->assertNull($saved, 'saveNewNotice didn\'t return null');
+	}
 }
