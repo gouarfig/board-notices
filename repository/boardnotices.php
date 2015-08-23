@@ -224,7 +224,7 @@ class boardnotices implements boardnotices_interface
 			{
 				$sql = "UPDATE {$this->notices_table} SET notice_order=notice_order-1 WHERE notice_order>=" . (int) $notice['notice_order'];
 				$this->db->sql_query($sql);
-				
+
 				$this->cleanNotices();
 			}
 		}
