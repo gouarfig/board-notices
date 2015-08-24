@@ -32,9 +32,19 @@ class logged_in extends rule_base implements rule_interface
 		return 'yesno';
 	}
 
+	public function getDefault()
+	{
+		return false;
+	}
+
 	public function getPossibleValues()
 	{
 		return null;
+	}
+
+	public function validateValues($values)
+	{
+		return true;
 	}
 
 	public function isTrue($conditions)

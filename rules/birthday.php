@@ -67,9 +67,19 @@ class birthday extends rule_base implements rule_interface
 		return 'n/a';
 	}
 
+	public function getDefault()
+	{
+		return null;
+	}
+
 	public function getPossibleValues()
 	{
 		return null;
+	}
+
+	public function validateValues($values)
+	{
+		return true;
 	}
 
 	public function isTrue($conditions)

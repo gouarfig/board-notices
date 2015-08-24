@@ -32,9 +32,19 @@ class has_not_posted_for extends rule_base implements rule_interface
 		return 'int';
 	}
 
+	public function getDefault()
+	{
+		return 0;
+	}
+
 	public function getPossibleValues()
 	{
 		return null;
+	}
+
+	public function validateValues($values)
+	{
+		return true;
 	}
 
 	public function isTrue($conditions)

@@ -34,9 +34,19 @@ class has_never_posted_in_forum extends rule_base implements rule_interface
 		return 'forums';
 	}
 
+	public function getDefault()
+	{
+		return array();
+	}
+
 	public function getPossibleValues()
 	{
 		return null;
+	}
+
+	public function validateValues($values)
+	{
+		return true;
 	}
 
 	public function isTrue($conditions)

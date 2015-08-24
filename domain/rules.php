@@ -153,6 +153,16 @@ class rules
 		return isset($this->rules[$rule_name]) ? $this->rules[$rule_name]->getPossibleValues() : '';
 	}
 
+	public function getRuleDefaultValue($rule_name)
+	{
+		if (!$this->rules_loaded)
+		{
+			$this->loadRules();
+		}
+
+		return isset($this->rules[$rule_name]) ? $this->rules[$rule_name]->getDefault() : '';
+	}
+
 	public function getAvailableVars($rule_name)
 	{
 		if (!$this->rules_loaded)

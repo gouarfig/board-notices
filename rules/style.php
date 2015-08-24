@@ -38,9 +38,19 @@ class style extends rule_base implements rule_interface
 		return 'multiple choice';
 	}
 
+	public function getDefault()
+	{
+		return array();
+	}
+
 	public function getPossibleValues()
 	{
 		return $this->data_layer->getStyles();
+	}
+
+	public function validateValues($values)
+	{
+		return true;
 	}
 
 	public function isTrue($conditions)

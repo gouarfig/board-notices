@@ -34,9 +34,19 @@ class in_default_usergroup extends rule_base implements rule_interface
 		return 'list';
 	}
 
+	public function getDefault()
+	{
+		return 0;
+	}
+
 	public function getPossibleValues()
 	{
 		return $this->data_layer->getAllGroups();
+	}
+
+	public function validateValues($values)
+	{
+		return true;
 	}
 
 	public function isTrue($conditions)

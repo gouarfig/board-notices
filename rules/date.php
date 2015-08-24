@@ -31,9 +31,19 @@ class date extends rule_base implements rule_interface
 		return 'date';
 	}
 
+	public function getDefault()
+	{
+		return array(0, 0, 0);
+	}
+
 	public function getPossibleValues()
 	{
 		return null;
+	}
+
+	public function validateValues($values)
+	{
+		return true;
 	}
 
 	public function isTrue($conditions)

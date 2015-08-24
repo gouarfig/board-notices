@@ -66,9 +66,19 @@ class rank extends rule_base implements rule_interface
 		return 'multiple choice';
 	}
 
+	public function getDefault()
+	{
+		return array();
+	}
+
 	public function getPossibleValues()
 	{
 		return $this->data_layer->getRanks();
+	}
+
+	public function validateValues($values)
+	{
+		return true;
 	}
 
 	public function isTrue($conditions)

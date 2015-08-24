@@ -277,7 +277,7 @@ class board_notices_module
 		{
 			$error = $this->validateNoticeForm($data);
 		}
-		//var_dump($data);
+
 		// Prepare a fresh notice preview
 		$notice_text_preview = '';
 		if ($this->request->is_set_post('preview'))
@@ -301,7 +301,7 @@ class board_notices_module
 			'LABEL_BOARD_NOTICE_TEXT' => $this->user->lang('LABEL_BOARD_NOTICE_TEXT'),
 			'LABEL_BOARD_NOTICE_BGCOLOR' => $this->user->lang('LABEL_BOARD_NOTICE_BGCOLOR'),
 			'ERRORS' => $error,
-			'NOTICE_ID' => $data['notice_id'] ? $data['notice_id'] : '',
+			'NOTICE_ID' => isset($data['notice_id']) ? $data['notice_id'] : '',
 			'BOARD_NOTICE_ACTIVE' => $data['active'],
 			'BOARD_NOTICE_TITLE' => $data['title'],
 			'BOARD_NOTICE_TEXT' => $notice_text_edit['text'],
@@ -344,7 +344,12 @@ class board_notices_module
 				'RULE_NAME' => $rule_name,
 				'RULE_DESCRIPTION' => $rule_description,
 				'RULE_CONDITIONS' => $this->getDisplayConditions(
-						$this->rules_manager->getRuleType($rule_name), $this->rules_manager->getRuleValues($rule_name), isset($data['notice_rule_conditions'][$rule_name]) ? $data['notice_rule_conditions'][$rule_name] : array(), "notice_rule_conditions[{$rule_name}]"
+						$this->rules_manager->getRuleType($rule_name),
+						$this->rules_manager->getRuleValues($rule_name),
+						isset($data['notice_rule_conditions'][$rule_name])
+							? $data['notice_rule_conditions'][$rule_name]
+							: $this->rules_manager->getRuleDefaultValue($rule_name),
+						"notice_rule_conditions[{$rule_name}]"
 				),
 				'RULE_VARIABLES' => implode(', ', $this->rules_manager->getAvailableVars($rule_name)),
 			));
@@ -506,8 +511,8 @@ class board_notices_module
 	private function getDisplayYesNoConditions($input_name, $selected)
 	{
 		$display = '';
-		$display .= '<label><input type="radio" class="radio" id="' . $input_name . '" name="' . $input_name . '[0]" value="1"' . ($selected[0] ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['YES'] . '</label>';
-		$display .= '<label><input type="radio" class="radio" name="' . $input_name . '[0]" value="0"' . (!$selected[0] ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['NO_GUEST_OR_BOT'] . '</label>';
+		$display .= '<label><input type="radio" class="radio" id="' . $input_name . '" name="' . $input_name . '[0]" value="1"' . ($selected ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['YES'] . '</label>';
+		$display .= '<label><input type="radio" class="radio" name="' . $input_name . '[0]" value="0"' . (!$selected ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['NO_GUEST_OR_BOT'] . '</label>';
 		return $display;
 	}
 
