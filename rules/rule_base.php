@@ -18,7 +18,7 @@ abstract class rule_base {
 		$value = false;
 		if (!is_null($conditions) && is_string($conditions))
 		{
-			$value = unserialize($conditions);
+			$value = @unserialize($conditions);
 		}
 		if ($value === false)
 		{
@@ -36,7 +36,7 @@ abstract class rule_base {
 		$values = false;
 		if (!is_null($conditions) && is_string($conditions))
 		{
-			$values = unserialize($conditions);
+			$values = @unserialize($conditions);
 		}
 		if ($values === false)
 		{
