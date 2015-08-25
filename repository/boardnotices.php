@@ -419,4 +419,32 @@ class boardnotices implements boardnotices_interface
 		$this->cleanRules();
 	}
 
+	public function setForumVisited($user_id, $forum_id)
+	{
+		$user_id = intval($user_id);
+		$forum_id = intval($forum_id);
+
+		if (($user_id > 0) && ($forum_id > 0))
+		{
+			$time = time();
+			$sql = "UPDATE {$this->forums_visited_table} SET visited={$time}"
+					. " WHERE user_id={$user_id} AND forum_id={$forum_id}";
+			$this->db->sql_query($sql);
+
+			if ($this->db->sql_affectedrows() < 1)
+			{
+				$sql = "INSERT INTO {$this->forums_visited_table} (user_id, forum_id, visited)"
+						. " VALUES ({$user_id}, {$forum_id}, {$time})";
+				$this->db->sql_query($sql);
+			}
+		}
+		return ;
+	}
+
+	public function clearForumVisited()
+	{
+		$sql = "TRUNCATE TABLE {$this->forums_visited_table}";
+		$this->db->sql_query($sql);
+	}
+
 }

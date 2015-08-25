@@ -205,7 +205,7 @@ class board_notices_module
 		global $phpbb_root_path, $phpEx;
 
 		/** @var \fq\boardnotices\repository\boardnotices_interface */
-		$data_layer = $this->getDataLayer();
+		$data_layer = $this->getRepository();
 
 		// Add the board notices ACP lang file
 		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
@@ -366,8 +366,8 @@ class board_notices_module
 
 	public function displaySettingsForm()
 	{
-		/** @var \fq\boardnotices\datalayer */
-		$data_layer = $this->getDataLayer();
+		/** @var \fq\boardnotices\repository\boardnotices */
+		$data_layer = $this->getRepository();
 
 		// Add the board notices ACP lang file
 		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
@@ -538,8 +538,8 @@ class board_notices_module
 
 	public function moveNotice($action, $notice_id)
 	{
-		/** @var \fq\boardnotices\datalayer */
-		$data_layer = $this->getDataLayer();
+		/** @var \fq\boardnotices\repository\boardnotices */
+		$data_layer = $this->getRepository();
 
 		$move_executed = $data_layer->moveNotice($action, $notice_id);
 
@@ -554,8 +554,8 @@ class board_notices_module
 
 	public function moveNoticeFirst($notice_id)
 	{
-		/** @var \fq\boardnotices\datalayer */
-		$data_layer = $this->getDataLayer();
+		/** @var \fq\boardnotices\repository\boardnotices */
+		$data_layer = $this->getRepository();
 
 		$move_executed = $data_layer->moveNoticeFirst($notice_id);
 
@@ -570,8 +570,8 @@ class board_notices_module
 
 	public function moveNoticeLast($notice_id)
 	{
-		/** @var \fq\boardnotices\datalayer */
-		$data_layer = $this->getDataLayer();
+		/** @var \fq\boardnotices\repository\boardnotices */
+		$data_layer = $this->getRepository();
 
 		$move_executed = $data_layer->moveNoticeLast($notice_id);
 
@@ -586,8 +586,8 @@ class board_notices_module
 
 	public function deleteNotice($notice_id)
 	{
-		/** @var \fq\boardnotices\datalayer */
-		$data_layer = $this->getDataLayer();
+		/** @var \fq\boardnotices\repository\boardnotices */
+		$data_layer = $this->getRepository();
 
 		$delete_executed = $data_layer->deleteNotice($notice_id);
 
@@ -602,8 +602,8 @@ class board_notices_module
 
 	public function enableNotice($action, $notice_id)
 	{
-		/** @var \fq\boardnotices\datalayer */
-		$data_layer = $this->getDataLayer();
+		/** @var \fq\boardnotices\repository\boardnotices */
+		$data_layer = $this->getRepository();
 
 		$executed = $data_layer->enableNotice($action, $notice_id);
 
@@ -616,16 +616,23 @@ class board_notices_module
 		}
 	}
 
-	protected function getDataLayer()
+	/**
+	 * Returns the current repository
+	 *
+	 * @global type $phpbb_container
+	 * @staticvar type $repository
+	 * @return \fq\boardnotices\repository\boardnotices
+	 */
+	protected function getRepository()
 	{
 		global $phpbb_container;
-		static $data_layer = null;
+		static $repository = null;
 
-		if (is_null($data_layer))
+		if (is_null($repository))
 		{
-			$data_layer = $phpbb_container->get('fq.boardnotices.repository.boardnotices');
+			$repository = $phpbb_container->get('fq.boardnotices.repository.boardnotices');
 		}
-		return $data_layer;
+		return $repository;
 	}
 
 	private function newBlankNotice()
@@ -647,7 +654,7 @@ class board_notices_module
 
 	private function loadNotice($notice_id)
 	{
-		$data_layer = $this->getDataLayer();
+		$data_layer = $this->getRepository();
 		$notice = $data_layer->getNoticeFromId($notice_id);
 		$notice['notice_rule_id'] = array();
 		$notice['notice_rule_checked'] = array();
@@ -781,7 +788,7 @@ class board_notices_module
 				}
 			}
 		}
-		$data_layer = $this->getDataLayer();
+		$data_layer = $this->getRepository();
 
 		if (!empty($to_delete))
 		{
@@ -814,7 +821,7 @@ class board_notices_module
 		unset($data['notice_rule_checked']);
 		unset($data['notice_rule_conditions']);
 
-		$data_layer = $this->getDataLayer();
+		$data_layer = $this->getRepository();
 		$notice_id = $data_layer->saveNewNotice($data);
 		if ($notice_id > 0)
 		{
@@ -841,7 +848,7 @@ class board_notices_module
 		unset($data['notice_rule_checked']);
 		unset($data['notice_rule_conditions']);
 
-		$data_layer = $this->getDataLayer();
+		$data_layer = $this->getRepository();
 		$data_layer->saveNotice($notice_id, $data);
 		$this->saveRules($notice_id, $rules_data);
 
@@ -899,6 +906,9 @@ class board_notices_module
 		}
 		else
 		{
+			$repository = $this->getRepository();
+			$repository->clearForumVisited();
+
 			if ($this->request->is_ajax())
 			{
 				trigger_error('RESET_FORUM_VISITS_SUCCESS');

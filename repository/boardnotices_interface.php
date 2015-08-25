@@ -31,4 +31,6 @@ interface boardnotices_interface
 	function updateRules($rules);
 	function insertRules($rules);
 
+	function setForumVisited($user_id, $forum_id);
+	function clearForumVisited();
 }

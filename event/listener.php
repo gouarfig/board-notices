@@ -46,7 +46,7 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
-	 * Display board notices
+	 * Display board notices. Function called on event 'core.page_header_after'
 	 *
 	 * @return null
 	 * @access public
@@ -105,6 +105,11 @@ class listener implements EventSubscriberInterface
 				'BOARD_NOTICE_BGCOLOR' => $notice_bgcolor,
 			));
 		}
+
+		if ($this->forumVisitedEnabled() && $this->isUserLoggedIn())
+		{
+			$this->setForumVisited();
+		}
 	}
 
 	private function getDefaultTemplateVars()
@@ -137,6 +142,16 @@ class listener implements EventSubscriberInterface
 		return $this->config['boardnotices_enabled'] ? true : false;
 	}
 
+	private function forumVisitedEnabled()
+	{
+		return $this->config['track_forums_visits'] ? true : false;
+	}
+
+	private function isUserLoggedIn()
+	{
+		return (($this->user->data['user_type'] == USER_NORMAL) || ($this->user->data['user_type'] == USER_FOUNDER));
+	}
+
 	private function isPreview()
 	{
 		$preview_key = $this->request->variable('bnpk', '');
@@ -154,5 +169,15 @@ class listener implements EventSubscriberInterface
 	{
 		$rules = $this->repository->getRulesFor($raw_notice['notice_id']);
 		return new notice($raw_notice, $rules);
+	}
+
+	private function setForumVisited()
+	{
+		$forum_id = $this->request->variable('f', 0);
+
+		if ($forum_id > 0)
+		{
+			$this->repository->setForumVisited($this->user->data['user_id'], $forum_id);
+		}
 	}
 }
