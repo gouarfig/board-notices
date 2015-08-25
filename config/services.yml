@@ -136,6 +136,12 @@ services:
         arguments:
             - @user
 
+    fq.boardnotices.rules.has_not_visited_for:
+        class: fq\boardnotices\rules\has_not_visited_for
+        arguments:
+            - @user
+            - @fq.boardnotices.repository.legacy
+
     fq.boardnotices.rules.has_posted_exactly:
         class: fq\boardnotices\rules\has_posted_exactly
         arguments:

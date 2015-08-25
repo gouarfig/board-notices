@@ -29,6 +29,11 @@ class has_never_posted_in_forum extends rule_base implements rule_interface
 		return $this->user->lang['RULE_HAS_NEVER_POSTED_IN_FORUM'];
 	}
 
+	public function getDisplayUnit()
+	{
+		return '';
+	}
+
 	public function getType()
 	{
 		return 'forums';

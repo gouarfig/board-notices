@@ -29,6 +29,11 @@ class in_default_usergroup extends rule_base implements rule_interface
 		return $this->user->lang['RULE_IN_DEFAULT_USERGROUP'];
 	}
 
+	public function getDisplayUnit()
+	{
+		return '';
+	}
+
 	public function getType()
 	{
 		return 'list';

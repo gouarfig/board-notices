@@ -29,6 +29,11 @@ class in_usergroup extends rule_base implements rule_interface
 		return "User belongs to either one of these selected groups";
 	}
 
+	public function getDisplayUnit()
+	{
+		return '';
+	}
+
 	public function getType()
 	{
 		return 'multiple choice';

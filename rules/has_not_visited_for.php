@@ -12,41 +12,44 @@
 
 namespace fq\boardnotices\rules;
 
-class language extends rule_base implements rule_interface
+class has_not_visited_for extends rule_base implements rule_interface
 {
 
 	private $user;
-	private $data_layer;
+	private $repository;
 
-	public function __construct(\phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer)
+	public function __construct(\phpbb\user $user, \fq\boardnotices\repository\legacy_interface $repository)
 	{
 		$this->user = $user;
-		$this->data_layer = $data_layer;
+		$this->repository = $repository;
 	}
 
 	public function getDisplayName()
 	{
-		return "User language is either one of these selected languages";
+		return array(
+			$this->user->lang['RULE_HAS_NOT_VISITED_FOR_1'],
+			$this->user->lang['RULE_HAS_NOT_VISITED_FOR_2'],
+		);
 	}
 
 	public function getDisplayUnit()
 	{
-		return '';
+		return $this->user->lang['RULE_DAY(S)'];
 	}
 
 	public function getType()
 	{
-		return 'multiple choice';
+		return 'forums|int';
 	}
 
 	public function getDefault()
 	{
-		return array();
+		return array(0, 0);
 	}
 
 	public function getPossibleValues()
 	{
-		return $this->data_layer->getLanguages();
+		return null;
 	}
 
 	public function validateValues($values)
@@ -57,22 +60,10 @@ class language extends rule_base implements rule_interface
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$languages = @unserialize($conditions);
-		if ($languages === false)
+		$days = $this->validateUniqueCondition($conditions);
+		if ($this->user->data['user_lastpost_time'] > 0)
 		{
-			// There's only one language
-			$languages = array($conditions);
-		}
-		if (!empty($languages))
-		{
-			foreach ($languages as $language_id)
-			{
-				$valid = ($this->user->data['user_lang'] == $language_id);
-				if ($valid)
-				{
-					break;
-				}
-			}
+			$valid = ((time() - $this->user->data['user_lastpost_time']) >= ($days * 24 * 60 * 60));
 		}
 		return $valid;
 	}

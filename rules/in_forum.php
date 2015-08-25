@@ -29,6 +29,11 @@ class in_forum extends rule_base implements rule_interface
 		return "User is currently browsing one of these forum(s)";
 	}
 
+	public function getDisplayUnit()
+	{
+		return '';
+	}
+
 	public function getType()
 	{
 		return 'forums';

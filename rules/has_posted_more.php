@@ -27,6 +27,11 @@ class has_posted_more extends rule_base implements rule_interface
 		return $this->user->lang['RULE_HAS_POSTED_MORE'];
 	}
 
+	public function getDisplayUnit()
+	{
+		return '';
+	}
+
 	public function getType()
 	{
 		return 'int';

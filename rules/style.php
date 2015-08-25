@@ -33,6 +33,11 @@ class style extends rule_base implements rule_interface
 		return "User style is either one of these selected styles";
 	}
 
+	public function getDisplayUnit()
+	{
+		return '';
+	}
+
 	public function getType()
 	{
 		return 'multiple choice';

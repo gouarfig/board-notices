@@ -62,6 +62,11 @@ class birthday extends rule_base implements rule_interface
 		return $this->user->lang['RULE_BIRTHDAY'];
 	}
 
+	public function getDisplayUnit()
+	{
+		return '';
+	}
+
 	public function getType()
 	{
 		return 'n/a';

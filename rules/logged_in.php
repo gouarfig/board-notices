@@ -27,6 +27,11 @@ class logged_in extends rule_base implements rule_interface
 		return "Is user logged in";
 	}
 
+	public function getDisplayUnit()
+	{
+		return '';
+	}
+
 	public function getType()
 	{
 		return 'yesno';

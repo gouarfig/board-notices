@@ -48,6 +48,8 @@ class rules
 	// Hide obsolete rules
 	private $hide = array(
 		'not_logged_in',
+		// This one is not ready to be used yet
+		'has_not_visited_for',
 	);
 
 	public function __construct($root_path)
@@ -106,6 +108,29 @@ class rules
 		}
 	}
 
+	private function getRuleDisplayValues($rule_name)
+	{
+		$displayName = $this->rules[$rule_name]->getDisplayName();
+		$displayUnit = $this->rules[$rule_name]->getDisplayUnit();
+
+		if (empty($displayUnit))
+		{
+			return $displayName;
+		}
+		else
+		{
+			if (is_array($displayName))
+			{
+				$displayName[] = $displayUnit;
+				return $displayName;
+			}
+			else
+			{
+				return array($displayName, $displayUnit);
+			}
+		}
+	}
+
 	public function getDefinedRules()
 	{
 		$rule_names = array();
@@ -118,15 +143,15 @@ class rules
 		{
 			if (isset($this->rules[$rule_name]))
 			{
-				$rule_names[$rule_name] = $this->rules[$rule_name]->getDisplayName();
+				$rule_names[$rule_name] = $this->getRuleDisplayValues($rule_name);
 			}
 		}
 		// Add the remaining ones not on the order list
-		foreach ($this->rules as $name => $rule)
+		foreach ($this->rules as $rule_name => $rule)
 		{
-			if (!isset($rule_names[$name]))
+			if (!isset($rule_names[$rule_name]))
 			{
-				$rule_names[$name] = $rule->getDisplayName();
+				$rule_names[$rule_name] = $this->getRuleDisplayValues($rule_name);
 			}
 		}
 

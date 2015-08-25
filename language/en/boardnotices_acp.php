@@ -99,12 +99,18 @@ $lang = array_merge($lang, array(
 	'RULE_DATE'								=> "The date is",
 	'RULE_HAS_NEVER_POSTED'					=> "User has never posted (takes into account posts waiting for approval)",
 	'RULE_HAS_NEVER_POSTED_IN_FORUM'		=> "User has never posted in any of these forums (including posts waiting for approval)",
-	'RULE_HAS_NOT_POSTED_FOR'				=> "User has not posted for this number of days or more (but has posted previously)",
+	'RULE_HAS_NOT_POSTED_FOR_1'				=> "User has not posted for ",
+	'RULE_HAS_NOT_POSTED_FOR_2'				=> " day(s) or more (but has posted previously)",
 	'RULE_HAS_POSTED_EXACTLY'				=> "Number of visible posts equals",
 	'RULE_HAS_POSTED_LESS'					=> "Number of visible posts equals or less than",
 	'RULE_HAS_POSTED_MORE'					=> "Number of visible posts equals or more than",
 	'RULE_HAS_POSTED_IN_FORUM'				=> "User has posted in at least one of these forums (<strong>not</strong> including posts waiting for approval)",
+	'RULE_HAS_NOT_VISITED_FOR_1'			=> "User has not visited any of these selected forums ",
+	'RULE_HAS_NOT_VISITED_FOR_2'			=> " for at least ",
 	'RULE_IN_DEFAULT_USERGROUP'				=> 'Default user group is',
+
+	// Rules units
+	'RULE_DAY(S)'							=> 'day(s)',
 
 	'RESET_FORUM_VISITS_SUCCESS'			=> 'The forum visit tracking data has been successfully cleaned.',
 	'RESET_FORUM_VISITS_CONFIRMATION'		=> 'Are you sure you want to reset all the forum visit information?',

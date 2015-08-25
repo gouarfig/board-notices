@@ -344,13 +344,22 @@ class board_notices_module
 		display_custom_bbcodes();
 
 		$all_rules = $this->getAllRules();
-		foreach ($all_rules as $rule_name => $rule_description)
+		foreach ($all_rules as $rule_name => $rule_descriptions)
 		{
+			if (is_array($rule_descriptions))
+			{
+				$rule_description = $rule_descriptions[0];
+			}
+			else
+			{
+				$rule_description = $rule_descriptions;
+			}
 			$this->template->assign_block_vars('allrules', array(
 				'NOTICE_RULE_ID' => isset($data['notice_rule_id'][$rule_name]) ? $data['notice_rule_id'][$rule_name] : '',
 				'NOTICE_RULE_CHECKED' => isset($data['notice_rule_checked'][$rule_name]) ? true : false,
 				'RULE_NAME' => $rule_name,
 				'RULE_DESCRIPTION' => $rule_description,
+				'RULE_UNIT' => (is_array($rule_descriptions)) ? $rule_descriptions[count($rule_descriptions)-1] : '',
 				'RULE_CONDITIONS' => $this->getDisplayConditions(
 						$this->rules_manager->getRuleType($rule_name),
 						$this->rules_manager->getRuleValues($rule_name),
@@ -366,9 +375,6 @@ class board_notices_module
 
 	public function displaySettingsForm()
 	{
-		/** @var \fq\boardnotices\repository\boardnotices */
-		$data_layer = $this->getRepository();
-
 		// Add the board notices ACP lang file
 		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
 
@@ -425,6 +431,7 @@ class board_notices_module
 			{
 				$display .= $this->getSingleDisplayConditions($single_type, $input_name, $selected[$i], $values[$i], $i);
 				$i++;
+				$display .= '&nbsp;';
 			}
 		}
 		return $display;

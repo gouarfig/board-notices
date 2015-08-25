@@ -29,6 +29,11 @@ class not_in_usergroup extends rule_base implements rule_interface
 		return "User does not belong to all these selected groups";
 	}
 
+	public function getDisplayUnit()
+	{
+		return '';
+	}
+
 	public function getType()
 	{
 		return 'multiple choice';
