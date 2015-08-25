@@ -5,7 +5,7 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\has_never_posted;
-use fq\boardnotices\dac\datalayer_interface;
+use fq\boardnotices\repository\legacy_interface;
 
 class has_never_posted_test extends \phpbb_test_case
 {
@@ -15,7 +15,7 @@ class has_never_posted_test extends \phpbb_test_case
 		$lang = &$user->lang;
 		include 'phpBB/ext/fq/boardnotices/language/en/boardnotices_acp.php';
 
-		$datalayer = $this->getMockBuilder('\fq\boardnotices\dac\datalayer_interface')->getMock();
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$rule = new has_never_posted($user, $datalayer);
 		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
 
@@ -76,7 +76,7 @@ class has_never_posted_test extends \phpbb_test_case
 	{
 		$user = new \phpbb\user('\phpbb\datetime');
 
-		$datalayer = $this->getMockBuilder('\fq\boardnotices\dac\datalayer_interface')->getMock();
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->willReturn(0);
 		$rule = new has_never_posted($user, $datalayer);
 		$this->assertTrue($rule->isTrue(null));
@@ -86,7 +86,7 @@ class has_never_posted_test extends \phpbb_test_case
 	{
 		$user = new \phpbb\user('\phpbb\datetime');
 
-		$datalayer = $this->getMockBuilder('\fq\boardnotices\dac\datalayer_interface')->getMock();
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->willReturn(1);
 		$rule = new has_never_posted($user, $datalayer);
 		$this->assertFalse($rule->isTrue(null));

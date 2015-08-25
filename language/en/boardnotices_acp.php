@@ -54,6 +54,15 @@ $lang = array_merge($lang, array(
 	'ACP_BOARD_NOTICE_RULES_EXPLAIN'		=> 'Edit the conditions for the message to be displayed. Please note that <strong>all conditions should be met</strong>.',
 
 	'LABEL_BOARD_NOTICES_ACTIVE'			=> 'Enable board notices',
+	'BOARD_NOTICES_ACTIVE_EXPLAIN'			=> 'Here you can disable the display of all notices while keeping the extension enabled.',
+
+	'L_FORUMS_VISITS'						=> 'Visits',
+	'LABEL_FORUMS_VISITS_ACTIVE'			=> 'Keep track of the last time a user visited a forum',
+	'FORUMS_VISITS_ACTIVE_EXPLAIN'			=> 'This enables or disables the tracking of last visits of each forum for each user. You need to activate it if you want to use the "<i>forum not visited for x days</i>" condition.',
+
+	'L_RESET_OPTIONS'						=> 'Reset visits',
+	'L_RESET_FORUM_VISITS'					=> 'Reset last time each forum was visited',
+	'L_RESET_FORUM_VISITS_EXPLAIN'			=> 'If you disable the forum visit track and re-enable it, some user will have a last visit time much earlier than the real time. It is recommended to reset the tracking after disabling and re-enabling forum visits tracking.',
 
 	'BOARD_NOTICE_TITLE'					=> 'Board Notices',
 	'BOARD_NOTICE_RULES'					=> 'Conditions',
@@ -96,4 +105,7 @@ $lang = array_merge($lang, array(
 	'RULE_HAS_POSTED_MORE'					=> "Number of visible posts equals or more than",
 	'RULE_HAS_POSTED_IN_FORUM'				=> "User has posted in at least one of these forums (<strong>not</strong> including posts waiting for approval)",
 	'RULE_IN_DEFAULT_USERGROUP'				=> 'Default user group is',
+
+	'RESET_FORUM_VISITS_SUCCESS'			=> 'The forum visit tracking data has been successfully cleaned.',
+	'RESET_FORUM_VISITS_CONFIRMATION'		=> 'Are you sure you want to reset all the forum visit information?',
 ));

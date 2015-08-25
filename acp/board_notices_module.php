@@ -181,13 +181,21 @@ class board_notices_module
 
 	public function settings_module($id, $mode)
 	{
-		if ($this->request->is_set_post('submit'))
+		$action = request_var('action', '');
+		if ($action == 'reset_forum_visits')
 		{
-			$this->saveSettings();
+			$this->resetForumVisits($id, $mode, $action);
 		}
 		else
 		{
-			$this->displaySettingsForm();
+			if ($this->request->is_set_post('submit'))
+			{
+				$this->saveSettings();
+			}
+			else
+			{
+				$this->displaySettingsForm();
+			}
 		}
 		return;
 	}
@@ -196,7 +204,7 @@ class board_notices_module
 	{
 		global $phpbb_root_path, $phpEx;
 
-		/** @var \fq\boardnotices\dac\datalayer_interface */
+		/** @var \fq\boardnotices\repository\boardnotices_interface */
 		$data_layer = $this->getDataLayer();
 
 		// Add the board notices ACP lang file
@@ -374,8 +382,20 @@ class board_notices_module
 		$this->template->assign_vars(array(
 			'BOARD_NOTICES_SETTINGS' => $this->user->lang('ACP_BOARD_NOTICES_SETTINGS'),
 			'BOARD_NOTICES_SETTINGS_EXPLAIN' => $this->user->lang('ACP_BOARD_NOTICES_SETTINGS_EXPLAIN'),
+
 			'LABEL_BOARD_NOTICES_ACTIVE' => $this->user->lang('LABEL_BOARD_NOTICES_ACTIVE'),
+			'BOARD_NOTICES_ACTIVE_EXPLAIN' => $this->user->lang('BOARD_NOTICES_ACTIVE_EXPLAIN'),
 			'BOARD_NOTICES_ACTIVE' => $this->config['boardnotices_enabled'] ? true : false,
+
+			'L_FORUMS_VISITS' => $this->user->lang('L_FORUMS_VISITS'),
+			'LABEL_FORUMS_VISITS_ACTIVE' => $this->user->lang('LABEL_FORUMS_VISITS_ACTIVE'),
+			'FORUMS_VISITS_ACTIVE_EXPLAIN' => $this->user->lang('FORUMS_VISITS_ACTIVE_EXPLAIN'),
+			'FORUMS_VISITS_ACTIVE' => $this->config['track_forums_visits'] ? true : false,
+
+			'L_RESET_OPTIONS' => $this->user->lang('L_RESET_OPTIONS'),
+			'L_RESET_FORUM_VISITS' => $this->user->lang('L_RESET_FORUM_VISITS'),
+			'L_RESET_FORUM_VISITS_EXPLAIN' => $this->user->lang('L_RESET_FORUM_VISITS_EXPLAIN'),
+			'U_ACTION' => $this->u_action,
 		));
 	}
 
@@ -603,7 +623,7 @@ class board_notices_module
 
 		if (is_null($data_layer))
 		{
-			$data_layer = $phpbb_container->get('fq.boardnotices.datalayer');
+			$data_layer = $phpbb_container->get('fq.boardnotices.repository.boardnotices');
 		}
 		return $data_layer;
 	}
@@ -851,14 +871,38 @@ class board_notices_module
 		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
 
 		// Get config options from the form
-		$data['enabled'] = $this->request->variable('board_notices_active', true);
+		$data['boardnotices_enabled'] = $this->request->variable('board_notices_active', true);
+		$data['track_forums_visits'] = $this->request->variable('forums_visits_active', true);
 
 		// Save data to the config
-		$this->config->set('boardnotices_enabled', ($data['enabled'] ? true : false));
+		$this->config->set('boardnotices_enabled', ($data['boardnotices_enabled'] ? true : false));
+		$this->config->set('track_forums_visits', ($data['track_forums_visits'] ? true : false));
 
 		// Logs the settings update
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BOARD_NOTICES_SETTINGS', time(), array());
 		// Output message to user for the update
 		trigger_error($this->user->lang('BOARD_NOTICES_SETTINGS_SAVED') . adm_back_link($this->u_action));
+	}
+
+	private function resetForumVisits($id, $mode, $action)
+	{
+		// Add the board notices ACP lang file
+		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+
+		if (!confirm_box(true))
+		{
+			confirm_box(false, $this->user->lang['RESET_FORUM_VISITS_CONFIRMATION'], build_hidden_fields(array(
+				'i'			=> $id,
+				'mode'		=> $mode,
+				'action'	=> $action,
+			)));
+		}
+		else
+		{
+			if ($this->request->is_ajax())
+			{
+				trigger_error('RESET_FORUM_VISITS_SUCCESS');
+			}
+		}
 	}
 }

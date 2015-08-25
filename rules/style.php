@@ -20,7 +20,7 @@ class style extends rule_base implements rule_interface
 	private $request;
 	private $config;
 
-	public function __construct(\phpbb\user $user, \fq\boardnotices\datalayer $data_layer, \phpbb\request\request $request, \phpbb\config\config $config)
+	public function __construct(\phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer, \phpbb\request\request $request, \phpbb\config\config $config)
 	{
 		$this->user = $user;
 		$this->data_layer = $data_layer;

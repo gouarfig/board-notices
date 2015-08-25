@@ -18,7 +18,7 @@ class has_never_posted extends rule_base implements rule_interface
 	private $user;
 	private $data_layer;
 
-	public function __construct(\phpbb\user $user, \fq\boardnotices\dac\datalayer_interface $data_layer)
+	public function __construct(\phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer)
 	{
 		$this->user = $user;
 		$this->data_layer = $data_layer;

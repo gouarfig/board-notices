@@ -17,7 +17,7 @@ class rank extends rule_base implements rule_interface
 	private $data_layer;
 	private $user_rank = null;
 
-	public function __construct(\phpbb\user $user, \fq\boardnotices\datalayer $data_layer)
+	public function __construct(\phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer)
 	{
 		$this->user = $user;
 		$this->data_layer = $data_layer;

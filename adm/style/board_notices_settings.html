@@ -23,10 +23,25 @@
 	<fieldset>
 		<legend>{L_GENERAL_OPTIONS}</legend>
 		<dl>
-			<dt><label for="board_notices_enabled">{LABEL_BOARD_NOTICES_ACTIVE}{L_COLON}</label></dt>
+			<dt><label for="board_notices_enabled">{LABEL_BOARD_NOTICES_ACTIVE}{L_COLON}</label>
+			<br /><span>{BOARD_NOTICES_ACTIVE_EXPLAIN}</span>
+			</dt>
 			<dd>
 				<label><input type="radio" class="radio" id="board_notices_active" name="board_notices_active" value="1"<!-- IF BOARD_NOTICES_ACTIVE --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
 				<label><input type="radio" class="radio" name="board_notices_active" value="0"<!-- IF not BOARD_NOTICES_ACTIVE --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+			</dd>
+		</dl>
+	</fieldset>
+
+	<fieldset>
+		<legend>{L_FORUMS_VISITS}</legend>
+		<dl>
+			<dt><label for="board_notices_enabled">{LABEL_FORUMS_VISITS_ACTIVE}{L_COLON}</label>
+			<br /><span>{FORUMS_VISITS_ACTIVE_EXPLAIN}</span>
+			</dt>
+			<dd>
+				<label><input type="radio" class="radio" id="forums_visits_active" name="forums_visits_active" value="1"<!-- IF FORUMS_VISITS_ACTIVE --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" name="forums_visits_active" value="0"<!-- IF not FORUMS_VISITS_ACTIVE --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
 			</dd>
 		</dl>
 	</fieldset>
@@ -36,5 +51,16 @@
 		{S_FORM_TOKEN}
 	</fieldset>
 </form>
+
+		<fieldset>
+			<legend>{L_RESET_OPTIONS}</legend>
+
+			<form id="action_forum_visits_form" method="post" action="{U_ACTION}" data-ajax="true">
+				<dl>
+					<dt><label for="action_forum_visits">{L_RESET_FORUM_VISITS}</label><br /><span>{L_RESET_FORUM_VISITS_EXPLAIN}</span></dt>
+					<dd><input type="hidden" name="action" value="reset_forum_visits" /><input class="button2" type="submit" id="action_forum_visits" name="action_forum_visits" value="{L_RUN}" /></dd>
+				</dl>
+			</form>
+		</fieldset>
 
 <!-- INCLUDE overall_footer.html -->

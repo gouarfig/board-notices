@@ -10,9 +10,9 @@
  *
  */
 
-namespace fq\boardnotices\dac;
+namespace fq\boardnotices\repository;
 
-interface datalayer_interface
+interface legacy_interface
 {
 	function getNotices($active_only = true);
 	function getAllNotices();
@@ -43,5 +43,7 @@ interface datalayer_interface
 	function getRanks();
 
 	function getForumLastReadTime($user_id, $forum_id);
+	function trackLastVisit($user_id, $forum_id);
+	function clearLastVisit();
 
 }

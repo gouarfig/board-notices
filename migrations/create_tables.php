@@ -33,12 +33,12 @@ class create_tables extends \phpbb\db\migration\migration
 						'message_bitfield' => array('VCHAR:255', ''),
 						'message_options' => array('UINT', 0),
 						'message_bgcolor' => array('VCHAR:6', ''),
-						'active' => array('UINT:1', 0),
-						'persistent' => array('UINT:1', 1),
-						'dismissable' => array('UINT:1', 0),
+						'active' => array('BOOL', 0),
+						'persistent' => array('BOOL', 1),
+						'dismissable' => array('BOOL', 0),
 						'reset_after' => array('UINT', 0),
-						'last' => array('UINT:1', 0),
-						'notice_order' => array('UINT', 1),
+						'last' => array('BOOL', 0),
+						'notice_order' => array('USINT', 1),
 					),
 					'PRIMARY_KEY' => 'notice_id',
 					'KEYS' => array(
@@ -62,7 +62,7 @@ class create_tables extends \phpbb\db\migration\migration
 					'COLUMNS' => array(
 						'notice_id' => array('UINT', 0),
 						'user_id' => array('UINT', 0),
-						'seen' => array('UINT', 0),
+						'seen' => array('TIMESTAMP', 0),
 					),
 				),
 			)

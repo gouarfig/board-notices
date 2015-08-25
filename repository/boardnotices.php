@@ -23,13 +23,22 @@ class boardnotices implements boardnotices_interface
 	private $notices_table;
 	private $notices_rules_table;
 	private $notices_seen_table;
+	private $forums_visited_table;
+
 	private $notices_loaded = false;
 	private $active_notices_loaded = false;
 	private $notices = array();
 	private $rules_loaded = false;
 	private $rules = array();
 
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\cache\service $cache, $notices_table, $notices_rules_table, $notices_seen_table)
+	public function __construct(
+			\phpbb\db\driver\driver_interface $db,
+			\phpbb\user $user,
+			\phpbb\cache\service $cache,
+			$notices_table,
+			$notices_rules_table,
+			$notices_seen_table,
+			$forums_visited_table)
 	{
 		$this->db = $db;
 		$this->user = $user;
@@ -37,6 +46,7 @@ class boardnotices implements boardnotices_interface
 		$this->notices_table = $notices_table;
 		$this->notices_rules_table = $notices_rules_table;
 		$this->notices_seen_table = $notices_seen_table;
+		$this->forums_visited_table = $forums_visited_table;
 	}
 
 	/**

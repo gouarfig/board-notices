@@ -10,13 +10,12 @@
  *
  */
 
-namespace fq\boardnotices;
+namespace fq\boardnotices\repository;
 
-use fq\boardnotices\dac\datalayer_interface;
+use fq\boardnotices\repository\legacy_interface;
 
-class datalayer implements datalayer_interface
+class legacy implements legacy_interface
 {
-
 	private $db;
 	private $user;
 	private $cache;
@@ -24,6 +23,8 @@ class datalayer implements datalayer_interface
 	private $notices_table;
 	private $notices_rules_table;
 	private $notices_seen_table;
+	private $forums_visited_table;
+
 	private $notices_loaded = false;
 	private $active_notices_loaded = false;
 	private $notices = array();
@@ -35,8 +36,17 @@ class datalayer implements datalayer_interface
 	private $usergroups = array();
 	private $allgroups_loaded = false;
 	private $allgroups = array();
+	private $visited_forums = array();
 
-	public function __construct(\phpbb\db\driver\driver_interface $db, \phpbb\user $user, \phpbb\cache\service $cache, \phpbb\config\config $config, $notices_table, $notices_rules_table, $notices_seen_table)
+	public function __construct(
+			\phpbb\db\driver\driver_interface $db,
+			\phpbb\user $user,
+			\phpbb\cache\service $cache,
+			\phpbb\config\config $config,
+			$notices_table,
+			$notices_rules_table,
+			$notices_seen_table,
+			$forums_visited_table)
 	{
 		$this->db = $db;
 		$this->user = $user;
@@ -45,6 +55,7 @@ class datalayer implements datalayer_interface
 		$this->notices_table = $notices_table;
 		$this->notices_rules_table = $notices_rules_table;
 		$this->notices_seen_table = $notices_seen_table;
+		$this->forums_visited_table = $forums_visited_table;
 	}
 
 	private function loadNotices($active_only = true)
@@ -622,5 +633,17 @@ class datalayer implements datalayer_interface
 	{
 		$forums = $this->loadForumLastReadTime($user_id);
 		return (isset($forums[$forum_id]) ? $forums[$forum_id] : null);
+	}
+
+	function trackLastVisit($user_id, $forum_id)
+	{
+		if (isset($this->visited_forums[$user_id]))
+		{
+			$this->visited_forums[$user_id][$forum_id] = time();
+		}
+	}
+
+	function clearLastVisit()
+	{
 	}
 }

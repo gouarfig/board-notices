@@ -5,7 +5,7 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\has_never_posted_in_forum;
-use fq\boardnotices\dac\datalayer_interface;
+use fq\boardnotices\repository\legacy_interface;
 
 class has_never_posted_in_forum_test extends \phpbb_test_case
 {
@@ -15,7 +15,7 @@ class has_never_posted_in_forum_test extends \phpbb_test_case
 		$lang = &$user->lang;
 		include 'phpBB/ext/fq/boardnotices/language/en/boardnotices_acp.php';
 
-		$datalayer = $this->getMockBuilder('\fq\boardnotices\dac\datalayer_interface')->getMock();
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$rule = new has_never_posted_in_forum($user, $datalayer);
 		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
 
@@ -76,7 +76,7 @@ class has_never_posted_in_forum_test extends \phpbb_test_case
 	{
 		$user = new \phpbb\user('\phpbb\datetime');
 
-		$datalayer = $this->getMockBuilder('\fq\boardnotices\dac\datalayer_interface')->getMock();
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->will($this->returnCallback(array($this, 'getNonDeletedUserPosts')));
 
 		$rule = new has_never_posted_in_forum($user, $datalayer);
@@ -91,7 +91,7 @@ class has_never_posted_in_forum_test extends \phpbb_test_case
 	{
 		$user = new \phpbb\user('\phpbb\datetime');
 
-		$datalayer = $this->getMockBuilder('\fq\boardnotices\dac\datalayer_interface')->getMock();
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->will($this->returnCallback(array($this, 'getNonDeletedUserPosts')));
 
 		$rule = new has_never_posted_in_forum($user, $datalayer);
@@ -104,7 +104,7 @@ class has_never_posted_in_forum_test extends \phpbb_test_case
 	{
 		$user = new \phpbb\user('\phpbb\datetime');
 
-		$datalayer = $this->getMockBuilder('\fq\boardnotices\dac\datalayer_interface')->getMock();
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->will($this->returnCallback(array($this, 'getNonDeletedUserPosts')));
 
 		$rule = new has_never_posted_in_forum($user, $datalayer);
