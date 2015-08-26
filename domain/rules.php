@@ -121,12 +121,14 @@ class rules
 		{
 			if (is_array($displayName))
 			{
-				$displayName[] = $displayUnit;
+				$displayName['display_unit'] = $displayUnit;
 				return $displayName;
 			}
 			else
 			{
-				return array($displayName, $displayUnit);
+				return array(
+					'display_name' => $displayName,
+					'display_unit' => $displayUnit);
 			}
 		}
 	}

@@ -348,7 +348,7 @@ class board_notices_module
 		{
 			if (is_array($rule_descriptions))
 			{
-				$rule_description = $rule_descriptions[0];
+				$rule_description = $rule_descriptions['display_name'];
 			}
 			else
 			{
@@ -359,7 +359,7 @@ class board_notices_module
 				'NOTICE_RULE_CHECKED' => isset($data['notice_rule_checked'][$rule_name]) ? true : false,
 				'RULE_NAME' => $rule_name,
 				'RULE_DESCRIPTION' => $rule_description,
-				'RULE_UNIT' => (is_array($rule_descriptions)) ? $rule_descriptions[count($rule_descriptions)-1] : '',
+				'RULE_UNIT' => (is_array($rule_descriptions)) ? $rule_descriptions['display_unit'] : '',
 				'RULE_CONDITIONS' => $this->getDisplayConditions(
 						$this->rules_manager->getRuleType($rule_name),
 						$this->rules_manager->getRuleValues($rule_name),

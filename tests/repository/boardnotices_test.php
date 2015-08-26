@@ -69,7 +69,7 @@ class boardnotices_test extends \phpbb_database_test_case
 		$phpbb_root_path = $this->getRootFolder();
 		$phpEx = substr(strrchr(__FILE__, '.'), 1);
 		$cache = new \phpbb\cache\service($cache_driver, $config, $this->db, $phpbb_root_path, $phpEx);
-		$dac = new boardnotices($this->db, $user, $cache, $this->table_prefix . 'notices', $this->table_prefix . 'notices_rules', $this->table_prefix . 'notices_seen', $this->table_prefix . 'forums_visited');
+		$dac = new boardnotices($this->db, $user, $cache, $config, $this->table_prefix . 'notices', $this->table_prefix . 'notices_rules', $this->table_prefix . 'notices_seen', $this->table_prefix . 'forums_visited');
 
 		return $dac;
 	}

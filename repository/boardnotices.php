@@ -20,6 +20,10 @@ class boardnotices implements boardnotices_interface
 	private $db;
 	private $user;
 	private $cache;
+	private $config;
+
+	private $cache_ttl = 0;
+
 	private $notices_table;
 	private $notices_rules_table;
 	private $notices_seen_table;
@@ -35,6 +39,7 @@ class boardnotices implements boardnotices_interface
 			\phpbb\db\driver\driver_interface $db,
 			\phpbb\user $user,
 			\phpbb\cache\service $cache,
+			\phpbb\config\config $config,
 			$notices_table,
 			$notices_rules_table,
 			$notices_seen_table,
@@ -43,10 +48,18 @@ class boardnotices implements boardnotices_interface
 		$this->db = $db;
 		$this->user = $user;
 		$this->cache = $cache;
+		$this->config = $config;
 		$this->notices_table = $notices_table;
 		$this->notices_rules_table = $notices_rules_table;
 		$this->notices_seen_table = $notices_seen_table;
 		$this->forums_visited_table = $forums_visited_table;
+
+		if (!is_null($this->config))
+		{
+			$this->cache_ttl = !empty($this->config['boardnotices_sql_cache_ttl'])
+								? $this->config['boardnotices_sql_cache_ttl']
+								: 86400;
+		}
 	}
 
 	/**
@@ -82,11 +95,32 @@ class boardnotices implements boardnotices_interface
 		return $notices;
 	}
 
+	private function getNoticesCacheName($active_only = true)
+	{
+		if ($active_only)
+		{
+			return 'boardnotices_active_notices';
+		}
+		else
+		{
+			return 'boardnotices_all_notices';
+		}
+	}
+
 	public function getNotices($active_only = true)
 	{
 		if (!$this->notices_loaded || ($this->active_notices_loaded != $active_only))
 		{
-			$this->notices = $this->loadNotices($active_only);
+			$notices = $this->cache->get($this->getNoticesCacheName($active_only));
+			if (!empty($notices))
+			{
+				$this->notices = $notices;
+			}
+			else
+			{
+				$this->notices = $this->loadNotices($active_only);
+				$this->cache->put($this->getNoticesCacheName($active_only), $this->notices, $this->cache_ttl);
+			}
 			$this->notices_loaded = true;
 			$this->active_notices_loaded = $active_only;
 		}
@@ -123,7 +157,8 @@ class boardnotices implements boardnotices_interface
 	{
 		$this->notices = array();
 		$this->notices_loaded = false;
-		$this->cache->destroy('_notices');
+		$this->cache->destroy('boardnotices_active_notices');
+		$this->cache->destroy('boardnotices_all_notices');
 		$this->cache->destroy('sql', $this->notices_table);
 	}
 
@@ -345,7 +380,7 @@ class boardnotices implements boardnotices_interface
 		);
 		$sql = $this->db->sql_build_query('SELECT', $sql_array);
 
-		$result = $this->db->sql_query($sql);
+		$result = $this->db->sql_query($sql, $this->cache_ttl);
 		while ($row = $this->db->sql_fetchrow($result))
 		{
 			$rules[$row['notice_id']][] = $row;
@@ -369,7 +404,7 @@ class boardnotices implements boardnotices_interface
 	private function cleanRules()
 	{
 		$this->rules_loaded = false;
-		$this->cache->destroy('_rules');
+		$this->cache->destroy('boardnotices_rules');
 		$this->cache->destroy('sql', $this->notices_rules_table);
 	}
 

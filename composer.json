@@ -3,7 +3,7 @@
 	"type": "phpbb-extension",
 	"description": "With this extension, you can manage all sorts of notices for your board",
 	"homepage": "https://github.com/gouarfig/board-notices",
-	"version": "0.2.9",
+	"version": "0.3.0",
 	"time": "2015-08-25",
 	"license": "GPL-2.0",
 	"authors": [{
