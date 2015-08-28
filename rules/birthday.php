@@ -90,13 +90,16 @@ class birthday extends rule_base implements rule_interface
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$user_birthday = $this->getUserBirthday();
-		list($bday_day, $bday_month, $bday_year) = array_map('intval', explode('-', $user_birthday));
-		$now = $this->user->create_datetime();
-		$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset());
-		$valid = (($bday_day == $now['mday']) && ($bday_month == $now['mon']));
-		// We create the 'age' variable in all cases (so it can be displayed in preview mode)
-		$this->setTemplateVars($this->age($bday_day, $bday_month, $bday_year));
+		if ($this->user->data['user_type'] != USER_IGNORE)
+		{
+			$user_birthday = $this->getUserBirthday();
+			list($bday_day, $bday_month, $bday_year) = array_map('intval', explode('-', $user_birthday));
+			$now = $this->user->create_datetime();
+			$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset());
+			$valid = (($bday_day == $now['mday']) && ($bday_month == $now['mon']));
+			// We create the 'age' variable in all cases (so it can be displayed in preview mode)
+			$this->setTemplateVars($this->age($bday_day, $bday_month, $bday_year));
+		}
 		return $valid;
 	}
 

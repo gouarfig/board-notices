@@ -87,14 +87,17 @@ class anniversary extends rule_base implements rule_interface
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$user_regdate = date('r', $this->getUserRegistrationDate());
-		$now = $this->user->create_datetime();
-		$regdate = $this->user->create_datetime($user_regdate);
-		$now = getdate($now->getTimestamp());
-		$regdate = getdate($regdate->getTimestamp());
-		$valid = (($regdate['mday'] == $now['mday']) && ($regdate['mon'] == $now['mon']) && ($regdate['year'] < $now['year']));
-		// We create the 'anniversary' variable in all cases (so it can be displayed in preview mode)
-		$this->setTemplateVars($this->anniversary($now, $regdate));
+		if ($this->user->data['user_type'] != USER_IGNORE)
+		{
+			$user_regdate = date('r', $this->getUserRegistrationDate());
+			$now = $this->user->create_datetime();
+			$regdate = $this->user->create_datetime($user_regdate);
+			$now = getdate($now->getTimestamp());
+			$regdate = getdate($regdate->getTimestamp());
+			$valid = (($regdate['mday'] == $now['mday']) && ($regdate['mon'] == $now['mon']) && ($regdate['year'] < $now['year']));
+			// We create the 'anniversary' variable in all cases (so it can be displayed in preview mode)
+			$this->setTemplateVars($this->anniversary($now, $regdate));
+		}
 		return $valid;
 	}
 
