@@ -64,7 +64,7 @@ class boardnotices_test extends \phpbb_database_test_case
 		$language_file_loader = new \phpbb\language\language_file_loader($phpbb_root_path, 'php');
 		$language = new \phpbb\language\language($language_file_loader);
 		$user = new \phpbb\user($language, '\phpbb\datetime');
-		$cache_driver = new \phpbb\cache\driver\null();
+		$cache_driver = new \phpbb\cache\driver\dummy();
 		$default_config = array(
 			'boardnotices_enabled' => true,
 		);
