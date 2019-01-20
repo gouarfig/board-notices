@@ -18,16 +18,16 @@ namespace fq\boardnotices\tests\functional;
  */
 class display_notices_test extends \phpbb_functional_test_case
 {
-    static protected function setup_extensions()
-    {
-        return array('fq/boardnotices');
-    }
+	static protected function setup_extensions()
+	{
+		return array('fq/boardnotices');
+	}
 
-    public function test_with_no_notice()
-    {
-        $crawler = self::request('GET', 'index.php');
-        $this->assertCount(0, $crawler->filter('#fq_notice'));
-    }
+	public function test_with_no_notice()
+	{
+		$crawler = self::request('GET', 'index.php');
+		$this->assertCount(0, $crawler->filter('#fq_notice'));
+	}
 
 	/**
 	 * @depends test_with_no_notice
@@ -77,8 +77,8 @@ class display_notices_test extends \phpbb_functional_test_case
 	 */
 	public function test_no_notice_is_displayed_for_guest()
 	{
-        $crawler = self::request('GET', 'index.php');
-        $this->assertCount(0, $crawler->filter('#fq_notice'));
+		$crawler = self::request('GET', 'index.php');
+		$this->assertCount(0, $crawler->filter('#fq_notice'));
 	}
 
 	/**
@@ -88,9 +88,9 @@ class display_notices_test extends \phpbb_functional_test_case
 	{
 		$this->login();
 
-        $crawler = self::request('GET', 'index.php');
+		$crawler = self::request('GET', 'index.php');
 		$notice = $crawler->filter('#fq_notice');
-        $this->assertCount(1, $notice);
+		$this->assertCount(1, $notice);
 		$this->assertTrue(strpos($notice->text(), 'Welcome admin!') !== false);
 	}
 }

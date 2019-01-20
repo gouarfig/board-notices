@@ -1,21 +1,23 @@
 <?php
 
+namespace fq\boardnotices\tests;
+
 use fq\boardnotices\domain\rules;
 
-class rules_test extends PHPUnit_Framework_TestCase
+class rules_test extends \PHPUnit_Framework_TestCase
 {
 	private function getRootFolder()
 	{
 		return dirname(__FILE__) . '/../../../../../';
 	}
 
-    public function testInstance()
-    {
-        $rules = new rules($this->getRootFolder());
-        $this->assertThat($rules, $this->logicalNot($this->equalTo(null)));
+	public function testInstance()
+	{
+		$rules = new rules($this->getRootFolder());
+		$this->assertThat($rules, $this->logicalNot($this->equalTo(null)));
 
 		return $rules;
-    }
+	}
 
 	/**
 	 * @depends testInstance
@@ -35,16 +37,15 @@ class rules_test extends PHPUnit_Framework_TestCase
 		$this->assertThat($anniversary->getDisplayName(), $this->logicalNot($this->equalTo(null)));
 
 		$definedRules = $rules->getDefinedRules();
+		$this->assertTrue(count($definedRules) > 0);
 	}
 
 	public function ContainerBuilderGet($name)
 	{
 		$name = str_replace('.', '\\', $name);
-//		$user = new \phpbb\user('\phpbb\datetime');
-//		$get = new $name($user);
 		$get = $this->getMockBuilder($name)->disableOriginalConstructor()->getMock();
 		$get->method('getDisplayName')->willReturn('My Name');
 		return $get;
 	}
 }
-?>
+

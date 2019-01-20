@@ -6,27 +6,16 @@ include_once 'phpBB/includes/functions.php';
 
 use \fq\boardnotices\rules\anniversary;
 
-class anniversary_test extends \phpbb_test_case
+class anniversary_test extends rule_test_base
 {
+
 	public function testInstance()
 	{
-		$user = new \phpbb\user('\phpbb\datetime');
-		$lang = &$user->lang;
-		include 'phpBB/ext/fq/boardnotices/language/en/boardnotices_acp.php';
+		$user = $this->getUser();
 		$rule = new anniversary($user);
 		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
 
 		return $rule;
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\anniversary $rule
-	 */
-	public function testGetDisplayName($rule)
-	{
-		$display = $rule->getDisplayName();
-		$this->assertTrue((strpos($display, "anniversary") !== false), "Wrong DisplayName: '{$display}'");
 	}
 
 	/**
@@ -83,7 +72,7 @@ class anniversary_test extends \phpbb_test_case
 	public function testTodayIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = time();
 		$rule = new anniversary($user);
@@ -97,7 +86,7 @@ class anniversary_test extends \phpbb_test_case
 	public function testOneHourBeforeTodayIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = time() - (60*60);
 		$rule = new anniversary($user);
@@ -111,7 +100,7 @@ class anniversary_test extends \phpbb_test_case
 	public function testOneMonthBeforeTodayIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = time() - (60*60*24*32);
 		$rule = new anniversary($user);
@@ -125,7 +114,7 @@ class anniversary_test extends \phpbb_test_case
 	public function testTodayPlusOneHourIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = time() + (60*60);
 		$rule = new anniversary($user);
@@ -139,7 +128,7 @@ class anniversary_test extends \phpbb_test_case
 	public function testTodayPlusOneMonthIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = time() + (60*60*24*32);
 		$rule = new anniversary($user);
@@ -152,7 +141,7 @@ class anniversary_test extends \phpbb_test_case
 	 */
 	private function buildRuleWithLastYearUserRegistration($timezone)
 	{
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = strtotime('last year');
 		$rule = new anniversary($user);

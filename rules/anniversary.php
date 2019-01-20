@@ -15,6 +15,7 @@ namespace fq\boardnotices\rules;
 class anniversary extends rule_base implements rule_interface
 {
 
+	/** @var \phpbb\user $lang */
 	private $user;
 	private $template_vars = array();
 
@@ -56,7 +57,7 @@ class anniversary extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return $this->user->lang['RULE_ANNIVERSARY'];
+		return $this->user->lang('RULE_ANNIVERSARY');
 	}
 
 	public function getDisplayUnit()
