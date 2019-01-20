@@ -6,27 +6,15 @@ include_once 'phpBB/includes/functions.php';
 
 use \fq\boardnotices\rules\birthday;
 
-class birthday_test extends \phpbb_test_case
+class birthday_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		$user = new \phpbb\user('\phpbb\datetime');
-		$lang = &$user->lang;
-		include 'phpBB/ext/fq/boardnotices/language/en/boardnotices_acp.php';
+		$user = $this->getUser();
 		$rule = new birthday($user);
 		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
 
 		return $rule;
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\anniversary $rule
-	 */
-	public function testGetDisplayName($rule)
-	{
-		$display = $rule->getDisplayName();
-		$this->assertTrue((strpos($display, "birthday") !== false), "Wrong DisplayName: '{$display}'");
 	}
 
 	/**
@@ -81,7 +69,7 @@ class birthday_test extends \phpbb_test_case
 	 */
 	private function buildRuleWithBirthday($timezone, $seconds_added = 0, $age_added = 30)
 	{
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$birthday = $user->create_datetime();
 		$birthday = phpbb_gmgetdate($birthday->getTimestamp() + $birthday->getOffset() + $seconds_added);
