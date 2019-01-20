@@ -6,27 +6,15 @@ include_once 'phpBB/includes/functions.php';
 
 use \fq\boardnotices\rules\date;
 
-class date_test extends \phpbb_test_case
+class date_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		$user = new \phpbb\user('\phpbb\datetime');
-		$lang = &$user->lang;
-		include 'phpBB/ext/fq/boardnotices/language/en/boardnotices_acp.php';
+		$user = $this->getUser();
 		$rule = new date($user);
 		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
 
 		return $rule;
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
-	 */
-	public function testGetDisplayName($rule)
-	{
-		$display = $rule->getDisplayName();
-		$this->assertTrue((strpos($display, "date") !== false), "Wrong DisplayName: '{$display}'");
 	}
 
 	/**
@@ -103,6 +91,9 @@ class date_test extends \phpbb_test_case
 		return $now;
 	}
 
+	/**
+	 * @return int[]
+	 */
 	public function buildConditions($now, $day = null, $month = null, $year = null)
 	{
 		$conditions = array(0, 0, 0);
@@ -129,6 +120,10 @@ class date_test extends \phpbb_test_case
 			else
 			{
 				$conditions[1] = $now['mon'] + $month;
+				if ($conditions[1] == 0)
+				{
+					$conditions[1] = 12;
+				}
 			}
 		}
 
@@ -154,7 +149,7 @@ class date_test extends \phpbb_test_case
 	public function testEmptyConditionIsTrue($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
@@ -169,7 +164,7 @@ class date_test extends \phpbb_test_case
 	public function testSameDayIsTrue($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
@@ -184,7 +179,7 @@ class date_test extends \phpbb_test_case
 	public function testSameMonthIsTrue($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
@@ -199,7 +194,7 @@ class date_test extends \phpbb_test_case
 	public function testSameYearIsTrue($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
@@ -214,7 +209,7 @@ class date_test extends \phpbb_test_case
 	public function testSameDayAndMonthIsTrue($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
@@ -229,7 +224,7 @@ class date_test extends \phpbb_test_case
 	public function testSameDayAndYearIsTrue($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
@@ -244,7 +239,7 @@ class date_test extends \phpbb_test_case
 	public function testSameMonthAndYearIsTrue($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
@@ -259,7 +254,7 @@ class date_test extends \phpbb_test_case
 	public function testSameDayAndMonthAndYearIsTrue($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
@@ -274,7 +269,7 @@ class date_test extends \phpbb_test_case
 	public function testPreviousDayIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
@@ -292,7 +287,7 @@ class date_test extends \phpbb_test_case
 	public function testNextDayIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
@@ -310,7 +305,7 @@ class date_test extends \phpbb_test_case
 	public function testPreviousMonthIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
@@ -328,7 +323,7 @@ class date_test extends \phpbb_test_case
 	public function testNextMonthIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
@@ -346,7 +341,7 @@ class date_test extends \phpbb_test_case
 	public function testPreviousYearIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
@@ -364,7 +359,7 @@ class date_test extends \phpbb_test_case
 	public function testNextYearIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = new \phpbb\user('\phpbb\datetime');
+		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$rule = new date($user);
 		$now = $this->getDatetime($user);
