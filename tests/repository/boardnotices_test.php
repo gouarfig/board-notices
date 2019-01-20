@@ -60,13 +60,15 @@ class boardnotices_test extends \phpbb_database_test_case
 	 */
 	private function getBoardNoticesInstance()
 	{
-		$user = new \phpbb\user('\phpbb\datetime');
+		$phpbb_root_path = $this->getRootFolder();
+		$language_file_loader = new \phpbb\language\language_file_loader($phpbb_root_path, 'php');
+		$language = new \phpbb\language\language($language_file_loader);
+		$user = new \phpbb\user($language, '\phpbb\datetime');
 		$cache_driver = new \phpbb\cache\driver\null();
 		$default_config = array(
 			'boardnotices_enabled' => true,
 		);
 		$config = new \phpbb\config\config($default_config);
-		$phpbb_root_path = $this->getRootFolder();
 		$phpEx = substr(strrchr(__FILE__, '.'), 1);
 		$cache = new \phpbb\cache\service($cache_driver, $config, $this->db, $phpbb_root_path, $phpEx);
 		$dac = new boardnotices($this->db, $user, $cache, $config, $this->table_prefix . 'notices', $this->table_prefix . 'notices_rules', $this->table_prefix . 'notices_seen', $this->table_prefix . 'forums_visited');
