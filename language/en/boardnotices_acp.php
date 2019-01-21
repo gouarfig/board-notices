@@ -107,7 +107,14 @@ $lang = array_merge($lang, array(
 	'RULE_HAS_POSTED_IN_FORUM'				=> "User has posted in at least one of these forums (<strong>not</strong> including posts waiting for approval)",
 	'RULE_HAS_NOT_VISITED_FOR_1'			=> "User has not visited any of these selected forums ",
 	'RULE_HAS_NOT_VISITED_FOR_2'			=> " for at least ",
-	'RULE_IN_DEFAULT_USERGROUP'				=> 'Default user group is',
+	'RULE_IN_DEFAULT_USERGROUP'				=> "Default user group is",
+	'RULE_IN_FORUM'							=> "User is currently browsing one of these forum(s)",
+	'RULE_IN_USERGROUP'						=> "User belongs to either one of these selected groups",
+	'RULE_LANGUAGE'							=> "User language is either one of these selected languages",
+	'RULE_LOGGED_IN'						=> "Is user logged in",
+	'RULE_NOT_IN_USERGROUP'					=> "User does not belong to any of these selected groups",
+	'RULE_RANK'								=> "User rank is any of these selected ranks",
+	'RULE_STYLE'							=> "User style is either one of these selected styles",
 
 	// Rules units
 	'RULE_DAY(S)'							=> 'day(s)',

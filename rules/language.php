@@ -28,7 +28,7 @@ class language extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return "User language is either one of these selected languages";
+		return $this->user->lang('RULE_LANGUAGE');
 	}
 
 	public function getDisplayUnit()

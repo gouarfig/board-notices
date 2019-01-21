@@ -28,7 +28,7 @@ class not_in_usergroup extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return "User does not belong to all these selected groups";
+		return $this->user->lang('RULE_NOT_IN_USERGROUP');
 	}
 
 	public function getDisplayUnit()

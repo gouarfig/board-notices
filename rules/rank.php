@@ -61,7 +61,7 @@ class rank extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return "User rank is any of these selected ranks";
+		return $this->user->lang('RULE_RANK');
 	}
 
 	public function getDisplayUnit()

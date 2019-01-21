@@ -28,7 +28,7 @@ class in_usergroup extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return "User belongs to either one of these selected groups";
+		return $this->user->lang('RULE_IN_USERGROUP');
 	}
 
 	public function getDisplayUnit()

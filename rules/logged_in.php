@@ -25,7 +25,7 @@ class logged_in extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return "Is user logged in";
+		return $this->user->lang('RULE_LOGGED_IN');
 	}
 
 	public function getDisplayUnit()

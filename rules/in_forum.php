@@ -27,7 +27,7 @@ class in_forum extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return "User is currently browsing one of these forum(s)";
+		return $this->user->lang('RULE_IN_FORUM');
 	}
 
 	public function getDisplayUnit()

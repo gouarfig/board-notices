@@ -32,7 +32,7 @@ class style extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return "User style is either one of these selected styles";
+		return $this->user->lang('RULE_STYLE');
 	}
 
 	public function getDisplayUnit()
