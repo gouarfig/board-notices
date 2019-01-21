@@ -6,16 +6,14 @@ include_once 'phpBB/includes/functions.php';
 
 use \fq\boardnotices\rules\has_not_posted_for;
 
-class has_not_posted_for_test extends \phpbb_test_case
+class has_not_posted_for_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		$user = new \phpbb\user('\phpbb\datetime');
-		$lang = &$user->lang;
-		include 'phpBB/ext/fq/boardnotices/language/en/boardnotices_acp.php';
-
+		/** @var \phpbb\user $user */
+		$user = $this->getUser();
 		$rule = new has_not_posted_for($user);
-		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
+		$this->assertNotNull($rule);
 
 		return array($user, $rule);
 	}
@@ -29,7 +27,7 @@ class has_not_posted_for_test extends \phpbb_test_case
 	{
 		list($user, $rule) = $args;
 		$display = $rule->getDisplayName();
-		$this->assertTrue((strpos($display, "not posted") !== false), "Wrong DisplayName: '{$display}'");
+		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
 
 	/**
