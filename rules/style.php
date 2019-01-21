@@ -21,8 +21,9 @@ class style extends rule_base implements rule_interface
 	private $request;
 	private $config;
 
-	public function __construct(\phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer, \phpbb\request\request $request, \phpbb\config\config $config)
+	public function __construct(\fq\boardnotices\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer, \phpbb\request\request $request, \phpbb\config\config $config)
 	{
+		$this->serializer = $serializer;
 		$this->user = $user;
 		$this->data_layer = $data_layer;
 		$this->request = $request;
@@ -73,7 +74,7 @@ class style extends rule_base implements rule_interface
 			$user_style = $this->user->data['user_style'];
 		}
 
-		$styles = $this->unserialize($conditions);
+		$styles = $this->serializer->decode($conditions);
 		if ($styles === false)
 		{
 			// There's only one style

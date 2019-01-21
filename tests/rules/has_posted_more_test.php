@@ -10,9 +10,11 @@ class has_posted_more_test extends rule_test_base
 {
 	public function testInstance()
 	{
+		/** @var \fq\boardnotices\serializer $serializer */
+		$serializer = new \fq\boardnotices\serializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-		$rule = new has_posted_more($user);
+		$rule = new has_posted_more($serializer, $user);
 		$this->assertNotNull($rule);
 
 		return array($user, $rule);

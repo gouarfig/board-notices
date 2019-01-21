@@ -10,12 +10,14 @@ class in_default_usergroup_test extends rule_test_base
 {
 	public function testInstance()
 	{
+		/** @var \fq\boardnotices\serializer $serializer */
+		$serializer = new \fq\boardnotices\serializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		$user->data['group_id'] = 10;
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
-		$rule = new in_default_usergroup($user, $datalayer);
+		$rule = new in_default_usergroup($serializer, $user, $datalayer);
 		$this->assertNotNull($rule);
 
 		return array($user, $rule);

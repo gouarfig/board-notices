@@ -362,7 +362,7 @@ class boardnotices implements boardnotices_interface
 
 			$sql = "UPDATE {$this->notices_table}
 				SET " . $this->db->sql_build_array('UPDATE', $data) . "
-				WHERE notice_id = " . $notice_id;
+				WHERE notice_id = " . (int) $notice_id;
 			$this->db->sql_query($sql);
 			$saved = ($this->db->sql_affectedrows() == 1) ? true : false;
 
@@ -429,12 +429,12 @@ class boardnotices implements boardnotices_interface
 		}
 		foreach ($rules as $rule)
 		{
-			$notice_rule_id = $rule['notice_rule_id'];
+			$notice_rule_id = intval($rule['notice_rule_id']);
 			unset($rule['notice_rule_id']);
 
 			$sql = "UPDATE {$this->notices_rules_table}
 				SET " . $this->db->sql_build_array('UPDATE', $rule) . "
-				WHERE notice_rule_id = " . $notice_rule_id;
+				WHERE notice_rule_id = " . (int) $notice_rule_id;
 			$this->db->sql_query($sql);
 		}
 		$this->cleanRules();

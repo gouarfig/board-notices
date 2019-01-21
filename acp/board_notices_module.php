@@ -627,7 +627,7 @@ class board_notices_module
 	 * Returns the current repository
 	 *
 	 * @global type $phpbb_container
-	 * @staticvar type $repository
+	 * @staticvar \fq\boardnotices\repository\boardnotices $repository
 	 * @return \fq\boardnotices\repository\boardnotices
 	 */
 	protected function getRepository()
@@ -640,6 +640,25 @@ class board_notices_module
 			$repository = $phpbb_container->get('fq.boardnotices.repository.boardnotices');
 		}
 		return $repository;
+	}
+
+	/**
+	 * Returns the current repository
+	 *
+	 * @global type $phpbb_container
+	 * @staticvar \fq\boardnotices\serializer $serializer
+	 * @return \fq\boardnotices\serializer
+	 */
+	protected function getSerializer()
+	{
+		global $phpbb_container;
+		static $serializer = null;
+
+		if (is_null($serializer))
+		{
+			$serializer = $phpbb_container->get('fq.boardnotices.serializer');
+		}
+		return $serializer;
 	}
 
 	private function newBlankNotice()
@@ -662,6 +681,7 @@ class board_notices_module
 	private function loadNotice($notice_id)
 	{
 		$data_layer = $this->getRepository();
+		$serializer = $this->getSerializer();
 		$notice = $data_layer->getNoticeFromId($notice_id);
 		$notice['notice_rule_id'] = array();
 		$notice['notice_rule_checked'] = array();
@@ -672,7 +692,7 @@ class board_notices_module
 		{
 			$notice['notice_rule_id'][$rule['rule']] = $rule['notice_rule_id'];
 			$notice['notice_rule_checked'][$rule['rule']] = 1;
-			$conditions = unserialize($rule['conditions']);
+			$conditions = $serializer->decode($rule['conditions']);
 			if ($conditions === false)
 			{
 				$conditions = array($rule['conditions']);
@@ -762,6 +782,7 @@ class board_notices_module
 
 	private function saveRules($notice_id, &$data)
 	{
+		$serializer = $this->getSerializer();
 		$to_delete = array();
 		foreach ($data['notice_rule_id'] as $rule_name => $rule_id)
 		{
@@ -782,7 +803,7 @@ class board_notices_module
 						'notice_rule_id' => $data['notice_rule_id'][$rule_name],
 						'notice_id' => $notice_id,
 						'rule' => $rule_name,
-						'conditions' => serialize($data['notice_rule_conditions'][$rule_name]),
+						'conditions' => $serializer->encode($data['notice_rule_conditions'][$rule_name]),
 					);
 				}
 				else
@@ -790,7 +811,7 @@ class board_notices_module
 					$to_insert[] = array(
 						'notice_id' => $notice_id,
 						'rule' => $rule_name,
-						'conditions' => serialize($data['notice_rule_conditions'][$rule_name]),
+						'conditions' => $serializer->encode($data['notice_rule_conditions'][$rule_name]),
 					);
 				}
 			}

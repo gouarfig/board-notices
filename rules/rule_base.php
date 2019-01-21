@@ -11,14 +11,17 @@
 
 namespace fq\boardnotices\rules;
 
-abstract class rule_base {
+abstract class rule_base
+{
+	/** @var \fq\boardnotices\serializer $serializer */
+	protected $serializer;
 
 	protected function validateUniqueCondition($conditions = null)
 	{
 		$value = false;
 		if (!is_null($conditions) && is_string($conditions))
 		{
-			$value = @unserialize($conditions);
+			$value = $this->serializer->decode($conditions);
 		}
 		if ($value === false)
 		{
@@ -36,7 +39,7 @@ abstract class rule_base {
 		$values = false;
 		if (!is_null($conditions) && is_string($conditions))
 		{
-			$values = @unserialize($conditions);
+			$values = $this->serializer->decode($conditions);
 		}
 		if ($values === false)
 		{
@@ -94,12 +97,4 @@ abstract class rule_base {
 		include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 	}
 
-	protected function unserialize($data)
-	{
-		if (empty($data))
-		{
-			return null;
-		}
-		return @unserialize($data);
-	}
 }

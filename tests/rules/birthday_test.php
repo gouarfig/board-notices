@@ -10,9 +10,11 @@ class birthday_test extends rule_test_base
 {
 	public function testInstance()
 	{
+		/** @var \fq\boardnotices\serializer $serializer */
+		$serializer = new \fq\boardnotices\serializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-		$rule = new birthday($user);
+		$rule = new birthday($serializer, $user);
 		$this->assertNotNull($rule);
 
 		return $rule;
@@ -80,12 +82,15 @@ class birthday_test extends rule_test_base
 	 */
 	private function buildRuleWithBirthday($timezone, $seconds_added = 0, $age_added = 30)
 	{
+		/** @var \fq\boardnotices\serializer $serializer */
+		$serializer = new \fq\boardnotices\serializer();
+		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$birthday = $user->create_datetime();
 		$birthday = phpbb_gmgetdate($birthday->getTimestamp() + $birthday->getOffset() + $seconds_added);
 		$user->data['user_birthday'] = sprintf('%2d-%2d-%4d', $birthday['mday'], $birthday['mon'], $birthday['year'] - $age_added);
-		$rule = new birthday($user);
+		$rule = new birthday($serializer, $user);
 		return array($user, $rule);
 	}
 

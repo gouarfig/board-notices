@@ -19,8 +19,9 @@ class language extends rule_base implements rule_interface
 	/** @var \fq\boardnotices\repository\legacy_interface $data_layer */
 	private $data_layer;
 
-	public function __construct(\phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer)
+	public function __construct(\fq\boardnotices\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer)
 	{
+		$this->serializer = $serializer;
 		$this->user = $user;
 		$this->data_layer = $data_layer;
 	}
@@ -58,7 +59,7 @@ class language extends rule_base implements rule_interface
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$languages = $this->unserialize($conditions);
+		$languages = $this->serializer->decode($conditions);
 		if ($languages === false)
 		{
 			// There's only one language

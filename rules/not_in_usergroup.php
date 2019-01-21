@@ -19,8 +19,9 @@ class not_in_usergroup extends rule_base implements rule_interface
 	/** @var \fq\boardnotices\repository\legacy_interface $data_layer */
 	private $data_layer;
 
-	public function __construct(\phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer)
+	public function __construct(\fq\boardnotices\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer)
 	{
+		$this->serializer = $serializer;
 		$this->user = $user;
 		$this->data_layer = $data_layer;
 	}
@@ -59,7 +60,7 @@ class not_in_usergroup extends rule_base implements rule_interface
 	{
 		$valid = false;
 
-		$groups = $this->unserialize($conditions);
+		$groups = $this->serializer->decode($conditions);
 		if ($groups === false)
 		{
 			// There's only one group

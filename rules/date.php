@@ -17,8 +17,9 @@ class date extends rule_base implements rule_interface
 	/** @var \phpbb\user $lang */
 	private $user;
 
-	public function __construct(\phpbb\user $user)
+	public function __construct(\fq\boardnotices\serializer $serializer, \phpbb\user $user)
 	{
+		$this->serializer = $serializer;
 		$this->user = $user;
 	}
 

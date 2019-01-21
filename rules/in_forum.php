@@ -18,8 +18,9 @@ class in_forum extends rule_base implements rule_interface
 	private $user;
 	private $request;
 
-	public function __construct(\phpbb\user $user, \phpbb\request\request $request)
+	public function __construct(\fq\boardnotices\serializer $serializer, \phpbb\user $user, \phpbb\request\request $request)
 	{
+		$this->serializer = $serializer;
 		$this->user = $user;
 		$this->request = $request;
 	}
@@ -59,7 +60,7 @@ class in_forum extends rule_base implements rule_interface
 		$valid = false;
 		$current_forum_id = $this->request->variable('f', 0);
 
-		$forums = $this->unserialize($conditions);
+		$forums = $this->serializer->decode($conditions);
 		if ($forums === false)
 		{
 			// There's only one group

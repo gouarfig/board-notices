@@ -18,8 +18,9 @@ class birthday extends rule_base implements rule_interface
 	private $user;
 	private $template_vars = array();
 
-	public function __construct(\phpbb\user $user)
+	public function __construct(\fq\boardnotices\serializer $serializer, \phpbb\user $user)
 	{
+		$this->serializer = $serializer;
 		$this->user = $user;
 	}
 
