@@ -72,8 +72,9 @@ class has_never_posted_in_forum_test extends rule_test_base
 
 	public function testFalseOnEmptyCondition()
 	{
+		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->will($this->returnCallback(array($this, 'getNonDeletedUserPosts')));
 
@@ -87,8 +88,9 @@ class has_never_posted_in_forum_test extends rule_test_base
 
 	public function testTrueConditions()
 	{
+		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->will($this->returnCallback(array($this, 'getNonDeletedUserPosts')));
 
@@ -100,8 +102,9 @@ class has_never_posted_in_forum_test extends rule_test_base
 
 	public function testFalseConditions()
 	{
+		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->will($this->returnCallback(array($this, 'getNonDeletedUserPosts')));
 

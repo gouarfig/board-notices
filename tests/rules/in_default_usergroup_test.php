@@ -5,20 +5,18 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\in_default_usergroup;
-use fq\boardnotices\repository\legacy_interface;
 
-class in_default_usergroup_test extends \phpbb_test_case
+class in_default_usergroup_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		$user = new \phpbb\user('\phpbb\datetime');
+		/** @var \phpbb\user $user */
+		$user = $this->getUser();
 		$user->data['group_id'] = 10;
-		$lang = &$user->lang;
-		include 'phpBB/ext/fq/boardnotices/language/en/boardnotices_acp.php';
-
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$rule = new in_default_usergroup($user, $datalayer);
-		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
+		$this->assertNotNull($rule);
 
 		return array($user, $rule);
 	}
@@ -26,19 +24,19 @@ class in_default_usergroup_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_posted_for $rule
+	 * @param in_default_usergroup $rule
 	 */
 	public function testGetDisplayName($args)
 	{
 		list($user, $rule) = $args;
 		$display = $rule->getDisplayName();
-		$this->assertTrue((strpos($display, "Default user group") !== false), "Wrong DisplayName: '{$display}'");
+		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
 
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_posted_for $rule
+	 * @param in_default_usergroup $rule
 	 */
 	public function testGetType($args)
 	{
@@ -50,7 +48,7 @@ class in_default_usergroup_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_posted_for $rule
+	 * @param in_default_usergroup $rule
 	 */
 	public function testGetPossibleValues($args)
 	{
@@ -62,7 +60,7 @@ class in_default_usergroup_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_posted_for $rule
+	 * @param in_default_usergroup $rule
 	 */
 	public function testGetAvailableVars($args)
 	{
@@ -75,7 +73,7 @@ class in_default_usergroup_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_posted_for $rule
+	 * @param in_default_usergroup $rule
 	 */
 	public function testGetTemplateVars($args)
 	{
@@ -90,7 +88,7 @@ class in_default_usergroup_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_posted_for $rule
+	 * @param in_default_usergroup $rule
 	 */
 	public function testRuleEmpty($args)
 	{
@@ -103,7 +101,7 @@ class in_default_usergroup_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_posted_for $rule
+	 * @param in_default_usergroup $rule
 	 */
 	public function testRuleNotInGroup($args)
 	{
@@ -117,7 +115,7 @@ class in_default_usergroup_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_posted_for $rule
+	 * @param in_default_usergroup $rule
 	 */
 	public function testRuleInGroup($args)
 	{
@@ -131,7 +129,7 @@ class in_default_usergroup_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_posted_for $rule
+	 * @param in_default_usergroup $rule
 	 */
 	public function testRuleInGroupNotArray($args)
 	{
@@ -145,7 +143,7 @@ class in_default_usergroup_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_posted_for $rule
+	 * @param in_default_usergroup $rule
 	 */
 	public function testRuleNotInGroupNotArray($args)
 	{
@@ -159,7 +157,7 @@ class in_default_usergroup_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_posted_for $rule
+	 * @param in_default_usergroup $rule
 	 */
 	public function testRuleInGroupNotArraySerialize($args)
 	{
@@ -173,7 +171,7 @@ class in_default_usergroup_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_posted_for $rule
+	 * @param in_default_usergroup $rule
 	 */
 	public function testRuleNotInGroupNotArraySerialize($args)
 	{

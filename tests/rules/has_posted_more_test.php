@@ -6,16 +6,14 @@ include_once 'phpBB/includes/functions.php';
 
 use \fq\boardnotices\rules\has_posted_more;
 
-class has_posted_more_test extends \phpbb_test_case
+class has_posted_more_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		$user = new \phpbb\user('\phpbb\datetime');
-		$lang = &$user->lang;
-		include 'phpBB/ext/fq/boardnotices/language/en/boardnotices_acp.php';
-
+		/** @var \phpbb\user $user */
+		$user = $this->getUser();
 		$rule = new has_posted_more($user);
-		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
+		$this->assertNotNull($rule);
 
 		return array($user, $rule);
 	}
@@ -23,19 +21,19 @@ class has_posted_more_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_more $rule
 	 */
 	public function testGetDisplayName($args)
 	{
 		list($user, $rule) = $args;
 		$display = $rule->getDisplayName();
-		$this->assertTrue((strpos($display, "posts equals or more than") !== false), "Wrong DisplayName: '{$display}'");
+		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
 
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_more $rule
 	 */
 	public function testGetType($args)
 	{
@@ -47,7 +45,7 @@ class has_posted_more_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_more $rule
 	 */
 	public function testGetPossibleValues($args)
 	{
@@ -59,7 +57,7 @@ class has_posted_more_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_more $rule
 	 */
 	public function testGetAvailableVars($args)
 	{
@@ -71,7 +69,7 @@ class has_posted_more_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_more $rule
 	 */
 	public function testGetTemplateVars($args)
 	{
@@ -84,7 +82,7 @@ class has_posted_more_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_more $rule
 	 */
 	public function testRuleEquals($args)
 	{
@@ -98,7 +96,7 @@ class has_posted_more_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_more $rule
 	 */
 	public function testRuleEqualsNoArray($args)
 	{
@@ -112,7 +110,7 @@ class has_posted_more_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_more $rule
 	 */
 	public function testRuleEqualsNoSerialize($args)
 	{
@@ -126,7 +124,7 @@ class has_posted_more_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_more $rule
 	 */
 	public function testRuleLessThan($args)
 	{
@@ -140,7 +138,7 @@ class has_posted_more_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_more $rule
 	 */
 	public function testRuleLessThanSerialize($args)
 	{
@@ -154,7 +152,7 @@ class has_posted_more_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_more $rule
 	 */
 	public function testRuleLessThanSerializeArray($args)
 	{
@@ -168,7 +166,7 @@ class has_posted_more_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_more $rule
 	 */
 	public function testRuleMoreThan($args)
 	{
@@ -182,7 +180,7 @@ class has_posted_more_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_more $rule
 	 */
 	public function testRuleMoreThanSerialize($args)
 	{
@@ -196,7 +194,7 @@ class has_posted_more_test extends \phpbb_test_case
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_more $rule
 	 */
 	public function testRuleMoreThanArraySerialize($args)
 	{

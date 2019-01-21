@@ -4,7 +4,7 @@ namespace fq\boardnotices\tests\rules;
 
 class rule_test_base extends \phpbb_test_case
 {
-    protected function getRootFolder()
+	protected function getRootFolder()
 	{
 		return dirname(__FILE__) . '/../../../../../';
 	}

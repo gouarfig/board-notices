@@ -72,8 +72,9 @@ class has_never_posted_test extends rule_test_base
 
 	public function testRuleTrue()
 	{
+		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->willReturn(0);
 		$rule = new has_never_posted($user, $datalayer);
@@ -82,8 +83,9 @@ class has_never_posted_test extends rule_test_base
 
 	public function testRuleFalse()
 	{
+		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->willReturn(1);
 		$rule = new has_never_posted($user, $datalayer);

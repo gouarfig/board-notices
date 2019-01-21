@@ -21,7 +21,7 @@ class has_posted_less_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_less $rule
 	 */
 	public function testGetDisplayName($args)
 	{
@@ -33,7 +33,7 @@ class has_posted_less_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_less $rule
 	 */
 	public function testGetType($args)
 	{
@@ -45,7 +45,7 @@ class has_posted_less_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_less $rule
 	 */
 	public function testGetPossibleValues($args)
 	{
@@ -57,7 +57,7 @@ class has_posted_less_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_less $rule
 	 */
 	public function testGetAvailableVars($args)
 	{
@@ -69,7 +69,7 @@ class has_posted_less_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_less $rule
 	 */
 	public function testGetTemplateVars($args)
 	{
@@ -82,7 +82,7 @@ class has_posted_less_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_less $rule
 	 */
 	public function testRuleEquals($args)
 	{
@@ -96,7 +96,7 @@ class has_posted_less_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_less $rule
 	 */
 	public function testRuleEqualsNoArray($args)
 	{
@@ -110,7 +110,7 @@ class has_posted_less_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_less $rule
 	 */
 	public function testRuleEqualsNoSerialize($args)
 	{
@@ -124,7 +124,7 @@ class has_posted_less_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_less $rule
 	 */
 	public function testRuleLessThan($args)
 	{
@@ -138,7 +138,7 @@ class has_posted_less_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_less $rule
 	 */
 	public function testRuleLessThanSerialize($args)
 	{
@@ -152,7 +152,7 @@ class has_posted_less_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_less $rule
 	 */
 	public function testRuleLessThanSerializeArray($args)
 	{
@@ -166,7 +166,7 @@ class has_posted_less_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_less $rule
 	 */
 	public function testRuleMoreThan($args)
 	{
@@ -180,7 +180,7 @@ class has_posted_less_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_less $rule
 	 */
 	public function testRuleMoreThanSerialize($args)
 	{
@@ -194,7 +194,7 @@ class has_posted_less_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_posted_exactly $rule
+	 * @param has_posted_less $rule
 	 */
 	public function testRuleMoreThanArraySerialize($args)
 	{
