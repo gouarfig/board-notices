@@ -2,6 +2,7 @@
 
 namespace fq\boardnotices\tests;
 
+use Symfony\Component\DependencyInjection\ContainerBuilder;
 use fq\boardnotices\domain\rules;
 
 class rules_test extends \PHPUnit_Framework_TestCase
