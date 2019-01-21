@@ -2,6 +2,9 @@
 
 namespace fq\boardnotices;
 
+/**
+ * Use this class to avoid the use of serialize and unserialize functions (which are unsafe)
+ */
 class serializer
 {
 	/**
@@ -31,6 +34,15 @@ class serializer
 			return json_decode(substr($string, 5));
 		}
 		/** @todo Remove compatibility before releasing version 1.0 */
-		return unserialize($string, ['allowed_classes' => false]);
+		return $this->safeUnserialize($string);
+	}
+
+	private function safeUnserialize($string)
+	{
+		if (intval(substr(phpversion(), 0, 1)) >= 7)
+		{
+			return unserialize($string, ['allowed_classes' => false]);
+		}
+		return unserialize($string);
 	}
 }
