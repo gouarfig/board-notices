@@ -5,77 +5,86 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\has_posted_in_forum;
-use fq\boardnotices\repository\legacy_interface;
 
-class has_posted_in_forum_test extends \phpbb_test_case
+class has_posted_in_forum_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		$user = new \phpbb\user('\phpbb\datetime');
-		$lang = &$user->lang;
-		include 'phpBB/ext/fq/boardnotices/language/en/boardnotices_acp.php';
-
+		/** @var \phpbb\user $user */
+		$user = $this->getUser();
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$rule = new has_posted_in_forum($user, $datalayer);
-		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
+		$this->assertNotNull($rule);
 
-		return $rule;
+		return array($user, $rule);
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\rules\has_posted_in_forum $rule
 	 */
-	public function testGetDisplayName($rule)
+	public function testGetDisplayName($args)
 	{
+		list($user, $rule) = $args;
 		$display = $rule->getDisplayName();
-		$this->assertTrue((strpos($display, "has posted") !== false), "Wrong DisplayName: '{$display}'");
+		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\rules\has_posted_in_forum $rule
 	 */
-	public function testGetType($rule)
+	public function testGetType($args)
 	{
+		list($user, $rule) = $args;
 		$type = $rule->getType();
 		$this->assertThat($type, $this->equalTo('forums'));
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\rules\has_posted_in_forum $rule
 	 */
-	public function testGetPossibleValues($rule)
+	public function testGetPossibleValues($args)
 	{
+		list($user, $rule) = $args;
 		$values = $rule->getPossibleValues();
 		$this->assertThat($values, $this->isNull());
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\rules\has_posted_in_forum $rule
 	 */
-	public function testGetAvailableVars($rule)
+	public function testGetAvailableVars($args)
 	{
+		list($user, $rule) = $args;
 		$vars = $rule->getAvailableVars();
 		$this->assertEquals(0, count($vars));
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\rules\has_posted_in_forum $rule
 	 */
-	public function testGetTemplateVars($rule)
+	public function testGetTemplateVars($args)
 	{
+		list($user, $rule) = $args;
 		$vars = $rule->getTemplateVars();
 		$this->assertEquals(0, count($vars));
 	}
 
 	public function testTrueOnEmptyCondition()
 	{
-		$user = new \phpbb\user('\phpbb\datetime');
-
+		/** @var \phpbb\user $user */
+		$user = $this->getUser();
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$datalayer->method('approvedUserPosts')->will($this->returnCallback(array($this, 'getUserPosts')));
 
@@ -89,8 +98,9 @@ class has_posted_in_forum_test extends \phpbb_test_case
 
 	public function testTrueConditions()
 	{
-		$user = new \phpbb\user('\phpbb\datetime');
-
+		/** @var \phpbb\user $user */
+		$user = $this->getUser();
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$datalayer->method('approvedUserPosts')->will($this->returnCallback(array($this, 'getUserPosts')));
 
@@ -102,8 +112,9 @@ class has_posted_in_forum_test extends \phpbb_test_case
 
 	public function testFalseConditions()
 	{
-		$user = new \phpbb\user('\phpbb\datetime');
-
+		/** @var \phpbb\user $user */
+		$user = $this->getUser();
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$datalayer->method('approvedUserPosts')->will($this->returnCallback(array($this, 'getUserPosts')));
 
