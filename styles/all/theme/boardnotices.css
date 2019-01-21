@@ -16,6 +16,40 @@
 	line-height: 1.5em;
 }
 
+/* make posted images responsive */
+#fq_notice .postimage {
+	-moz-box-sizing: border-box;
+	-webkit-box-sizing: border-box;
+	box-sizing: border-box;
+	max-width: 100%;
+}
+
+/* style the close button */
+#fq_notice .close {
+	background: transparent url('images/close.png') no-repeat 0 0;
+	opacity: 0.6;
+	float: right;
+	width: 12px;
+	height: 12px;
+	margin: 0 0 0 4px;
+}
+
+/* reposition close button for right to left languages */
+.rtl #fq_notice .close {
+	float: left;
+	margin: 0 4px 0 0;
+}
+
+/* hide close button on desktops by default */
+.notouch #fq_notice .close {
+	opacity: 0;
+	transition: opacity 0.5s;
+}
+
+/* display the close button on mouse-over of the banner */
+.notouch #fq_notice:hover .close {
+	opacity: 0.6;
+}
 
 /* fix for lists, force them to display inside containing div */
 #fq_notice ul, #fq_notice ol {
