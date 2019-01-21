@@ -58,7 +58,7 @@ class language extends rule_base implements rule_interface
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$languages = @unserialize($conditions);
+		$languages = $this->unserialize($conditions);
 		if ($languages === false)
 		{
 			// There's only one language

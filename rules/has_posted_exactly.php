@@ -55,7 +55,7 @@ class has_posted_exactly extends rule_base implements rule_interface
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$posts = unserialize($conditions);
+		$posts = $this->unserialize($conditions);
 		if ($posts === false)
 		{
 			$posts = $conditions;

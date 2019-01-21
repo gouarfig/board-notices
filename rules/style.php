@@ -73,7 +73,7 @@ class style extends rule_base implements rule_interface
 			$user_style = $this->user->data['user_style'];
 		}
 
-		$styles = @unserialize($conditions);
+		$styles = $this->unserialize($conditions);
 		if ($styles === false)
 		{
 			// There's only one style

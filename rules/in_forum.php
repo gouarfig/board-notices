@@ -59,7 +59,7 @@ class in_forum extends rule_base implements rule_interface
 		$valid = false;
 		$current_forum_id = $this->request->variable('f', 0);
 
-		$forums = @unserialize($conditions);
+		$forums = $this->unserialize($conditions);
 		if ($forums === false)
 		{
 			// There's only one group

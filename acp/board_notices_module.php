@@ -90,7 +90,7 @@ class board_notices_module
 
 	public function manage_module($id, $mode)
 	{
-		$action = request_var('action', '');
+		$action = $this->request->variable('action', '');
 		if ($this->request->is_set_post('add'))
 		{
 			$action = 'add';
@@ -99,7 +99,7 @@ class board_notices_module
 		{
 			$action = 'edit';
 		}
-		$notice_id = request_var('id', 0);
+		$notice_id = $this->request->variable('id', 0);
 
 		switch ($action)
 		{
@@ -181,7 +181,7 @@ class board_notices_module
 
 	public function settings_module($id, $mode)
 	{
-		$action = request_var('action', '');
+		$action = $this->request->variable('action', '');
 		if ($action == 'reset_forum_visits')
 		{
 			$this->resetForumVisits($id, $mode, $action);

@@ -94,4 +94,12 @@ abstract class rule_base {
 		include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
 	}
 
+	protected function unserialize($data)
+	{
+		if (empty($data))
+		{
+			return null;
+		}
+		return @unserialize($data);
+	}
 }

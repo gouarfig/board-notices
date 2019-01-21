@@ -37,6 +37,6 @@ class configuration extends \phpbb\db\migration\migration
 	{
 		// Generates some kind of fairly random key
 		$key = mt_rand() . date('r') . $this->config['cookie_name'];
-		return sha1($key);
+		return hash('sha256', $key);
 	}
 }

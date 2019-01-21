@@ -70,7 +70,7 @@ class boardnotices implements boardnotices_interface
 	{
 		if (defined('BOARDNOTICES_DEBUG') && BOARDNOTICES_DEBUG)
 		{
-			echo "<br />{$message}<br />\n";
+			// do_nothing "<br />{$message}<br />\n";
 		}
 	}
 

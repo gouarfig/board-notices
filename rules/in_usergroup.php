@@ -59,7 +59,7 @@ class in_usergroup extends rule_base implements rule_interface
 	{
 		$valid = false;
 
-		$groups = @unserialize($conditions);
+		$groups = $this->unserialize($conditions);
 		if ($groups === false)
 		{
 			// There's only one group

@@ -55,7 +55,7 @@ class logged_in extends rule_base implements rule_interface
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$logged_in_conditions = unserialize($conditions);
+		$logged_in_conditions = $this->unserialize($conditions);
 		if ($logged_in_conditions === false)
 		{
 			$logged_in_conditions = $conditions;

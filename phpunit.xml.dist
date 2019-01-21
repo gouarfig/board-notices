@@ -32,15 +32,16 @@
 				<directory suffix=".php">./language/</directory>
 				<directory suffix=".php">./migrations/</directory>
 				<directory suffix=".php">./styles/</directory>
+				<directory suffix=".php">./vendor/</directory>
 			</exclude>
 		</whitelist>
 	</filter>
 
-	<!-- <logging>
+	<logging>
 		<log type="coverage-clover" target="./logs/clover.xml"/>
 		<log type="coverage-html" target="./logs/coverage" lowUpperBound="35" highLowerBound="70"/>
 		<log type="coverage-text" target="php://stdout" showUncoveredFiles="false"/>
-	</logging> -->
+	</logging>
 
 	<php>
 		<server name="PHPBB_FUNCTIONAL_URL" value="http://localhost/" />

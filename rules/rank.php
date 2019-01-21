@@ -93,7 +93,7 @@ class rank extends rule_base implements rule_interface
 		$valid = false;
 
 		$user_rank = $this->getUserRank();
-		$ranks = @unserialize($conditions);
+		$ranks = $this->unserialize($conditions);
 		if ($ranks === false)
 		{
 			// There's only one rank
