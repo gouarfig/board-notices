@@ -72,6 +72,7 @@ class in_default_usergroup_test extends rule_test_base
 
 	/**
 	 * @depends testInstance
+	 * @runInSeparateProcess
 	 * @param \phpbb\user $user
 	 * @param in_default_usergroup $rule
 	 */
