@@ -62,18 +62,6 @@ class boardnotices implements boardnotices_interface
 		}
 	}
 
-	/**
-	 * @codeCoverageIgnore
-	 * @param string $message
-	 */
-	private function debug($message)
-	{
-		if (defined('BOARDNOTICES_DEBUG') && BOARDNOTICES_DEBUG)
-		{
-			// do_nothing "<br />{$message}<br />\n";
-		}
-	}
-
 	private function loadNotices($active_only = true)
 	{
 		$notices = array();
