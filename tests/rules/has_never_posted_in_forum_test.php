@@ -5,7 +5,6 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\has_never_posted_in_forum;
-use fq\boardnotices\repository\legacy_interface;
 
 class has_never_posted_in_forum_test extends \phpbb_test_case
 {

@@ -14,7 +14,7 @@ namespace fq\boardnotices\rules;
 
 class logged_in extends rule_base implements rule_interface
 {
-
+	/** @var \phpbb\user $lang */
 	private $user;
 
 	public function __construct(\phpbb\user $user)

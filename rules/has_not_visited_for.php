@@ -14,7 +14,7 @@ namespace fq\boardnotices\rules;
 
 class has_not_visited_for extends rule_base implements rule_interface
 {
-
+	/** @var \phpbb\user $lang */
 	private $user;
 	private $repository;
 
@@ -27,14 +27,14 @@ class has_not_visited_for extends rule_base implements rule_interface
 	public function getDisplayName()
 	{
 		return array(
-			$this->user->lang['RULE_HAS_NOT_VISITED_FOR_1'],
-			$this->user->lang['RULE_HAS_NOT_VISITED_FOR_2'],
+			$this->user->lang('RULE_HAS_NOT_VISITED_FOR_1'),
+			$this->user->lang('RULE_HAS_NOT_VISITED_FOR_2'),
 		);
 	}
 
 	public function getDisplayUnit()
 	{
-		return $this->user->lang['RULE_DAY(S)'];
+		return $this->user->lang('RULE_DAY(S)');
 	}
 
 	public function getType()

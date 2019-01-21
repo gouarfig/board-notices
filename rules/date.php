@@ -14,6 +14,7 @@ namespace fq\boardnotices\rules;
 
 class date extends rule_base implements rule_interface
 {
+	/** @var \phpbb\user $lang */
 	private $user;
 
 	public function __construct(\phpbb\user $user)
@@ -23,7 +24,7 @@ class date extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return $this->user->lang['RULE_DATE'];
+		return $this->user->lang('RULE_DATE');
 	}
 
 	public function getDisplayUnit()

@@ -14,7 +14,7 @@ namespace fq\boardnotices\rules;
 
 class in_forum extends rule_base implements rule_interface
 {
-
+	/** @var \phpbb\user $lang */
 	private $user;
 	private $request;
 

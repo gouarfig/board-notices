@@ -14,7 +14,7 @@ namespace fq\boardnotices\rules;
 
 class in_default_usergroup extends rule_base implements rule_interface
 {
-
+	/** @var \phpbb\user $lang */
 	private $user;
 	private $data_layer;
 
@@ -26,7 +26,7 @@ class in_default_usergroup extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return $this->user->lang['RULE_IN_DEFAULT_USERGROUP'];
+		return $this->user->lang('RULE_IN_DEFAULT_USERGROUP');
 	}
 
 	public function getDisplayUnit()

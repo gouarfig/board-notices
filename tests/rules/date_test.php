@@ -21,6 +21,16 @@ class date_test extends rule_test_base
 	 * @depends testInstance
 	 * @param \fq\boardnotices\rules\date $rule
 	 */
+	public function testGetDisplayName($rule)
+	{
+		$display = $rule->getDisplayName();
+		$this->assertNotEmpty($display, "DisplayName is empty");
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\rules\date $rule
+	 */
 	public function testGetType($rule)
 	{
 		$type = $rule->getType();
@@ -84,9 +94,9 @@ class date_test extends rule_test_base
 		);
 	}
 
-	public function getDatetime($user)
+	private function getDatetime(\phpbb\user $user, $time = null)
 	{
-		$now = $user->create_datetime();
+		$now = $user->create_datetime($time);
 		$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset());
 		return $now;
 	}
@@ -94,7 +104,7 @@ class date_test extends rule_test_base
 	/**
 	 * @return int[]
 	 */
-	public function buildConditions($now, $day = null, $month = null, $year = null)
+	private function buildConditions($now, $day = null, $month = null, $year = null)
 	{
 		$conditions = array(0, 0, 0);
 		if (!is_null($day))
@@ -107,6 +117,11 @@ class date_test extends rule_test_base
 			else
 			{
 				$conditions[0] = $now['mday'] + $day;
+				// We can't get to zero, it means "any"
+				if ($conditions[0] == 0)
+				{
+					$conditions[0] = 30;
+				}
 			}
 		}
 
@@ -120,6 +135,7 @@ class date_test extends rule_test_base
 			else
 			{
 				$conditions[1] = $now['mon'] + $month;
+				// We can't get to zero, it means "any"
 				if ($conditions[1] == 0)
 				{
 					$conditions[1] = 12;
@@ -266,6 +282,24 @@ class date_test extends rule_test_base
 	 * @dataProvider getTimezones
 	 * @param string $timezone
 	 */
+	public function testPreviousDayOfFirstDayOfTheMonthIsFalse($timezone)
+	{
+		date_default_timezone_set($timezone);
+		$user = $this->getUser();
+		$user->timezone = new \DateTimeZone($timezone);
+		$rule = new date($user);
+		$now = $this->getDatetime($user, '2019-10-01');
+		$conditions = $this->buildConditions($now, -1, 0, 0);
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
+
+		$conditions = $this->buildConditions($now, -1, null, null);
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
+	}
+
+	/**
+	 * @dataProvider getTimezones
+	 * @param string $timezone
+	 */
 	public function testPreviousDayIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
@@ -295,6 +329,24 @@ class date_test extends rule_test_base
 		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 
 		$conditions = $this->buildConditions($now, 1, null, null);
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
+	}
+
+	/**
+	 * @dataProvider getTimezones
+	 * @param string $timezone
+	 */
+	public function testPreviousMonthOfJanuaryIsFalse($timezone)
+	{
+		date_default_timezone_set($timezone);
+		$user = $this->getUser();
+		$user->timezone = new \DateTimeZone($timezone);
+		$rule = new date($user);
+		$now = $this->getDatetime($user, '2019-01-10');
+		$conditions = $this->buildConditions($now, 0, -1, 0);
+		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
+
+		$conditions = $this->buildConditions($now, null, -1, null);
 		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
 	}
 

@@ -14,7 +14,7 @@ namespace fq\boardnotices\rules;
 
 class birthday extends rule_base implements rule_interface
 {
-
+	/** @var \phpbb\user $lang */
 	private $user;
 	private $template_vars = array();
 
@@ -59,7 +59,7 @@ class birthday extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return $this->user->lang['RULE_BIRTHDAY'];
+		return $this->user->lang('RULE_BIRTHDAY');
 	}
 
 	public function getDisplayUnit()

@@ -14,7 +14,7 @@ namespace fq\boardnotices\rules;
 
 class has_never_posted_in_forum extends rule_base implements rule_interface
 {
-
+	/** @var \phpbb\user $lang */
 	private $user;
 	private $data_layer;
 
@@ -26,7 +26,7 @@ class has_never_posted_in_forum extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return $this->user->lang['RULE_HAS_NEVER_POSTED_IN_FORUM'];
+		return $this->user->lang('RULE_HAS_NEVER_POSTED_IN_FORUM');
 	}
 
 	public function getDisplayUnit()

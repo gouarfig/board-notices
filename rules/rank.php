@@ -13,6 +13,7 @@ namespace fq\boardnotices\rules;
 
 class rank extends rule_base implements rule_interface
 {
+	/** @var \phpbb\user $lang */
 	private $user;
 	private $data_layer;
 	private $user_rank = null;

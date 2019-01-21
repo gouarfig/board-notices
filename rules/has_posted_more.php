@@ -14,7 +14,7 @@ namespace fq\boardnotices\rules;
 
 class has_posted_more extends rule_base implements rule_interface
 {
-
+	/** @var \phpbb\user $lang */
 	private $user;
 
 	public function __construct(\phpbb\user $user)
@@ -24,7 +24,7 @@ class has_posted_more extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return $this->user->lang['RULE_HAS_POSTED_MORE'];
+		return $this->user->lang('RULE_HAS_POSTED_MORE');
 	}
 
 	public function getDisplayUnit()

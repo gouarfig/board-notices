@@ -12,9 +12,19 @@ class birthday_test extends rule_test_base
 	{
 		$user = $this->getUser();
 		$rule = new birthday($user);
-		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
+		$this->assertNotNull($rule);
 
 		return $rule;
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\rules\date $rule
+	 */
+	public function testGetDisplayName($rule)
+	{
+		$display = $rule->getDisplayName();
+		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
 
 	/**

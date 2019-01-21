@@ -14,7 +14,7 @@ namespace fq\boardnotices\rules;
 
 class has_not_posted_for extends rule_base implements rule_interface
 {
-
+	/** @var \phpbb\user $lang */
 	private $user;
 
 	public function __construct(\phpbb\user $user)
@@ -24,12 +24,12 @@ class has_not_posted_for extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return $this->user->lang['RULE_HAS_NOT_POSTED_FOR_1'];
+		return $this->user->lang('RULE_HAS_NOT_POSTED_FOR_1');
 	}
 
 	public function getDisplayUnit()
 	{
-		return $this->user->lang['RULE_HAS_NOT_POSTED_FOR_2'];
+		return $this->user->lang('RULE_HAS_NOT_POSTED_FOR_2');
 	}
 
 	public function getType()
