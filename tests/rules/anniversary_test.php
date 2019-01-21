@@ -11,6 +11,7 @@ class anniversary_test extends rule_test_base
 
 	public function testInstance()
 	{
+		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		$rule = new anniversary($user);
 		$this->assertNotNull($rule);
