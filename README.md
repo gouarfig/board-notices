@@ -1,11 +1,12 @@
 
 [![Build Status](https://travis-ci.org/gouarfig/board-notices.svg)](https://travis-ci.org/gouarfig/board-notices)
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/4836ae0c5386422eb43a18d301b7119e)](https://www.codacy.com/app/gouarfig/board-notices?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=gouarfig/board-notices&amp;utm_campaign=Badge_Grade)
 
-# Board Notices Manager for phpBB 3.1
+# Board Notices Manager for phpBB 3.2
 
 This extension will help you manage various notices at the top of all the pages.
 
-This is not the same as an announcement. An announcement is global, whereas notices are contextual. Also an announcement is dismissable, notices are not.
+This is not the same as an announcement. An announcement is global, whereas notices are contextual.
 
 A few examples:
 * Display a message to guests asking them to register
@@ -16,7 +17,9 @@ A few examples:
 * Some warning that you're browsing a specific forum (like a read-only section)
 * etc.
 
-**Please note this extension is still at the development stage, and is not ready for production**
+**Please note this extension is still at the development stage, and is probably not ready for production**
+
+I've been using it on my board for a few years without any issue.
 
 ## Installation notes
 
