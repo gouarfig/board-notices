@@ -21,6 +21,8 @@ class rules_test extends \PHPUnit_Framework_TestCase
 	}
 
 	/**
+	 * I'm not sure why ContainerBuilder cannot be mocked using the same phpunit version under php 5
+	 * @requires PHP 7
 	 * @depends testInstance
 	 * @param fq\boardnotices\domain\rules $rules
 	 */
