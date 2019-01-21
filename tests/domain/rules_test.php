@@ -48,4 +48,3 @@ class rules_test extends \PHPUnit_Framework_TestCase
 		return $get;
 	}
 }
-
