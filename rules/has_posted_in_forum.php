@@ -16,6 +16,7 @@ class has_posted_in_forum extends rule_base implements rule_interface
 {
 	/** @var \phpbb\user $lang */
 	private $user;
+	/** @var \fq\boardnotices\repository\legacy_interface $data_layer */
 	private $data_layer;
 
 	public function __construct(\phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer)

@@ -16,6 +16,7 @@ class has_not_visited_for extends rule_base implements rule_interface
 {
 	/** @var \phpbb\user $lang */
 	private $user;
+	/** @var \fq\boardnotices\repository\legacy_interface $repository */
 	private $repository;
 
 	public function __construct(\phpbb\user $user, \fq\boardnotices\repository\legacy_interface $repository)

@@ -12,7 +12,7 @@ class date_test extends rule_test_base
 	{
 		$user = $this->getUser();
 		$rule = new date($user);
-		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
+		$this->assertNotNull($rule);
 
 		return $rule;
 	}

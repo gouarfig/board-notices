@@ -6,17 +6,15 @@ include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\has_never_posted_in_forum;
 
-class has_never_posted_in_forum_test extends \phpbb_test_case
+class has_never_posted_in_forum_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		$user = new \phpbb\user('\phpbb\datetime');
-		$lang = &$user->lang;
-		include 'phpBB/ext/fq/boardnotices/language/en/boardnotices_acp.php';
+		$user = $this->getUser();
 
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 		$rule = new has_never_posted_in_forum($user, $datalayer);
-		$this->assertThat($rule, $this->logicalNot($this->equalTo(null)));
+		$this->assertNotNull($rule);
 
 		return $rule;
 	}
@@ -28,7 +26,7 @@ class has_never_posted_in_forum_test extends \phpbb_test_case
 	public function testGetDisplayName($rule)
 	{
 		$display = $rule->getDisplayName();
-		$this->assertTrue((strpos($display, "never posted") !== false), "Wrong DisplayName: '{$display}'");
+		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
 
 	/**

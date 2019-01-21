@@ -15,6 +15,7 @@ class rank extends rule_base implements rule_interface
 {
 	/** @var \phpbb\user $lang */
 	private $user;
+	/** @var \fq\boardnotices\repository\legacy_interface $data_layer */
 	private $data_layer;
 	private $user_rank = null;
 
