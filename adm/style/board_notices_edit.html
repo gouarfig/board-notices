@@ -57,9 +57,6 @@
 				<input name="board_notice_bgcolor" type="text" id="board_notice_bgcolor" value="{BOARD_NOTICE_BGCOLOR}" size="6" maxlength="6" <!-- IF BOARD_NOTICE_BGCOLOR -->style="border-right:20px solid #{BOARD_NOTICE_BGCOLOR}"<!-- ENDIF --> />
 			</dd>
 		</dl>
-
-		<br />
-
 		<!-- INCLUDE acp_posting_buttons.html -->
 
 		<dl class="responsive-columns">
@@ -80,6 +77,13 @@
 			</dd>
 			<dd style="margin-{S_CONTENT_FLOW_BEGIN}: 90px; margin-top: 10px;"><strong>{L_OPTIONS}{L_COLON} </strong>{BBCODE_STATUS} :: {IMG_STATUS} :: {FLASH_STATUS} :: {URL_STATUS} :: {SMILIES_STATUS}</dd>
 			<dd style="margin-{S_CONTENT_FLOW_BEGIN}: 90px; margin-top: 10px;"><strong>{L_INFO}{L_COLON} </strong>{VARIABLES_EXPLAIN}</dd>
+		</dl>
+
+		<dl>
+			<dt><label for="board_notice_style">{LABEL_BOARD_NOTICE_STYLE}{L_COLON}</label><br /><span>{LABEL_BOARD_NOTICE_STYLE_EXPLAIN}</span></dt>
+			<dd>
+				<input name="board_notice_style" type="text" id="board_notice_style" value="{BOARD_NOTICE_STYLE}" size="20" maxlength="50" />
+			</dd>
 		</dl>
 	</fieldset>
 

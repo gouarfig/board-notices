@@ -1,5 +1,8 @@
 <!-- IF S_BOARD_NOTICE -->
-	<div id="fq_notice"<!-- IF BOARD_NOTICE_BGCOLOR --> style="background-color:#{BOARD_NOTICE_BGCOLOR}"<!-- ENDIF -->>
+	<div id="fq_notice"
+		<!-- IF BOARD_NOTICE_STYLE --> class="{BOARD_NOTICE_STYLE}"<!-- ENDIF -->
+		<!-- IF BOARD_NOTICE_BGCOLOR --> style="background-color:#{BOARD_NOTICE_BGCOLOR}"<!-- ENDIF -->
+		>
 		<div>{BOARD_NOTICE}</div>
 	</div>
 <!-- ENDIF -->

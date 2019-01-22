@@ -308,6 +308,9 @@ class board_notices_module
 			'LABEL_BOARD_NOTICE_PREVIEW' => $this->user->lang('LABEL_BOARD_NOTICE_PREVIEW'),
 			'LABEL_BOARD_NOTICE_TEXT' => $this->user->lang('LABEL_BOARD_NOTICE_TEXT'),
 			'LABEL_BOARD_NOTICE_BGCOLOR' => $this->user->lang('LABEL_BOARD_NOTICE_BGCOLOR'),
+			'LABEL_BOARD_NOTICE_BGCOLOR_EXPLAIN' => $this->user->lang('LABEL_BOARD_NOTICE_BGCOLOR_EXPLAIN'),
+			'LABEL_BOARD_NOTICE_STYLE' => $this->user->lang('LABEL_BOARD_NOTICE_STYLE'),
+			'LABEL_BOARD_NOTICE_STYLE_EXPLAIN' => $this->user->lang('LABEL_BOARD_NOTICE_STYLE_EXPLAIN'),
 			'ERRORS' => $error,
 			'NOTICE_ID' => isset($data['notice_id']) ? $data['notice_id'] : '',
 			'BOARD_NOTICE_ACTIVE' => $data['active'],
@@ -315,6 +318,7 @@ class board_notices_module
 			'BOARD_NOTICE_TEXT' => $notice_text_edit['text'],
 			'BOARD_NOTICE_PREVIEW' => $notice_text_preview,
 			'BOARD_NOTICE_BGCOLOR' => $data['message_bgcolor'],
+			'BOARD_NOTICE_STYLE' => $data['message_style'],
 			'S_BBCODE_DISABLE_CHECKED' => !$notice_text_edit['allow_bbcode'],
 			'S_SMILIES_DISABLE_CHECKED' => !$notice_text_edit['allow_smilies'],
 			'S_MAGIC_URL_DISABLE_CHECKED' => !$notice_text_edit['allow_urls'],
@@ -705,6 +709,7 @@ class board_notices_module
 	/**
 	 * Validates form data and returns the values into $data
 	 * Return value of the function is an empty string if the form is valid, or an error message otherwise
+	 * @todo It can be confusing that it's this method to get the data from the form
 	 * @param array $data
 	 * @param bool $for_submit
 	 * @return string
@@ -727,6 +732,7 @@ class board_notices_module
 		$data['message'] = $this->request->variable('board_notice_text', '', true);
 		$data['title'] = $this->request->variable('board_notice_title', '', true);
 		$data['message_bgcolor'] = $this->request->variable('board_notice_bgcolor', '', true);
+		$data['message_style'] = $this->request->variable('board_notice_style', '', true);
 
 		// Get config options from the form
 		$data['active'] = $this->request->variable('board_notice_active', false);

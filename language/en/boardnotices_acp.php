@@ -74,6 +74,10 @@ $lang = array_merge($lang, array(
 	'LABEL_BOARD_NOTICE_PREVIEW'			=> 'Message preview',
 	'LABEL_BOARD_NOTICE_TEXT'				=> 'Message displayed when conditions are met',
 	'LABEL_BOARD_NOTICE_BGCOLOR'			=> 'Background color of the message',
+	'LABEL_BOARD_NOTICE_BGCOLOR_EXPLAIN'	=> 'If not specified. the default color is #ECD5D8',
+
+	'LABEL_BOARD_NOTICE_STYLE'				=> '[Advanced users:] CSS class of the message container',
+	'LABEL_BOARD_NOTICE_STYLE_EXPLAIN'		=> 'The default CSS style is a class named #fq_notice but you can change it here if you prefer to use your own.',
 
 	'L_INFORMATION'							=> 'Information',
 	'VARIABLES_EXPLAIN'						=> 'You may include the following special variables in your text:<br />'

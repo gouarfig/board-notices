@@ -81,34 +81,60 @@ class notice
 		return $valid || $preview;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isLastNotice()
 	{
 		return $this->properties['last'] ? true : false;
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getMessage()
 	{
 		return $this->properties['message'];
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getMessageUid()
 	{
 		return $this->properties['message_uid'];
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getMessageBitfield()
 	{
 		return $this->properties['message_bitfield'];
 	}
 
+	/**
+	 * @return int
+	 */
 	public function getMessageOptions()
 	{
 		return $this->properties['message_options'];
 	}
 
+	/**
+	 * @return string
+	 */
 	public function getMessageBgColor()
 	{
 		return $this->properties['message_bgcolor'];
+	}
+
+	/**
+	 * @return string
+	 */
+	public function getMessageStyle()
+	{
+		return $this->properties['message_style'];
 	}
 
 	public function getTemplateVars()

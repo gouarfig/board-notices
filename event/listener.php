@@ -17,11 +17,15 @@ use \fq\boardnotices\domain\notice;
 
 class listener implements EventSubscriberInterface
 {
-
+	/** @var \phpbb\user $user */
 	protected $user = null;
+	/** @var \phpbb\config\config $config */
 	protected $config = null;
+	/** @var \phpbb\template\template $template */
 	protected $template = '';
+	/** @var \phpbb\request\request $request */
 	protected $request;
+	/** @var \fq\boardnotices\repository\boardnotices_interface $repository */
 	protected $repository;
 
 	static public function getSubscribedEvents()
@@ -36,7 +40,12 @@ class listener implements EventSubscriberInterface
 	 *
 	 * @param \phpbb\user $user
 	 */
-	public function __construct(\phpbb\user $user, \phpbb\config\config $config, \phpbb\template\template $template, \phpbb\request\request $request, \fq\boardnotices\repository\boardnotices_interface $repository)
+	public function __construct(
+		\phpbb\user $user,
+		\phpbb\config\config $config,
+		\phpbb\template\template $template,
+		\phpbb\request\request $request,
+		\fq\boardnotices\repository\boardnotices_interface $repository)
 	{
 		$this->user = $user;
 		$this->config = $config;
@@ -79,6 +88,7 @@ class listener implements EventSubscriberInterface
 
 		$notice_message = '';
 		$notice_bgcolor = '';
+		$notice_style = '';
 
 		foreach ($notices as $notice)
 		{
@@ -89,6 +99,7 @@ class listener implements EventSubscriberInterface
 						$notice->getMessage(), $notice->getMessageUid(), $notice->getMessageBitfield(), $notice->getMessageOptions()
 				);
 				$notice_bgcolor = $notice->getMessageBgColor();
+				$notice_style = $notice->getMessageStyle();
 				$template_vars = array_merge($template_vars, $notice->getTemplateVars());
 				break;
 			}
@@ -103,6 +114,7 @@ class listener implements EventSubscriberInterface
 				'S_BOARD_NOTICE' => true,
 				'BOARD_NOTICE' => $notice_message,
 				'BOARD_NOTICE_BGCOLOR' => $notice_bgcolor,
+				'BOARD_NOTICE_STYLE' => $notice_style,
 			));
 		}
 
@@ -165,6 +177,9 @@ class listener implements EventSubscriberInterface
 		return $preview_id;
 	}
 
+	/**
+	 * @return notice
+	 */
 	private function getNotice($raw_notice)
 	{
 		$rules = $this->repository->getRulesFor($raw_notice['notice_id']);
