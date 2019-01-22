@@ -102,16 +102,16 @@
 	</thead>
 	<tbody>
 	<!-- BEGIN allrules -->
-		<tr>
-			<td style="text-align: right;">
+		<tr data-id="{allrules.RULE_NAME}" class="<!-- IF allrules.NOTICE_RULE_CHECKED -->active-rule<!-- ELSE -->inactive-rule<!-- ENDIF -->">
+			<td class="boardnotice-checkbox">
 				<input type="hidden" name="notice_rule_id[{allrules.RULE_NAME}]" value="{allrules.NOTICE_RULE_ID}" />
-				<input type="checkbox" name="notice_rule_checked[{allrules.RULE_NAME}]" value="1"<!-- IF allrules.NOTICE_RULE_CHECKED --> checked<!-- ENDIF -->/>
+				<input type="checkbox" name="notice_rule_checked[{allrules.RULE_NAME}]" data-rule="checkbox" data-id="{allrules.RULE_NAME}" value="1"<!-- IF allrules.NOTICE_RULE_CHECKED --> checked<!-- ENDIF -->/>
 			</td>
-			<td style="text-align: right;">
+			<td class="boardnotice-description">
 				<strong>{allrules.RULE_DESCRIPTION}</strong>
 			</td>
-			<td>{allrules.RULE_CONDITIONS} {allrules.RULE_UNIT}</td>
-			<td>{allrules.RULE_VARIABLES}</td>
+			<td class="boardnotice-conditions">{allrules.RULE_CONDITIONS} {allrules.RULE_UNIT}</td>
+			<td class="boardnotice-variables">{allrules.RULE_VARIABLES}</td>
 		</tr>
 	<!-- BEGINELSE -->
 		<tr class="row3">

@@ -5,3 +5,19 @@ table tr:first-child td.actions .first, table tr:last-child td.actions .last {
 table tr:first-child td.actions .first-disabled, table tr:last-child td.actions .last-disabled {
 	display: inline !important;
 }
+
+.boardnotice-checkbox, .boardnotice-description {
+	text-align: right;
+}
+
+tr.inactive-rule .boardnotice-description {
+	opacity: 0.5;
+}
+
+tr.inactive-rule .boardnotice-conditions {
+	opacity: 0.5;
+}
+
+tr.inactive-rule .boardnotice-variables {
+	opacity: 0.5;
+}
