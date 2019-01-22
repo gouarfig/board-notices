@@ -675,6 +675,7 @@ class board_notices_module
 			'message_bitfield' => '',
 			'message_options' => OPTION_FLAG_BBCODE + OPTION_FLAG_SMILIES + OPTION_FLAG_LINKS,
 			'message_bgcolor' => '',
+			'message_style' => '',
 			'notice_rule_id' => array(),
 			'notice_rule_checked' => array(),
 			'notice_rule_conditions' => array(),
