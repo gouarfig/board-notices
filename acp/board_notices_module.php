@@ -208,7 +208,7 @@ class board_notices_module
 		$data_layer = $this->getRepository();
 
 		// Add the board notices ACP lang file
-		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+		$this->addAdminLanguage();
 
 		// Load a template from adm/style for our ACP page
 		$this->tpl_name = 'board_notices';
@@ -264,7 +264,7 @@ class board_notices_module
 		$this->user->add_lang(array('posting'));
 
 		// Add the board notices ACP lang file
-		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+		$this->addAdminLanguage();
 
 		// Load a template from adm/style for our ACP page
 		$this->tpl_name = 'board_notices_edit';
@@ -383,7 +383,7 @@ class board_notices_module
 	public function displaySettingsForm()
 	{
 		// Add the board notices ACP lang file
-		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+		$this->addAdminLanguage();
 
 		// Load a template from adm/style for our ACP page
 		$this->tpl_name = 'board_notices_settings';
@@ -712,7 +712,7 @@ class board_notices_module
 		$error = '';
 
 		// Add the board notices ACP lang file
-		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+		$this->addAdminLanguage();
 
 		// Test if form key is valid
 		if (!check_form_key($this->notice_form_name))
@@ -837,7 +837,7 @@ class board_notices_module
 	private function saveNewNotice(&$data)
 	{
 		// Add the board notices ACP lang file
-		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+		$this->addAdminLanguage();
 
 		$rules_data = array(
 			'notice_rule_id' => $data['notice_rule_id'],
@@ -864,7 +864,7 @@ class board_notices_module
 	private function saveNotice($notice_id, &$data)
 	{
 		// Add the board notices ACP lang file
-		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+		$this->addAdminLanguage();
 
 		$rules_data = array(
 			'notice_rule_id' => $data['notice_rule_id'],
@@ -902,7 +902,7 @@ class board_notices_module
 		$data = array();
 
 		// Add the board notices ACP lang file
-		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+		$this->addAdminLanguage();
 
 		// Get config options from the form
 		$data['boardnotices_enabled'] = $this->request->variable('board_notices_active', true);
@@ -923,7 +923,7 @@ class board_notices_module
 	private function resetForumVisits($id, $mode, $action)
 	{
 		// Add the board notices ACP lang file
-		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+		$this->addAdminLanguage();
 
 		if (!confirm_box(true))
 		{
@@ -943,5 +943,11 @@ class board_notices_module
 				trigger_error('RESET_FORUM_VISITS_SUCCESS');
 			}
 		}
+	}
+
+	private function addAdminLanguage()
+	{
+		// Keep compatibility with phpBB 3.1 (for now)
+		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
 	}
 }

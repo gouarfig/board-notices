@@ -31,7 +31,7 @@
 		<dl>
 			<dt><label for="board_notice_enable">{LABEL_BOARD_NOTICE_ACTIVE}{L_COLON}</label></dt>
 			<dd>
-				<label><input type="radio" class="radio" id="board_notice_active" name="board_notice_active" value="1"<!-- IF BOARD_NOTICE_ACTIVE --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
+				<label><input type="radio" class="radio" id="board_notice_active" name="board_notice_active" value="1"<!-- IF BOARD_NOTICE_ACTIVE --> checked="checked"<!-- ENDIF --> /> {{ lang('YES') }}</label>
 				<label><input type="radio" class="radio" name="board_notice_active" value="0"<!-- IF not BOARD_NOTICE_ACTIVE --> checked="checked"<!-- ENDIF --> /> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
@@ -43,7 +43,7 @@
 		</dl>
 	</fieldset>
 
-	{% if IF BOARD_NOTICE_PREVIEW %}
+	{% if BOARD_NOTICE_PREVIEW %}
 		<fieldset>
 			<legend>{LABEL_BOARD_NOTICE_PREVIEW}</legend>
 			<div style="padding:10px; font-size:1.0em; overflow: auto; <!-- IF BOARD_NOTICE_BGCOLOR -->background-color:#{BOARD_NOTICE_BGCOLOR}<!-- ENDIF -->">{BOARD_NOTICE_PREVIEW}</div>
