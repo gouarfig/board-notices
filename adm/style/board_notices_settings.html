@@ -22,18 +22,22 @@
 	<fieldset>
 		<legend>{{ lang('GENERAL_OPTIONS') }}</legend>
 		<dl>
-			<dt><label for="board_notices_enabled">{{ lang('LABEL_BOARD_NOTICES_ACTIVE') ~ lang('COLON') }}</label>
-			<br /><span>{{ lang('BOARD_NOTICES_ACTIVE_EXPLAIN') }}</span>
+			<dt>
+				<label for="board_notices_enabled">{{ lang('LABEL_BOARD_NOTICES_ACTIVE') ~ lang('COLON') }}</label><br />
+				<span>{{ lang('BOARD_NOTICES_ACTIVE_EXPLAIN') }}</span>
 			</dt>
 			<dd>
-				<label><input type="radio" class="radio" id="board_notices_active" name="board_notices_active" value="1"<!-- IF BOARD_NOTICES_ACTIVE --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-				<label><input type="radio" class="radio" name="board_notices_active" value="0"<!-- IF not BOARD_NOTICES_ACTIVE --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+				<label><input type="radio" class="radio" id="board_notices_active" name="board_notices_active" value="1"{% if BOARD_NOTICES_ACTIVE %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="board_notices_active" value="0"{% if not BOARD_NOTICES_ACTIVE %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="board_notice_default_bgcolor">{{ lang('LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR') ~ lang('COLON') }}</label><br /><span>{{ lang('LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR_EXPLAIN') }}</span></dt>
+			<dt>
+				<label for="board_notice_default_bgcolor">{{ lang('LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR') ~ lang('COLON') }}</label><br />
+				<span>{{ lang('LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR_EXPLAIN') }}</span>
+			</dt>
 			<dd>
-				<input name="board_notice_default_bgcolor" type="text" id="board_notice_default_bgcolor" value="{BOARD_NOTICE_DEFAULT_BGCOLOR}" size="6" maxlength="6" <!-- IF BOARD_NOTICE_DEFAULT_BGCOLOR -->style="border-right:20px solid #{BOARD_NOTICE_DEFAULT_BGCOLOR}"<!-- ENDIF --> />
+				<input name="board_notice_default_bgcolor" type="text" id="board_notice_default_bgcolor" value="{{ BOARD_NOTICE_DEFAULT_BGCOLOR }}" size="6" maxlength="6" {% if BOARD_NOTICE_DEFAULT_BGCOLOR %}style="border-right:20px solid #{{ BOARD_NOTICE_DEFAULT_BGCOLOR }}"{% endif %} />
 			</dd>
 		</dl>
 	</fieldset>
@@ -41,12 +45,13 @@
 	<fieldset>
 		<legend>{{ lang('L_FORUMS_VISITS') }}</legend>
 		<dl>
-			<dt><label for="board_notices_enabled">{{ lang('LABEL_FORUMS_VISITS_ACTIVE') ~ lang('COLON') }}</label>
-			<br /><span>{{ lang('FORUMS_VISITS_ACTIVE_EXPLAIN') }}</span>
+			<dt>
+				<label for="board_notices_enabled">{{ lang('LABEL_FORUMS_VISITS_ACTIVE') ~ lang('COLON') }}</label><br />
+				<span>{{ lang('FORUMS_VISITS_ACTIVE_EXPLAIN') }}</span>
 			</dt>
 			<dd>
-				<label><input type="radio" class="radio" id="forums_visits_active" name="forums_visits_active" value="1"<!-- IF FORUMS_VISITS_ACTIVE --> checked="checked"<!-- ENDIF --> /> {L_YES}</label>
-				<label><input type="radio" class="radio" name="forums_visits_active" value="0"<!-- IF not FORUMS_VISITS_ACTIVE --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
+				<label><input type="radio" class="radio" id="forums_visits_active" name="forums_visits_active" value="1"{% if FORUMS_VISITS_ACTIVE %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="forums_visits_active" value="0"{% if not FORUMS_VISITS_ACTIVE %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
 	</fieldset>
@@ -57,15 +62,21 @@
 	</fieldset>
 </form>
 
-		<fieldset>
-			<legend>{{ lang('L_RESET_OPTIONS') }}</legend>
+<fieldset>
+	<legend>{{ lang('L_RESET_OPTIONS') }}</legend>
 
-			<form id="action_forum_visits_form" method="post" action="{{ U_ACTION }}" data-ajax="true">
-				<dl>
-					<dt><label for="action_forum_visits">{{ lang('L_RESET_FORUM_VISITS') }}</label><br /><span>{{ lang('L_RESET_FORUM_VISITS_EXPLAIN') }}</span></dt>
-					<dd><input type="hidden" name="action" value="reset_forum_visits" /><input class="button2" type="submit" id="action_forum_visits" name="action_forum_visits" value="{{ lang('RUN') }}" /></dd>
-				</dl>
-			</form>
-		</fieldset>
+	<form id="action_forum_visits_form" method="post" action="{{ U_ACTION }}" data-ajax="true">
+		<dl>
+			<dt>
+				<label for="action_forum_visits">{{ lang('L_RESET_FORUM_VISITS') }}</label><br />
+				<span>{{ lang('L_RESET_FORUM_VISITS_EXPLAIN') }}</span>
+			</dt>
+			<dd>
+				<input type="hidden" name="action" value="reset_forum_visits" />
+				<input class="button2" type="submit" id="action_forum_visits" name="action_forum_visits" value="{{ lang('RUN') }}" />
+			</dd>
+		</dl>
+	</form>
+</fieldset>
 
 {% include 'overall_footer.html' %}
