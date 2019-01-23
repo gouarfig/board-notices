@@ -394,26 +394,9 @@ class board_notices_module
 		// Output data to the template
 		$this->template->assign_vars(array(
 			'S_BOARD_NOTICES' => true,
-
-			'BOARD_NOTICES_SETTINGS' => $this->user->lang('ACP_BOARD_NOTICES_SETTINGS'),
-			'BOARD_NOTICES_SETTINGS_EXPLAIN' => $this->user->lang('ACP_BOARD_NOTICES_SETTINGS_EXPLAIN'),
-
-			'LABEL_BOARD_NOTICES_ACTIVE' => $this->user->lang('LABEL_BOARD_NOTICES_ACTIVE'),
-			'BOARD_NOTICES_ACTIVE_EXPLAIN' => $this->user->lang('BOARD_NOTICES_ACTIVE_EXPLAIN'),
 			'BOARD_NOTICES_ACTIVE' => $this->config['boardnotices_enabled'] ? true : false,
-
-			'LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR' => $this->user->lang('LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR'),
-			'LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR_EXPLAIN' => $this->user->lang('LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR_EXPLAIN'),
 			'BOARD_NOTICE_DEFAULT_BGCOLOR' => $this->config['boardnotices_default_bgcolor'],
-
-			'L_FORUMS_VISITS' => $this->user->lang('L_FORUMS_VISITS'),
-			'LABEL_FORUMS_VISITS_ACTIVE' => $this->user->lang('LABEL_FORUMS_VISITS_ACTIVE'),
-			'FORUMS_VISITS_ACTIVE_EXPLAIN' => $this->user->lang('FORUMS_VISITS_ACTIVE_EXPLAIN'),
 			'FORUMS_VISITS_ACTIVE' => $this->config['track_forums_visits'] ? true : false,
-
-			'L_RESET_OPTIONS' => $this->user->lang('L_RESET_OPTIONS'),
-			'L_RESET_FORUM_VISITS' => $this->user->lang('L_RESET_FORUM_VISITS'),
-			'L_RESET_FORUM_VISITS_EXPLAIN' => $this->user->lang('L_RESET_FORUM_VISITS_EXPLAIN'),
 			'U_ACTION' => $this->u_action,
 		));
 	}

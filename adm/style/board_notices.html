@@ -1,10 +1,10 @@
-<!-- INCLUDE overall_header.html -->
+{% include 'overall_header.html' %}
 
 <a id="maincontent"></a>
 
-<h1>{ACP_BOARD_NOTICES_MANAGER}</h1>
+<h1>{{ lang('ACP_BOARD_NOTICES_MANAGER') }}</h1>
 
-<p>{ACP_BOARD_NOTICES_MANAGER_EXPLAIN}</p>
+<p>{{ lang('ACP_BOARD_NOTICES_MANAGER_EXPLAIN') }}</p>
 
 <!-- IF NOTICE -->
 	<div class="successbox">
@@ -13,7 +13,7 @@
 	</div>
 <!-- ENDIF -->
 
-<form id="acp_icons" method="post" action="{U_ACTION}">
+<form id="acp_icons" method="post" action="{{ U_ACTION }}">
 
 <fieldset class="tabulated">
 
@@ -70,4 +70,4 @@
 </fieldset>
 </form>
 
-<!-- INCLUDE overall_footer.html -->
+{% include 'overall_footer.html' %}

@@ -1,4 +1,4 @@
-<!-- INCLUDE overall_header.html -->
+{% include 'overall_header.html' %}
 
 <script>
 	var form_name = 'acp_board_notice';
@@ -10,23 +10,24 @@
 
 <a id="maincontent"></a>
 <a href="{U_BACK}" style="float: {S_CONTENT_FLOW_END};">&laquo; {L_BACK}</a>
-<h1>{BOARD_NOTICE_SETTINGS}</h1>
 
-<p>{BOARD_NOTICE_SETTINGS_EXPLAIN}</p>
+<h1>{{ lang('ACP_BOARD_NOTICE_SETTINGS') }}</h1>
 
-<!-- IF ERRORS -->
+<p>{{ lang('ACP_BOARD_NOTICE_SETTINGS_EXPLAIN') }}</p>
+
+{% if ERRORS %}
 	<div class="errorbox">
-		<h3>{L_WARNING}</h3>
-		<p>{ERRORS}</p>
+		<h3>{{ lang('WARNING') }}</h3>
+		<p>{{ ERRORS }}</p>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
-<form id="acp_board_notice" method="post" action="{U_ACTION}">
-<!-- IF NOTICE_ID -->
-<input type="hidden" name="id" value="{NOTICE_ID}" />
-<!-- ENDIF -->
+<form id="acp_board_notice" method="post" action="{{ U_ACTION }}">
+	{% if NOTICE_ID %}
+		<input type="hidden" name="id" value="{{ NOTICE_ID }}" />
+	{% endif %}
 	<fieldset>
-		<legend>{L_GENERAL_OPTIONS}</legend>
+		<legend>{{ lang('GENERAL_OPTIONS') }}</legend>
 		<dl>
 			<dt><label for="board_notice_enable">{LABEL_BOARD_NOTICE_ACTIVE}{L_COLON}</label></dt>
 			<dd>
@@ -42,12 +43,12 @@
 		</dl>
 	</fieldset>
 
-	<!-- IF BOARD_NOTICE_PREVIEW -->
+	{% if IF BOARD_NOTICE_PREVIEW %}
 		<fieldset>
 			<legend>{LABEL_BOARD_NOTICE_PREVIEW}</legend>
 			<div style="padding:10px; font-size:1.0em; overflow: auto; <!-- IF BOARD_NOTICE_BGCOLOR -->background-color:#{BOARD_NOTICE_BGCOLOR}<!-- ENDIF -->">{BOARD_NOTICE_PREVIEW}</div>
 		</fieldset>
-	<!-- ENDIF -->
+	{% endif %}
 
 	<fieldset>
 		<legend>{LABEL_BOARD_NOTICE_TEXT}</legend>
@@ -57,7 +58,7 @@
 				<input name="board_notice_bgcolor" type="text" id="board_notice_bgcolor" value="{BOARD_NOTICE_BGCOLOR}" size="6" maxlength="6" <!-- IF BOARD_NOTICE_BGCOLOR -->style="border-right:20px solid #{BOARD_NOTICE_BGCOLOR}"<!-- ENDIF --> />
 			</dd>
 		</dl>
-		<!-- INCLUDE acp_posting_buttons.html -->
+		{% include 'acp_posting_buttons.html' %}
 
 		<dl class="responsive-columns">
 			<dt style="width: 90px;" id="color_palette_placeholder" data-orientation="v" data-height="12" data-width="15" data-bbcode="true"></dt>
@@ -128,4 +129,4 @@
 	</fieldset>
 </form>
 
-<!-- INCLUDE overall_footer.html -->
+{% include 'overall_footer.html' %}
