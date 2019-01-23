@@ -6,43 +6,8 @@
 <!-- ENDIF -->
 
 <script>
-jQuery(function($) {
-	function getColpickConfig(colorpick) {
-		return {
-			layout: 'hex',
-			submit: 0,
-			onBeforeShow: function() {
-				if (colorpick !== '') {
-					$(this).colpickSetColor(colorpick);
-					colorpick = '';
-				}
-			},
-			onChange: function(hsb, hex, rgb, el, bySetColor) {
-				$(el).css({
-					'border-right-color': '#' + hex,
-					'border-right-width': '20px',
-					'border-right-type': 'solid'
-				});
-				if (!bySetColor) {
-					$(el).val(hex);
-				}
-			}
-		}
-	}
-	var bgcolor = '{BOARD_NOTICE_BGCOLOR}';
-	$('#board_notice_bgcolor').colpick(
-		getColpickConfig(bgcolor)
-	).keyup(function() {
-		$(this).colpickSetColor(this.value || 'ffffff');
-	});
-
-	var default_bgcolor = '{BOARD_NOTICE_DEFAULT_BGCOLOR}';
-	$('#board_notice_default_bgcolor').colpick(
-		getColpickConfig(default_bgcolor)
-	).keyup(function() {
-		$(this).colpickSetColor(this.value || 'ffffff');
-	});
-});
+	var boardNoticeBgColor = '{BOARD_NOTICE_BGCOLOR}';
+	var boardNoticeDefaultBgColor = '{BOARD_NOTICE_DEFAULT_BGCOLOR}';
 </script>
 
 <!-- IF not $INCLUDED_BOARDNOTICESJS -->
