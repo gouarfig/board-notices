@@ -10,8 +10,8 @@ class has_never_posted_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		/** @var \fq\boardnotices\serializer $serializer */
-		$serializer = new \fq\boardnotices\serializer();
+		/** @var \fq\boardnotices\service\serializer $serializer */
+		$serializer = new \fq\boardnotices\service\serializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
@@ -74,8 +74,8 @@ class has_never_posted_test extends rule_test_base
 
 	public function testRuleTrue()
 	{
-		/** @var \fq\boardnotices\serializer $serializer */
-		$serializer = new \fq\boardnotices\serializer();
+		/** @var \fq\boardnotices\service\serializer $serializer */
+		$serializer = new \fq\boardnotices\service\serializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
@@ -87,8 +87,8 @@ class has_never_posted_test extends rule_test_base
 
 	public function testRuleFalse()
 	{
-		/** @var \fq\boardnotices\serializer $serializer */
-		$serializer = new \fq\boardnotices\serializer();
+		/** @var \fq\boardnotices\service\serializer $serializer */
+		$serializer = new \fq\boardnotices\service\serializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */

@@ -18,7 +18,7 @@ class in_forum extends rule_base implements rule_interface
 	private $user;
 	private $request;
 
-	public function __construct(\fq\boardnotices\serializer $serializer, \phpbb\user $user, \phpbb\request\request $request)
+	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \phpbb\request\request $request)
 	{
 		$this->serializer = $serializer;
 		$this->user = $user;

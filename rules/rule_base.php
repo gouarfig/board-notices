@@ -13,7 +13,7 @@ namespace fq\boardnotices\rules;
 
 abstract class rule_base
 {
-	/** @var \fq\boardnotices\serializer $serializer */
+	/** @var \fq\boardnotices\service\serializer $serializer */
 	protected $serializer;
 
 	protected function validateUniqueCondition($conditions = null)

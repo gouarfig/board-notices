@@ -10,8 +10,8 @@ class in_default_usergroup_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		/** @var \fq\boardnotices\serializer $serializer */
-		$serializer = new \fq\boardnotices\serializer();
+		/** @var \fq\boardnotices\service\serializer $serializer */
+		$serializer = new \fq\boardnotices\service\serializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		$user->data['group_id'] = 10;

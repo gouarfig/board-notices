@@ -2,7 +2,7 @@
 
 namespace fq\boardnotices\tests\service;
 
-use fq\boardnotices\serializer;
+use fq\boardnotices\service\serializer;
 
 class serializer_test extends \phpbb_test_case
 {

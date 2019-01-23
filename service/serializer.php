@@ -1,6 +1,6 @@
 <?php
 
-namespace fq\boardnotices;
+namespace fq\boardnotices\service;
 
 /**
  * Use this class to avoid the use of serialize and unserialize functions (which are unsafe)

@@ -10,8 +10,8 @@ class birthday_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		/** @var \fq\boardnotices\serializer $serializer */
-		$serializer = new \fq\boardnotices\serializer();
+		/** @var \fq\boardnotices\service\serializer $serializer */
+		$serializer = new \fq\boardnotices\service\serializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		$rule = new birthday($serializer, $user);
@@ -82,8 +82,8 @@ class birthday_test extends rule_test_base
 	 */
 	private function buildRuleWithBirthday($timezone, $seconds_added = 0, $age_added = 30)
 	{
-		/** @var \fq\boardnotices\serializer $serializer */
-		$serializer = new \fq\boardnotices\serializer();
+		/** @var \fq\boardnotices\service\serializer $serializer */
+		$serializer = new \fq\boardnotices\service\serializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);

@@ -17,7 +17,7 @@ class has_not_posted_for extends rule_base implements rule_interface
 	/** @var \phpbb\user $lang */
 	private $user;
 
-	public function __construct(\fq\boardnotices\serializer $serializer, \phpbb\user $user)
+	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user)
 	{
 		$this->serializer = $serializer;
 		$this->user = $user;

@@ -10,8 +10,8 @@ class has_posted_in_forum_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		/** @var \fq\boardnotices\serializer $serializer */
-		$serializer = new \fq\boardnotices\serializer();
+		/** @var \fq\boardnotices\service\serializer $serializer */
+		$serializer = new \fq\boardnotices\service\serializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
@@ -84,8 +84,8 @@ class has_posted_in_forum_test extends rule_test_base
 
 	public function testTrueOnEmptyCondition()
 	{
-		/** @var \fq\boardnotices\serializer $serializer */
-		$serializer = new \fq\boardnotices\serializer();
+		/** @var \fq\boardnotices\service\serializer $serializer */
+		$serializer = new \fq\boardnotices\service\serializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
@@ -102,8 +102,8 @@ class has_posted_in_forum_test extends rule_test_base
 
 	public function testTrueConditions()
 	{
-		/** @var \fq\boardnotices\serializer $serializer */
-		$serializer = new \fq\boardnotices\serializer();
+		/** @var \fq\boardnotices\service\serializer $serializer */
+		$serializer = new \fq\boardnotices\service\serializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
@@ -118,8 +118,8 @@ class has_posted_in_forum_test extends rule_test_base
 
 	public function testFalseConditions()
 	{
-		/** @var \fq\boardnotices\serializer $serializer */
-		$serializer = new \fq\boardnotices\serializer();
+		/** @var \fq\boardnotices\service\serializer $serializer */
+		$serializer = new \fq\boardnotices\service\serializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */

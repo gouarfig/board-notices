@@ -9,13 +9,13 @@ use \fq\boardnotices\rules\date;
 class date_test extends rule_test_base
 {
 	/**
-	 * @return \fq\boardnotices\serializer $serializer
+	 * @return \fq\boardnotices\service\serializer $serializer
 	 */
 	private function getSerializer()
 	{
 		static $serializer;
 		if (is_null($serializer)) {
-			$serializer = new \fq\boardnotices\serializer();
+			$serializer = new \fq\boardnotices\service\serializer();
 		}
 		return $serializer;
 	}

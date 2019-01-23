@@ -19,7 +19,7 @@ class has_never_posted extends rule_base implements rule_interface
 	/** @var \fq\boardnotices\repository\legacy_interface $data_layer */
 	private $data_layer;
 
-	public function __construct(\fq\boardnotices\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer)
+	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer)
 	{
 		$this->serializer = $serializer;
 		$this->user = $user;

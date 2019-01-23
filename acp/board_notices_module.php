@@ -658,8 +658,8 @@ class board_notices_module
 	 * Returns the current repository
 	 *
 	 * @global type $phpbb_container
-	 * @staticvar \fq\boardnotices\serializer $serializer
-	 * @return \fq\boardnotices\serializer
+	 * @staticvar \fq\boardnotices\service\serializer $serializer
+	 * @return \fq\boardnotices\service\serializer
 	 */
 	protected function getSerializer()
 	{
