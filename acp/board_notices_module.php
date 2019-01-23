@@ -219,6 +219,7 @@ class board_notices_module
 		// Output data to the template
 		$this->template->assign_vars(array(
 			'BOARD_NOTICES_ENABLED' => true,
+			'S_BOARD_NOTICES' => true,
 			'ACP_BOARD_NOTICES_MANAGER' => $this->user->lang('ACP_BOARD_NOTICES_MANAGER'),
 			'ACP_BOARD_NOTICES_MANAGER_EXPLAIN' => $this->user->lang('ACP_BOARD_NOTICES_MANAGER_EXPLAIN'),
 			'BOARD_NOTICE_TITLE' => $this->user->lang('BOARD_NOTICE_TITLE'),
@@ -302,6 +303,7 @@ class board_notices_module
 		// Output data to the template
 		$this->template->assign_vars(array(
 			'BOARD_NOTICES_ENABLED' => true,
+			'S_BOARD_NOTICES' => true,
 			'BOARD_NOTICE_SETTINGS' => $this->user->lang('ACP_BOARD_NOTICE_SETTINGS'),
 			'BOARD_NOTICE_SETTINGS_EXPLAIN' => $this->user->lang('ACP_BOARD_NOTICE_SETTINGS_EXPLAIN'),
 			'LABEL_BOARD_NOTICE_ACTIVE' => $this->user->lang('LABEL_BOARD_NOTICE_ACTIVE'),
@@ -391,8 +393,7 @@ class board_notices_module
 
 		// Output data to the template
 		$this->template->assign_vars(array(
-			// This variable is used to include CSS and JS files - so let's consider the extension enabled
-			'BOARD_NOTICES_ENABLED' => true,
+			'S_BOARD_NOTICES' => true,
 
 			'BOARD_NOTICES_SETTINGS' => $this->user->lang('ACP_BOARD_NOTICES_SETTINGS'),
 			'BOARD_NOTICES_SETTINGS_EXPLAIN' => $this->user->lang('ACP_BOARD_NOTICES_SETTINGS_EXPLAIN'),

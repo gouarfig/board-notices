@@ -1,18 +1,17 @@
-<!-- IF BOARD_NOTICES_ENABLED -->
+{% if S_BOARD_NOTICES %}
 
-<!-- IF not $INCLUDED_COLPICKJS -->
-	<!-- INCLUDEJS @fq_boardnotices/colpick.js -->
-	<!-- DEFINE $INCLUDED_COLPICKJS = true -->
-<!-- ENDIF -->
+	{% if not definition.INCLUDED_COLPICKJS %}
+		{% INCLUDEJS '@fq_boardnotices/colpick.js' %}
+		{% INCLUDECSS '@fq_boardnotices/colpick.css' %}
+		{% DEFINE INCLUDED_COLPICKJS = true %}
+	{% endif %}
 
-<script>
-	var boardNoticeBgColor = '{BOARD_NOTICE_BGCOLOR}';
-	var boardNoticeDefaultBgColor = '{BOARD_NOTICE_DEFAULT_BGCOLOR}';
-</script>
+	<script>
+		var boardNoticeBgColor = '{{ BOARD_NOTICE_BGCOLOR|e('js') }}';
+		var boardNoticeDefaultBgColor = '{{ BOARD_NOTICE_DEFAULT_BGCOLOR|e('js') }}';
+	</script>
 
-<!-- IF not $INCLUDED_BOARDNOTICESJS -->
-	<!-- INCLUDEJS @fq_boardnotices/boardnotices.js -->
-	<!-- DEFINE $INCLUDED_BOARDNOTICESJS = true -->
-<!-- ENDIF -->
+	{% INCLUDEJS '@fq_boardnotices/boardnotices.js' %}
+	{% INCLUDECSS '@fq_boardnotices/boardnotices.css' %}
 
-<!-- ENDIF -->
+{% endif %}
