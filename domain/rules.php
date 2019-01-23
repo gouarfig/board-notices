@@ -16,6 +16,7 @@ class rules
 {
 
 	private $root_path;
+	/** @var \fq\boardnotices\rules\rule_interface[] $rules */
 	private $rules;
 	private $rules_loaded = false;
 	private $not_rule_files = array(
@@ -52,6 +53,11 @@ class rules
 		'has_not_visited_for',
 	);
 
+	/**
+	 * Constructor
+	 *
+	 * @param string $root_path
+	 */
 	public function __construct($root_path)
 	{
 		$this->root_path = $root_path;
@@ -63,12 +69,18 @@ class rules
 		return $folder;
 	}
 
+	/**
+	 * Returns a list of rule files
+	 *
+	 * @param string $folder
+	 * @return string[]
+	 */
 	private function getRulesClassesList($folder)
 	{
 		$classes = array();
-		if ($handle = opendir($folder))
+		if ($rulesDirectory = dir($folder))
 		{
-			while (false !== ($entry = readdir($handle)))
+			while (false !== ($entry = $rulesDirectory->read()))
 			{
 				if (!in_array($entry, $this->not_rule_files))
 				{
@@ -76,7 +88,7 @@ class rules
 					$classes[] = $entry;
 				}
 			}
-			closedir($handle);
+			$rulesDirectory->close();
 		}
 		return $classes;
 	}
@@ -108,6 +120,9 @@ class rules
 		}
 	}
 
+	/**
+	 * @return string|string[]
+	 */
 	private function getRuleDisplayValues($rule_name)
 	{
 		$displayName = $this->rules[$rule_name]->getDisplayName();
@@ -128,11 +143,17 @@ class rules
 			{
 				return array(
 					'display_name' => $displayName,
-					'display_unit' => $displayUnit);
+					'display_unit' => $displayUnit
+				);
 			}
 		}
 	}
 
+	/**
+	 * Returns a list of defined rule names
+	 *
+	 * @return array
+	 */
 	public function getDefinedRules()
 	{
 		$rule_names = array();
@@ -160,6 +181,12 @@ class rules
 		return $rule_names;
 	}
 
+	/**
+	 * Returns the type of the rule
+	 *
+	 * @param string $rule_name
+	 * @return string
+	 */
 	public function getRuleType($rule_name)
 	{
 		if (!$this->rules_loaded)
@@ -190,6 +217,12 @@ class rules
 		return isset($this->rules[$rule_name]) ? $this->rules[$rule_name]->getDefault() : '';
 	}
 
+	/**
+	 * Returns a list of variables defined by the rule
+	 *
+	 * @param string $rule_name
+	 * @return string[]
+	 */
 	public function getAvailableVars($rule_name)
 	{
 		if (!$this->rules_loaded)

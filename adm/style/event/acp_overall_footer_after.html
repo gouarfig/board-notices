@@ -7,27 +7,39 @@
 
 <script>
 jQuery(function($) {
-	var bgcolor = '{BOARD_NOTICE_BGCOLOR}';
-	$('#board_notice_bgcolor').colpick({
-		layout: 'hex',
-		submit: 0,
-		onBeforeShow: function() {
-			if (bgcolor !== '') {
-				$(this).colpickSetColor(bgcolor);
-				bgcolor = '';
-			}
-		},
-		onChange: function(hsb, hex, rgb, el, bySetColor) {
-			$(el).css({
-				'border-right-color': '#' + hex,
-				'border-right-width': '20px',
-				'border-right-type': 'solid'
-			});
-			if (!bySetColor) {
-				$(el).val(hex);
+	function getColpickConfig(colorpick) {
+		return {
+			layout: 'hex',
+			submit: 0,
+			onBeforeShow: function() {
+				if (colorpick !== '') {
+					$(this).colpickSetColor(colorpick);
+					colorpick = '';
+				}
+			},
+			onChange: function(hsb, hex, rgb, el, bySetColor) {
+				$(el).css({
+					'border-right-color': '#' + hex,
+					'border-right-width': '20px',
+					'border-right-type': 'solid'
+				});
+				if (!bySetColor) {
+					$(el).val(hex);
+				}
 			}
 		}
-	}).keyup(function() {
+	}
+	var bgcolor = '{BOARD_NOTICE_BGCOLOR}';
+	$('#board_notice_bgcolor').colpick(
+		getColpickConfig(bgcolor)
+	).keyup(function() {
+		$(this).colpickSetColor(this.value || 'ffffff');
+	});
+
+	var default_bgcolor = '{BOARD_NOTICE_DEFAULT_BGCOLOR}';
+	$('#board_notice_default_bgcolor').colpick(
+		getColpickConfig(default_bgcolor)
+	).keyup(function() {
 		$(this).colpickSetColor(this.value || 'ffffff');
 	});
 });

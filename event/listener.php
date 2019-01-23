@@ -100,6 +100,10 @@ class listener implements EventSubscriberInterface
 				);
 				$notice_bgcolor = $notice->getMessageBgColor();
 				$notice_style = $notice->getMessageStyle();
+				if (empty($notice_bgcolor))
+				{
+					$notice_bgcolor = $this->config['boardnotices_default_bgcolor'];
+				}
 				$template_vars = array_merge($template_vars, $notice->getTemplateVars());
 				break;
 			}

@@ -57,6 +57,9 @@ $lang = array_merge($lang, array(
 	'LABEL_BOARD_NOTICES_ACTIVE'			=> 'Luba foorumi teated',
 	'BOARD_NOTICES_ACTIVE_EXPLAIN'			=> 'Siin saate keelata kõigi teadete kuvamise ja samal ajal säilitades laienduse aktiivsena.',
 
+	'LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR'			=> 'Default background color of notices',
+	'LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR_EXPLAIN'	=> 'This is the default color of a background message when not specified per notice. If you don\'t set a value, <strong>no</strong> background color will be applied.',
+
 	'L_FORUMS_VISITS'						=> 'Külastusi',
 	'LABEL_FORUMS_VISITS_ACTIVE'			=> 'Jälgige kuna kasutaja külastas viimati foorumit',
 	'FORUMS_VISITS_ACTIVE_EXPLAIN'			=> 'See võimaldab või keelab kasutaja viimase külastuse jälgimise. Te peate selle aktiveerima, kui soovite kasutada "<i>foorumi, mida pole külastatud x päeva</i>" tingimuse jaoks.',

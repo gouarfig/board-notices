@@ -67,6 +67,7 @@ class boardnotices_test extends \phpbb_database_test_case
 		$cache_driver = new \phpbb\cache\driver\dummy();
 		$default_config = array(
 			'boardnotices_enabled' => true,
+			'boardnotices_default_bgcolor' => 'ECD5D8',
 		);
 		$config = new \phpbb\config\config($default_config);
 		$phpEx = substr(strrchr(__FILE__, '.'), 1);

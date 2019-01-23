@@ -31,6 +31,12 @@
 				<label><input type="radio" class="radio" name="board_notices_active" value="0"<!-- IF not BOARD_NOTICES_ACTIVE --> checked="checked"<!-- ENDIF --> /> {L_NO}</label>
 			</dd>
 		</dl>
+		<dl>
+			<dt><label for="board_notice_default_bgcolor">{LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR}{L_COLON}</label><br /><span>{LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR_EXPLAIN}</span></dt>
+			<dd>
+				<input name="board_notice_default_bgcolor" type="text" id="board_notice_default_bgcolor" value="{BOARD_NOTICE_DEFAULT_BGCOLOR}" size="6" maxlength="6" <!-- IF BOARD_NOTICE_DEFAULT_BGCOLOR -->style="border-right:20px solid #{BOARD_NOTICE_DEFAULT_BGCOLOR}"<!-- ENDIF --> />
+			</dd>
+		</dl>
 	</fieldset>
 
 	<fieldset>

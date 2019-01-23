@@ -56,6 +56,9 @@ $lang = array_merge($lang, array(
 	'LABEL_BOARD_NOTICES_ACTIVE'			=> 'Enable board notices',
 	'BOARD_NOTICES_ACTIVE_EXPLAIN'			=> 'Here you can disable the display of all notices while keeping the extension enabled.',
 
+	'LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR'			=> 'Default background color of notices',
+	'LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR_EXPLAIN'	=> 'This is the default color of a background message when not specified per notice. If you don\'t set a value, <strong>no</strong> background color will be applied.',
+
 	'L_FORUMS_VISITS'						=> 'Visits',
 	'LABEL_FORUMS_VISITS_ACTIVE'			=> 'Keep track of the last time a user visited a forum',
 	'FORUMS_VISITS_ACTIVE_EXPLAIN'			=> 'This enables or disables the tracking of last visits of each forum for each user. You need to activate it if you want to use the "<i>forum not visited for x days</i>" condition.',
@@ -74,7 +77,7 @@ $lang = array_merge($lang, array(
 	'LABEL_BOARD_NOTICE_PREVIEW'			=> 'Message preview',
 	'LABEL_BOARD_NOTICE_TEXT'				=> 'Message displayed when conditions are met',
 	'LABEL_BOARD_NOTICE_BGCOLOR'			=> 'Background color of the message',
-	'LABEL_BOARD_NOTICE_BGCOLOR_EXPLAIN'	=> 'If not specified, the default color is #ECD5D8 (light red)',
+	'LABEL_BOARD_NOTICE_BGCOLOR_EXPLAIN'	=> 'If not specified, the default color is going to be used. If the default color is empty, the background color will inherit the CSS style.',
 
 	'LABEL_BOARD_NOTICE_STYLE'				=> '[Advanced users:] CSS class of the message container',
 	'LABEL_BOARD_NOTICE_STYLE_EXPLAIN'		=> 'If you need more control on how the notice is displayed, you can specify a CSS class that will be added to the overall DIV.',

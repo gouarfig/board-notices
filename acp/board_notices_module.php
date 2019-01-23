@@ -290,6 +290,7 @@ class board_notices_module
 		$notice_text_preview = '';
 		if ($this->request->is_set_post('preview'))
 		{
+			// @todo The preview message does not replace the extension variables
 			$notice_text_preview = generate_text_for_display(
 					$data['message'], $data['message_uid'], $data['message_bitfield'], $data['message_options']);
 		}
@@ -390,12 +391,19 @@ class board_notices_module
 
 		// Output data to the template
 		$this->template->assign_vars(array(
+			// This variable is used to include CSS and JS files - so let's consider the extension enabled
+			'BOARD_NOTICES_ENABLED' => true,
+
 			'BOARD_NOTICES_SETTINGS' => $this->user->lang('ACP_BOARD_NOTICES_SETTINGS'),
 			'BOARD_NOTICES_SETTINGS_EXPLAIN' => $this->user->lang('ACP_BOARD_NOTICES_SETTINGS_EXPLAIN'),
 
 			'LABEL_BOARD_NOTICES_ACTIVE' => $this->user->lang('LABEL_BOARD_NOTICES_ACTIVE'),
 			'BOARD_NOTICES_ACTIVE_EXPLAIN' => $this->user->lang('BOARD_NOTICES_ACTIVE_EXPLAIN'),
 			'BOARD_NOTICES_ACTIVE' => $this->config['boardnotices_enabled'] ? true : false,
+
+			'LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR' => $this->user->lang('LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR'),
+			'LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR_EXPLAIN' => $this->user->lang('LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR_EXPLAIN'),
+			'BOARD_NOTICE_DEFAULT_BGCOLOR' => $this->config['boardnotices_default_bgcolor'],
 
 			'L_FORUMS_VISITS' => $this->user->lang('L_FORUMS_VISITS'),
 			'LABEL_FORUMS_VISITS_ACTIVE' => $this->user->lang('LABEL_FORUMS_VISITS_ACTIVE'),
@@ -915,10 +923,12 @@ class board_notices_module
 		// Get config options from the form
 		$data['boardnotices_enabled'] = $this->request->variable('board_notices_active', true);
 		$data['track_forums_visits'] = $this->request->variable('forums_visits_active', true);
+		$data['boardnotices_default_bgcolor'] = $this->request->variable('board_notice_default_bgcolor', '');
 
 		// Save data to the config
 		$this->config->set('boardnotices_enabled', ($data['boardnotices_enabled'] ? true : false));
 		$this->config->set('track_forums_visits', ($data['track_forums_visits'] ? true : false));
+		$this->config->set('boardnotices_default_bgcolor', $data['boardnotices_default_bgcolor']);
 
 		// Logs the settings update
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BOARD_NOTICES_SETTINGS', time(), array());
