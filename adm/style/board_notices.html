@@ -6,67 +6,68 @@
 
 <p>{{ lang('ACP_BOARD_NOTICES_MANAGER_EXPLAIN') }}</p>
 
-<!-- IF NOTICE -->
+{% if NOTICE  %}
 	<div class="successbox">
-		<h3>{L_NOTIFY}</h3>
-		<p>{NOTICE}</p>
+		<h3>{{ lang('NOTIFY') }}</h3>
+		<p>{{ NOTICE }}</p>
 	</div>
-<!-- ENDIF -->
+{% endif %}
 
 <form id="acp_icons" method="post" action="{{ U_ACTION }}">
 
 <fieldset class="tabulated">
 
-<legend>{BOARD_NOTICE_TITLE}</legend>
+<legend>{{ lang('BOARD_NOTICE_TITLE') }}</legend>
 
 <table class="table1 zebra-table">
-<thead>
-<tr>
-	<th>{BOARD_NOTICE_TITLE}</th>
-	<th></th>
-	<th>{BOARD_NOTICE_RULES}</th>
-	<th>{L_ACTIVE}</th>
-	<th></th>
-	<th>{L_OPTIONS}</th>
-</tr>
-</thead>
-<tbody>
-<!-- BEGIN items -->
-	<tr>
-		<td>{items.TITLE}</td>
-		<td style="text-align: center;"><a href="{items.PREVIEW_LINK}" target="board-notices-preview">{L_PREVIEW}</a></td>
-		<td style="text-align: right;">{items.RULES}</td>
-		<td style="text-align: center;">{items.ACTIVE}</td>
-		<td style="white-space: nowrap; text-align: center; vertical-align: middle;">&nbsp;<!-- IF items.ENABLED --><a href="{items.U_DISABLE}">{L_DISABLE}</a><!-- ELSE --><a href="{items.U_ENABLE}">{L_ENABLE}</a><!-- ENDIF -->&nbsp;</td>
-		<td class="actions" style="text-align: right;">
-			<span class="first-disabled" style="display:none;">{ICON_MOVE_FIRST_DISABLED}</span>
-			<span class="first"><a href="{items.U_MOVE_FIRST}" data-ajax="row_first">{ICON_MOVE_FIRST}</a></span>
-			<span class="up-disabled" style="display:none;">{ICON_MOVE_UP_DISABLED}</span>
-			<span class="up"><a href="{items.U_MOVE_UP}" data-ajax="row_up">{ICON_MOVE_UP}</a></span>
-			<span class="down-disabled" style="display:none;">{ICON_MOVE_DOWN_DISABLED}</span>
-			<span class="down"><a href="{items.U_MOVE_DOWN}" data-ajax="row_down">{ICON_MOVE_DOWN}</a></span>
-			<span class="last-disabled" style="display:none;">{ICON_MOVE_LAST_DISABLED}</span>
-			<span class="last"><a href="{items.U_MOVE_LAST}" data-ajax="row_last">{ICON_MOVE_LAST}</a></span>
-			<a href="{items.U_EDIT}">{ICON_EDIT}</a>
-			<a href="{items.U_DELETE}" data-ajax="row_delete">{ICON_DELETE}</a>
-		</td>
-	</tr>
-<!-- BEGINELSE -->
-	<tr class="row3">
-		<td colspan="{COLSPAN}">{L_ACP_NO_ITEMS}</td>
-	</tr>
-<!-- END items -->
-</tbody>
+	<thead>
+		<tr>
+			<th>{{ lang('BOARD_NOTICE_TITLE') }}</th>
+			<th></th>
+			<th>{{ lang('BOARD_NOTICE_RULES') }}</th>
+			<th>{{ lang('ACTIVE') }}</th>
+			<th></th>
+			<th>{{ lang('OPTIONS') }}</th>
+		</tr>
+	</thead>
+	<tbody>
+	{% for notice in notices %}
+		<tr>
+			<td>{{ notice.TITLE }}</td>
+			<td style="text-align: center;"><a href="{{ notice.PREVIEW_LINK }}" target="board-notices-preview">{{ lang('PREVIEW') }}</a></td>
+			<td style="text-align: right;">{{ notice.RULES }}</td>
+			<td style="text-align: center;">{{ notice.ACTIVE }}</td>
+			<td style="white-space: nowrap; text-align: center; vertical-align: middle;">&nbsp;
+				{% if notice.ENABLED %}
+					<a href="{{ notice.U_DISABLE }}">{{ lang('DISABLE') }}</a>
+				{% else %}
+					<a href="{{ notice.U_ENABLE }}">{{ lang('ENABLE') }}</a>
+				{% endif %}
+			&nbsp;</td>
+			<td class="actions" style="text-align: right;">
+				<span class="first-disabled" style="display:none;">{{ ICON_MOVE_FIRST_DISABLED }}</span>
+				<span class="first"><a href="{{ notice.U_MOVE_FIRST }}" data-ajax="row_first">{{ ICON_MOVE_FIRST }}</a></span>
+				<span class="up-disabled" style="display:none;">{{ ICON_MOVE_UP_DISABLED }}</span>
+				<span class="up"><a href="{{ notice.U_MOVE_UP }}" data-ajax="row_up">{{ ICON_MOVE_UP }}</a></span>
+				<span class="down-disabled" style="display:none;">{{ ICON_MOVE_DOWN_DISABLED }}</span>
+				<span class="down"><a href="{{ notice.U_MOVE_DOWN }}" data-ajax="row_down">{{ ICON_MOVE_DOWN }}</a></span>
+				<span class="last-disabled" style="display:none;">{{ ICON_MOVE_LAST_DISABLED }}</span>
+				<span class="last"><a href="{{ notice.U_MOVE_LAST }}" data-ajax="row_last">{{ ICON_MOVE_LAST }}</a></span>
+				<a href="{{ notice.U_EDIT }}">{{ ICON_EDIT }}</a>
+				<a href="{{ notice.U_DELETE }}" data-ajax="row_delete">{{ ICON_DELETE }}</a>
+			</td>
+		</tr>
+	{% else %}
+		<tr class="row3">
+			<td colspan="{{ COLSPAN }}">{{ lang('ACP_NO_ITEMS') }}</td>
+		</tr>
+	{% endfor %}
+	</tbody>
 </table>
-<div class="pagination">
-<!-- IF .pagination -->
-	<!-- INCLUDE pagination.html -->
-<!-- ENDIF -->
-</div>
 <p class="quick">
-	<input class="button2" name="add" type="submit" value="{BOARD_NOTICE_ADD}" />
+	<input class="button2" name="add" type="submit" value="{{ BOARD_NOTICE_ADD }}" />
 </p>
-{S_FORM_TOKEN}
+{{ S_FORM_TOKEN }}
 </fieldset>
 </form>
 

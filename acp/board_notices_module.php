@@ -200,6 +200,11 @@ class board_notices_module
 		return;
 	}
 
+	/**
+	 * Display the notice manager page
+	 *
+	 * @return void
+	 */
 	public function displayManager()
 	{
 		global $phpbb_root_path, $phpEx;
@@ -218,15 +223,9 @@ class board_notices_module
 
 		// Output data to the template
 		$this->template->assign_vars(array(
-			'BOARD_NOTICES_ENABLED' => true,
 			'S_BOARD_NOTICES' => true,
-			'ACP_BOARD_NOTICES_MANAGER' => $this->user->lang('ACP_BOARD_NOTICES_MANAGER'),
-			'ACP_BOARD_NOTICES_MANAGER_EXPLAIN' => $this->user->lang('ACP_BOARD_NOTICES_MANAGER_EXPLAIN'),
-			'BOARD_NOTICE_TITLE' => $this->user->lang('BOARD_NOTICE_TITLE'),
-			'BOARD_NOTICE_RULES' => $this->user->lang('BOARD_NOTICE_RULES'),
 			'BOARD_NOTICE_ADD' => $this->user->lang('BOARD_NOTICE_ADD'),
 			'COLSPAN' => 6,
-
 			'ICON_MOVE_FIRST'			=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first.gif" alt="' . $this->user->lang['MOVE_FIRST'] . '" title="' . $this->user->lang['MOVE_FIRST'] . '" />',
 			'ICON_MOVE_FIRST_DISABLED'	=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first_disabled.gif" alt="' . $this->user->lang['MOVE_FIRST'] . '" title="' . $this->user->lang['MOVE_FIRST'] . '" />',
 			'ICON_MOVE_LAST'			=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last.gif" alt="' . $this->user->lang['MOVE_LAST'] . '" title="' . $this->user->lang['MOVE_LAST'] . '" />',
@@ -237,27 +236,34 @@ class board_notices_module
 		foreach ($notices as $notice)
 		{
 			$rules = $data_layer->getRulesFor($notice['notice_id']);
-			$this->template->assign_block_vars('items', array(
+			$this->template->assign_block_vars('notices', array(
 				'S_SPACER' => false,
 				'TITLE' => $notice['title'],
-				'PREVIEW_LINK' => append_sid("{$phpbb_root_path}index.$phpEx") . "&bnpk=" . $this->config['boardnotices_previewkey'] . "&bnid={$notice['notice_id']}",
+				'PREVIEW_LINK' => append_sid("{$phpbb_root_path}index.$phpEx") . "&bnpk=" . $this->config['boardnotices_previewkey'] . "&bnid=" . (int) $notice['notice_id'],
 				'RULES' => count($rules),
-				'ACTIVE' => $notice['active'] ? 'Yes' : 'No',
+				'ACTIVE' => $notice['active'] ? $this->user->lang('YES') : $this->user->lang('NO'),
 				'ENABLED' => $notice['active'] ? true : false,
-				'U_ENABLE' => $this->u_action . '&amp;action=enable&amp;id=' . $notice['notice_id'],
-				'U_DISABLE' => $this->u_action . '&amp;action=disable&amp;id=' . $notice['notice_id'],
-				'U_EDIT' => $this->u_action . '&amp;action=edit&amp;id=' . $notice['notice_id'],
-				'U_DELETE' => $this->u_action . '&amp;action=delete&amp;id=' . $notice['notice_id'],
-				'U_MOVE_UP' => $this->u_action . '&amp;action=move_up&amp;id=' . $notice['notice_id'],
-				'U_MOVE_DOWN' => $this->u_action . '&amp;action=move_down&amp;id=' . $notice['notice_id'],
-
-				'U_MOVE_FIRST' => $this->u_action . '&amp;action=move_first&amp;id=' . $notice['notice_id'],
-				'U_MOVE_LAST' => $this->u_action . '&amp;action=move_last&amp;id=' . $notice['notice_id'],
+				'U_ENABLE' => $this->u_action . '&amp;action=enable&amp;id=' . (int) $notice['notice_id'],
+				'U_DISABLE' => $this->u_action . '&amp;action=disable&amp;id=' . (int) $notice['notice_id'],
+				'U_EDIT' => $this->u_action . '&amp;action=edit&amp;id=' . (int) $notice['notice_id'],
+				'U_DELETE' => $this->u_action . '&amp;action=delete&amp;id=' . (int) $notice['notice_id'],
+				'U_MOVE_UP' => $this->u_action . '&amp;action=move_up&amp;id=' . (int) $notice['notice_id'],
+				'U_MOVE_DOWN' => $this->u_action . '&amp;action=move_down&amp;id=' . (int) $notice['notice_id'],
+				'U_MOVE_FIRST' => $this->u_action . '&amp;action=move_first&amp;id=' . (int) $notice['notice_id'],
+				'U_MOVE_LAST' => $this->u_action . '&amp;action=move_last&amp;id=' . (int) $notice['notice_id'],
 			));
 			unset($rules);
 		}
 	}
 
+	/**
+	 * Display the notice setup form
+	 *
+	 * @param string $action
+	 * @param array $data
+	 * @param string $error
+	 * @return void
+	 */
 	public function displayNoticeForm($action, $data, $error = '')
 	{
 		// Add the posting lang file needed by BBCodes
@@ -302,10 +308,7 @@ class board_notices_module
 
 		// Output data to the template
 		$this->template->assign_vars(array(
-			'BOARD_NOTICES_ENABLED' => true,
 			'S_BOARD_NOTICES' => true,
-			'BOARD_NOTICE_SETTINGS' => $this->user->lang('ACP_BOARD_NOTICE_SETTINGS'),
-			'BOARD_NOTICE_SETTINGS_EXPLAIN' => $this->user->lang('ACP_BOARD_NOTICE_SETTINGS_EXPLAIN'),
 			'LABEL_BOARD_NOTICE_ACTIVE' => $this->user->lang('LABEL_BOARD_NOTICE_ACTIVE'),
 			'LABEL_BOARD_NOTICE_TITLE' => $this->user->lang('LABEL_BOARD_NOTICE_TITLE'),
 			'LABEL_BOARD_NOTICE_PREVIEW' => $this->user->lang('LABEL_BOARD_NOTICE_PREVIEW'),
@@ -380,6 +383,11 @@ class board_notices_module
 		}
 	}
 
+	/**
+	 * Display the global settings form
+	 *
+	 * @return void
+	 */
 	public function displaySettingsForm()
 	{
 		// Add the board notices ACP lang file
@@ -541,7 +549,7 @@ class board_notices_module
 
 	public function moveNotice($action, $notice_id)
 	{
-		/** @var \fq\boardnotices\repository\boardnotices */
+		/** @var \fq\boardnotices\repository\boardnotices $data_layer */
 		$data_layer = $this->getRepository();
 
 		$move_executed = $data_layer->moveNotice($action, $notice_id);
@@ -557,7 +565,7 @@ class board_notices_module
 
 	public function moveNoticeFirst($notice_id)
 	{
-		/** @var \fq\boardnotices\repository\boardnotices */
+		/** @var \fq\boardnotices\repository\boardnotices $data_layer */
 		$data_layer = $this->getRepository();
 
 		$move_executed = $data_layer->moveNoticeFirst($notice_id);
@@ -573,7 +581,7 @@ class board_notices_module
 
 	public function moveNoticeLast($notice_id)
 	{
-		/** @var \fq\boardnotices\repository\boardnotices */
+		/** @var \fq\boardnotices\repository\boardnotices $data_layer */
 		$data_layer = $this->getRepository();
 
 		$move_executed = $data_layer->moveNoticeLast($notice_id);
@@ -589,7 +597,7 @@ class board_notices_module
 
 	public function deleteNotice($notice_id)
 	{
-		/** @var \fq\boardnotices\repository\boardnotices */
+		/** @var \fq\boardnotices\repository\boardnotices $data_layer */
 		$data_layer = $this->getRepository();
 
 		$delete_executed = $data_layer->deleteNotice($notice_id);
@@ -605,7 +613,7 @@ class board_notices_module
 
 	public function enableNotice($action, $notice_id)
 	{
-		/** @var \fq\boardnotices\repository\boardnotices */
+		/** @var \fq\boardnotices\repository\boardnotices $data_layer */
 		$data_layer = $this->getRepository();
 
 		$executed = $data_layer->enableNotice($action, $notice_id);
