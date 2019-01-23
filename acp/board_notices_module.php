@@ -335,19 +335,14 @@ class board_notices_module
 			'URL_STATUS' => $this->user->lang('URL_IS_ON'),
 			'S_BBCODE_ALLOWED' => true,
 			'S_SMILIES_ALLOWED' => true,
+			'S_LINKS_ALLOWED' => true,
 			'S_BBCODE_IMG' => true,
 			'S_BBCODE_FLASH' => true,
-			'S_LINKS_ALLOWED' => true,
 			'L_INFO' => $this->user->lang('L_INFORMATION'),
 			'VARIABLES_EXPLAIN' => $this->user->lang('VARIABLES_EXPLAIN'),
 			'U_BACK' => $this->u_action,
 			'U_ACTION' => $this->u_action . '&amp;action=' . $action,
 			'ALLRULES_COLSPAN' => 4,
-			'ACP_BOARD_NOTICE_RULES' => $this->user->lang('ACP_BOARD_NOTICE_RULES'),
-			'ACP_BOARD_NOTICE_RULES_EXPLAIN' => $this->user->lang('ACP_BOARD_NOTICE_RULES_EXPLAIN'),
-			'BOARD_NOTICE_RULE_NAME' => $this->user->lang('BOARD_NOTICE_RULE_NAME'),
-			'BOARD_NOTICE_RULE_VALUE' => $this->user->lang('BOARD_NOTICE_RULE_VALUE'),
-			'BOARD_NOTICE_RULE_VARIABLES' => $this->user->lang('BOARD_NOTICE_RULE_VARIABLES'),
 		));
 
 		// Assigning custom bbcodes

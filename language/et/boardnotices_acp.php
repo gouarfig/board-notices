@@ -87,6 +87,7 @@ $lang = array_merge($lang, array(
 	'VARIABLES_EXPLAIN'						=> 'Te võite teksti lisada järgmised erimuutujad:<br />'
 												. '{SESSIONID}, {USERID}, {USERNAME}, {LASTVISIT}, {LASTPOST}, {REGISTERED} ja mõni muu, kui aktiveerite konkreetse reegli. Kontrollige reegleid, et näha, millised muutujad on saadaval.',
 
+	'BOARD_NOTICE_RULE_ACTIVE'				=> '',
 	'BOARD_NOTICE_RULE_NAME'				=> 'Reegel',
 	'BOARD_NOTICE_RULE_VALUE'				=> 'Tingimused',
 	'BOARD_NOTICE_RULE_VARIABLES'			=> 'Pakkumine',

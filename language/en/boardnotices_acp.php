@@ -50,8 +50,8 @@ $lang = array_merge($lang, array(
 
 	'BOARD_NOTICES_SETTINGS_SAVED'			=> 'Board notices settings have been saved.',
 
-	'ACP_BOARD_NOTICE_RULES'				=> 'Board Notice conditions',
-	'ACP_BOARD_NOTICE_RULES_EXPLAIN'		=> 'Edit the conditions for the message to be displayed. Please note that <strong>all conditions should be met</strong>.',
+	'ACP_BOARD_NOTICE_RULES'				=> 'Board Notice Conditions',
+	'ACP_BOARD_NOTICE_RULES_EXPLAIN'		=> 'Edit the conditions for the message to be displayed. Click on the checkbox on the left to activate a condition.<br />Please note that <strong>all conditions should be met</strong>.',
 
 	'LABEL_BOARD_NOTICES_ACTIVE'			=> 'Enable board notices',
 	'BOARD_NOTICES_ACTIVE_EXPLAIN'			=> 'Here you can disable the display of all notices while keeping the extension enabled.',
@@ -86,6 +86,7 @@ $lang = array_merge($lang, array(
 	'VARIABLES_EXPLAIN'						=> 'You may include the following special variables in your text:<br />'
 												. '{SESSIONID}, {USERID}, {USERNAME}, {LASTVISIT}, {LASTPOST}, {REGISTERED} and some other when you activate a particuliar rule. Check the rules to see which variables are available.',
 
+	'BOARD_NOTICE_RULE_ACTIVE'				=> '',
 	'BOARD_NOTICE_RULE_NAME'				=> 'Rule',
 	'BOARD_NOTICE_RULE_VALUE'				=> 'Conditions',
 	'BOARD_NOTICE_RULE_VARIABLES'			=> 'Providing',
