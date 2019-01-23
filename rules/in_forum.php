@@ -16,6 +16,7 @@ class in_forum extends rule_base implements rule_interface
 {
 	/** @var \phpbb\user $lang */
 	private $user;
+	/** @var \phpbb\request\request $request */
 	private $request;
 
 	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \phpbb\request\request $request)
@@ -57,27 +58,21 @@ class in_forum extends rule_base implements rule_interface
 
 	public function isTrue($conditions)
 	{
-		$valid = false;
 		$current_forum_id = $this->request->variable('f', 0);
 
-		$forums = $this->serializer->decode($conditions);
-		if ($forums === false)
-		{
-			// There's only one group
-			$forums = array((int) $conditions);
-		}
+		$forums = $this->validateArrayOfConditions($conditions);
+		$forums = $this->cleanEmptyStringsFromArray($forums);
 		if (!empty($forums))
 		{
 			foreach ($forums as $forum_id)
 			{
-				$valid = ($current_forum_id == $forum_id);
-				if ($valid)
+				if ($current_forum_id == $forum_id)
 				{
-					break;
+					return true;
 				}
 			}
 		}
-		return $valid;
+		return false;
 	}
 
 	public function getAvailableVars()

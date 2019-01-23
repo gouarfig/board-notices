@@ -12,6 +12,10 @@
 
 namespace fq\boardnotices\domain;
 
+/**
+ * Board Notices Manager
+ * Rules management
+ */
 class rules
 {
 
@@ -121,6 +125,7 @@ class rules
 	}
 
 	/**
+	 * @param string $rule_name
 	 * @return string|string[]
 	 */
 	private function getRuleDisplayValues($rule_name)
