@@ -655,7 +655,7 @@ class board_notices_module
 	}
 
 	/**
-	 * Returns the current repository
+	 * Returns the current serializer service
 	 *
 	 * @global type $phpbb_container
 	 * @staticvar \fq\boardnotices\service\serializer $serializer
@@ -668,7 +668,7 @@ class board_notices_module
 
 		if (is_null($serializer))
 		{
-			$serializer = $phpbb_container->get('fq.boardnotices.serializer');
+			$serializer = $phpbb_container->get('fq.boardnotices.service.serializer');
 		}
 		return $serializer;
 	}
