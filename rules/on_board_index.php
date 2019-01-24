@@ -14,25 +14,28 @@ namespace fq\boardnotices\rules;
 
 use \fq\boardnotices\service\constants;
 
-class logged_in extends rule_base implements rule_interface
+class on_board_index extends rule_base implements rule_interface
 {
 	/** @var \phpbb\user $lang */
 	private $user;
+	/** @var \phpbb\template\template $template */
+	private $template;
 
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user)
+	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \phpbb\template\template $template)
 	{
 		$this->serializer = $serializer;
 		$this->user = $user;
+		$this->template = $template;
 	}
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_LOGGED_IN');
+		return $this->user->lang('RULE_ON_BOARD_INDEX');
 	}
 
 	public function getDisplayUnit()
 	{
-		return '(No = Guest or Bot)';
+		return '';
 	}
 
 	public function getType()
@@ -58,17 +61,9 @@ class logged_in extends rule_base implements rule_interface
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$logged_in_conditions = $this->serializer->decode($conditions);
-		if ($logged_in_conditions === false)
-		{
-			$logged_in_conditions = $conditions;
-		}
-		if (is_array($logged_in_conditions))
-		{
-			$logged_in_conditions = $logged_in_conditions[0];
-		}
-		$logged_in = ($this->user->data['user_type'] != USER_IGNORE);
-		$valid = ($logged_in_conditions && $logged_in) || (!$logged_in_conditions && !$logged_in);
+		$on_board_index_conditions = $this->validateUniqueCondition($conditions);
+		$on_board_index = ($this->template->retrieve_var('S_INDEX') === true);
+		$valid = ($on_board_index_conditions && $on_board_index) || (!$on_board_index_conditions && !$on_board_index);
 		return $valid;
 	}
 

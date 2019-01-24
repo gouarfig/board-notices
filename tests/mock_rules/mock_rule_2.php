@@ -45,12 +45,12 @@ class mock_rule_2 extends \fq\boardnotices\rules\rule_base implements \fq\boardn
 
 	public function getDefault()
 	{
-		return null;
+		return array(0, 0);
 	}
 
 	public function getPossibleValues()
 	{
-		return null;
+		return array('en' => 'English', 'fr' => 'French');
 	}
 
 	public function validateValues($values)

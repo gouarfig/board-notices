@@ -21,13 +21,6 @@ class mock_rule_1 extends \fq\boardnotices\rules\rule_base implements \fq\boardn
 		$this->serializer = $serializer;
 	}
 
-	private function setTemplateVars($value)
-	{
-		$this->template_vars = array(
-			'MOCK1' => $value
-		);
-	}
-
 	public function getDisplayName()
 	{
 		return "Mock Rule 1";
@@ -65,7 +58,7 @@ class mock_rule_1 extends \fq\boardnotices\rules\rule_base implements \fq\boardn
 
 	public function getAvailableVars()
 	{
-		return array('MOCK1');
+		return array();
 	}
 
 	public function getTemplateVars()

@@ -57,8 +57,8 @@ $lang = array_merge($lang, array(
 	'LABEL_BOARD_NOTICES_ACTIVE'			=> 'Luba foorumi teated',
 	'BOARD_NOTICES_ACTIVE_EXPLAIN'			=> 'Siin saate keelata kõigi teadete kuvamise ja samal ajal säilitades laienduse aktiivsena.',
 
-	'LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR'			=> 'Default background color of notices',
-	'LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR_EXPLAIN'	=> 'This is the default color of a background message when not specified per notice. If you don\'t set a value, <strong>no</strong> background color will be applied.',
+	'LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR'			=> 'Default background color of notices', // @todo
+	'LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR_EXPLAIN'	=> 'This is the default color of a background message when not specified per notice. If you don\'t set a value, <strong>no</strong> background color will be applied.', // @todo
 
 	'L_FORUMS_VISITS'						=> 'Külastusi',
 	'LABEL_FORUMS_VISITS_ACTIVE'			=> 'Jälgige kuna kasutaja külastas viimati foorumit',
@@ -119,6 +119,7 @@ $lang = array_merge($lang, array(
 	'RULE_IN_DEFAULT_USERGROUP'				=> "Vaikimisi kasutajagrupp on",
 	'RULE_IN_FORUM'							=> "Kasutaja sirvib praegu mõnda neist foorumitest",
 	'RULE_IN_USERGROUP'						=> "Kasutaja kuulub ühte neist valitud gruppidest",
+	'RULE_ON_BOARD_INDEX'					=> "User is browsing the board index",	// @todo
 	'RULE_LANGUAGE'							=> "Kasutaja keel on üks neist valitud keeltest",
 	'RULE_LOGGED_IN'						=> "Kas kasutaja on sisse loginud",
 	'RULE_NOT_IN_USERGROUP'					=> "Kasutaja ei kuulu ühtegi valitud gruppi",

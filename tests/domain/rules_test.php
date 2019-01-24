@@ -109,4 +109,73 @@ class rules_test extends \PHPUnit_Framework_TestCase
 
 		$this->assertEquals("n/a", $rules->getRuleType('mock_rule_1'));
 	}
+
+	/**
+	 * @depends testInstance
+	 * @param fq\boardnotices\domain\rules $rules
+	 */
+	public function testGetEmptyRulePossibleValues($rules)
+	{
+		global $phpbb_container;
+
+		$this->assertNull($rules->getRuleValues('mock_rule_1'));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param fq\boardnotices\domain\rules $rules
+	 */
+	public function testGetRulePossibleValues($rules)
+	{
+		global $phpbb_container;
+
+		$expected = array('en' => 'English', 'fr' => 'French');
+		$this->assertEquals($expected, $rules->getRuleValues('mock_rule_2'));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param fq\boardnotices\domain\rules $rules
+	 */
+	public function testGetEmptyDefaultValue($rules)
+	{
+		global $phpbb_container;
+
+		$this->assertNull($rules->getRuleDefaultValue('mock_rule_1'));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param fq\boardnotices\domain\rules $rules
+	 */
+	public function testGetRuleDefaultValue($rules)
+	{
+		global $phpbb_container;
+
+		$expected = array(0, 0);
+		$this->assertEquals($expected, $rules->getRuleDefaultValue('mock_rule_2'));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param fq\boardnotices\domain\rules $rules
+	 */
+	public function testGetEmptyAvailableVariables($rules)
+	{
+		global $phpbb_container;
+
+		$this->assertEquals(array(), $rules->getAvailableVars('mock_rule_1'));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param fq\boardnotices\domain\rules $rules
+	 */
+	public function testGetRuleAvailableVariables($rules)
+	{
+		global $phpbb_container;
+
+		$expected = array('{MOCK2}');
+		$this->assertEquals($expected, $rules->getAvailableVars('mock_rule_2'));
+	}
 }

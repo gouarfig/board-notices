@@ -183,3 +183,10 @@ services:
     arguments:
       - '@fq.boardnotices.service.serializer'
       - '@user'
+
+  fq.boardnotices.rules.on_board_index:
+    class: fq\boardnotices\rules\on_board_index
+    arguments:
+      - '@fq.boardnotices.service.serializer'
+      - '@user'
+      - '@template'

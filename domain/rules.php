@@ -45,6 +45,7 @@ class rules
 		'has_posted_more',
 		'has_never_posted_in_forum',
 		'has_posted_in_forum',
+		'on_board_index',
 		'in_forum',
 		'language',
 		'style',

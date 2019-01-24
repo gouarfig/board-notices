@@ -309,14 +309,6 @@ class board_notices_module
 		// Output data to the template
 		$this->template->assign_vars(array(
 			'S_BOARD_NOTICES' => true,
-			'LABEL_BOARD_NOTICE_ACTIVE' => $this->user->lang('LABEL_BOARD_NOTICE_ACTIVE'),
-			'LABEL_BOARD_NOTICE_TITLE' => $this->user->lang('LABEL_BOARD_NOTICE_TITLE'),
-			'LABEL_BOARD_NOTICE_PREVIEW' => $this->user->lang('LABEL_BOARD_NOTICE_PREVIEW'),
-			'LABEL_BOARD_NOTICE_TEXT' => $this->user->lang('LABEL_BOARD_NOTICE_TEXT'),
-			'LABEL_BOARD_NOTICE_BGCOLOR' => $this->user->lang('LABEL_BOARD_NOTICE_BGCOLOR'),
-			'LABEL_BOARD_NOTICE_BGCOLOR_EXPLAIN' => $this->user->lang('LABEL_BOARD_NOTICE_BGCOLOR_EXPLAIN'),
-			'LABEL_BOARD_NOTICE_STYLE' => $this->user->lang('LABEL_BOARD_NOTICE_STYLE'),
-			'LABEL_BOARD_NOTICE_STYLE_EXPLAIN' => $this->user->lang('LABEL_BOARD_NOTICE_STYLE_EXPLAIN'),
 			'ERRORS' => $error,
 			'NOTICE_ID' => isset($data['notice_id']) ? $data['notice_id'] : '',
 			'BOARD_NOTICE_ACTIVE' => $data['active'],
@@ -328,18 +320,11 @@ class board_notices_module
 			'S_BBCODE_DISABLE_CHECKED' => !$notice_text_edit['allow_bbcode'],
 			'S_SMILIES_DISABLE_CHECKED' => !$notice_text_edit['allow_smilies'],
 			'S_MAGIC_URL_DISABLE_CHECKED' => !$notice_text_edit['allow_urls'],
-			'BBCODE_STATUS' => $this->user->lang('BBCODE_IS_ON', '', ''),
-			'SMILIES_STATUS' => $this->user->lang('SMILIES_ARE_ON'),
-			'IMG_STATUS' => $this->user->lang('IMAGES_ARE_ON'),
-			'FLASH_STATUS' => $this->user->lang('FLASH_IS_ON'),
-			'URL_STATUS' => $this->user->lang('URL_IS_ON'),
 			'S_BBCODE_ALLOWED' => true,
 			'S_SMILIES_ALLOWED' => true,
 			'S_LINKS_ALLOWED' => true,
 			'S_BBCODE_IMG' => true,
 			'S_BBCODE_FLASH' => true,
-			'L_INFO' => $this->user->lang('L_INFORMATION'),
-			'VARIABLES_EXPLAIN' => $this->user->lang('VARIABLES_EXPLAIN'),
 			'U_BACK' => $this->u_action,
 			'U_ACTION' => $this->u_action . '&amp;action=' . $action,
 			'ALLRULES_COLSPAN' => 4,
@@ -538,7 +523,7 @@ class board_notices_module
 	{
 		$display = '';
 		$display .= '<label><input type="radio" class="radio" id="' . $input_name . '" name="' . $input_name . '[0]" value="1"' . ($selected ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['YES'] . '</label>';
-		$display .= '<label><input type="radio" class="radio" name="' . $input_name . '[0]" value="0"' . (!$selected ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['NO_GUEST_OR_BOT'] . '</label>';
+		$display .= '<label><input type="radio" class="radio" name="' . $input_name . '[0]" value="0"' . (!$selected ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['NO'] . '</label>';
 		return $display;
 	}
 

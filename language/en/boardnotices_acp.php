@@ -91,7 +91,7 @@ $lang = array_merge($lang, array(
 	'BOARD_NOTICE_RULE_VALUE'				=> 'Conditions',
 	'BOARD_NOTICE_RULE_VARIABLES'			=> 'Providing',
 
-	'NO_GUEST_OR_BOT'						=> 'No (Guest or Bot)',
+	'NO_GUEST_OR_BOT'						=> 'No (Guest or Bot)',	// @todo Remove entry
 
 	'BOARD_NOTICE_SAVED'					=> 'Board notice has been saved.',
 
@@ -121,6 +121,7 @@ $lang = array_merge($lang, array(
 	'RULE_LANGUAGE'							=> "User language is either one of these selected languages",
 	'RULE_LOGGED_IN'						=> "Is user logged in",
 	'RULE_NOT_IN_USERGROUP'					=> "User does not belong to any of these selected groups",
+	'RULE_ON_BOARD_INDEX'					=> "User is browsing the board index",
 	'RULE_RANK'								=> "User rank is any of these selected ranks",
 	'RULE_STYLE'							=> "User style is either one of these selected styles",
 
