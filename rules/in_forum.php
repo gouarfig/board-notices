@@ -12,18 +12,17 @@
 
 namespace fq\boardnotices\rules;
 
+use \fq\boardnotices\service\constants;
+
 class in_forum extends rule_base implements rule_interface
 {
-	/** @var \fq\boardnotices\service\constants $constants */
-	private $constants;
 	/** @var \phpbb\user $lang */
 	private $user;
 	/** @var \phpbb\request\request $request */
 	private $request;
 
-	public function __construct(\fq\boardnotices\service\constants $constants, \fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \phpbb\request\request $request)
+	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \phpbb\request\request $request)
 	{
-		$this->constants = $constants;
 		$this->serializer = $serializer;
 		$this->user = $user;
 		$this->request = $request;
@@ -41,7 +40,7 @@ class in_forum extends rule_base implements rule_interface
 
 	public function getType()
 	{
-		return 'forums';
+		return constants::$RULE_TYPE_FORUMS;
 	}
 
 	public function getDefault()

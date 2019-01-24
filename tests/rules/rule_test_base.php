@@ -31,17 +31,4 @@ class rule_test_base extends \phpbb_test_case
 		return $serializer;
 	}
 
-	/**
-	 * @return \fq\boardnotices\service\constants $constants
-	 */
-	protected function getConstants()
-	{
-		static $constants;
-		if (is_null($constants))
-		{
-			$constants = new \fq\boardnotices\service\constants();
-		}
-		return $constants;
-	}
-
 }

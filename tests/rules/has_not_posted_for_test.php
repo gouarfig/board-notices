@@ -12,7 +12,7 @@ class has_not_posted_for_test extends rule_test_base
 	{
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-		$rule = new has_not_posted_for($this->getConstants(), $this->getSerializer(), $user);
+		$rule = new has_not_posted_for($this->getSerializer(), $user);
 		$this->assertNotNull($rule);
 
 		return array($user, $rule);

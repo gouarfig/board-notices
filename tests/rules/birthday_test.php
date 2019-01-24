@@ -12,7 +12,7 @@ class birthday_test extends rule_test_base
 	{
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-		$rule = new birthday($this->getConstants(), $this->getSerializer(), $user);
+		$rule = new birthday($this->getSerializer(), $user);
 		$this->assertNotNull($rule);
 
 		return $rule;
@@ -86,7 +86,7 @@ class birthday_test extends rule_test_base
 		$birthday = $user->create_datetime();
 		$birthday = phpbb_gmgetdate($birthday->getTimestamp() + $birthday->getOffset() + $seconds_added);
 		$user->data['user_birthday'] = sprintf('%2d-%2d-%4d', $birthday['mday'], $birthday['mon'], $birthday['year'] - $age_added);
-		$rule = new birthday($this->getConstants(), $this->getSerializer(), $user);
+		$rule = new birthday($this->getSerializer(), $user);
 		return array($user, $rule);
 	}
 

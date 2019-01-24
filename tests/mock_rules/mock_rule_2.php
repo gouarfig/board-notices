@@ -14,14 +14,10 @@ namespace fq\boardnotices\tests\mock_rules;
 
 class mock_rule_2 extends \fq\boardnotices\rules\rule_base implements \fq\boardnotices\rules\rule_interface
 {
-	/** @var \fq\boardnotices\service\constants $constants */
-	private $constants;
-
 	private $template_vars = array();
 
-	public function __construct(\fq\boardnotices\service\constants $constants, \fq\boardnotices\service\serializer $serializer)
+	public function __construct(\fq\boardnotices\service\serializer $serializer)
 	{
-		$this->constants = $constants;
 		$this->serializer = $serializer;
 	}
 

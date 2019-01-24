@@ -25,4 +25,10 @@ class constants
 	public static $RULE_DISPLAY_UNIT = 'display_unit';
 
 	public static $RULE_WITH_NO_TYPE = 'n/a';
+	public static $RULE_TYPE_DATE = 'date';
+	public static $RULE_TYPE_FORUMS = 'forums';
+	public static $RULE_TYPE_INTEGER = 'int';
+	public static $RULE_TYPE_LIST = 'list';
+	public static $RULE_TYPE_MULTIPLE_CHOICE = 'multiple choice';
+	public static $RULE_TYPE_YESNO = 'yesno';
 }

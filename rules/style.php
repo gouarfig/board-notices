@@ -12,10 +12,10 @@
 
 namespace fq\boardnotices\rules;
 
+use \fq\boardnotices\service\constants;
+
 class style extends rule_base implements rule_interface
 {
-	/** @var \fq\boardnotices\service\constants $constants */
-	private $constants;
 	/** @var \phpbb\user $lang */
 	private $user;
 	/** @var \fq\boardnotices\repository\legacy_interface $data_layer */
@@ -23,9 +23,8 @@ class style extends rule_base implements rule_interface
 	private $request;
 	private $config;
 
-	public function __construct(\fq\boardnotices\service\constants $constants, \fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer, \phpbb\request\request $request, \phpbb\config\config $config)
+	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer, \phpbb\request\request $request, \phpbb\config\config $config)
 	{
-		$this->constants = $constants;
 		$this->serializer = $serializer;
 		$this->user = $user;
 		$this->data_layer = $data_layer;
@@ -45,7 +44,7 @@ class style extends rule_base implements rule_interface
 
 	public function getType()
 	{
-		return 'multiple choice';
+		return constants::$RULE_TYPE_MULTIPLE_CHOICE;
 	}
 
 	public function getDefault()

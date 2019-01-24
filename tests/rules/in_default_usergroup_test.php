@@ -15,7 +15,7 @@ class in_default_usergroup_test extends rule_test_base
 		$user->data['group_id'] = 10;
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
-		$rule = new in_default_usergroup($this->getConstants(), $this->getSerializer(), $user, $datalayer);
+		$rule = new in_default_usergroup($this->getSerializer(), $user, $datalayer);
 		$this->assertNotNull($rule);
 
 		return array($user, $rule);

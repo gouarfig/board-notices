@@ -3,39 +3,18 @@
 namespace fq\boardnotices\tests;
 
 use \fq\boardnotices\domain\rules;
+use \fq\boardnotices\service\constants;
 use \fq\boardnotices\service\serializer;
 use \fq\boardnotices\tests\mock_rules\mock_rule_1;
 use \fq\boardnotices\tests\mock_rules\mock_rule_2;
 
 class rules_test extends \PHPUnit_Framework_TestCase
 {
-	/**
-	 * @return \fq\boardnotices\service\constants $constants
-	 */
-	private function getConstants()
+
+	public static function setUpBeforeClass()
 	{
-		/** @var \fq\boardnotices\service\constants $constants */
-		static $constants;
-
-		if (!empty($constants))
-		{
-			return $constants;
-		}
-		$constants = new \fq\boardnotices\service\constants();
-		// We fake the folder where the rules sit
-		$constants::$RULES_FOLDER = 'mock_rules';
-		$constants::$RULES_CLASS_PREFIX = 'fq.boardnotices.tests.mock_rules';
-		return $constants;
-	}
-
-	public function testInstance()
-	{
-		$constants = $this->getConstants();
-		$root = __DIR__ . '/../';
-		$rules = new rules($root, $constants);
-		$this->assertNotNull($rules);
-
-		return $rules;
+		constants::$RULES_FOLDER = 'mock_rules';
+		constants::$RULES_CLASS_PREFIX = 'fq.boardnotices.tests.mock_rules';
 	}
 
 	public function setUp()
@@ -45,11 +24,10 @@ class rules_test extends \PHPUnit_Framework_TestCase
 
 		$phpbb_container = new \phpbb_mock_container_builder();
 
-		$constants = $this->getConstants();
 		$serializer = new serializer();
 		// Creates the mock rules an adds them to the container
-		$phpbb_container->set("fq.boardnotices.tests.mock_rules.mock_rule_1", new mock_rule_1($constants, $serializer));
-		$phpbb_container->set("fq.boardnotices.tests.mock_rules.mock_rule_2", new mock_rule_2($constants, $serializer));
+		$phpbb_container->set("fq.boardnotices.tests.mock_rules.mock_rule_1", new mock_rule_1($serializer));
+		$phpbb_container->set("fq.boardnotices.tests.mock_rules.mock_rule_2", new mock_rule_2($serializer));
 	}
 
 	public function tearDown()
@@ -58,6 +36,15 @@ class rules_test extends \PHPUnit_Framework_TestCase
 		global $phpbb_container;
 
 		unset($phpbb_container);
+	}
+
+	public function testInstance()
+	{
+		$root = __DIR__ . '/../';
+		$rules = new rules($root);
+		$this->assertNotNull($rules);
+
+		return $rules;
 	}
 
 	/**

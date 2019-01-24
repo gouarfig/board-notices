@@ -12,6 +12,8 @@
 
 namespace fq\boardnotices\domain;
 
+use \fq\boardnotices\service\constants;
+
 /**
  * Board Notices Manager
  * Rules management
@@ -21,8 +23,6 @@ class rules
 
 	/** @var string $root_path */
 	private $root_path;
-	/** @var \fq\boardnotices\service\constants $constants */
-	private $constants;
 	/** @var \fq\boardnotices\rules\rule_interface[] $rules */
 	private $rules;
 	private $rules_loaded = false;
@@ -65,10 +65,9 @@ class rules
 	 *
 	 * @param string $root_path
 	 */
-	public function __construct($root_path, \fq\boardnotices\service\constants $constants)
+	public function __construct($root_path)
 	{
 		$this->root_path = $root_path;
-		$this->constants = $constants;
 	}
 
 	/**
@@ -169,7 +168,7 @@ class rules
 
 	private function getRulesFolder()
 	{
-		$folder = $this->root_path . $this->constants::$RULES_FOLDER;
+		$folder = $this->root_path . constants::$RULES_FOLDER;
 		return $folder;
 	}
 
@@ -188,7 +187,7 @@ class rules
 				{
 					try
 					{
-						$rule = $phpbb_container->get($this->constants::$RULES_CLASS_PREFIX . ".$entry");
+						$rule = $phpbb_container->get(constants::$RULES_CLASS_PREFIX . ".$entry");
 						$this->rules[$entry] = $rule;
 					} catch (\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException $exc)
 					{
@@ -215,7 +214,7 @@ class rules
 			{
 				if (!in_array($entry, $this->not_rule_files))
 				{
-					$entry = str_replace($this->constants::$RULES_FILE_EXTENSION, '', $entry);
+					$entry = str_replace(constants::$RULES_FILE_EXTENSION, '', $entry);
 					$classes[] = $entry;
 				}
 			}
@@ -241,14 +240,14 @@ class rules
 		{
 			if (is_array($displayName))
 			{
-				$displayName[$this->constants::$RULE_DISPLAY_UNIT] = $displayUnit;
+				$displayName[constants::$RULE_DISPLAY_UNIT] = $displayUnit;
 				return $displayName;
 			}
 			else
 			{
 				return array(
-					$this->constants::$RULE_DISPLAY_NAME => $displayName,
-					$this->constants::$RULE_DISPLAY_UNIT => $displayUnit
+					constants::$RULE_DISPLAY_NAME => $displayName,
+					constants::$RULE_DISPLAY_UNIT => $displayUnit
 				);
 			}
 		}

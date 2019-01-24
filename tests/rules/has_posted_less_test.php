@@ -12,7 +12,7 @@ class has_posted_less_test extends rule_test_base
 	{
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-		$rule = new has_posted_less($this->getConstants(), $this->getSerializer(), $user);
+		$rule = new has_posted_less($this->getSerializer(), $user);
 		$this->assertNotNull($rule);
 
 		return array($user, $rule);

@@ -50,33 +50,28 @@ services:
     class: fq\boardnotices\domain\rules
     arguments:
       - '%core.root_path%'
-      - '@fq.boardnotices.service.constants'
 
   fq.boardnotices.rules.anniversary:
     class: fq\boardnotices\rules\anniversary
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
 
   fq.boardnotices.rules.birthday:
     class: fq\boardnotices\rules\birthday
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
 
   fq.boardnotices.rules.date:
     class: fq\boardnotices\rules\date
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
 
   fq.boardnotices.rules.in_default_usergroup:
     class: fq\boardnotices\rules\in_default_usergroup
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
       - '@fq.boardnotices.repository.legacy'
@@ -84,7 +79,6 @@ services:
   fq.boardnotices.rules.in_usergroup:
     class: fq\boardnotices\rules\in_usergroup
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
       - '@fq.boardnotices.repository.legacy'
@@ -92,7 +86,6 @@ services:
   fq.boardnotices.rules.not_in_usergroup:
     class: fq\boardnotices\rules\not_in_usergroup
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
       - '@fq.boardnotices.repository.legacy'
@@ -100,7 +93,6 @@ services:
   fq.boardnotices.rules.has_never_posted:
     class: fq\boardnotices\rules\has_never_posted
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
       - '@fq.boardnotices.repository.legacy'
@@ -108,7 +100,6 @@ services:
   fq.boardnotices.rules.has_never_posted_in_forum:
     class: fq\boardnotices\rules\has_never_posted_in_forum
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
       - '@fq.boardnotices.repository.legacy'
@@ -116,7 +107,6 @@ services:
   fq.boardnotices.rules.has_posted_in_forum:
     class: fq\boardnotices\rules\has_posted_in_forum
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
       - '@fq.boardnotices.repository.legacy'
@@ -124,21 +114,18 @@ services:
   fq.boardnotices.rules.not_logged_in:
     class: fq\boardnotices\rules\not_logged_in
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
 
   fq.boardnotices.rules.logged_in:
     class: fq\boardnotices\rules\logged_in
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
 
   fq.boardnotices.rules.style:
     class: fq\boardnotices\rules\style
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
       - '@fq.boardnotices.repository.legacy'
@@ -148,7 +135,6 @@ services:
   fq.boardnotices.rules.language:
     class: fq\boardnotices\rules\language
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
       - '@fq.boardnotices.repository.legacy'
@@ -156,7 +142,6 @@ services:
   fq.boardnotices.rules.rank:
     class: fq\boardnotices\rules\rank
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
       - '@fq.boardnotices.repository.legacy'
@@ -164,7 +149,6 @@ services:
   fq.boardnotices.rules.in_forum:
     class: fq\boardnotices\rules\in_forum
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
       - '@request'
@@ -172,14 +156,12 @@ services:
   fq.boardnotices.rules.has_not_posted_for:
     class: fq\boardnotices\rules\has_not_posted_for
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
 
   fq.boardnotices.rules.has_not_visited_for:
     class: fq\boardnotices\rules\has_not_visited_for
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
       - '@fq.boardnotices.repository.legacy'
@@ -187,20 +169,17 @@ services:
   fq.boardnotices.rules.has_posted_exactly:
     class: fq\boardnotices\rules\has_posted_exactly
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
 
   fq.boardnotices.rules.has_posted_less:
     class: fq\boardnotices\rules\has_posted_less
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
 
   fq.boardnotices.rules.has_posted_more:
     class: fq\boardnotices\rules\has_posted_more
     arguments:
-      - '@fq.boardnotices.service.constants'
       - '@fq.boardnotices.service.serializer'
       - '@user'
