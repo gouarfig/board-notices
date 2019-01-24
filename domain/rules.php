@@ -19,7 +19,10 @@ namespace fq\boardnotices\domain;
 class rules
 {
 
+	/** @var string $root_path */
 	private $root_path;
+	/** @var \fq\boardnotices\service\constants $constants */
+	private $constants;
 	/** @var \fq\boardnotices\rules\rule_interface[] $rules */
 	private $rules;
 	private $rules_loaded = false;
@@ -62,96 +65,10 @@ class rules
 	 *
 	 * @param string $root_path
 	 */
-	public function __construct($root_path)
+	public function __construct($root_path, \fq\boardnotices\service\constants $constants)
 	{
 		$this->root_path = $root_path;
-	}
-
-	private function getRulesFolder()
-	{
-		$folder = $this->root_path . 'ext/fq/boardnotices/rules';
-		return $folder;
-	}
-
-	/**
-	 * Returns a list of rule files
-	 *
-	 * @param string $folder
-	 * @return string[]
-	 */
-	private function getRulesClassesList($folder)
-	{
-		$classes = array();
-		if ($rulesDirectory = dir($folder))
-		{
-			while (false !== ($entry = $rulesDirectory->read()))
-			{
-				if (!in_array($entry, $this->not_rule_files))
-				{
-					$entry = str_replace('.php', '', $entry);
-					$classes[] = $entry;
-				}
-			}
-			$rulesDirectory->close();
-		}
-		return $classes;
-	}
-
-	private function loadRules()
-	{
-		global $phpbb_container;
-
-		$this->rules = array();
-		$folder = $this->getRulesFolder();
-		if (is_dir($folder))
-		{
-			$classes = $this->getRulesClassesList($folder);
-			foreach ($classes as $entry)
-			{
-				if (!in_array($entry, $this->hide))
-				{
-					try
-					{
-						$rule = $phpbb_container->get("fq.boardnotices.rules.$entry");
-						$this->rules[$entry] = $rule;
-					} catch (\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException $exc)
-					{
-						// The installation is obviously corrupted, but should we bother the user with it?
-					}
-				}
-			}
-			$this->rules_loaded = true;
-		}
-	}
-
-	/**
-	 * @param string $rule_name
-	 * @return string|string[]
-	 */
-	private function getRuleDisplayValues($rule_name)
-	{
-		$displayName = $this->rules[$rule_name]->getDisplayName();
-		$displayUnit = $this->rules[$rule_name]->getDisplayUnit();
-
-		if (empty($displayUnit))
-		{
-			return $displayName;
-		}
-		else
-		{
-			if (is_array($displayName))
-			{
-				$displayName['display_unit'] = $displayUnit;
-				return $displayName;
-			}
-			else
-			{
-				return array(
-					'display_name' => $displayName,
-					'display_unit' => $displayUnit
-				);
-			}
-		}
+		$this->constants = $constants;
 	}
 
 	/**
@@ -248,6 +165,93 @@ class rules
 			}
 		}
 		return $available_vars;
+	}
+
+	private function getRulesFolder()
+	{
+		$folder = $this->root_path . $this->constants::$RULES_FOLDER;
+		return $folder;
+	}
+
+	/**
+	 * Returns a list of rule files
+	 *
+	 * @param string $folder
+	 * @return string[]
+	 */
+	private function getRulesClassesList($folder)
+	{
+		$classes = array();
+		if ($rulesDirectory = dir($folder))
+		{
+			while (false !== ($entry = $rulesDirectory->read()))
+			{
+				if (!in_array($entry, $this->not_rule_files))
+				{
+					$entry = str_replace($this->constants::$RULES_FILE_EXTENSION, '', $entry);
+					$classes[] = $entry;
+				}
+			}
+			$rulesDirectory->close();
+		}
+		return $classes;
+	}
+
+	private function loadRules()
+	{
+		global $phpbb_container;
+
+		$this->rules = array();
+		$folder = $this->getRulesFolder();
+		if (is_dir($folder))
+		{
+			$classes = $this->getRulesClassesList($folder);
+			foreach ($classes as $entry)
+			{
+				if (!in_array($entry, $this->hide))
+				{
+					try
+					{
+						$rule = $phpbb_container->get($this->constants::$RULES_CLASS_PREFIX . ".$entry");
+						$this->rules[$entry] = $rule;
+					} catch (\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException $exc)
+					{
+						// The installation is obviously corrupted, but should we bother the user with it?
+					}
+				}
+			}
+			$this->rules_loaded = true;
+		}
+	}
+
+	/**
+	 * @param string $rule_name
+	 * @return string|string[]
+	 */
+	private function getRuleDisplayValues($rule_name)
+	{
+		$displayName = $this->rules[$rule_name]->getDisplayName();
+		$displayUnit = $this->rules[$rule_name]->getDisplayUnit();
+
+		if (empty($displayUnit))
+		{
+			return $displayName;
+		}
+		else
+		{
+			if (is_array($displayName))
+			{
+				$displayName[$this->constants::$RULE_DISPLAY_UNIT] = $displayUnit;
+				return $displayName;
+			}
+			else
+			{
+				return array(
+					$this->constants::$RULE_DISPLAY_NAME => $displayName,
+					$this->constants::$RULE_DISPLAY_UNIT => $displayUnit
+				);
+			}
+		}
 	}
 
 }

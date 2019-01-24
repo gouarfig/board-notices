@@ -2,27 +2,46 @@
 
 namespace fq\boardnotices\tests;
 
-use Symfony\Component\DependencyInjection\ContainerBuilder;
-use fq\boardnotices\domain\rules;
+use \fq\boardnotices\domain\rules;
+use \fq\boardnotices\service\serializer;
+use \fq\boardnotices\tests\mock_rules\mock_rule;
 
 class rules_test extends \PHPUnit_Framework_TestCase
 {
-	private function getRootFolder()
-	{
-		return dirname(__FILE__) . '/../../../../../';
-	}
-
 	public function testInstance()
 	{
-		$rules = new rules($this->getRootFolder());
-		$this->assertThat($rules, $this->logicalNot($this->equalTo(null)));
+		$constants = new \fq\boardnotices\service\constants();
+		// We fake the folder where the rules sit
+		$constants::$RULES_FOLDER = 'mock_rules';
+		$constants::$RULES_CLASS_PREFIX = 'fq.boardnotices.tests.mock_rules';
+		$root = __DIR__ . '/../';
+		$rules = new rules($root, $constants);
+		$this->assertNotNull($rules);
 
 		return $rules;
 	}
 
+	public function setUp()
+	{
+		// We recreate a new container for each test
+		global $phpbb_container;
+
+		$phpbb_container = new \phpbb_mock_container_builder();
+
+		$serializer = new serializer();
+		// Creates a mock rule an adds it to the container
+		$phpbb_container->set("fq.boardnotices.tests.mock_rules.mock_rule", new mock_rule($serializer));
+	}
+
+	public function tearDown()
+	{
+		// We delete the DI container after each test
+		global $phpbb_container;
+
+		unset($phpbb_container);
+	}
+
 	/**
-	 * I'm not sure why ContainerBuilder cannot be mocked using the same phpunit version under php 5
-	 * @requires PHP 7
 	 * @depends testInstance
 	 * @param fq\boardnotices\domain\rules $rules
 	 */
@@ -30,24 +49,19 @@ class rules_test extends \PHPUnit_Framework_TestCase
 	{
 		global $phpbb_container;
 
-		$phpbb_container = $this->getMockBuilder('Symfony\Component\DependencyInjection\ContainerBuilder')->getMock();
-		$this->assertThat($phpbb_container, $this->logicalNot($this->equalTo(null)), '$phpbb_container is null');
-
-		$phpbb_container->method('get')->will($this->returnCallback(array($this, 'ContainerBuilderGet')));
-
-		$anniversary = $phpbb_container->get("fq.boardnotices.rules.anniversary");
-		$this->assertThat($anniversary, $this->logicalNot($this->equalTo(null)), '$anniversary is null');
-		$this->assertThat($anniversary->getDisplayName(), $this->logicalNot($this->equalTo(null)));
-
 		$definedRules = $rules->getDefinedRules();
-		$this->assertTrue(count($definedRules) > 0);
+		$this->assertEquals(1, count($definedRules));
 	}
 
-	public function ContainerBuilderGet($name)
+	/**
+	 * @depends testInstance
+	 * @param fq\boardnotices\domain\rules $rules
+	 */
+	public function testGetDisplayName($rules)
 	{
-		$name = str_replace('.', '\\', $name);
-		$get = $this->getMockBuilder($name)->disableOriginalConstructor()->getMock();
-		$get->method('getDisplayName')->willReturn('My Name');
-		return $get;
+		global $phpbb_container;
+
+		$definedRules = $rules->getDefinedRules();
+		$this->assertEquals("Mock Rule", $definedRules['mock_rule']);
 	}
 }

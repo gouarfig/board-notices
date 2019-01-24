@@ -5,6 +5,9 @@ parameters:
   tables.boardnotices.forums_visited: '%core.table_prefix%forums_visited'
 
 services:
+  fq.boardnotices.service.constants:
+    class: fq\boardnotices\service\constants
+
   fq.boardnotices.service.serializer:
     class: fq\boardnotices\service\serializer
 
@@ -47,6 +50,7 @@ services:
     class: fq\boardnotices\domain\rules
     arguments:
       - '%core.root_path%'
+      - '@fq.boardnotices.service.constants'
 
   fq.boardnotices.rules.anniversary:
     class: fq\boardnotices\rules\anniversary
