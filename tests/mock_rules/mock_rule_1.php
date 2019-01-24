@@ -10,28 +10,31 @@
  *
  */
 
-namespace fq\boardnotices\rules;
+namespace fq\boardnotices\tests\mock_rules;
 
-class has_never_posted extends rule_base implements rule_interface
+class mock_rule_1 extends \fq\boardnotices\rules\rule_base implements \fq\boardnotices\rules\rule_interface
 {
 	/** @var \fq\boardnotices\service\constants $constants */
 	private $constants;
-	/** @var \phpbb\user $lang */
-	private $user;
-	/** @var \fq\boardnotices\repository\legacy_interface $data_layer */
-	private $data_layer;
 
-	public function __construct(\fq\boardnotices\service\constants $constants, \fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer)
+	private $template_vars = array();
+
+	public function __construct(\fq\boardnotices\service\constants $constants, \fq\boardnotices\service\serializer $serializer)
 	{
 		$this->constants = $constants;
 		$this->serializer = $serializer;
-		$this->user = $user;
-		$this->data_layer = $data_layer;
+	}
+
+	private function setTemplateVars($value)
+	{
+		$this->template_vars = array(
+			'MOCK1' => $value
+		);
 	}
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_HAS_NEVER_POSTED');
+		return "Mock Rule 1";
 	}
 
 	public function getDisplayUnit()
@@ -61,20 +64,17 @@ class has_never_posted extends rule_base implements rule_interface
 
 	public function isTrue($conditions)
 	{
-		$valid = false;
-		$posts = $this->data_layer->nonDeletedUserPosts();
-		$valid = ($posts == 0);
-		return $valid;
+		return true;
 	}
 
 	public function getAvailableVars()
 	{
-		return array();
+		return array('MOCK1');
 	}
 
 	public function getTemplateVars()
 	{
-		return array();
+		return $this->template_vars;
 	}
 
 }

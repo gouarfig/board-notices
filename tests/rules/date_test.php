@@ -8,22 +8,11 @@ use \fq\boardnotices\rules\date;
 
 class date_test extends rule_test_base
 {
-	/**
-	 * @return \fq\boardnotices\service\serializer $serializer
-	 */
-	private function getSerializer()
-	{
-		static $serializer;
-		if (is_null($serializer)) {
-			$serializer = new \fq\boardnotices\service\serializer();
-		}
-		return $serializer;
-	}
 
 	public function testInstance()
 	{
 		$user = $this->getUser();
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$this->assertNotNull($rule);
 
 		return $rule;
@@ -179,7 +168,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now);
 		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
@@ -194,7 +183,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0);
 		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
@@ -209,7 +198,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, null, 0);
 		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
@@ -224,7 +213,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, null, null, 0);
 		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
@@ -239,7 +228,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, 0);
 		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
@@ -254,7 +243,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, null, 0);
 		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
@@ -269,7 +258,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, null, 0, 0);
 		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
@@ -284,7 +273,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, 0, 0);
 		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
@@ -299,7 +288,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user, '2019-10-01');
 		$conditions = $this->buildConditions($now, -1, 0, 0);
 		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
@@ -317,7 +306,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, -1, 0, 0);
 		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
@@ -335,7 +324,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 1, 0, 0);
 		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
@@ -353,7 +342,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user, '2019-01-10');
 		$conditions = $this->buildConditions($now, 0, -1, 0);
 		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
@@ -371,7 +360,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, -1, 0);
 		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
@@ -389,7 +378,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, 1, 0);
 		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
@@ -407,7 +396,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, 0, -1);
 		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
@@ -425,7 +414,7 @@ class date_test extends rule_test_base
 		date_default_timezone_set($timezone);
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
+		$rule = new date($this->getConstants(), $this->getSerializer(), $user);
 		$now = $this->getDatetime($user);
 		$conditions = $this->buildConditions($now, 0, 0, 1);
 		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");

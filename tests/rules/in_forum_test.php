@@ -10,8 +10,7 @@ class in_forum_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		/** @var \fq\boardnotices\service\serializer $serializer */
-		$serializer = new \fq\boardnotices\service\serializer();
+		$serializer = $this->getSerializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		$user->data['f'] = 10;
@@ -23,7 +22,7 @@ class in_forum_test extends rule_test_base
 		// Make sure the mock works
 		$this->assertEquals(10, $request->variable('f', 0));
 
-		$rule = new in_forum($serializer, $user, $request);
+		$rule = new in_forum($this->getConstants(), $this->getSerializer(), $user, $request);
 		$this->assertNotNull($rule);
 
 		return array($serializer, $user, $rule);
@@ -110,7 +109,7 @@ class in_forum_test extends rule_test_base
 			->getMock();
 		$request->method('variable')->will($this->returnValue(10));
 
-		$rule = new in_forum($serializer, $user, $request);
+		$rule = new in_forum($this->getConstants(), $this->getSerializer(), $user, $request);
 
 		$this->assertFalse($rule->isTrue(null));
 	}
@@ -131,7 +130,7 @@ class in_forum_test extends rule_test_base
 			->getMock();
 		$request->method('variable')->will($this->returnValue(10));
 
-		$rule = new in_forum($serializer, $user, $request);
+		$rule = new in_forum($this->getConstants(), $this->getSerializer(), $user, $request);
 
 		$forum = serialize(array(11));
 		$this->assertFalse($rule->isTrue($forum));
@@ -153,7 +152,7 @@ class in_forum_test extends rule_test_base
 			->getMock();
 		$request->method('variable')->will($this->returnValue(10));
 
-		$rule = new in_forum($serializer, $user, $request);
+		$rule = new in_forum($this->getConstants(), $this->getSerializer(), $user, $request);
 
 		$forum = $serializer->encode(array(11));
 		$this->assertFalse($rule->isTrue($forum));
@@ -175,7 +174,7 @@ class in_forum_test extends rule_test_base
 			->getMock();
 		$request->method('variable')->will($this->returnValue(10));
 
-		$rule = new in_forum($serializer, $user, $request);
+		$rule = new in_forum($this->getConstants(), $this->getSerializer(), $user, $request);
 
 		$forum = serialize(array(10));
 		$this->assertTrue($rule->isTrue($forum)); ///
@@ -197,7 +196,7 @@ class in_forum_test extends rule_test_base
 			->getMock();
 		$request->method('variable')->will($this->returnValue(10));
 
-		$rule = new in_forum($serializer, $user, $request);
+		$rule = new in_forum($this->getConstants(), $this->getSerializer(), $user, $request);
 
 		$forum = $serializer->encode(array(10));
 		$this->assertTrue($rule->isTrue($forum)); ///
@@ -219,7 +218,7 @@ class in_forum_test extends rule_test_base
 			->getMock();
 		$request->method('variable')->will($this->returnValue(10));
 
-		$rule = new in_forum($serializer, $user, $request);
+		$rule = new in_forum($this->getConstants(), $this->getSerializer(), $user, $request);
 
 		$forum = 10;
 		$this->assertTrue($rule->isTrue($forum)); ///
@@ -241,7 +240,7 @@ class in_forum_test extends rule_test_base
 			->getMock();
 		$request->method('variable')->will($this->returnValue(10));
 
-		$rule = new in_forum($serializer, $user, $request);
+		$rule = new in_forum($this->getConstants(), $this->getSerializer(), $user, $request);
 
 		$forum = 11;
 		$this->assertFalse($rule->isTrue($forum));
@@ -263,7 +262,7 @@ class in_forum_test extends rule_test_base
 			->getMock();
 		$request->method('variable')->will($this->returnValue(10));
 
-		$rule = new in_forum($serializer, $user, $request);
+		$rule = new in_forum($this->getConstants(), $this->getSerializer(), $user, $request);
 
 		$forum = serialize(10);
 		$this->assertTrue($rule->isTrue($forum)); ///
@@ -285,7 +284,7 @@ class in_forum_test extends rule_test_base
 			->getMock();
 		$request->method('variable')->will($this->returnValue(10));
 
-		$rule = new in_forum($serializer, $user, $request);
+		$rule = new in_forum($this->getConstants(), $this->getSerializer(), $user, $request);
 
 		$forum = $serializer->encode(10);
 		$this->assertTrue($rule->isTrue($forum)); ///
@@ -307,7 +306,7 @@ class in_forum_test extends rule_test_base
 			->getMock();
 		$request->method('variable')->will($this->returnValue(10));
 
-		$rule = new in_forum($serializer, $user, $request);
+		$rule = new in_forum($this->getConstants(), $this->getSerializer(), $user, $request);
 
 		$forum = serialize(11);
 		$this->assertFalse($rule->isTrue($forum));
@@ -329,7 +328,7 @@ class in_forum_test extends rule_test_base
 			->getMock();
 		$request->method('variable')->will($this->returnValue(10));
 
-		$rule = new in_forum($serializer, $user, $request);
+		$rule = new in_forum($this->getConstants(), $this->getSerializer(), $user, $request);
 
 		$forum = $serializer->encode(11);
 		$this->assertFalse($rule->isTrue($forum));

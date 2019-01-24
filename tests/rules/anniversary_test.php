@@ -8,23 +8,12 @@ use \fq\boardnotices\rules\anniversary;
 
 class anniversary_test extends rule_test_base
 {
-	/**
-	 * @return \fq\boardnotices\service\serializer $serializer
-	 */
-	private function getSerializer()
-	{
-		static $serializer;
-		if (is_null($serializer)) {
-			$serializer = new \fq\boardnotices\service\serializer();
-		}
-		return $serializer;
-	}
 
 	public function testInstance()
 	{
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-		$rule = new anniversary($this->getSerializer(), $user);
+		$rule = new anniversary($this->getConstants(), $this->getSerializer(), $user);
 		$this->assertNotNull($rule);
 
 		return $rule;
@@ -97,7 +86,7 @@ class anniversary_test extends rule_test_base
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = time();
-		$rule = new anniversary($this->getSerializer(), $user);
+		$rule = new anniversary($this->getConstants(), $this->getSerializer(), $user);
 		$this->assertFalse($rule->isTrue(null));
 	}
 
@@ -111,7 +100,7 @@ class anniversary_test extends rule_test_base
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = time() - (60*60);
-		$rule = new anniversary($this->getSerializer(), $user);
+		$rule = new anniversary($this->getConstants(), $this->getSerializer(), $user);
 		$this->assertFalse($rule->isTrue(null));
 	}
 
@@ -125,7 +114,7 @@ class anniversary_test extends rule_test_base
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = time() - (60*60*24*32);
-		$rule = new anniversary($this->getSerializer(), $user);
+		$rule = new anniversary($this->getConstants(), $this->getSerializer(), $user);
 		$this->assertFalse($rule->isTrue(null));
 	}
 
@@ -139,7 +128,7 @@ class anniversary_test extends rule_test_base
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = time() + (60*60);
-		$rule = new anniversary($this->getSerializer(), $user);
+		$rule = new anniversary($this->getConstants(), $this->getSerializer(), $user);
 		$this->assertFalse($rule->isTrue(null));
 	}
 
@@ -153,7 +142,7 @@ class anniversary_test extends rule_test_base
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = time() + (60*60*24*32);
-		$rule = new anniversary($this->getSerializer(), $user);
+		$rule = new anniversary($this->getConstants(), $this->getSerializer(), $user);
 		$this->assertFalse($rule->isTrue(null));
 	}
 
@@ -166,7 +155,7 @@ class anniversary_test extends rule_test_base
 		$user = $this->getUser();
 		$user->timezone = new \DateTimeZone($timezone);
 		$user->data['user_regdate'] = strtotime('last year');
-		$rule = new anniversary($this->getSerializer(), $user);
+		$rule = new anniversary($this->getConstants(), $this->getSerializer(), $user);
 		return array($user, $rule);
 	}
 	/**

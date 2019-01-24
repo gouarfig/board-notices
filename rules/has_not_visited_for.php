@@ -14,13 +14,16 @@ namespace fq\boardnotices\rules;
 
 class has_not_visited_for extends rule_base implements rule_interface
 {
+	/** @var \fq\boardnotices\service\constants $constants */
+	private $constants;
 	/** @var \phpbb\user $lang */
 	private $user;
 	/** @var \fq\boardnotices\repository\legacy_interface $repository */
 	private $repository;
 
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\legacy_interface $repository)
+	public function __construct(\fq\boardnotices\service\constants $constants, \fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\legacy_interface $repository)
 	{
+		$this->constants = $constants;
 		$this->serializer = $serializer;
 		$this->user = $user;
 		$this->repository = $repository;

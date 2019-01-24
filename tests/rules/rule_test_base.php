@@ -17,4 +17,31 @@ class rule_test_base extends \phpbb_test_case
 		$user = new \phpbb\user($language, '\phpbb\datetime');
 		return $user;
 	}
+
+	/**
+	 * @return \fq\boardnotices\service\serializer $serializer
+	 */
+	protected function getSerializer()
+	{
+		static $serializer;
+		if (is_null($serializer))
+		{
+			$serializer = new \fq\boardnotices\service\serializer();
+		}
+		return $serializer;
+	}
+
+	/**
+	 * @return \fq\boardnotices\service\constants $constants
+	 */
+	protected function getConstants()
+	{
+		static $constants;
+		if (is_null($constants))
+		{
+			$constants = new \fq\boardnotices\service\constants();
+		}
+		return $constants;
+	}
+
 }

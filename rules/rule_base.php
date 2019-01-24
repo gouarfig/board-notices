@@ -13,6 +13,9 @@ namespace fq\boardnotices\rules;
 
 abstract class rule_base
 {
+
+	/** @var \fq\boardnotices\service\constants $constants */
+	private $constants;
 	/** @var \fq\boardnotices\service\serializer $serializer */
 	protected $serializer;
 

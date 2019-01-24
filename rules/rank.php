@@ -13,14 +13,17 @@ namespace fq\boardnotices\rules;
 
 class rank extends rule_base implements rule_interface
 {
+	/** @var \fq\boardnotices\service\constants $constants */
+	private $constants;
 	/** @var \phpbb\user $lang */
 	private $user;
 	/** @var \fq\boardnotices\repository\legacy_interface $data_layer */
 	private $data_layer;
 	private $user_rank = null;
 
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer)
+	public function __construct(\fq\boardnotices\service\constants $constants, \fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer)
 	{
+		$this->constants = $constants;
 		$this->serializer = $serializer;
 		$this->user = $user;
 		$this->data_layer = $data_layer;

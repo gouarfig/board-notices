@@ -14,13 +14,16 @@ namespace fq\boardnotices\rules;
 
 class in_forum extends rule_base implements rule_interface
 {
+	/** @var \fq\boardnotices\service\constants $constants */
+	private $constants;
 	/** @var \phpbb\user $lang */
 	private $user;
 	/** @var \phpbb\request\request $request */
 	private $request;
 
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \phpbb\request\request $request)
+	public function __construct(\fq\boardnotices\service\constants $constants, \fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \phpbb\request\request $request)
 	{
+		$this->constants = $constants;
 		$this->serializer = $serializer;
 		$this->user = $user;
 		$this->request = $request;

@@ -14,13 +14,15 @@ namespace fq\boardnotices\rules;
 
 class anniversary extends rule_base implements rule_interface
 {
-
+	/** @var \fq\boardnotices\service\constants $constants */
+	private $constants;
 	/** @var \phpbb\user $lang */
 	private $user;
 	private $template_vars = array();
 
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user)
+	public function __construct(\fq\boardnotices\service\constants $constants, \fq\boardnotices\service\serializer $serializer, \phpbb\user $user)
 	{
+		$this->constants = $constants;
 		$this->serializer = $serializer;
 		$this->user = $user;
 	}
@@ -68,7 +70,7 @@ class anniversary extends rule_base implements rule_interface
 
 	public function getType()
 	{
-		return 'n/a';
+		return $this->constants::$RULE_WITH_NO_TYPE;
 	}
 
 	public function getDefault()

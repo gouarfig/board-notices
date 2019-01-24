@@ -10,11 +10,9 @@ class has_posted_exactly_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		/** @var \fq\boardnotices\service\serializer $serializer */
-		$serializer = new \fq\boardnotices\service\serializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-		$rule = new has_posted_exactly($serializer, $user);
+		$rule = new has_posted_exactly($this->getConstants(), $this->getSerializer(), $user);
 		$this->assertNotNull($rule);
 
 		return array($user, $rule);

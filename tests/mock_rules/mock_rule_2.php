@@ -12,31 +12,34 @@
 
 namespace fq\boardnotices\tests\mock_rules;
 
-class mock_rule extends \fq\boardnotices\rules\rule_base implements \fq\boardnotices\rules\rule_interface
+class mock_rule_2 extends \fq\boardnotices\rules\rule_base implements \fq\boardnotices\rules\rule_interface
 {
+	/** @var \fq\boardnotices\service\constants $constants */
+	private $constants;
 
 	private $template_vars = array();
 
-	public function __construct(\fq\boardnotices\service\serializer $serializer)
+	public function __construct(\fq\boardnotices\service\constants $constants, \fq\boardnotices\service\serializer $serializer)
 	{
+		$this->constants = $constants;
 		$this->serializer = $serializer;
 	}
 
 	private function setTemplateVars($value)
 	{
 		$this->template_vars = array(
-			'MOCK' => $value
+			'MOCK2' => $value
 		);
 	}
 
 	public function getDisplayName()
 	{
-		return "Mock Rule";
+		return "Mock Rule 2";
 	}
 
 	public function getDisplayUnit()
 	{
-		return '';
+		return 'Mock Unit';
 	}
 
 	public function getType()
@@ -66,7 +69,7 @@ class mock_rule extends \fq\boardnotices\rules\rule_base implements \fq\boardnot
 
 	public function getAvailableVars()
 	{
-		return array('MOCK');
+		return array('MOCK2');
 	}
 
 	public function getTemplateVars()

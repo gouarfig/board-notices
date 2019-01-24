@@ -173,30 +173,6 @@ class rules
 		return $folder;
 	}
 
-	/**
-	 * Returns a list of rule files
-	 *
-	 * @param string $folder
-	 * @return string[]
-	 */
-	private function getRulesClassesList($folder)
-	{
-		$classes = array();
-		if ($rulesDirectory = dir($folder))
-		{
-			while (false !== ($entry = $rulesDirectory->read()))
-			{
-				if (!in_array($entry, $this->not_rule_files))
-				{
-					$entry = str_replace($this->constants::$RULES_FILE_EXTENSION, '', $entry);
-					$classes[] = $entry;
-				}
-			}
-			$rulesDirectory->close();
-		}
-		return $classes;
-	}
-
 	private function loadRules()
 	{
 		global $phpbb_container;
@@ -222,6 +198,30 @@ class rules
 			}
 			$this->rules_loaded = true;
 		}
+	}
+
+	/**
+	 * Returns a list of rule files
+	 *
+	 * @param string $folder
+	 * @return string[]
+	 */
+	private function getRulesClassesList($folder)
+	{
+		$classes = array();
+		if ($rulesDirectory = dir($folder))
+		{
+			while (false !== ($entry = $rulesDirectory->read()))
+			{
+				if (!in_array($entry, $this->not_rule_files))
+				{
+					$entry = str_replace($this->constants::$RULES_FILE_EXTENSION, '', $entry);
+					$classes[] = $entry;
+				}
+			}
+			$rulesDirectory->close();
+		}
+		return $classes;
 	}
 
 	/**
