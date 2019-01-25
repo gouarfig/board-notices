@@ -117,7 +117,7 @@ class in_usergroup_test extends rule_test_base
 	 * @param \phpbb\user $user
 	 * @param in_usergroup $rule
 	 */
-	public function testRuleNotInForumSerialize($args)
+	public function testRuleNotInUsergroupSerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
@@ -136,7 +136,26 @@ class in_usergroup_test extends rule_test_base
 	 * @param \phpbb\user $user
 	 * @param in_usergroup $rule
 	 */
-	public function testRuleNotInForumNewSerialize($args)
+	public function testRuleNotInUsergroupSerialize2($args)
+	{
+		list($serializer, $user, $rule) = $args;
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
+		$datalayer->method('isUserInGroupId')->will($this->returnCallback('\fq\boardnotices\tests\rules\isUserInGroupId'));
+
+		$rule = new in_usergroup($this->getSerializer(), $user, $datalayer);
+
+		$forum = serialize(array(11, 12));
+		$this->assertFalse($rule->isTrue($forum));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\service\serializer $serializer
+	 * @param \phpbb\user $user
+	 * @param in_usergroup $rule
+	 */
+	public function testRuleNotInUsergroupNewSerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
@@ -155,7 +174,26 @@ class in_usergroup_test extends rule_test_base
 	 * @param \phpbb\user $user
 	 * @param in_usergroup $rule
 	 */
-	public function testRuleInForumSerialize($args)
+	public function testRuleNotInUsergroupNewSerialize2($args)
+	{
+		list($serializer, $user, $rule) = $args;
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
+		$datalayer->method('isUserInGroupId')->will($this->returnCallback('\fq\boardnotices\tests\rules\isUserInGroupId'));
+
+		$rule = new in_usergroup($this->getSerializer(), $user, $datalayer);
+
+		$forum = $serializer->encode(array(11, 12));
+		$this->assertFalse($rule->isTrue($forum));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\service\serializer $serializer
+	 * @param \phpbb\user $user
+	 * @param in_usergroup $rule
+	 */
+	public function testRuleInUserGroupSerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
@@ -165,7 +203,7 @@ class in_usergroup_test extends rule_test_base
 		$rule = new in_usergroup($this->getSerializer(), $user, $datalayer);
 
 		$forum = serialize(array(10));
-		$this->assertTrue($rule->isTrue($forum)); ///
+		$this->assertTrue($rule->isTrue($forum));
 	}
 
 	/**
@@ -174,7 +212,26 @@ class in_usergroup_test extends rule_test_base
 	 * @param \phpbb\user $user
 	 * @param in_usergroup $rule
 	 */
-	public function testRuleInForumNewSerialize($args)
+	public function testRuleInUserGroupSerialize2($args)
+	{
+		list($serializer, $user, $rule) = $args;
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
+		$datalayer->method('isUserInGroupId')->will($this->returnCallback('\fq\boardnotices\tests\rules\isUserInGroupId'));
+
+		$rule = new in_usergroup($this->getSerializer(), $user, $datalayer);
+
+		$forum = serialize(array(10, 11, 12));
+		$this->assertTrue($rule->isTrue($forum));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\service\serializer $serializer
+	 * @param \phpbb\user $user
+	 * @param in_usergroup $rule
+	 */
+	public function testRuleInUserGroupNewSerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
@@ -184,7 +241,7 @@ class in_usergroup_test extends rule_test_base
 		$rule = new in_usergroup($this->getSerializer(), $user, $datalayer);
 
 		$forum = $serializer->encode(array(10));
-		$this->assertTrue($rule->isTrue($forum)); ///
+		$this->assertTrue($rule->isTrue($forum));
 	}
 
 	/**
@@ -193,7 +250,26 @@ class in_usergroup_test extends rule_test_base
 	 * @param \phpbb\user $user
 	 * @param in_usergroup $rule
 	 */
-	public function testRuleInForumNotArray($args)
+	public function testRuleInUserGroupNewSerialize2($args)
+	{
+		list($serializer, $user, $rule) = $args;
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
+		$datalayer->method('isUserInGroupId')->will($this->returnCallback('\fq\boardnotices\tests\rules\isUserInGroupId'));
+
+		$rule = new in_usergroup($this->getSerializer(), $user, $datalayer);
+
+		$forum = $serializer->encode(array(10, 11, 12));
+		$this->assertTrue($rule->isTrue($forum));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\service\serializer $serializer
+	 * @param \phpbb\user $user
+	 * @param in_usergroup $rule
+	 */
+	public function testRuleInUserGroupNotArray($args)
 	{
 		list($serializer, $user, $rule) = $args;
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
@@ -203,7 +279,7 @@ class in_usergroup_test extends rule_test_base
 		$rule = new in_usergroup($this->getSerializer(), $user, $datalayer);
 
 		$forum = 10;
-		$this->assertTrue($rule->isTrue($forum)); ///
+		$this->assertTrue($rule->isTrue($forum));
 	}
 
 	/**
@@ -212,7 +288,26 @@ class in_usergroup_test extends rule_test_base
 	 * @param \phpbb\user $user
 	 * @param in_usergroup $rule
 	 */
-	public function testRuleNotInForumNotArray($args)
+	public function testRuleInUserGroupNotArray2($args)
+	{
+		list($serializer, $user, $rule) = $args;
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
+		$datalayer->method('isUserInGroupId')->will($this->returnCallback('\fq\boardnotices\tests\rules\isUserInGroupId'));
+
+		$rule = new in_usergroup($this->getSerializer(), $user, $datalayer);
+
+		$forum = array(10, 11, 12);
+		$this->assertTrue($rule->isTrue($forum));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\service\serializer $serializer
+	 * @param \phpbb\user $user
+	 * @param in_usergroup $rule
+	 */
+	public function testRuleNotInUsergroupNotArray($args)
 	{
 		list($serializer, $user, $rule) = $args;
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
@@ -231,7 +326,26 @@ class in_usergroup_test extends rule_test_base
 	 * @param \phpbb\user $user
 	 * @param in_usergroup $rule
 	 */
-	public function testRuleInForumNotArraySerialize($args)
+	public function testRuleNotInUsergroupNotArray2($args)
+	{
+		list($serializer, $user, $rule) = $args;
+		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
+		$datalayer->method('isUserInGroupId')->will($this->returnCallback('\fq\boardnotices\tests\rules\isUserInGroupId'));
+
+		$rule = new in_usergroup($this->getSerializer(), $user, $datalayer);
+
+		$forum = array(11, 12);
+		$this->assertFalse($rule->isTrue($forum));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\service\serializer $serializer
+	 * @param \phpbb\user $user
+	 * @param in_usergroup $rule
+	 */
+	public function testRuleInUserGroupNotArraySerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
@@ -250,7 +364,7 @@ class in_usergroup_test extends rule_test_base
 	 * @param \phpbb\user $user
 	 * @param in_usergroup $rule
 	 */
-	public function testRuleInForumNotArrayNewSerialize($args)
+	public function testRuleInUserGroupNotArrayNewSerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
@@ -260,7 +374,7 @@ class in_usergroup_test extends rule_test_base
 		$rule = new in_usergroup($this->getSerializer(), $user, $datalayer);
 
 		$forum = $serializer->encode(10);
-		$this->assertTrue($rule->isTrue($forum)); ///
+		$this->assertTrue($rule->isTrue($forum));
 	}
 
 	/**
@@ -269,7 +383,7 @@ class in_usergroup_test extends rule_test_base
 	 * @param \phpbb\user $user
 	 * @param in_usergroup $rule
 	 */
-	public function testRuleNotInForumNotArraySerialize($args)
+	public function testRuleNotInUsergroupNotArraySerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
@@ -288,7 +402,7 @@ class in_usergroup_test extends rule_test_base
 	 * @param \phpbb\user $user
 	 * @param in_usergroup $rule
 	 */
-	public function testRuleNotInForumNotArrayNewSerialize($args)
+	public function testRuleNotInUsergroupNotArrayNewSerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */

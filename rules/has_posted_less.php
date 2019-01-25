@@ -57,18 +57,8 @@ class has_posted_less extends rule_base implements rule_interface
 
 	public function isTrue($conditions)
 	{
-		$valid = false;
-		$posts = $this->serializer->decode($conditions);
-		if ($posts === false)
-		{
-			$posts = $conditions;
-		}
-		if (is_array($posts))
-		{
-			$posts = (int) $posts[0];
-		}
-		$valid = ($this->user->data['user_posts'] <= $posts);
-		return $valid;
+		$posts = $this->validateUniqueCondition($conditions);
+		return ($this->user->data['user_posts'] <= $posts);
 	}
 
 	public function getAvailableVars()

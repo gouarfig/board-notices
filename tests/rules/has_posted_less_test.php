@@ -98,12 +98,40 @@ class has_posted_less_test extends rule_test_base
 	 * @param \phpbb\user $user
 	 * @param has_posted_less $rule
 	 */
+	public function testRuleEquals2($args)
+	{
+		list($user, $rule) = $args;
+		$user->data['user_posts'] = 63;
+
+		$posts = $this->getSerializer()->encode(array(63));
+		$this->assertTrue($rule->isTrue($posts));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \phpbb\user $user
+	 * @param has_posted_less $rule
+	 */
 	public function testRuleEqualsNoArray($args)
 	{
 		list($user, $rule) = $args;
 		$user->data['user_posts'] = 63;
 
 		$posts = serialize(63);
+		$this->assertTrue($rule->isTrue($posts));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \phpbb\user $user
+	 * @param has_posted_less $rule
+	 */
+	public function testRuleEqualsNoArray2($args)
+	{
+		list($user, $rule) = $args;
+		$user->data['user_posts'] = 63;
+
+		$posts = $this->getSerializer()->encode(63);
 		$this->assertTrue($rule->isTrue($posts));
 	}
 
@@ -154,12 +182,40 @@ class has_posted_less_test extends rule_test_base
 	 * @param \phpbb\user $user
 	 * @param has_posted_less $rule
 	 */
+	public function testRuleLessThanSerialize2($args)
+	{
+		list($user, $rule) = $args;
+		$user->data['user_posts'] = 53;
+
+		$posts = $this->getSerializer()->encode(63);
+		$this->assertTrue($rule->isTrue($posts));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \phpbb\user $user
+	 * @param has_posted_less $rule
+	 */
 	public function testRuleLessThanSerializeArray($args)
 	{
 		list($user, $rule) = $args;
 		$user->data['user_posts'] = 53;
 
 		$posts = serialize(array(63));
+		$this->assertTrue($rule->isTrue($posts));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \phpbb\user $user
+	 * @param has_posted_less $rule
+	 */
+	public function testRuleLessThanSerializeArray2($args)
+	{
+		list($user, $rule) = $args;
+		$user->data['user_posts'] = 53;
+
+		$posts = $this->getSerializer()->encode(array(63));
 		$this->assertTrue($rule->isTrue($posts));
 	}
 
@@ -196,12 +252,40 @@ class has_posted_less_test extends rule_test_base
 	 * @param \phpbb\user $user
 	 * @param has_posted_less $rule
 	 */
+	public function testRuleMoreThanSerialize2($args)
+	{
+		list($user, $rule) = $args;
+		$user->data['user_posts'] = 73;
+
+		$posts = $this->getSerializer()->encode(63);
+		$this->assertFalse($rule->isTrue($posts));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \phpbb\user $user
+	 * @param has_posted_less $rule
+	 */
 	public function testRuleMoreThanArraySerialize($args)
 	{
 		list($user, $rule) = $args;
 		$user->data['user_posts'] = 73;
 
 		$posts = serialize(array(63));
+		$this->assertFalse($rule->isTrue($posts));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \phpbb\user $user
+	 * @param has_posted_less $rule
+	 */
+	public function testRuleMoreThanArraySerialize2($args)
+	{
+		list($user, $rule) = $args;
+		$user->data['user_posts'] = 73;
+
+		$posts = $this->getSerializer()->encode(array(63));
 		$this->assertFalse($rule->isTrue($posts));
 	}
 

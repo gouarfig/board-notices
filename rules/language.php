@@ -61,12 +61,8 @@ class language extends rule_base implements rule_interface
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		$languages = $this->serializer->decode($conditions);
-		if ($languages === false)
-		{
-			// There's only one language
-			$languages = array($conditions);
-		}
+		$languages = $this->validateArrayOfConditions($conditions);
+		$languages = $this->cleanEmptyStringsFromArray($languages);
 		if (!empty($languages))
 		{
 			foreach ($languages as $language_id)
