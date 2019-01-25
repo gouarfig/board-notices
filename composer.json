@@ -19,7 +19,7 @@
 	"extra": {
 		"display-name": "Board Notices Manager",
 		"soft-require": {
-			"phpbb/phpbb": ">=3.1.2,<3.3@dev"
+			"phpbb/phpbb": ">=3.2,<3.3@dev"
 		},
 		"version-check": {
 			"host": "gouarfig.github.io",
