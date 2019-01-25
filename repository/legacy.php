@@ -458,6 +458,9 @@ class legacy implements legacy_interface
 		return $usergroups;
 	}
 
+	/**
+	 * @return bool
+	 */
 	public function isUserInGroupId($group_id)
 	{
 		if (!$this->usergroups_loaded)

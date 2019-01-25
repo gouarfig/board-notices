@@ -62,12 +62,8 @@ class in_usergroup extends rule_base implements rule_interface
 	{
 		$valid = false;
 
-		$groups = $this->serializer->decode($conditions);
-		if ($groups === false)
-		{
-			// There's only one group
-			$groups = array((int) $conditions);
-		}
+		$groups = $this->validateArrayOfConditions($conditions);
+		$groups = $this->cleanEmptyStringsFromArray($groups);
 		if (!empty($groups))
 		{
 			foreach ($groups as $group_id)

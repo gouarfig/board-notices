@@ -118,12 +118,40 @@ class in_default_usergroup_test extends rule_test_base
 	 * @param \phpbb\user $user
 	 * @param in_default_usergroup $rule
 	 */
+	public function testRuleNotInGroupNew($args)
+	{
+		list($user, $rule) = $args;
+		$user->data['group_id'] = 10;
+
+		$groups = $this->getSerializer()->encode(array(11));
+		$this->assertFalse($rule->isTrue($groups));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \phpbb\user $user
+	 * @param in_default_usergroup $rule
+	 */
 	public function testRuleInGroup($args)
 	{
 		list($user, $rule) = $args;
 		$user->data['group_id'] = 10;
 
 		$groups = serialize(array(10));
+		$this->assertTrue($rule->isTrue($groups));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \phpbb\user $user
+	 * @param in_default_usergroup $rule
+	 */
+	public function testRuleInGroupNew($args)
+	{
+		list($user, $rule) = $args;
+		$user->data['group_id'] = 10;
+
+		$groups = $this->getSerializer()->encode(array(10));
 		$this->assertTrue($rule->isTrue($groups));
 	}
 
@@ -174,12 +202,40 @@ class in_default_usergroup_test extends rule_test_base
 	 * @param \phpbb\user $user
 	 * @param in_default_usergroup $rule
 	 */
+	public function testRuleInGroupNotArrayNewSerialize($args)
+	{
+		list($user, $rule) = $args;
+		$user->data['group_id'] = 10;
+
+		$groups = $this->getSerializer()->encode(10);
+		$this->assertTrue($rule->isTrue($groups));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \phpbb\user $user
+	 * @param in_default_usergroup $rule
+	 */
 	public function testRuleNotInGroupNotArraySerialize($args)
 	{
 		list($user, $rule) = $args;
 		$user->data['group_id'] = 10;
 
 		$groups = serialize(11);
+		$this->assertFalse($rule->isTrue($groups));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \phpbb\user $user
+	 * @param in_default_usergroup $rule
+	 */
+	public function testRuleNotInGroupNotArrayNewSerialize($args)
+	{
+		list($user, $rule) = $args;
+		$user->data['group_id'] = 10;
+
+		$groups = $this->getSerializer()->encode(11);
 		$this->assertFalse($rule->isTrue($groups));
 	}
 
