@@ -85,7 +85,7 @@ abstract class rule_base
 	{
 		global $phpbb_root_path, $phpEx;
 
-		include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+		include "{$phpbb_root_path}includes/functions_display.{$phpEx}";
 	}
 
 	/**
@@ -95,7 +95,7 @@ abstract class rule_base
 	{
 		global $phpbb_root_path, $phpEx;
 
-		include($phpbb_root_path . 'includes/functions_user.' . $phpEx);
+		include "{$phpbb_root_path}includes/functions_user.{$phpEx}";
 	}
 
 }

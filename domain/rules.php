@@ -178,26 +178,26 @@ class rules
 		global $phpbb_container;
 
 		$this->rules = array();
-		$folder = $this->getRulesFolder();
-		if (is_dir($folder))
+		$classes = $this->getRulesClassesList($this->getRulesFolder());
+		if (empty($classes))
 		{
-			$classes = $this->getRulesClassesList($folder);
-			foreach ($classes as $entry)
+			return;
+		}
+		foreach ($classes as $entry)
+		{
+			if (!in_array($entry, $this->hide))
 			{
-				if (!in_array($entry, $this->hide))
+				try
 				{
-					try
-					{
-						$rule = $phpbb_container->get(constants::$RULES_CLASS_PREFIX . ".$entry");
-						$this->rules[$entry] = $rule;
-					} catch (\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException $exc)
-					{
-						// The installation is obviously corrupted, but should we bother the user with it?
-					}
+					$rule = $phpbb_container->get(constants::$RULES_CLASS_PREFIX . ".$entry");
+					$this->rules[$entry] = $rule;
+				} catch (\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException $exc)
+				{
+					// The installation is obviously corrupted, but should we bother the user with it?
 				}
 			}
-			$this->rules_loaded = true;
 		}
+		$this->rules_loaded = true;
 	}
 
 	/**

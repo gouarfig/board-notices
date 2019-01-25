@@ -284,7 +284,7 @@ class board_notices_module
 		// Include files needed for displaying BBCodes
 		if (!function_exists('display_custom_bbcodes'))
 		{
-			include($this->phpbb_root_path . 'includes/functions_display.' . $this->php_ext);
+			include "{$this->phpbb_root_path}includes/functions_display.{$this->php_ext}";
 		}
 
 		// If form is previewed
