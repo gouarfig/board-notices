@@ -19,15 +19,7 @@ abstract class rule_base
 
 	protected function validateUniqueCondition($conditions = null)
 	{
-		$value = false;
-		if (!is_null($conditions) && is_string($conditions))
-		{
-			$value = $this->serializer->decode($conditions);
-		}
-		if ($value === false)
-		{
-			$value = $conditions;
-		}
+		$value = $this->validateConditions($conditions);
 		if (is_array($value))
 		{
 			$value = $value[0];
@@ -37,14 +29,14 @@ abstract class rule_base
 
 	protected function validateConditions($conditions = null)
 	{
-		$values = false;
-		if (!is_null($conditions) && is_string($conditions))
+		$values = $conditions;
+		if (!empty($conditions) && is_string($conditions))
 		{
 			$values = $this->serializer->decode($conditions);
-		}
-		if ($values === false)
-		{
-			$values = $conditions;
+			if ($this->serializer->errorDetected())
+			{
+				$values = $conditions;
+			}
 		}
 		return $values;
 	}
@@ -52,7 +44,7 @@ abstract class rule_base
 	protected function validateArrayOfConditions($conditions = array())
 	{
 		$conditions = $this->validateConditions($conditions);
-		if (!is_null($conditions) && !is_array($conditions))
+		if (!empty($conditions) && !is_array($conditions))
 		{
 			$conditions = array($conditions);
 		}

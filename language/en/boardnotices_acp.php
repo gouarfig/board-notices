@@ -91,7 +91,7 @@ $lang = array_merge($lang, array(
 	'BOARD_NOTICE_RULE_VALUE'				=> 'Conditions',
 	'BOARD_NOTICE_RULE_VARIABLES'			=> 'Providing',
 
-	'NO_GUEST_OR_BOT'						=> 'No (Guest or Bot)',	// @todo Remove entry
+	'NO_GUEST_OR_BOT'						=> 'No (Guest or Bot)',
 
 	'BOARD_NOTICE_SAVED'					=> 'Board notice has been saved.',
 
