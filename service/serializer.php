@@ -7,6 +7,7 @@ namespace fq\boardnotices\service;
  */
 class serializer
 {
+	private $lastJsonError = false;
 	private $lastError = false;
 
 	/**
@@ -17,7 +18,7 @@ class serializer
 	public function encode($data)
 	{
 		$encoded = 'json:' . json_encode($data);
-		$this->lastError = json_last_error();
+		$this->lastJsonError = json_last_error();
 		return $encoded;
 	}
 
@@ -29,14 +30,14 @@ class serializer
 	 */
 	public function decode($string)
 	{
-		if (empty($string))
+		if (empty($string) || !is_string($string))
 		{
-			return null;
+			return $this->error();
 		}
 		if (substr($string, 0, 5) === 'json:')
 		{
 			$decoded = json_decode(substr($string, 5));
-			$this->lastError = json_last_error();
+			$this->lastJsonError = json_last_error();
 			return $decoded;
 		}
 		/** @todo Remove compatibility before releasing version 1.0 */
@@ -50,7 +51,13 @@ class serializer
 	 */
 	public function errorDetected()
 	{
-		return $this->lastError != JSON_ERROR_NONE;
+		return ($this->lastJsonError != JSON_ERROR_NONE) || ($this->lastError);
+	}
+
+	private function error()
+	{
+		$this->lastError = true;
+		return null;
 	}
 
 	private function isSerialized($data)
@@ -101,9 +108,10 @@ class serializer
 
 	private function safeUnserialize($string)
 	{
+		$this->lastError = false;
 		if (!$this->isSerialized($string))
 		{
-			return $string;
+			return $this->error();
 		}
 		if (intval(substr(phpversion(), 0, 1)) >= 7)
 		{

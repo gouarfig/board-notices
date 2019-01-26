@@ -18,6 +18,7 @@ class serializer_test extends \phpbb_test_case
 			array(false),
 			array(null),
 			array(0),
+			array(0, 0),
 			array(-1),
 		);
 	}
@@ -53,6 +54,18 @@ class serializer_test extends \phpbb_test_case
 		$serializer = new serializer();
 		$serialized = $serializer->encode($data);
 		$this->assertEquals($data, $serializer->decode($serialized));
+	}
+
+	/**
+	 * @dataProvider getTestData
+	 * @param mixed $data
+	 */
+	public function testCannotDecodeNonEncodedData($data)
+	{
+		$serializer = new serializer();
+		$unserialized = $serializer->decode($data);
+		$this->assertTrue($serializer->errorDetected());
+		$this->assertNull($unserialized);
 	}
 
 }
