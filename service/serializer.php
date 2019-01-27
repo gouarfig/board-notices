@@ -41,7 +41,12 @@ class serializer
 			return $decoded;
 		}
 		/** @todo Remove compatibility before releasing version 1.0 */
-		return $this->safeUnserialize($string);
+		$decoded = $this->safeUnserialize($string);
+		if (($decoded === false) && ($string !== 'b:0;'))
+		{
+			return $this->error();
+		}
+		return $decoded;
 	}
 
 	/**
@@ -54,65 +59,18 @@ class serializer
 		return ($this->lastJsonError != JSON_ERROR_NONE) || ($this->lastError);
 	}
 
+	/**
+	 * Always return null on error
+	 */
 	private function error()
 	{
 		$this->lastError = true;
 		return null;
 	}
 
-	private function isSerialized($data)
-	{
-		// if it isn't a string, it isn't serialized
-		if (!is_string($data))
-		{
-			return false;
-		}
-		$data = trim($data);
-		if ('N;' == $data)
-		{
-			return true;
-		}
-		if (strlen($data) < 4)
-		{
-			return false;
-		}
-		if (':' !== $data[1])
-		{
-			return false;
-		}
-		if (!preg_match('/^([adObis]):/', $data, $badions))
-		{
-			return false;
-		}
-		switch ($badions[1])
-		{
-			case 'a' :
-			case 'O' :
-			case 's' :
-				if (preg_match("/^{$badions[1]}:[0-9]+:.*[;}]\$/s", $data))
-				{
-					return true;
-				}
-				break;
-			case 'b' :
-			case 'i' :
-			case 'd' :
-				if (preg_match("/^{$badions[1]}:[0-9.E-]+;\$/", $data))
-				{
-					return true;
-				}
-				break;
-		}
-		return false;
-	}
-
 	private function safeUnserialize($string)
 	{
 		$this->lastError = false;
-		if (!$this->isSerialized($string))
-		{
-			return $this->error();
-		}
 		if (intval(substr(phpversion(), 0, 1)) >= 7)
 		{
 			return @unserialize($string, ['allowed_classes' => false]);
