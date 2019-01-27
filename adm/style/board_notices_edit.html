@@ -31,12 +31,12 @@
 		<dl>
 			<dt><label for="board_notice_enable">{{ lang('LABEL_BOARD_NOTICE_ACTIVE') ~ lang('COLON') }}</label></dt>
 			<dd>
-				<label><input type="radio" class="radio" id="board_notice_active" name="board_notice_active" value="1"<!-- IF BOARD_NOTICE_ACTIVE --> checked="checked"<!-- ENDIF --> /> {{ lang('YES') }}</label>
-				<label><input type="radio" class="radio" name="board_notice_active" value="0"<!-- IF not BOARD_NOTICE_ACTIVE --> checked="checked"<!-- ENDIF --> /> {{ lang('NO') }}</label>
+				<label><input type="radio" class="radio" id="board_notice_active" name="board_notice_active" value="1"{% if BOARD_NOTICE_ACTIVE %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="board_notice_active" value="0"{% if not BOARD_NOTICE_ACTIVE %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
 		<dl>
-			<dt><label for="board_notice_title">{{ lang('LABEL_BOARD_NOTICE_TITLE') ~ lang('COLON') }}</label><br /><span>{BOARD_NOTICE_TITLE_EXPLAIN}</span></dt>
+			<dt><label for="board_notice_title">{{ lang('LABEL_BOARD_NOTICE_TITLE') ~ lang('COLON') }}</label></dt>
 			<dd>
 				<input name="board_notice_title" type="text" id="board_notice_title" value="{BOARD_NOTICE_TITLE}" size="50" maxlength="100" />
 			</dd>
@@ -103,7 +103,7 @@
 	</thead>
 	<tbody>
 	{% for rule in allrules %}
-		<tr data-id="{{ rule.RULE_NAME }}" class="{% if rule.NOTICE_RULE_CHECKED %}active-rule{% else %}inactive-rule{% endif %}">
+		{# <tr data-id="{{ rule.RULE_NAME }}" class="{% if rule.NOTICE_RULE_CHECKED %}active-rule{% else %}inactive-rule{% endif %}">
 			<td class="boardnotice-checkbox">
 				<input type="hidden" name="notice_rule_id[{{ rule.RULE_NAME }}]" value="{{ rule.NOTICE_RULE_ID }}" />
 				<input type="checkbox" name="notice_rule_checked[{{ rule.RULE_NAME }}]" data-rule="checkbox" data-id="{{ rule.RULE_NAME }}" value="1"<!-- IF rule.NOTICE_RULE_CHECKED --> checked<!-- ENDIF -->/>
@@ -112,6 +112,62 @@
 				<strong>{{ rule.RULE_DESCRIPTION }}</strong>
 			</td>
 			<td class="boardnotice-conditions">{{ rule.RULE_CONDITIONS }} {{ rule.RULE_UNIT }}</td>
+			<td class="boardnotice-variables">{{ rule.RULE_VARIABLES }}</td>
+		</tr> #}
+		<tr data-id="{{ rule.RULE_NAME }}" class="{% if rule.NOTICE_RULE_CHECKED %}active-rule{% else %}inactive-rule{% endif %}">
+			<td class="boardnotice-checkbox">
+				<input type="hidden" name="notice_rule_id[{{ rule.RULE_NAME }}]" value="{{ rule.NOTICE_RULE_ID }}" />
+				<input type="checkbox" name="notice_rule_checked[{{ rule.RULE_NAME }}]" data-rule="checkbox" data-id="{{ rule.RULE_NAME }}" value="1"<!-- IF rule.NOTICE_RULE_CHECKED --> checked<!-- ENDIF -->/>
+			</td>
+			<td class="boardnotice-description">
+				<strong>{{ rule.RULE_DESCRIPTION }}</strong>
+			</td>
+			<td class="boardnotice-conditions">
+				{% if rule.RULE_TYPE == 'yesno' %}
+					<label>
+						<input type="radio" class="radio" id="notice_rule_conditions[{{ rule.RULE_NAME }}]" name="notice_rule_conditions[{{ rule.RULE_NAME }}][0]" value="1"{% if rule.RULE_DATA[0] %} checked="checked"{% endif %} />
+						{{ lang('YES') }}</label>
+					<label>
+						<input type="radio" class="radio" name="notice_rule_conditions[{{ rule.RULE_NAME }}][0]" value="0"{% if not rule.RULE_DATA[0] %} checked="checked"{% endif %} />
+						{{ lang('NO') }}</label>
+				{% elseif rule.RULE_TYPE == 'date' %}
+					{{ lang('DAY') ~ lang('COLON') }}
+					<select name="notice_rule_conditions[{{ rule.RULE_NAME }}][0]">
+						<option value="0">---</option>
+						{% for day in range(1, 31) %}
+							<option value="{{ day }}"{% if rule.RULE_DATA[0] == day %} selected{% endif %}>{{ day }}</option>
+						{% endfor %}
+					</select>
+					{{ lang('MONTH') ~ lang('COLON') }}
+					<select name="notice_rule_conditions[{{ rule.RULE_NAME }}][1]">
+						<option value="0">---</option>
+						{% for month in range(1, 12) %}
+							<option value="{{ month }}"{% if rule.RULE_DATA[1] == month %} selected{% endif %}>{{ month }}</option>
+						{% endfor %}
+					</select>
+					{{ lang('YEAR') ~ lang('COLON') }}
+					<select name="notice_rule_conditions[{{ rule.RULE_NAME }}][2]">
+						<option value="0">---</option>
+						{% for year in range(2015, 2038) %}
+							<option value="{{ year }}"{% if rule.RULE_DATA[2] == year %} selected{% endif %}>{{ year }}</option>
+						{% endfor %}
+					</select>
+				{% elseif rule.RULE_TYPE == 'int' %}
+					<input type="text" maxlength="5" size="10" name="notice_rule_conditions[{{ rule.RULE_NAME }}][]" value="{{ rule.RULE_DATA[0] }}">
+				{% elseif rule.RULE_TYPE == 'list' or rule.RULE_TYPE == 'multiple choice' %}
+					{% set size = (rule.RULE_VALUES_COUNT < 10) ? rule.RULE_VALUES_COUNT : 10 %}
+					<select{% if rule.RULE_TYPE == 'multiple choice'%} multiple="multiple"{% endif %} size="{{ size }}" name="notice_rule_conditions[{{ rule.RULE_NAME }}][]">
+						{% for key, value in rule.RULE_VALUES %}
+							<option value="{{ key }}"{% if key in rule.RULE_DATA %} selected{% endif %}>{{ value }}</option>
+						{% endfor %}
+					</select>
+				{% elseif rule.RULE_TYPE == 'forums' %}
+					<select multiple="multiple" size="10" name="notice_rule_conditions[{{ rule.RULE_NAME }}][]">
+						{{ rule.RULE_FORUMS }}
+					</select>
+				{% endif %}
+				{{ rule.RULE_UNIT }}
+			</td>
 			<td class="boardnotice-variables">{{ rule.RULE_VARIABLES }}</td>
 		</tr>
 	{% else %}

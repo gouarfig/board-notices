@@ -344,20 +344,39 @@ class board_notices_module
 			{
 				$rule_description = $rule_descriptions;
 			}
+			$rule_type = $this->rules_manager->getRuleType($rule_name);
+			$rule_selected = isset($data['notice_rule_conditions'][$rule_name])
+						? $data['notice_rule_conditions'][$rule_name]
+						: $this->rules_manager->getRuleDefaultValue($rule_name);
+			if (!is_array($rule_selected))
+			{
+				if (!is_null($rule_selected))
+				{
+					$rule_selected = array($rule_selected);
+				}
+				else
+				{
+					$rule_selected = array();
+				}
+			}
+
 			$this->template->assign_block_vars('allrules', array(
 				'NOTICE_RULE_ID' => isset($data['notice_rule_id'][$rule_name]) ? $data['notice_rule_id'][$rule_name] : '',
 				'NOTICE_RULE_CHECKED' => isset($data['notice_rule_checked'][$rule_name]) ? true : false,
 				'RULE_NAME' => $rule_name,
 				'RULE_DESCRIPTION' => $rule_description,
 				'RULE_UNIT' => (is_array($rule_descriptions)) ? $rule_descriptions['display_unit'] : '',
-				'RULE_CONDITIONS' => $this->getDisplayConditions(
-						$this->rules_manager->getRuleType($rule_name),
-						$this->rules_manager->getRuleValues($rule_name),
-						isset($data['notice_rule_conditions'][$rule_name])
-							? $data['notice_rule_conditions'][$rule_name]
-							: $this->rules_manager->getRuleDefaultValue($rule_name),
-						"notice_rule_conditions[{$rule_name}]"
-				),
+				// 'RULE_CONDITIONS' => $this->getDisplayConditions(
+				// 		$rule_type,
+				// 		$this->rules_manager->getRuleValues($rule_name),
+				// 		$rule_selected,
+				// 		"notice_rule_conditions[{$rule_name}]"
+				// ),
+				'RULE_TYPE' => $rule_type,
+				'RULE_VALUES' => $this->rules_manager->getRuleValues($rule_name),
+				'RULE_VALUES_COUNT' => count($this->rules_manager->getRuleValues($rule_name)),
+				'RULE_DATA' => $rule_selected,
+				'RULE_FORUMS' => ($rule_type == 'forums') ? make_forum_select($rule_selected, false, false, true) : '',
 				'RULE_VARIABLES' => implode(', ', $this->rules_manager->getAvailableVars($rule_name)),
 			));
 		}
@@ -461,69 +480,69 @@ class board_notices_module
 
 	private function getDisplayIntConditions($input_name, $selected)
 	{
-		return '<input type="text" maxlength="5" size="10" name="' . $input_name . '[]" value="' . $selected . '">';
+		// return '<input type="text" maxlength="5" size="10" name="' . $input_name . '[]" value="' . $selected . '">';
 	}
 
 	private function getDisplayDateConditions($input_name, $selected)
 	{
 		$display = '';
-		$display .= $this->user->lang('DAY') . $this->user->lang('COLON');
-		$display .= '&nbsp;<select name="' . $input_name . '[0]">';
-		$display .= '<option value="0">---</option>';
-		for ($i = 1; $i <= 31; $i++)
-		{
-			$display .= '<option value="' . $i . '"' . (($selected[0] == $i) ? ' selected' : '') . '>' . $i . '</option>';
-		}
-		$display .= '</select>&nbsp;';
-		$display .= $this->user->lang('MONTH') . $this->user->lang('COLON');
-		$display .= '&nbsp;<select name="' . $input_name . '[1]">';
-		$display .= '<option value="0">---</option>';
-		for ($i = 1; $i <= 12; $i++)
-		{
-			$display .= '<option value="' . $i . '"' . (($selected[1] == $i) ? ' selected' : '') . '>' . $i . '</option>';
-		}
-		$display .= '</select>&nbsp;';
-		$display .= $this->user->lang('YEAR') . $this->user->lang('COLON');
-		$display .= '&nbsp;<select name="' . $input_name . '[2]">';
-		$display .= '<option value="0">---</option>';
-		for ($i = 2015; $i <= 2038; $i++)
-		{
-			$display .= '<option value="' . $i . '"' . (($selected[2] == $i) ? ' selected' : '') . '>' . $i . '</option>';
-		}
-		$display .= '</select>&nbsp;';
+		// $display .= $this->user->lang('DAY') . $this->user->lang('COLON');
+		// $display .= '&nbsp;<select name="' . $input_name . '[0]">';
+		// $display .= '<option value="0">---</option>';
+		// for ($i = 1; $i <= 31; $i++)
+		// {
+		// 	$display .= '<option value="' . $i . '"' . (($selected[0] == $i) ? ' selected' : '') . '>' . $i . '</option>';
+		// }
+		// $display .= '</select>&nbsp;';
+		// $display .= $this->user->lang('MONTH') . $this->user->lang('COLON');
+		// $display .= '&nbsp;<select name="' . $input_name . '[1]">';
+		// $display .= '<option value="0">---</option>';
+		// for ($i = 1; $i <= 12; $i++)
+		// {
+		// 	$display .= '<option value="' . $i . '"' . (($selected[1] == $i) ? ' selected' : '') . '>' . $i . '</option>';
+		// }
+		// $display .= '</select>&nbsp;';
+		// $display .= $this->user->lang('YEAR') . $this->user->lang('COLON');
+		// $display .= '&nbsp;<select name="' . $input_name . '[2]">';
+		// $display .= '<option value="0">---</option>';
+		// for ($i = 2015; $i <= 2038; $i++)
+		// {
+		// 	$display .= '<option value="' . $i . '"' . (($selected[2] == $i) ? ' selected' : '') . '>' . $i . '</option>';
+		// }
+		// $display .= '</select>&nbsp;';
 		return $display;
 	}
 
 	private function getDisplayListConditions($type, $input_name, $values, $selected)
 	{
 		$display = '';
-		$size = (count($values) < 10) ? count($values) : 10;
-		$display .= '<select' . (($type == 'multiple choice') ? ' multiple="multiple"' : '') . ' size="' . $size . '" name="' . $input_name . '[]">';
-		if (is_array($values) && !empty($values))
-		{
-			foreach ($values as $key => $value)
-			{
-				$display .= '<option value="' . $key . '"' . (in_array($key, $selected) ? ' selected' : '') . '>' . $value . '</option>';
-			}
-		}
-		$display .= "</select>";
+		// $size = (count($values) < 10) ? count($values) : 10;
+		// $display .= '<select' . (($type == 'multiple choice') ? ' multiple="multiple"' : '') . ' size="' . $size . '" name="' . $input_name . '[]">';
+		// if (is_array($values) && !empty($values))
+		// {
+		// 	foreach ($values as $key => $value)
+		// 	{
+		// 		$display .= '<option value="' . $key . '"' . (in_array($key, $selected) ? ' selected' : '') . '>' . $value . '</option>';
+		// 	}
+		// }
+		// $display .= "</select>";
 		return $display;
 	}
 
 	private function getDisplayForumsConditions($input_name, $selected)
 	{
 		$display = '';
-		$display .= '<select multiple="multiple" size="10" name="' . $input_name . '[]">';
-		$display .= make_forum_select($selected, false, false, true);
-		$display .= "</select>";
+		// $display .= '<select multiple="multiple" size="10" name="' . $input_name . '[]">';
+		// $display .= make_forum_select($selected, false, false, true);
+		// $display .= "</select>";
 		return $display;
 	}
 
 	private function getDisplayYesNoConditions($input_name, $selected)
 	{
 		$display = '';
-		$display .= '<label><input type="radio" class="radio" id="' . $input_name . '" name="' . $input_name . '[0]" value="1"' . ($selected ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['YES'] . '</label>';
-		$display .= '<label><input type="radio" class="radio" name="' . $input_name . '[0]" value="0"' . (!$selected ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['NO'] . '</label>';
+		// $display .= '<label><input type="radio" class="radio" id="' . $input_name . '" name="' . $input_name . '[0]" value="1"' . ($selected ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['YES'] . '</label>';
+		// $display .= '<label><input type="radio" class="radio" name="' . $input_name . '[0]" value="0"' . (!$selected ? ' checked="checked"' : '') . ' /> ' . $this->user->lang['NO'] . '</label>';
 		return $display;
 	}
 
