@@ -725,6 +725,7 @@ class board_notices_module
 		if (!check_form_key($this->notice_form_name))
 		{
 			$error = $this->user->lang('FORM_INVALID');
+			return $error;
 		}
 
 		// Get new values from the form
@@ -737,9 +738,28 @@ class board_notices_module
 		// Get config options from the form
 		$data['active'] = $this->request->variable('board_notice_active', false);
 
+		if (empty($data['title']) || empty($data['message']))
+		{
+			if (empty($data['title']))
+			{
+				$error .= $this->user->lang('ERROR_EMPTY_TITLE') . "<br />";
+			}
+			if (empty($data['message']))
+			{
+				$error .= $this->user->lang('ERROR_EMPTY_MESSAGE') . "<br />";
+			}
+			return $error;
+		}
+
 		// Prepare notice text for storage
 		generate_text_for_storage(
-				$data['message'], $data['message_uid'], $data['message_bitfield'], $data['message_options'], !$this->request->variable('disable_bbcode', false), !$this->request->variable('disable_magic_url', false), !$this->request->variable('disable_smilies', false)
+				$data['message'],
+				$data['message_uid'],
+				$data['message_bitfield'],
+				$data['message_options'],
+				!$this->request->variable('disable_bbcode', false),
+				!$this->request->variable('disable_magic_url', false),
+				!$this->request->variable('disable_smilies', false)
 		);
 
 		// Get config for all the rules
