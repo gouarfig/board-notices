@@ -36,7 +36,8 @@ class serializer
 		}
 		if (substr($string, 0, 5) === 'json:')
 		{
-			$decoded = json_decode(substr($string, 5));
+			$associativeArrays = true;
+			$decoded = json_decode(substr($string, 5), $associativeArrays);
 			$this->lastJsonError = json_last_error();
 			return $decoded;
 		}
@@ -68,13 +69,197 @@ class serializer
 		return null;
 	}
 
+	// private function safeUnserialize($string)
+	// {
+	// 	$this->lastError = false;
+	// 	if (intval(substr(phpversion(), 0, 1)) >= 7)
+	// 	{
+	// 		return @unserialize($string, ['allowed_classes' => false]);
+	// 	}
+	// 	return @unserialize($string);
+	// }
+
 	private function safeUnserialize($string)
 	{
 		$this->lastError = false;
-		if (intval(substr(phpversion(), 0, 1)) >= 7)
+		if (!is_string($string) || empty($string))
 		{
-			return @unserialize($string, ['allowed_classes' => false]);
+			return $this->error();
 		}
-		return @unserialize($string);
+		try
+		{
+			$unserialized = $this->getSingleValue($string);
+		}
+		catch (\Exception $exception)
+		{
+			return $this->error();
+		}
+		return $unserialized;
+	}
+
+	/**
+	 * @param string $string
+	 * @param int &$pos = 0
+	 */
+	private function getSingleValue($string, &$pos = 0)
+	{
+		$value = null;
+		switch ($string[$pos])
+		{
+			case 'N':
+				return $this->getNullValue($pos);
+
+			case 'b':
+				return $this->getBooleanValue($string, $pos);
+
+			case 'i':
+				return $this->getIntegerValue($string, $pos);
+
+			case 's':
+				return $this->getStringValue($string, $pos);
+
+			case 'a':
+				return $this->getArrayValue($string, $pos);
+
+			default:
+				throw new \Exception("Invalid serialized string: type code '{$string[$pos]}' unknown at position {$pos}.", 101);
+		}
+		return $value;
+	}
+
+	private function getSerializedValue($string, $start)
+	{
+		$end = strpos($string, ';', $start);
+		if ($end > $start)
+		{
+			return substr($string, $start, $end - $start);
+		}
+		throw new \Exception("Invalid serialized string", 102);
+	}
+
+	/**
+	 * @param string $string
+	 * @param int $start
+	 * @return int
+	 */
+	private function getSizeValue($string, $start)
+	{
+		$end = strpos($string, ':', $start);
+		if ($end > $start)
+		{
+			return (int) substr($string, $start, $end - $start);
+		}
+		throw new \Exception("Invalid serialized string", 103);
+	}
+
+	/**
+	 * null format is: 'N;'
+	 * @param int $pos
+	 */
+	private function getNullValue(&$pos)
+	{
+		$pos += 2;
+		return null;
+	}
+
+	/**
+	 * boolean format is: 'b:0;' or 'b:1;'
+	 * @param string $string
+	 * @param int $pos
+	 */
+	private function getBooleanValue($string, &$pos)
+	{
+		$pos += 2;
+		$rawValue = $this->getSerializedValue($string, $pos);
+		$pos += 2;
+		return $this->booleanValue($rawValue);
+	}
+
+	private function booleanValue($string)
+	{
+		if ($string == '0')
+		{
+			$pos++;
+			return false;
+		}
+		if ($string == '1')
+		{
+			$pos++;
+			return true;
+		}
+		throw new \Exception("Invalid serialized string", 111);
+	}
+
+	/**
+	 * integer format is: 'i:10;'
+	 * @param string $string
+	 * @param int $pos
+	 */
+	private function getIntegerValue($string, &$pos)
+	{
+		$pos += 2;
+		$rawValue = $this->getSerializedValue($string, $pos);
+		$value = $this->integerValue($rawValue);
+		$pos += strlen((string) $value) +1;
+		return $value;
+	}
+
+	private function integerValue($string)
+	{
+		if (!is_numeric($string))
+		{
+			throw new \Exception("Invalid serialized string", 121);
+		}
+		return (int) $string;
+	}
+
+	/**
+	 * string format is: 's:4:"toto";'
+	 * @param string $string
+	 * @param int $pos
+	 */
+	private function getStringValue($string, &$pos)
+	{
+		$pos += 2;
+		$size = $this->getSizeValue($string, $pos);
+		$pos += strlen((string) $size) +2;
+		$value = substr($string, $pos, $size);
+		$pos += (int) $size +2;
+		return $value;
+	}
+
+	/**
+	 * empty array format is: 'a:0:{}'
+	 * simple array with only one int element: 'a:1:{i:0;i:10;}'
+	 * array with 2 elements with indexes: 'a:2:{s:3:"int";i:0;s:3:"str";s:4:"toto";}'
+	 * @param string $string
+	 * @param int $pos
+	 */
+	private function getArrayValue($string, &$pos)
+	{
+		$array = array();
+		$pos += 2;
+		$size = $this->getSizeValue($string, $pos);
+		if ($size == 0)
+		{
+			return array();
+		}
+		if ($size < 0)
+		{
+			throw new \Exception("Invalid serialized string", 131);
+		}
+		$pos += strlen((string) $size) +2;
+		for ($element = 0; $element < $size; $element++)
+		{
+			$key = $this->getSingleValue($string, $pos);
+			if (!is_scalar($key))
+			{
+				throw new \Exception("Invalid serialized string", 132);
+			}
+			$value = $this->getSingleValue($string, $pos);
+			$array[$key] = $value;
+		}
+		$pos++;
+		return $array;
 	}
 }
