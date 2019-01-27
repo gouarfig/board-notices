@@ -359,6 +359,7 @@ class board_notices_module
 					$rule_selected = array();
 				}
 			}
+			$rule_values = $this->rules_manager->getRuleValues($rule_name);
 
 			$this->template->assign_block_vars('allrules', array(
 				'NOTICE_RULE_ID' => isset($data['notice_rule_id'][$rule_name]) ? $data['notice_rule_id'][$rule_name] : '',
@@ -368,13 +369,13 @@ class board_notices_module
 				'RULE_UNIT' => (is_array($rule_descriptions)) ? $rule_descriptions['display_unit'] : '',
 				// 'RULE_CONDITIONS' => $this->getDisplayConditions(
 				// 		$rule_type,
-				// 		$this->rules_manager->getRuleValues($rule_name),
+				// 		$rule_values,
 				// 		$rule_selected,
 				// 		"notice_rule_conditions[{$rule_name}]"
 				// ),
 				'RULE_TYPE' => $rule_type,
-				'RULE_VALUES' => $this->rules_manager->getRuleValues($rule_name),
-				'RULE_VALUES_COUNT' => count($this->rules_manager->getRuleValues($rule_name)),
+				'RULE_VALUES' => $rule_values,
+				'RULE_VALUES_COUNT' => (!empty($rule_values) && is_array($rule_values)) ? count($rule_values) : 0,
 				'RULE_DATA' => $rule_selected,
 				'RULE_FORUMS' => ($rule_type == 'forums') ? make_forum_select($rule_selected, false, false, true) : '',
 				'RULE_VARIABLES' => implode(', ', $this->rules_manager->getAvailableVars($rule_name)),
