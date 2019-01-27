@@ -30,6 +30,7 @@ class rank extends rule_base implements rule_interface
 
 	private function calculateUserRank($user_posts)
 	{
+		/** @var \phpbb\cache\service $cache */
 		global $cache;
 		$user_rank = 0;
 		$ranks = $cache->obtain_ranks();
@@ -38,6 +39,7 @@ class rank extends rule_base implements rule_interface
 		{
 			foreach ($ranks['normal'] as $rank_id => $rank)
 			{
+				// The query is ordering them by rank_min DESC
 				if ($user_posts >= $rank['rank_min'])
 				{
 					$user_rank = $rank_id;
@@ -52,9 +54,11 @@ class rank extends rule_base implements rule_interface
 	{
 		if (is_null($this->user_rank))
 		{
+			// This is for a special rank
 			$this->user_rank = (int) $this->user->data['user_rank'];
 			if ($this->user_rank == 0)
 			{
+				// If no special rank, there might be a calculated one (normal rank)
 				$this->user_rank = $this->calculateUserRank($this->user->data['user_posts']);
 			}
 		}
@@ -96,12 +100,8 @@ class rank extends rule_base implements rule_interface
 		$valid = false;
 
 		$user_rank = $this->getUserRank();
-		$ranks = $this->serializer->decode($conditions);
-		if ($ranks === false)
-		{
-			// There's only one rank
-			$ranks = array((int) $conditions);
-		}
+		$ranks = $this->validateArrayOfConditions($conditions);
+		$ranks = $this->cleanEmptyStringsFromArray($ranks);
 		if (!empty($ranks))
 		{
 			foreach ($ranks as $rank_id)

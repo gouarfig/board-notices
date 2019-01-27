@@ -4,14 +4,9 @@ namespace fq\boardnotices\tests\rules;
 
 include_once 'phpBB/includes/functions.php';
 
-use fq\boardnotices\rules\in_usergroup;
+use fq\boardnotices\rules\style;
 
-function inUsergroupTest_isUserInGroupId($group)
-{
-	return $group === 10;
-}
-
-class in_usergroup_test extends rule_test_base
+class style_test extends rule_test_base
 {
 	public function testInstance()
 	{
@@ -22,7 +17,13 @@ class in_usergroup_test extends rule_test_base
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 
-		$rule = new in_usergroup($this->getSerializer(), $user, $datalayer);
+		/** @var \phpbb\request\request $request */
+		$request = $this->getMockBuilder('\phpbb\request\request')->disableOriginalConstructor()->getMock();
+
+		/** @var \phpbb\request\config $config */
+		$config = $this->getMockBuilder('\phpbb\config\config')->disableOriginalConstructor()->getMock();
+
+		$rule = new style($this->getSerializer(), $user, $datalayer, $request, $config);
 		$this->assertNotNull($rule);
 
 		return array($serializer, $user, $rule);
@@ -32,7 +33,7 @@ class in_usergroup_test extends rule_test_base
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
 	 * @param \phpbb\user $user
-	 * @param in_usergroup $rule
+	 * @param style $rule
 	 */
 	public function testGetDisplayName($args)
 	{
@@ -45,7 +46,7 @@ class in_usergroup_test extends rule_test_base
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
 	 * @param \phpbb\user $user
-	 * @param in_usergroup $rule
+	 * @param style $rule
 	 */
 	public function testGetType($args)
 	{
@@ -58,7 +59,7 @@ class in_usergroup_test extends rule_test_base
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
 	 * @param \phpbb\user $user
-	 * @param in_usergroup $rule
+	 * @param style $rule
 	 */
 	public function testGetPossibleValues($args)
 	{
@@ -71,7 +72,7 @@ class in_usergroup_test extends rule_test_base
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
 	 * @param \phpbb\user $user
-	 * @param in_usergroup $rule
+	 * @param style $rule
 	 */
 	public function testGetAvailableVars($args)
 	{
@@ -84,7 +85,7 @@ class in_usergroup_test extends rule_test_base
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
 	 * @param \phpbb\user $user
-	 * @param in_usergroup $rule
+	 * @param style $rule
 	 */
 	public function testGetTemplateVars($args)
 	{
@@ -98,52 +99,59 @@ class in_usergroup_test extends rule_test_base
 		$serializer = $this->getSerializer();
 		return array(
 			// Empty conditions
-			array(null, false),
-			array(serialize(null), false),
-			array($serializer->encode(null), false),
-			// Not in usergroup (single choice)
-			array(11, false),
-			array(serialize(11), false),
-			array($serializer->encode(11), false),
-			// Not in usergroup (array of single choice)
-			array(array(11), false),
-			array(serialize(array(11)), false),
-			array($serializer->encode(array(11)), false),
-			// Not in usergroup (array of multiple choices)
-			array(array(11, 12), false),
-			array(serialize(array(11, 12)), false),
-			array($serializer->encode(array(11, 12)), false),
-			// In usergroup (single choice)
-			array(10, true),
-			array(serialize(10), true),
-			array($serializer->encode(10), true),
-			// In usergroup (array of single choice)
-			array(array(10), true),
-			array(serialize(array(10)), true),
-			array($serializer->encode(array(10)), true),
-			// In usergroup (array of multiple choices)
-			array(array(10, 11), true),
-			array(serialize(array(10, 11)), true),
-			array($serializer->encode(array(10, 11)), true),
+			array(null, null, false),
+			array(null, serialize(null), false),
+			array(null, $serializer->encode(null), false),
+			// Wrong style from one selection
+			array(1, 2, false),
+			array(1, serialize(2), false),
+			array(1, $serializer->encode(2), false),
+			// Wrong style from one selection in an array
+			array(1, array(2), false),
+			array(1, serialize(array(2)), false),
+			array(1, $serializer->encode(array(2)), false),
+			// Wrong style from multiple selections
+			array(1, array(2, 3, 4), false),
+			array(1, serialize(array(2, 3, 4)), false),
+			array(1, $serializer->encode(array(2, 3, 4)), false),
+			// Right style from one selection
+			array(1, 1, true),
+			array(1, serialize(1), true),
+			array(1, $serializer->encode(1), true),
+			// Right style from one selection in an array
+			array(1, array(1), true),
+			array(1, serialize(array(1)), true),
+			array(1, $serializer->encode(array(1)), true),
+			// Right style from multiple selections
+			array(1, array(2, 1, 4), true),
+			array(1, serialize(array(2, 1, 4)), true),
+			array(1, $serializer->encode(array(2, 1, 4)), true),
 		);
 	}
 
 	/**
 	 * @dataProvider conditionsProvider
+	 * @param int $userStyle
 	 * @param mixed $conditions
 	 * @param bool $result
 	 */
-	public function testRuleConditions($conditions, $result)
+	public function testRuleConditionsForNormalUser($userStyle, $conditions, $result)
 	{
 		$serializer = $this->getSerializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-		$user->data['user_lang'] = 'fr';
+		$user->data['user_id'] = 10;
+		$user->data['user_style'] = $userStyle;
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
-		$datalayer->method('isUserInGroupId')->will($this->returnCallback('\fq\boardnotices\tests\rules\inUsergroupTest_isUserInGroupId'));
 
-		$rule = new in_usergroup($serializer, $user, $datalayer);
+		/** @var \phpbb\request\request $request */
+		$request = $this->getMockBuilder('\phpbb\request\request')->disableOriginalConstructor()->getMock();
+
+		/** @var \phpbb\request\config $config */
+		$config = $this->getMockBuilder('\phpbb\config\config')->disableOriginalConstructor()->getMock();
+
+		$rule = new style($serializer, $user, $datalayer, $request, $config);
 
 		$this->assertEquals($result, $rule->isTrue($conditions));
 	}

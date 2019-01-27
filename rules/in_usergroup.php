@@ -60,8 +60,6 @@ class in_usergroup extends rule_base implements rule_interface
 
 	public function isTrue($conditions)
 	{
-		$valid = false;
-
 		$groups = $this->validateArrayOfConditions($conditions);
 		$groups = $this->cleanEmptyStringsFromArray($groups);
 		if (!empty($groups))
@@ -70,12 +68,11 @@ class in_usergroup extends rule_base implements rule_interface
 			{
 				if ($this->data_layer->isUserInGroupId($group_id))
 				{
-					$valid = true;
-					break;
+					return true;
 				}
 			}
 		}
-		return $valid;
+		return false;
 	}
 
 	public function getAvailableVars()

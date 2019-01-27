@@ -4,14 +4,14 @@ namespace fq\boardnotices\tests\rules;
 
 include_once 'phpBB/includes/functions.php';
 
-use fq\boardnotices\rules\in_usergroup;
+use fq\boardnotices\rules\not_in_usergroup;
 
-function inUsergroupTest_isUserInGroupId($group)
+function notInUsergroupTest_isUserInGroupId($group)
 {
 	return $group === 10;
 }
 
-class in_usergroup_test extends rule_test_base
+class not_in_usergroup_test extends rule_test_base
 {
 	public function testInstance()
 	{
@@ -22,7 +22,7 @@ class in_usergroup_test extends rule_test_base
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
 
-		$rule = new in_usergroup($this->getSerializer(), $user, $datalayer);
+		$rule = new not_in_usergroup($this->getSerializer(), $user, $datalayer);
 		$this->assertNotNull($rule);
 
 		return array($serializer, $user, $rule);
@@ -32,7 +32,7 @@ class in_usergroup_test extends rule_test_base
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
 	 * @param \phpbb\user $user
-	 * @param in_usergroup $rule
+	 * @param not_in_usergroup $rule
 	 */
 	public function testGetDisplayName($args)
 	{
@@ -45,7 +45,7 @@ class in_usergroup_test extends rule_test_base
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
 	 * @param \phpbb\user $user
-	 * @param in_usergroup $rule
+	 * @param not_in_usergroup $rule
 	 */
 	public function testGetType($args)
 	{
@@ -58,7 +58,7 @@ class in_usergroup_test extends rule_test_base
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
 	 * @param \phpbb\user $user
-	 * @param in_usergroup $rule
+	 * @param not_in_usergroup $rule
 	 */
 	public function testGetPossibleValues($args)
 	{
@@ -71,7 +71,7 @@ class in_usergroup_test extends rule_test_base
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
 	 * @param \phpbb\user $user
-	 * @param in_usergroup $rule
+	 * @param not_in_usergroup $rule
 	 */
 	public function testGetAvailableVars($args)
 	{
@@ -84,7 +84,7 @@ class in_usergroup_test extends rule_test_base
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
 	 * @param \phpbb\user $user
-	 * @param in_usergroup $rule
+	 * @param not_in_usergroup $rule
 	 */
 	public function testGetTemplateVars($args)
 	{
@@ -102,29 +102,29 @@ class in_usergroup_test extends rule_test_base
 			array(serialize(null), false),
 			array($serializer->encode(null), false),
 			// Not in usergroup (single choice)
-			array(11, false),
-			array(serialize(11), false),
-			array($serializer->encode(11), false),
+			array(11, true),
+			array(serialize(11), true),
+			array($serializer->encode(11), true),
 			// Not in usergroup (array of single choice)
-			array(array(11), false),
-			array(serialize(array(11)), false),
-			array($serializer->encode(array(11)), false),
+			array(array(11), true),
+			array(serialize(array(11)), true),
+			array($serializer->encode(array(11)), true),
 			// Not in usergroup (array of multiple choices)
-			array(array(11, 12), false),
-			array(serialize(array(11, 12)), false),
-			array($serializer->encode(array(11, 12)), false),
+			array(array(11, 12), true),
+			array(serialize(array(11, 12)), true),
+			array($serializer->encode(array(11, 12)), true),
 			// In usergroup (single choice)
-			array(10, true),
-			array(serialize(10), true),
-			array($serializer->encode(10), true),
+			array(10, false),
+			array(serialize(10), false),
+			array($serializer->encode(10), false),
 			// In usergroup (array of single choice)
-			array(array(10), true),
-			array(serialize(array(10)), true),
-			array($serializer->encode(array(10)), true),
+			array(array(10), false),
+			array(serialize(array(10)), false),
+			array($serializer->encode(array(10)), false),
 			// In usergroup (array of multiple choices)
-			array(array(10, 11), true),
-			array(serialize(array(10, 11)), true),
-			array($serializer->encode(array(10, 11)), true),
+			array(array(10, 11), false),
+			array(serialize(array(10, 11)), false),
+			array($serializer->encode(array(10, 11)), false),
 		);
 	}
 
@@ -141,9 +141,9 @@ class in_usergroup_test extends rule_test_base
 		$user->data['user_lang'] = 'fr';
 		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
-		$datalayer->method('isUserInGroupId')->will($this->returnCallback('\fq\boardnotices\tests\rules\inUsergroupTest_isUserInGroupId'));
+		$datalayer->method('isUserInGroupId')->will($this->returnCallback('\fq\boardnotices\tests\rules\notInUsergroupTest_isUserInGroupId'));
 
-		$rule = new in_usergroup($serializer, $user, $datalayer);
+		$rule = new not_in_usergroup($serializer, $user, $datalayer);
 
 		$this->assertEquals($result, $rule->isTrue($conditions));
 	}

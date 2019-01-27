@@ -69,19 +69,15 @@ class style extends rule_base implements rule_interface
 		$user_style = null;
 		if ($this->user->data['user_id'] == ANONYMOUS)
 		{
-			$user_style = $this->request_cookie(intval($this->user->data['user_style']));
+			$user_style = $this->getStyleFromCookie();
 		}
 		if (empty($user_style))
 		{
 			$user_style = $this->user->data['user_style'];
 		}
 
-		$styles = $this->serializer->decode($conditions);
-		if ($styles === false)
-		{
-			// There's only one style
-			$styles = array((int) $conditions);
-		}
+		$styles = $this->validateArrayOfConditions($conditions);
+		$styles = $this->cleanEmptyStringsFromArray($styles);
 		if (!empty($styles))
 		{
 			foreach ($styles as $style_id)
@@ -106,7 +102,7 @@ class style extends rule_base implements rule_interface
 		return array();
 	}
 
-	private function request_cookie($default = null)
+	private function getStyleFromCookie($default = null)
 	{
 		$name = $this->config['cookie_name'] . '_style';
 

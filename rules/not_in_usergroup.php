@@ -60,26 +60,21 @@ class not_in_usergroup extends rule_base implements rule_interface
 
 	public function isTrue($conditions)
 	{
-		$valid = false;
-
-		$groups = $this->serializer->decode($conditions);
-		if ($groups === false)
-		{
-			// There's only one group
-			$groups = array((int) $conditions);
-		}
+		$groups = $this->validateArrayOfConditions($conditions);
+		$groups = $this->cleanEmptyStringsFromArray($groups);
 		if (!empty($groups))
 		{
 			foreach ($groups as $group_id)
 			{
-				$valid = !$this->data_layer->isUserInGroupId($group_id);
-				if (!$valid)
+				if ($this->data_layer->isUserInGroupId($group_id))
 				{
-					break;
+					return false;
 				}
 			}
+			return true;
 		}
-		return $valid;
+		// Default for empty conditions
+		return false;
 	}
 
 	public function getAvailableVars()
