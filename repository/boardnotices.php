@@ -524,7 +524,7 @@ class boardnotices implements boardnotices_interface
 			return false;
 		}
 		$sql = "DELETE FROM " . $this->notices_rules_table . " WHERE notice_rule_id IN (" . implode(',', $cleanRules) . ")";
-		$result = $this->db->sql_query($sql);
+		$this->db->sql_query($sql);
 		$this->clearRules();
 
 		return $this->db->sql_affectedrows();

@@ -17,11 +17,11 @@ class rank extends rule_base implements rule_interface
 {
 	/** @var \phpbb\user $lang */
 	private $user;
-	/** @var \fq\boardnotices\repository\legacy_interface $data_layer */
+	/** @var \fq\boardnotices\repository\users_interface $data_layer */
 	private $data_layer;
 	private $user_rank = null;
 
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\legacy_interface $data_layer)
+	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\users_interface $data_layer)
 	{
 		$this->serializer = $serializer;
 		$this->user = $user;

@@ -19,8 +19,8 @@ class not_in_usergroup_test extends rule_test_base
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 
-		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
-		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
+		/** @var \fq\boardnotices\repository\users_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 
 		$rule = new not_in_usergroup($this->getSerializer(), $user, $datalayer);
 		$this->assertNotNull($rule);
@@ -139,8 +139,8 @@ class not_in_usergroup_test extends rule_test_base
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		$user->data['user_lang'] = 'fr';
-		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
-		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
+		/** @var \fq\boardnotices\repository\users_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 		$datalayer->method('isUserInGroupId')->will($this->returnCallback('\fq\boardnotices\tests\rules\notInUsergroupTest_isUserInGroupId'));
 
 		$rule = new not_in_usergroup($serializer, $user, $datalayer);

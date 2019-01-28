@@ -12,8 +12,8 @@ class has_never_posted_test extends rule_test_base
 	{
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
-		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
+		/** @var \fq\boardnotices\repository\users_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 		$rule = new has_never_posted($this->getSerializer(), $user, $datalayer);
 		$this->assertNotNull($rule);
 
@@ -74,8 +74,8 @@ class has_never_posted_test extends rule_test_base
 	{
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
-		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
+		/** @var \fq\boardnotices\repository\users_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->willReturn(0);
 		$rule = new has_never_posted($this->getSerializer(), $user, $datalayer);
 		$this->assertTrue($rule->isTrue(null));
@@ -85,8 +85,8 @@ class has_never_posted_test extends rule_test_base
 	{
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
-		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
+		/** @var \fq\boardnotices\repository\users_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->willReturn(1);
 		$rule = new has_never_posted($this->getSerializer(), $user, $datalayer);
 		$this->assertFalse($rule->isTrue(null));

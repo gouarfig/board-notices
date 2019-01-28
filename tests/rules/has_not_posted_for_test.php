@@ -63,7 +63,7 @@ class has_not_posted_for_test extends rule_test_base
 	{
 		list($user, $rule) = $args;
 		$vars = $rule->getAvailableVars();
-		$this->assertEquals(0, count($vars));
+		$this->assertEquals(4, count($vars));
 	}
 
 	/**
@@ -75,7 +75,7 @@ class has_not_posted_for_test extends rule_test_base
 	{
 		list($user, $rule) = $args;
 		$vars = $rule->getTemplateVars();
-		$this->assertEquals(0, count($vars));
+		$this->assertEquals(4, count($vars));
 	}
 
 	/**

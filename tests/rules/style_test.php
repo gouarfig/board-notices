@@ -14,8 +14,8 @@ class style_test extends rule_test_base
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 
-		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
-		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
+		/** @var \fq\boardnotices\repository\users_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 
 		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')->disableOriginalConstructor()->getMock();
@@ -142,8 +142,8 @@ class style_test extends rule_test_base
 		$user = $this->getUser();
 		$user->data['user_id'] = 10;
 		$user->data['user_style'] = $userStyle;
-		/** @var \fq\boardnotices\repository\legacy_interface $datalayer */
-		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\legacy_interface')->getMock();
+		/** @var \fq\boardnotices\repository\users_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 
 		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')->disableOriginalConstructor()->getMock();

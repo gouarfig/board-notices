@@ -11,8 +11,8 @@ services:
   fq.boardnotices.service.serializer:
     class: fq\boardnotices\service\serializer
 
-  fq.boardnotices.repository.legacy:
-    class: fq\boardnotices\repository\legacy
+  fq.boardnotices.repository.users:
+    class: fq\boardnotices\repository\users
     arguments:
       - '@dbal.conn'
       - '@user'
@@ -74,42 +74,42 @@ services:
     arguments:
       - '@fq.boardnotices.service.serializer'
       - '@user'
-      - '@fq.boardnotices.repository.legacy'
+      - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.in_usergroup:
     class: fq\boardnotices\rules\in_usergroup
     arguments:
       - '@fq.boardnotices.service.serializer'
       - '@user'
-      - '@fq.boardnotices.repository.legacy'
+      - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.not_in_usergroup:
     class: fq\boardnotices\rules\not_in_usergroup
     arguments:
       - '@fq.boardnotices.service.serializer'
       - '@user'
-      - '@fq.boardnotices.repository.legacy'
+      - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.has_never_posted:
     class: fq\boardnotices\rules\has_never_posted
     arguments:
       - '@fq.boardnotices.service.serializer'
       - '@user'
-      - '@fq.boardnotices.repository.legacy'
+      - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.has_never_posted_in_forum:
     class: fq\boardnotices\rules\has_never_posted_in_forum
     arguments:
       - '@fq.boardnotices.service.serializer'
       - '@user'
-      - '@fq.boardnotices.repository.legacy'
+      - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.has_posted_in_forum:
     class: fq\boardnotices\rules\has_posted_in_forum
     arguments:
       - '@fq.boardnotices.service.serializer'
       - '@user'
-      - '@fq.boardnotices.repository.legacy'
+      - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.not_logged_in:
     class: fq\boardnotices\rules\not_logged_in
@@ -128,7 +128,7 @@ services:
     arguments:
       - '@fq.boardnotices.service.serializer'
       - '@user'
-      - '@fq.boardnotices.repository.legacy'
+      - '@fq.boardnotices.repository.users'
       - '@request'
       - '@config'
 
@@ -137,14 +137,14 @@ services:
     arguments:
       - '@fq.boardnotices.service.serializer'
       - '@user'
-      - '@fq.boardnotices.repository.legacy'
+      - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.rank:
     class: fq\boardnotices\rules\rank
     arguments:
       - '@fq.boardnotices.service.serializer'
       - '@user'
-      - '@fq.boardnotices.repository.legacy'
+      - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.in_forum:
     class: fq\boardnotices\rules\in_forum
@@ -164,7 +164,7 @@ services:
     arguments:
       - '@fq.boardnotices.service.serializer'
       - '@user'
-      - '@fq.boardnotices.repository.legacy'
+      - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.has_posted_exactly:
     class: fq\boardnotices\rules\has_posted_exactly

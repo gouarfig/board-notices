@@ -68,12 +68,37 @@ class has_not_posted_for extends rule_base implements rule_interface
 
 	public function getAvailableVars()
 	{
-		return array();
+		return array(
+			'DAYS_NO_POSTS',
+			'WEEKS_NO_POSTS',
+			'MONTHS_NO_POSTS',
+			'YEARS_NO_POSTS',
+		);
 	}
 
 	public function getTemplateVars()
 	{
-		return array();
+		$daysNoPosts = 0;
+		$weeksNoPosts = 0;
+		$monthsNoPosts = 0;
+		$yearsNoPosts = 0;
+
+		$user_lastpost_time = (int) $this->user->data['user_lastpost_time'];
+		if ($user_lastpost_time > 0)
+		{
+			$noPosts = time() - $user_lastpost_time;
+			$daysNoPosts = floor($noPosts / 86400);
+			$weeksNoPosts = floor($noPosts / 604800);
+			$monthsNoPosts = floor($noPosts / 2592000);
+			$yearsNoPosts = floor($noPosts / 31536000);
+		}
+
+		return array(
+			'DAYS_NO_POSTS' => $daysNoPosts,
+			'WEEKS_NO_POSTS' => $weeksNoPosts,
+			'MONTHS_NO_POSTS' => $monthsNoPosts,
+			'YEARS_NO_POSTS' => $yearsNoPosts,
+		);
 	}
 
 }

@@ -38,7 +38,7 @@
 		<dl>
 			<dt><label for="board_notice_title">{{ lang('LABEL_BOARD_NOTICE_TITLE') ~ lang('COLON') }}</label></dt>
 			<dd>
-				<input name="board_notice_title" type="text" id="board_notice_title" value="{BOARD_NOTICE_TITLE}" size="50" maxlength="100" />
+				<input name="board_notice_title" type="text" id="board_notice_title" value="{{ BOARD_NOTICE_TITLE }}" size="50" maxlength="100" />
 			</dd>
 		</dl>
 	</fieldset>
@@ -55,7 +55,7 @@
 		<dl>
 			<dt><label for="board_notice_bgcolor">{{ lang('LABEL_BOARD_NOTICE_BGCOLOR') ~ lang('COLON') }}</label><br /><span>{{ lang('LABEL_BOARD_NOTICE_BGCOLOR_EXPLAIN') }}</span></dt>
 			<dd>
-				<input name="board_notice_bgcolor" type="text" id="board_notice_bgcolor" value="{BOARD_NOTICE_BGCOLOR}" size="6" maxlength="6" {% if BOARD_NOTICE_BGCOLOR %}style="border-right:20px solid #{{ BOARD_NOTICE_BGCOLOR }}"{% endif %} />
+				<input name="board_notice_bgcolor" type="text" id="board_notice_bgcolor" value="{{ BOARD_NOTICE_BGCOLOR }}" size="6" maxlength="6" {% if BOARD_NOTICE_BGCOLOR %}style="border-right:20px solid #{{ BOARD_NOTICE_BGCOLOR }}"{% endif %} />
 			</dd>
 		</dl>
 		{% include 'acp_posting_buttons.html' %}
@@ -83,7 +83,7 @@
 		<dl>
 			<dt><label for="board_notice_style">{{ lang('LABEL_BOARD_NOTICE_STYLE') ~ lang('COLON') }}</label><br /><span>{{ lang('LABEL_BOARD_NOTICE_STYLE_EXPLAIN') }}</span></dt>
 			<dd>
-				<input name="board_notice_style" type="text" id="board_notice_style" value="{BOARD_NOTICE_STYLE}" size="20" maxlength="50" />
+				<input name="board_notice_style" type="text" id="board_notice_style" value="{{ BOARD_NOTICE_STYLE }}" size="20" maxlength="50" />
 			</dd>
 		</dl>
 	</fieldset>
@@ -168,7 +168,11 @@
 				{% endif %}
 				{{ rule.RULE_UNIT }}
 			</td>
-			<td class="boardnotice-variables">{{ rule.RULE_VARIABLES }}</td>
+			<td class="boardnotice-variables">
+				{% for variable in rule.RULE_VARIABLES %}
+					{{ variable }}<br />
+				{% endfor %}
+			</td>
 		</tr>
 	{% else %}
 		<tr class="row3">
