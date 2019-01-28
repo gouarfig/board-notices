@@ -17,7 +17,7 @@ define('BOARDNOTICES_DEBUG', false);
 
 use fq\boardnotices\repository\boardnotices;
 
-class boardnotices_test extends \phpbb_database_test_case
+abstract class boardnotices_testbase extends \phpbb_database_test_case
 {
 	protected $db;
 
@@ -48,7 +48,7 @@ class boardnotices_test extends \phpbb_database_test_case
 		$this->db_tools = new \phpbb\db\tools($this->db);
 	}
 
-	private function getRootFolder()
+	protected function getRootFolder()
 	{
 		return dirname(__FILE__) . '/../../../../../';
 	}
@@ -58,24 +58,7 @@ class boardnotices_test extends \phpbb_database_test_case
 	 *
 	 * @return boardnotices
 	 */
-	private function getBoardNoticesInstance()
-	{
-		$phpbb_root_path = $this->getRootFolder();
-		$language_file_loader = new \phpbb\language\language_file_loader($phpbb_root_path, 'php');
-		$language = new \phpbb\language\language($language_file_loader);
-		$user = new \phpbb\user($language, '\phpbb\datetime');
-		$cache_driver = new \phpbb\cache\driver\dummy();
-		$default_config = array(
-			'boardnotices_enabled' => true,
-			'boardnotices_default_bgcolor' => 'ECD5D8',
-		);
-		$config = new \phpbb\config\config($default_config);
-		$phpEx = substr(strrchr(__FILE__, '.'), 1);
-		$cache = new \phpbb\cache\service($cache_driver, $config, $this->db, $phpbb_root_path, $phpEx);
-		$dac = new boardnotices($this->db, $user, $cache, $config, $this->table_prefix . 'notices', $this->table_prefix . 'notices_rules', $this->table_prefix . 'notices_seen', $this->table_prefix . 'forums_visited');
-
-		return $dac;
-	}
+	protected abstract function getBoardNoticesInstance();
 
 	public function testInstance()
 	{
@@ -89,6 +72,9 @@ class boardnotices_test extends \phpbb_database_test_case
 		$dac = $this->getBoardNoticesInstance();
 		$notices = $dac->getAllNotices();
 		$this->assertThat(count($notices), $this->equalTo(2));
+		// Retry in case there's something wrong with the cache
+		$notices = $dac->getAllNotices();
+		$this->assertThat(count($notices), $this->equalTo(2));
 	}
 
 	public function testGetActiveNotices()
@@ -96,11 +82,18 @@ class boardnotices_test extends \phpbb_database_test_case
 		$dac = $this->getBoardNoticesInstance();
 		$notices = $dac->getActiveNotices();
 		$this->assertThat(count($notices), $this->equalTo(1));
+		// Retry in case there's something wrong with the cache
+		$notices = $dac->getActiveNotices();
+		$this->assertThat(count($notices), $this->equalTo(1));
 	}
 
 	public function testGetNoticeFromId()
 	{
 		$dac = $this->getBoardNoticesInstance();
+		$notice = $dac->getNoticeFromId(2);
+		$this->assertThat($notice, $this->logicalNot($this->equalTo(null)));
+		$this->assertThat($notice['notice_id'], $this->equalTo(2));
+		// Retry in case there's something wrong with the cache
 		$notice = $dac->getNoticeFromId(2);
 		$this->assertThat($notice, $this->logicalNot($this->equalTo(null)));
 		$this->assertThat($notice['notice_id'], $this->equalTo(2));
@@ -113,6 +106,15 @@ class boardnotices_test extends \phpbb_database_test_case
 		$this->assertThat(count($notices), $this->equalTo(1));
 		$notices = $dac->getAllNotices();
 		$this->assertThat(count($notices), $this->equalTo(2));
+	}
+
+	public function testGetActiveNoticesAfterGetAllNotices()
+	{
+		$dac = $this->getBoardNoticesInstance();
+		$notices = $dac->getAllNotices();
+		$this->assertThat(count($notices), $this->equalTo(2));
+		$notices = $dac->getActiveNotices();
+		$this->assertThat(count($notices), $this->equalTo(1));
 	}
 
 	public function testGetInactiveNoticeAfterGetActiveNotices()
@@ -446,6 +448,67 @@ class boardnotices_test extends \phpbb_database_test_case
 		$this->assertEquals(3, $notice['notice_order']);
 	}
 
+	public function testGetRulesForNoticeId()
+	{
+		$dac = $this->getBoardNoticesInstance();
+		$rules = $dac->getRulesFor(1);
+		$this->assertEquals(1, count($rules));
+		$this->assertEquals(1, $rules[0]['notice_rule_id']);
+	}
+
+	public function testDeleteRules()
+	{
+		$dac = $this->getBoardNoticesInstance();
+		$rules = $dac->getRulesFor(1);
+		foreach ($rules as $rule)
+		{
+			$delete[] = $rule['notice_rule_id'];
+		}
+		$deleted = $dac->deleteRules($delete);
+		$this->assertTrue($deleted > 0);
+		$rules = $dac->getRulesFor(1);
+		$this->assertEmpty($rules);
+	}
+
+	public function testInsertAndUpdateRules()
+	{
+		$notice_id = 11;
+		$dac = $this->getBoardNoticesInstance();
+		$rules = $dac->getRulesFor($notice_id);
+		$this->assertEmpty($rules);
+
+		$rule = array(
+			'notice_id' => $notice_id,
+			'rule' => 'test1',
+			'conditions' => 'json:["1"]',
+		);
+		$inserted = $dac->insertRules(array($rule));
+		$this->assertEquals(1, $inserted);
+
+		$rules = $dac->getRulesFor($notice_id);
+		$this->assertEquals('test1', $rules[0]['rule']);
+
+		$rules[0]['rule'] = 'test2';
+		$dac->updateRules($rules);
+
+		$rules = $dac->getRulesFor($notice_id);
+		$this->assertEquals('test2', $rules[0]['rule']);
+	}
+
+	public function testVisitAlreadyVisitedForum()
+	{
+		$dac = $this->getBoardNoticesInstance();
+		$visited = $dac->setForumVisited(1, 1);
+		$this->assertTrue($visited);
+	}
+
+	public function testVisitNewForum()
+	{
+		$dac = $this->getBoardNoticesInstance();
+		$visited = $dac->setForumVisited(2, 2);
+		$this->assertTrue($visited);
+	}
+
 	public function testInvalidIds()
 	{
 		$dac = $this->getBoardNoticesInstance();
@@ -475,7 +538,34 @@ class boardnotices_test extends \phpbb_database_test_case
 		$saved = $dac->saveNotice(1, $new_notice);
 		$this->assertFalse($saved, 'saveNotice(2) didn\'t return false');
 
+		$rules = $dac->getRulesFor('invalid id');
+		$this->assertNull($rules);
+
+		$deleted = $dac->deleteRules('invalid id');
+		$this->assertFalse($deleted, "deleteRules should have returned FALSE");
+
 		$saved = $dac->saveNewNotice($new_notice);
 		$this->assertNull($saved, 'saveNewNotice didn\'t return null');
+
+		$updated = $dac->updateRules('invalid id');
+		$this->assertEquals(0, $updated);
+
+		$updated = $dac->updateRules(array('notice_rule_id' => 'invalid id'));
+		$this->assertEquals(0, $updated);
+
+		$updated = $dac->updateRules(array(array('notice_rule_id' => 'invalid id')));
+		$this->assertEquals(0, $updated);
+
+		$saved = $dac->insertRules('invalid');
+		$this->assertEquals(0, $saved);
+
+		$saved = $dac->insertRules(array('invalid'));
+		$this->assertEquals(0, $saved);
+
+		$saved = $dac->setForumVisited('invalid id', 1);
+		$this->assertFalse($saved);
+
+		$saved = $dac->setForumVisited(1, 'invalid id');
+		$this->assertFalse($saved);
 	}
 }

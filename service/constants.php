@@ -17,6 +17,11 @@ namespace fq\boardnotices\service;
  */
 class constants
 {
+	public static $CONFIG_SQL_CACHE_TTL = 'boardnotices_sql_cache_ttl';
+	public static $CONFIG_ACTIVE_NOTICES_CACHE_KEY = 'boardnotices_active_notices';
+	public static $CONFIG_ALL_NOTICES_CACHE_KEY = 'boardnotices_all_notices';
+	public static $CONFIG_RULES_CACHE_KEY = 'boardnotices_rules';
+
 	public static $RULES_FOLDER = 'ext/fq/boardnotices/rules';
 	public static $RULES_FILE_EXTENSION = '.php';
 	public static $RULES_CLASS_PREFIX = 'fq.boardnotices.rules';

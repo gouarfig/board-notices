@@ -1,51 +1,109 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <dataset>
-    <table name="phpbb_notices">
-        <column>notice_id</column>
-        <column>title</column>
-        <column>message</column>
-        <column>message_uid</column>
-        <column>message_bitfield</column>
-        <column>message_options</column>
-        <column>message_bgcolor</column>
-        <column>message_style</column>
-        <column>active</column>
-        <column>persistent</column>
-        <column>dismissable</column>
-        <column>reset_after</column>
-        <column>last</column>
-        <column>notice_order</column>
-        <row>
-            <value>1</value>
-            <value>Is Administrator</value>
-            <value>Hello Administrator!</value>
-            <value></value>
-            <value></value>
-            <value>0</value>
-            <value>E5EEF5</value>
-            <value>test-css-class</value>
-            <value>1</value>
-            <value>0</value>
-            <value>0</value>
-            <value>0</value>
-            <value>1</value>
-            <value>1</value>
-        </row>
-        <row>
-            <value>2</value>
-            <value>Rule inactive</value>
-            <value>Rule inactive!</value>
-            <value></value>
-            <value></value>
-            <value>0</value>
-            <value>E5EEF5</value>
-            <value></value>
-            <value>0</value>
-            <value>0</value>
-            <value>0</value>
-            <value>0</value>
-            <value>0</value>
-            <value>2</value>
-        </row>
-    </table>
+	<table name="phpbb_notices">
+		<column>notice_id</column>
+		<column>title</column>
+		<column>message</column>
+		<column>message_uid</column>
+		<column>message_bitfield</column>
+		<column>message_options</column>
+		<column>message_bgcolor</column>
+		<column>message_style</column>
+		<column>active</column>
+		<column>persistent</column>
+		<column>dismissable</column>
+		<column>reset_after</column>
+		<column>last</column>
+		<column>notice_order</column>
+		<row>
+			<value>1</value>
+			<value>Is Administrator</value>
+			<value>Hello Administrator!</value>
+			<value></value>
+			<value></value>
+			<value>0</value>
+			<value>E5EEF5</value>
+			<value>test-css-class</value>
+			<value>1</value>
+			<value>0</value>
+			<value>0</value>
+			<value>0</value>
+			<value>1</value>
+			<value>1</value>
+		</row>
+		<row>
+			<value>2</value>
+			<value>Rule inactive</value>
+			<value>Rule inactive!</value>
+			<value></value>
+			<value></value>
+			<value>0</value>
+			<value>E5EEF5</value>
+			<value></value>
+			<value>0</value>
+			<value>0</value>
+			<value>0</value>
+			<value>0</value>
+			<value>0</value>
+			<value>2</value>
+		</row>
+	</table>
+	<table name="phpbb_notices_rules">
+		<column>notice_rule_id</column>
+		<column>notice_id</column>
+		<column>rule</column>
+		<column>conditions</column>
+		<row>
+			<value>1</value>
+			<value>1</value>
+			<value>in_default_usergroup</value>
+			<value>json:["5"]</value>
+		</row>
+		<row>
+			<value>4</value>
+			<value>3</value>
+			<value>in_forum</value>
+			<value>json:["5","7","4","6"]</value>
+		</row>
+		<row>
+			<value>5</value>
+			<value>4</value>
+			<value>language</value>
+			<value>json:["en_us","en"]</value>
+		</row>
+		<row>
+			<value>6</value>
+			<value>5</value>
+			<value>on_board_index</value>
+			<value>json:["1"]</value>
+		</row>
+		<row>
+			<value>7</value>
+			<value>6</value>
+			<value>rank</value>
+			<value>json:["1","3","2"]</value>
+		</row>
+		<row>
+			<value>8</value>
+			<value>7</value>
+			<value>date</value>
+			<value>json:["16","2","2024"]</value>
+		</row>
+		<row>
+			<value>9</value>
+			<value>8</value>
+			<value>has_posted_exactly</value>
+			<value>json:["100"]</value>
+		</row>
+	</table>
+	<table name="phpbb_forums_visited">
+		<column>forum_id</column>
+		<column>user_id</column>
+		<column>visited</column>
+		<row>
+			<value>1</value>
+			<value>1</value>
+			<value>1548669246</value>
+		</row>
+	</table>
 </dataset>

@@ -13,13 +13,17 @@
 namespace fq\boardnotices\repository;
 
 use fq\boardnotices\repository\boardnotices_interface;
+use fq\boardnotices\service\constants;
 
 class boardnotices implements boardnotices_interface
 {
-
+	/** @var \phpbb\db\driver\driver_interface $db */
 	private $db;
+	/** @var \phpbb\user $user */
 	private $user;
+	/** @var \phpbb\cache\service $cache */
 	private $cache;
+	/** @var \phpbb\config\config $config */
 	private $config;
 
 	private $cache_ttl = 0;
@@ -54,10 +58,10 @@ class boardnotices implements boardnotices_interface
 		$this->notices_seen_table = $notices_seen_table;
 		$this->forums_visited_table = $forums_visited_table;
 
-		if (!is_null($this->config))
+		if (!empty($this->config))
 		{
-			$this->cache_ttl = !empty($this->config['boardnotices_sql_cache_ttl'])
-								? $this->config['boardnotices_sql_cache_ttl']
+			$this->cache_ttl = !empty($this->config[constants::$CONFIG_SQL_CACHE_TTL])
+								? $this->config[constants::$CONFIG_SQL_CACHE_TTL]
 								: 86400;
 		}
 	}
@@ -87,14 +91,20 @@ class boardnotices implements boardnotices_interface
 	{
 		if ($active_only)
 		{
-			return 'boardnotices_active_notices';
+			return constants::$CONFIG_ACTIVE_NOTICES_CACHE_KEY;
 		}
 		else
 		{
-			return 'boardnotices_all_notices';
+			return constants::$CONFIG_ALL_NOTICES_CACHE_KEY;
 		}
 	}
 
+	/**
+	 * Returns notices
+	 *
+	 * @param boolean $active_only
+	 * @return array
+	 */
 	public function getNotices($active_only = true)
 	{
 		if (!$this->notices_loaded || ($this->active_notices_loaded != $active_only))
@@ -115,20 +125,36 @@ class boardnotices implements boardnotices_interface
 		return $this->notices;
 	}
 
+	/**
+	 * Returns all notices (including inactive ones)
+	 *
+	 * @return array
+	 */
 	public function getAllNotices()
 	{
 		return $this->getNotices(false);
 	}
 
+	/**
+	 * Returns all active notices
+	 *
+	 * @return array
+	 */
 	public function getActiveNotices()
 	{
 		return $this->getNotices(true);
 	}
 
+	/**
+	 * Returns a notice from its ID
+	 *
+	 * @param int $notice_id
+	 * @return array $notice
+	 */
 	public function getNoticeFromId($notice_id)
 	{
 		$notice = null;
-		$notice_id = intval($notice_id);
+		$notice_id = (int) $notice_id;
 		$this->getAllNotices();
 		foreach ($this->notices as $row)
 		{
@@ -141,19 +167,32 @@ class boardnotices implements boardnotices_interface
 		return $notice;
 	}
 
-	private function cleanNotices()
+	/**
+	 * Clears the notices cache
+	 *
+	 * @return void
+	 */
+	private function clearNotices()
 	{
 		$this->notices = array();
 		$this->notices_loaded = false;
-		$this->cache->destroy('boardnotices_active_notices');
-		$this->cache->destroy('boardnotices_all_notices');
+		$this->cache->destroy(constants::$CONFIG_ACTIVE_NOTICES_CACHE_KEY);
+		$this->cache->destroy(constants::$CONFIG_ALL_NOTICES_CACHE_KEY);
 		$this->cache->destroy('sql', $this->notices_table);
 	}
 
+	/**
+	 * Moves the notice to the direction specified in $action:
+	 *  move_up' or 'move_down'
+	 *
+	 * @param string $action
+	 * @param int $notice_id
+	 * @return bool
+	 */
 	public function moveNotice($action, $notice_id)
 	{
 		$move_executed = false;
-		$notice_id = intval($notice_id);
+		$notice_id = (int) $notice_id;
 
 		// Get current order id...
 		$sql = "SELECT notice_order as current_order
@@ -184,55 +223,67 @@ class boardnotices implements boardnotices_interface
 		// Only update the other entry too if the previous entry got updated
 		if ($move_executed)
 		{
-			$sql = "UPDATE $this->notices_table
+			$sql = "UPDATE {$this->notices_table}
 				SET notice_order = $switch_order_id
 				WHERE notice_order = $current_order
 					AND notice_id = $notice_id";
 			$this->db->sql_query($sql);
 
-			$this->cleanNotices();
+			$this->clearNotices();
 		}
 
 		return $move_executed;
 	}
 
+	/**
+	 * Moves the notice to the first position
+	 *
+	 * @param int $notice_id
+	 * @return bool
+	 */
 	public function moveNoticeFirst($notice_id)
 	{
 		$move_executed = false;
-		$notice_id = intval($notice_id);
+		$notice_id = (int) $notice_id;
 		$notice = $this->getNoticeFromId($notice_id);
-		if (!is_null($notice) && ($notice['notice_order'] > 1))
+		if (!empty($notice) && ($notice['notice_order'] > 1))
 		{
-			$sql = "UPDATE $this->notices_table
+			$sql = "UPDATE {$this->notices_table}
 				SET notice_order = notice_order +1
-				WHERE notice_order < {$notice['notice_order']}";
+				WHERE notice_order < " . (int) $notice['notice_order'];
 			$this->db->sql_query($sql);
 			$move_executed = ($this->db->sql_affectedrows() > 0) ? true : false;
 
 			if ($move_executed)
 			{
-				$sql = "UPDATE $this->notices_table
+				$sql = "UPDATE {$this->notices_table}
 					SET notice_order = 1
 					WHERE notice_id = $notice_id";
 				$this->db->sql_query($sql);
 
-				$this->cleanNotices();
+				$this->clearNotices();
 			}
 		}
 		return $move_executed;
 	}
 
+	/**
+	 * Moves the notice to the last position
+	 *
+	 * @param int $notice_id
+	 * @return bool
+	 */
 	public function moveNoticeLast($notice_id)
 	{
 		$move_executed = false;
-		$notice_id = intval($notice_id);
-		$last_order = $this->getNextNoticeOrder() -1;
+		$notice_id = (int) $notice_id;
+		$last_order = (int) $this->getNextNoticeOrder() -1;
 		$notice = $this->getNoticeFromId($notice_id);
-		if (!is_null($notice) && ($notice['notice_order'] > 0) && ($notice['notice_order'] < $last_order))
+		if (!empty($notice) && ($notice['notice_order'] > 0) && ($notice['notice_order'] < $last_order))
 		{
 			$sql = "UPDATE {$this->notices_table}
 				SET notice_order = notice_order -1
-				WHERE notice_order > {$notice['notice_order']}";
+				WHERE notice_order > " . (int) $notice['notice_order'];
 			$this->db->sql_query($sql);
 			$move_executed = ($this->db->sql_affectedrows() > 0) ? true : false;
 
@@ -243,18 +294,24 @@ class boardnotices implements boardnotices_interface
 					WHERE notice_id = {$notice_id}";
 				$this->db->sql_query($sql);
 
-				$this->cleanNotices();
+				$this->clearNotices();
 			}
 		}
 		return $move_executed;
 	}
 
+	/**
+	 * Delete a notice
+	 *
+	 * @param int $notice_id
+	 * @return bool
+	 */
 	public function deleteNotice($notice_id)
 	{
 		$deleted = false;
-		$notice_id = intval($notice_id);
+		$notice_id = (int) $notice_id;
 		$notice = $this->getNoticeFromId($notice_id);
-		if (!is_null($notice))
+		if (!empty($notice))
 		{
 			$sql = "DELETE FROM {$this->notices_seen_table} WHERE notice_id=" . (int) $notice_id;
 			$this->db->sql_query($sql);
@@ -268,19 +325,27 @@ class boardnotices implements boardnotices_interface
 
 			if ($deleted && ($notice['notice_order'] > 0))
 			{
-				$sql = "UPDATE {$this->notices_table} SET notice_order=notice_order-1 WHERE notice_order>=" . (int) $notice['notice_order'];
+				$sql = "UPDATE {$this->notices_table} SET notice_order=notice_order-1
+						WHERE notice_order>=" . (int) $notice['notice_order'];
 				$this->db->sql_query($sql);
 
-				$this->cleanNotices();
+				$this->clearNotices();
 			}
 		}
 		return $deleted;
 	}
 
+	/**
+	 * Enable or disable a notice
+	 *
+	 * @param string $action
+	 * @param int $notice_id
+	 * @return bool
+	 */
 	public function enableNotice($action, $notice_id)
 	{
 		$query_done = false;
-		$notice_id = intval($notice_id);
+		$notice_id = (int) $notice_id;
 		if ($notice_id > 0)
 		{
 			$sql = "UPDATE {$this->notices_table}"
@@ -289,7 +354,7 @@ class boardnotices implements boardnotices_interface
 			$this->db->sql_query($sql);
 			$query_done = ($this->db->sql_affectedrows() > 0) ? true : false;
 
-			$this->cleanNotices();
+			$this->clearNotices();
 		}
 		return $query_done;
 	}
@@ -322,6 +387,12 @@ class boardnotices implements boardnotices_interface
 		return $next_order + 1;
 	}
 
+	/**
+	 * Insert notice data
+	 *
+	 * @param array $data
+	 * @return int|null
+	 */
 	public function saveNewNotice(&$data)
 	{
 		$new_id = null;
@@ -333,16 +404,23 @@ class boardnotices implements boardnotices_interface
 			$this->db->sql_query($sql);
 
 			$new_id = $data['notice_id'];
-			$this->cleanNotices();
+			$this->clearNotices();
 		}
 
 		return $new_id;
 	}
 
+	/**
+	 * Save notice data
+	 *
+	 * @param int $notice_id
+	 * @param array $data
+	 * @return bool
+	 */
 	public function saveNotice($notice_id, &$data)
 	{
 		$saved = false;
-		$notice_id = intval($notice_id);
+		$notice_id = (int) $notice_id;
 		if (($notice_id > 0) && is_array($data) && !empty($data))
 		{
 			unset($data['notice_id']);
@@ -354,7 +432,7 @@ class boardnotices implements boardnotices_interface
 			$this->db->sql_query($sql);
 			$saved = ($this->db->sql_affectedrows() == 1) ? true : false;
 
-			$this->cleanNotices();
+			$this->clearNotices();
 		}
 		return $saved;
 	}
@@ -378,74 +456,154 @@ class boardnotices implements boardnotices_interface
 		return $rules;
 	}
 
+	/**
+	 * Returns all the rules (conditions) for the notice in argument
+	 *
+	 * @param int $notice_id
+	 * @return array $rules
+	 */
 	public function getRulesFor($notice_id)
 	{
-		$notice_id = intval($notice_id);
+		$notice_id = (int) $notice_id;
+		if ($notice_id <= 0)
+		{
+			return null;
+		}
 		if (!$this->rules_loaded)
 		{
-			$this->rules = $this->loadRules();
+			$rules = $this->cache->get(constants::$CONFIG_RULES_CACHE_KEY);
+			if (!empty($rules))
+			{
+				$this->rules = $rules;
+			}
+			else
+			{
+				$this->rules = $this->loadRules();
+				$this->cache->put(constants::$CONFIG_RULES_CACHE_KEY, $this->rules, $this->cache_ttl);
+			}
 			$this->rules_loaded = true;
 		}
 		return !empty($this->rules[$notice_id]) ? $this->rules[$notice_id] : array();
 	}
 
-	private function cleanRules()
+	/**
+	 * Purge the rules cache
+	 *
+	 * @return void
+	 */
+	private function clearRules()
 	{
 		$this->rules_loaded = false;
-		$this->cache->destroy('boardnotices_rules');
+		$this->cache->destroy(constants::$CONFIG_RULES_CACHE_KEY);
 		$this->cache->destroy('sql', $this->notices_rules_table);
 	}
 
+	/**
+	 * Deletes a list of rules, and returns the number of rules deleted, or FALSE if error
+	 *
+	 * @param int[] $rules
+	 * @return int
+	 */
 	public function deleteRules($rules)
 	{
 		if (!is_array($rules))
 		{
 			$rules = array($rules);
 		}
-		$sql = "DELETE FROM " . $this->notices_rules_table . " WHERE notice_rule_id IN (" . implode(',', $rules) . ")";
+		$cleanRules = array();
+		foreach ($rules as $rule)
+		{
+			$rule = (int) $rule;
+			if ($rule > 0)
+			{
+				$cleanRules[] = $rule;
+			}
+		}
+		if (empty($cleanRules))
+		{
+			return false;
+		}
+		$sql = "DELETE FROM " . $this->notices_rules_table . " WHERE notice_rule_id IN (" . implode(',', $cleanRules) . ")";
 		$result = $this->db->sql_query($sql);
-		$this->cleanRules();
+		$this->clearRules();
 
-		return $result;
+		return $this->db->sql_affectedrows();
 	}
 
+	/**
+	 * Update a list of rules
+	 *
+	 * @param array $rules
+	 * @return int $updated
+	 */
 	public function updateRules($rules)
 	{
+		$updated = 0;
 		if (!is_array($rules))
 		{
 			$rules = array($rules);
 		}
 		foreach ($rules as $rule)
 		{
-			$notice_rule_id = intval($rule['notice_rule_id']);
-			unset($rule['notice_rule_id']);
+			if (is_array($rule))
+			{
+				$notice_rule_id = (int) $rule['notice_rule_id'];
+				unset($rule['notice_rule_id']);
 
-			$sql = "UPDATE {$this->notices_rules_table}
-				SET " . $this->db->sql_build_array('UPDATE', $rule) . "
-				WHERE notice_rule_id = " . (int) $notice_rule_id;
-			$this->db->sql_query($sql);
+				if ($notice_rule_id > 0)
+				{
+					$sql = "UPDATE {$this->notices_rules_table}
+						SET " . $this->db->sql_build_array('UPDATE', $rule) . "
+						WHERE notice_rule_id = " . (int) $notice_rule_id;
+					$this->db->sql_query($sql);
+					$updated += $this->db->sql_affectedrows();
+				}
+			}
 		}
-		$this->cleanRules();
+		$this->clearRules();
+
+		return $updated;
 	}
 
+	/**
+	 * Saves new rules
+	 *
+	 * @param array $rules
+	 * @return int $rules
+	 */
 	public function insertRules($rules)
 	{
+		$inserted = 0;
 		if (!is_array($rules))
 		{
 			$rules = array($rules);
 		}
 		foreach ($rules as $rule)
 		{
-			$sql = "INSERT INTO {$this->notices_rules_table} " . $this->db->sql_build_array('INSERT', $rule);
-			$this->db->sql_query($sql);
+			if (is_array($rule))
+			{
+				$sql = "INSERT INTO {$this->notices_rules_table} " . $this->db->sql_build_array('INSERT', $rule);
+				$this->db->sql_query($sql);
+				$inserted += $this->db->sql_affectedrows();
+			}
 		}
-		$this->cleanRules();
+		$this->clearRules();
+
+		return $inserted;
 	}
 
+	/**
+	 * Indicates that this forum has been visited by this user
+	 *
+	 * @param int $user_id
+	 * @param int $forum_id
+	 * @return bool
+	 */
 	public function setForumVisited($user_id, $forum_id)
 	{
-		$user_id = intval($user_id);
-		$forum_id = intval($forum_id);
+		$affectedRows = 0;
+		$user_id = (int) $user_id;
+		$forum_id = (int) $forum_id;
 
 		if (($user_id > 0) && ($forum_id > 0))
 		{
@@ -453,17 +611,24 @@ class boardnotices implements boardnotices_interface
 			$sql = "UPDATE {$this->forums_visited_table} SET visited={$time}"
 					. " WHERE user_id={$user_id} AND forum_id={$forum_id}";
 			$this->db->sql_query($sql);
+			$affectedRows = $this->db->sql_affectedrows();
 
-			if ($this->db->sql_affectedrows() < 1)
+			if ($affectedRows < 1)
 			{
 				$sql = "INSERT INTO {$this->forums_visited_table} (user_id, forum_id, visited)"
 						. " VALUES ({$user_id}, {$forum_id}, {$time})";
 				$this->db->sql_query($sql);
+				$affectedRows = $this->db->sql_affectedrows();
 			}
 		}
-		return ;
+		return $affectedRows == 1;
 	}
 
+	/**
+	 * Clears forum visit table
+	 *
+	 * @return void
+	 */
 	public function clearForumVisited()
 	{
 		$sql = "TRUNCATE TABLE {$this->forums_visited_table}";
