@@ -1,0 +1,3 @@
+fq_boardnotices_controller:
+  path: /boardnotices/close
+  defaults: { _controller: fq.boardnotices.controller:close_notice }

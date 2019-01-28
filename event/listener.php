@@ -13,20 +13,25 @@
 namespace fq\boardnotices\event;
 
 use Symfony\Component\EventDispatcher\EventSubscriberInterface;
-use \fq\boardnotices\domain\notice;
+use fq\boardnotices\domain\notice;
+use fq\boardnotices\service\constants;
 
 class listener implements EventSubscriberInterface
 {
 	/** @var \phpbb\user $user */
-	protected $user = null;
+	private $user = null;
 	/** @var \phpbb\config\config $config */
-	protected $config = null;
+	private $config = null;
 	/** @var \phpbb\template\template $template */
-	protected $template = '';
+	private $template = '';
 	/** @var \phpbb\request\request $request */
-	protected $request;
+	private $request;
+	/** @var \phpbb\controller\helper $controller_helper */
+	private $controller_helper;
+	/** @var \phpbb\language\language $language */
+	private $language;
 	/** @var \fq\boardnotices\repository\boardnotices_interface $repository */
-	protected $repository;
+	private $repository;
 
 	static public function getSubscribedEvents()
 	{
@@ -45,12 +50,16 @@ class listener implements EventSubscriberInterface
 		\phpbb\config\config $config,
 		\phpbb\template\template $template,
 		\phpbb\request\request $request,
+		\phpbb\controller\helper $controller_helper,
+		\phpbb\language\language $language,
 		\fq\boardnotices\repository\boardnotices_interface $repository)
 	{
 		$this->user = $user;
 		$this->config = $config;
 		$this->template = $template;
 		$this->request = $request;
+		$this->controller_helper = $controller_helper;
+		$this->language = $language;
 		$this->repository = $repository;
 	}
 
@@ -94,7 +103,7 @@ class listener implements EventSubscriberInterface
 		{
 			if ($notice->hasValidatedAllRules($force_all_rules, $preview))
 			{
-				// Prepare board announcement message for display
+				// Prepare board notice message for display
 				$notice_message = generate_text_for_display(
 						$notice->getMessage(), $notice->getMessageUid(), $notice->getMessageBitfield(), $notice->getMessageOptions()
 				);
@@ -104,21 +113,29 @@ class listener implements EventSubscriberInterface
 				{
 					$notice_bgcolor = $this->config['boardnotices_default_bgcolor'];
 				}
+				$notice_dismissable = $notice->getDismissable();
 				$template_vars = array_merge($template_vars, $notice->getTemplateVars());
+				// We stop at the first displayable notice
 				break;
 			}
 		}
 
 		if (!empty($notice_message))
 		{
+			$this->language->add_lang('boardnotices', 'fq/boardnotices');
 			$notice_message = $this->replaceTemplateVars($notice_message, $template_vars);
 
-			// Output board announcement to the template
+			// Output board notice to the template
 			$this->template->assign_vars(array(
 				'S_BOARD_NOTICE' => true,
+				'S_BOARD_NOTICE_DISMISS' => $notice_dismissable,
 				'BOARD_NOTICE' => $notice_message,
 				'BOARD_NOTICE_BGCOLOR' => $notice_bgcolor,
 				'BOARD_NOTICE_STYLE' => $notice_style,
+				'U_BOARD_NOTICE_CLOSE'	=> $this->controller_helper->route(
+					constants::$CONTROLLER_ROUTING_ID,
+					array('hash' => generate_link_hash('close_boardnotice'))
+				),
 			));
 		}
 

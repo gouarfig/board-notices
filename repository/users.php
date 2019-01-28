@@ -25,8 +25,8 @@ class users implements users_interface
 	private $notices_seen_table;
 	private $forums_visited_table;
 
-	private $user_loaded = false;
-	private $user_row = array();
+	// private $user_loaded = false;
+	// private $user_row = array();
 	private $usergroups_loaded = false;
 	private $usergroups = array();
 	private $allgroups_loaded = false;

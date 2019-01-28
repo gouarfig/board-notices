@@ -42,9 +42,19 @@ services:
       - '@config'
       - '@template'
       - '@request'
+      - '@controller.helper'
+      - '@language'
       - '@fq.boardnotices.repository.boardnotices'
     tags:
       - { name: event.listener }
+
+  fq.boardnotices.controller:
+    class: fq\boardnotices\controller\controller
+    arguments:
+      - '@config'
+      - '@request'
+      - '@user'
+      - '@fq.boardnotices.repository.boardnotices'
 
   fq.boardnotices.domain.rules:
     class: fq\boardnotices\domain\rules

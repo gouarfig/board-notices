@@ -137,6 +137,16 @@ class notice
 		return $this->properties['message_style'];
 	}
 
+	/**
+	 * Return the dismissable option
+	 *
+	 * @return boolean
+	 */
+	public function getDismissable()
+	{
+		return !empty($this->properties['dismissable']) ? true : false;
+	}
+
 	public function getTemplateVars()
 	{
 		return $this->template_vars;

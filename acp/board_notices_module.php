@@ -415,75 +415,75 @@ class board_notices_module
 		));
 	}
 
-	private function getDisplayConditions($type, $values, $selected, $input_name)
-	{
-		$display = '';
-		if (!is_array($selected))
-		{
-			if (!is_null($selected))
-			{
-				$selected = array($selected);
-			}
-			else
-			{
-				$selected = array();
-			}
-		}
-		if (strpos($type, '|') === false)
-		{
-			$display .= $this->getSingleDisplayConditions($type, $input_name, $selected, $values);
-		}
-		else
-		{
-			$types = explode('|', $type);
-			$i = 0;
-			foreach ($types as $single_type)
-			{
-				$display .= $this->getSingleDisplayConditions($single_type, $input_name, $selected[$i], $values[$i], $i);
-				$i++;
-				$display .= '&nbsp;';
-			}
-		}
-		return $display;
-	}
+	// private function getDisplayConditions($type, $values, $selected, $input_name)
+	// {
+	// 	$display = '';
+	// 	if (!is_array($selected))
+	// 	{
+	// 		if (!is_null($selected))
+	// 		{
+	// 			$selected = array($selected);
+	// 		}
+	// 		else
+	// 		{
+	// 			$selected = array();
+	// 		}
+	// 	}
+	// 	if (strpos($type, '|') === false)
+	// 	{
+	// 		$display .= $this->getSingleDisplayConditions($type, $input_name, $selected, $values);
+	// 	}
+	// 	else
+	// 	{
+	// 		$types = explode('|', $type);
+	// 		$i = 0;
+	// 		foreach ($types as $single_type)
+	// 		{
+	// 			$display .= $this->getSingleDisplayConditions($single_type, $input_name, $selected[$i], $values[$i], $i);
+	// 			$i++;
+	// 			$display .= '&nbsp;';
+	// 		}
+	// 	}
+	// 	return $display;
+	// }
 
-	private function getSingleDisplayConditions($type, $input_name, $selected, $values, $index = 0)
-	{
-		$display = '';
+	// private function getSingleDisplayConditions($type, $input_name, $selected, $values, $index = 0)
+	// {
+	// 	$display = '';
 
-		if ($index > 0)
-		{
-			$input_name .= $index;
-		}
+	// 	if ($index > 0)
+	// 	{
+	// 		$input_name .= $index;
+	// 	}
 
-		switch ($type)
-		{
-			case 'int':
-				// $display .= $this->getDisplayIntConditions($input_name, $selected[0]);
-				break;
+	// 	switch ($type)
+	// 	{
+	// 		case 'int':
+	// 			$display .= $this->getDisplayIntConditions($input_name, $selected[0]);
+	// 			break;
 
-			case 'date':
-				// $display .= $this->getDisplayDateConditions($input_name, $selected);
-				break;
+	// 		case 'date':
+	// 			$display .= $this->getDisplayDateConditions($input_name, $selected);
+	// 			break;
 
-			case 'list':
-			case 'multiple choice':
-				// $display .= $this->getDisplayListConditions($type, $input_name, $values, $selected);
-				break;
+	// 		case 'list':
+	// 		case 'multiple choice':
+	// 			$display .= $this->getDisplayListConditions($type, $input_name, $values, $selected);
+	// 			break;
 
-			case 'forums':
-				// $display .= $this->getDisplayForumsConditions($input_name, $selected);
-				break;
+	// 		case 'forums':
+	// 			$display .= $this->getDisplayForumsConditions($input_name, $selected);
+	// 			break;
 
-			case 'yesno':
-				// $display .= $this->getDisplayYesNoConditions($input_name, $selected[0]);
-				break;
+	// 		case 'yesno':
+	// 			$display .= $this->getDisplayYesNoConditions($input_name, $selected[0]);
+	// 			break;
 
-			default:
-				break;
-		}
-		return $display;
-	}
+	// 		default:
+	// 			break;
+	// 	}
+	// 	return $display;
+	// }
 
 	public function moveNotice($action, $notice_id)
 	{
@@ -577,7 +577,7 @@ class board_notices_module
 		global $phpbb_container;
 		static $repository = null;
 
-		if (is_null($repository))
+		if ($repository === null)
 		{
 			$repository = $phpbb_container->get('fq.boardnotices.repository.boardnotices');
 		}
@@ -596,7 +596,7 @@ class board_notices_module
 		global $phpbb_container;
 		static $serializer = null;
 
-		if (is_null($serializer))
+		if ($serializer === null)
 		{
 			$serializer = $phpbb_container->get('fq.boardnotices.service.serializer');
 		}

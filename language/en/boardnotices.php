@@ -6,7 +6,6 @@
 * @copyright (c) phpBB Limited <https://www.phpbb.com>
 * @license GNU General Public License, version 2 (GPL-2.0)
 *
-* Estonian translation by phpBBestonia.eu <https://www.phpbbestonia.eu>
 */
 
 /**
@@ -39,14 +38,5 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	// ACP Module
-	'ACP_BOARD_NOTICES'				=> 'Foorumi teated',
-	'ACP_BOARD_NOTICES_SETTINGS'	=> 'Seaded',
-	'ACP_BOARD_NOTICES_MANAGE'		=> 'Halda teateid',
-
-	// ACP Logs
-	'LOG_BOARD_NOTICE_ERROR'		=> '<strong>Viga foorumi teate loomisel</strong><br />» Viga %1$s real %2$s: %3$s',
-	'LOG_BOARD_NOTICES_SETTINGS'	=> "<strong>Foorumi teadete seaded uuendatud</strong>",
-	'LOG_BOARD_NOTICES_ADDED'		=> "<strong>Foorumi teade '%s' lisatud</strong>",
-	'LOG_BOARD_NOTICES_UPDATED'		=> "<strong>Foorumi teade '%s' uuendatud</strong>",
+	'BOARD_NOTICE_CLOSE'		=> 'Close notice',
 ));
