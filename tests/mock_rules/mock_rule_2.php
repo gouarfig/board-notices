@@ -33,6 +33,11 @@ class mock_rule_2 extends \fq\boardnotices\rules\rule_base implements \fq\boardn
 		return "Mock Rule 2";
 	}
 
+	public function getDisplayExplain()
+	{
+		return 'Mock Explanation';
+	}
+
 	public function getDisplayUnit()
 	{
 		return 'Mock Unit';

@@ -30,6 +30,11 @@ class has_not_posted_for extends rule_base implements rule_interface
 		return $this->user->lang('RULE_HAS_NOT_POSTED_FOR_1');
 	}
 
+	public function getDisplayExplain()
+	{
+		return '';
+	}
+
 	public function getDisplayUnit()
 	{
 		return $this->user->lang('RULE_HAS_NOT_POSTED_FOR_2');
@@ -69,10 +74,10 @@ class has_not_posted_for extends rule_base implements rule_interface
 	public function getAvailableVars()
 	{
 		return array(
-			'DAYS_NO_POSTS',
-			'WEEKS_NO_POSTS',
-			'MONTHS_NO_POSTS',
-			'YEARS_NO_POSTS',
+			'DAYS_NO_POST',
+			'WEEKS_NO_POST',
+			'MONTHS_NO_POST',
+			'YEARS_NO_POST',
 		);
 	}
 
@@ -94,10 +99,10 @@ class has_not_posted_for extends rule_base implements rule_interface
 		}
 
 		return array(
-			'DAYS_NO_POSTS' => $daysNoPosts,
-			'WEEKS_NO_POSTS' => $weeksNoPosts,
-			'MONTHS_NO_POSTS' => $monthsNoPosts,
-			'YEARS_NO_POSTS' => $yearsNoPosts,
+			'DAYS_NO_POST' => $daysNoPosts,
+			'WEEKS_NO_POST' => $weeksNoPosts,
+			'MONTHS_NO_POST' => $monthsNoPosts,
+			'YEARS_NO_POST' => $yearsNoPosts,
 		);
 	}
 

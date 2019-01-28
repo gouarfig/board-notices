@@ -33,6 +33,11 @@ class on_board_index extends rule_base implements rule_interface
 		return $this->user->lang('RULE_ON_BOARD_INDEX');
 	}
 
+	public function getDisplayExplain()
+	{
+		return '';
+	}
+
 	public function getDisplayUnit()
 	{
 		return '';

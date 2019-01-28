@@ -27,6 +27,7 @@ class constants
 	public static $RULES_CLASS_PREFIX = 'fq.boardnotices.rules';
 
 	public static $RULE_DISPLAY_NAME = 'display_name';
+	public static $RULE_DISPLAY_EXPLAIN = 'display_explain';
 	public static $RULE_DISPLAY_UNIT = 'display_unit';
 
 	public static $RULE_WITH_NO_TYPE = 'n/a';

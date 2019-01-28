@@ -36,6 +36,11 @@ class has_not_visited_for extends rule_base implements rule_interface
 		);
 	}
 
+	public function getDisplayExplain()
+	{
+		return '';
+	}
+
 	public function getDisplayUnit()
 	{
 		return $this->user->lang('RULE_DAY(S)');

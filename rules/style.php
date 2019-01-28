@@ -37,6 +37,11 @@ class style extends rule_base implements rule_interface
 		return $this->user->lang('RULE_STYLE');
 	}
 
+	public function getDisplayExplain()
+	{
+		return '';
+	}
+
 	public function getDisplayUnit()
 	{
 		return '';

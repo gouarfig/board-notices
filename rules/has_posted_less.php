@@ -30,6 +30,11 @@ class has_posted_less extends rule_base implements rule_interface
 		return $this->user->lang('RULE_HAS_POSTED_LESS');
 	}
 
+	public function getDisplayExplain()
+	{
+		return '';
+	}
+
 	public function getDisplayUnit()
 	{
 		return '';

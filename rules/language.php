@@ -33,6 +33,11 @@ class language extends rule_base implements rule_interface
 		return $this->user->lang('RULE_LANGUAGE');
 	}
 
+	public function getDisplayExplain()
+	{
+		return '';
+	}
+
 	public function getDisplayUnit()
 	{
 		return '';

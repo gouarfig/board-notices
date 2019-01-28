@@ -106,7 +106,7 @@
 		{# <tr data-id="{{ rule.RULE_NAME }}" class="{% if rule.NOTICE_RULE_CHECKED %}active-rule{% else %}inactive-rule{% endif %}">
 			<td class="boardnotice-checkbox">
 				<input type="hidden" name="notice_rule_id[{{ rule.RULE_NAME }}]" value="{{ rule.NOTICE_RULE_ID }}" />
-				<input type="checkbox" name="notice_rule_checked[{{ rule.RULE_NAME }}]" data-rule="checkbox" data-id="{{ rule.RULE_NAME }}" value="1"<!-- IF rule.NOTICE_RULE_CHECKED --> checked<!-- ENDIF -->/>
+				<input type="checkbox" name="notice_rule_checked[{{ rule.RULE_NAME }}]" data-rule="checkbox" data-id="{{ rule.RULE_NAME }}" value="1"{% if rule.NOTICE_RULE_CHECKED %} checked{% endif %}/>
 			</td>
 			<td class="boardnotice-description">
 				<strong>{{ rule.RULE_DESCRIPTION }}</strong>
@@ -117,10 +117,13 @@
 		<tr data-id="{{ rule.RULE_NAME }}" class="{% if rule.NOTICE_RULE_CHECKED %}active-rule{% else %}inactive-rule{% endif %}">
 			<td class="boardnotice-checkbox">
 				<input type="hidden" name="notice_rule_id[{{ rule.RULE_NAME }}]" value="{{ rule.NOTICE_RULE_ID }}" />
-				<input type="checkbox" name="notice_rule_checked[{{ rule.RULE_NAME }}]" data-rule="checkbox" data-id="{{ rule.RULE_NAME }}" value="1"<!-- IF rule.NOTICE_RULE_CHECKED --> checked<!-- ENDIF -->/>
+				<input type="checkbox" name="notice_rule_checked[{{ rule.RULE_NAME }}]" id="checkbox_{{ rule.RULE_NAME }}" data-rule="checkbox" data-id="{{ rule.RULE_NAME }}" value="1"{% if rule.NOTICE_RULE_CHECKED %} checked{% endif %}/>
 			</td>
 			<td class="boardnotice-description">
 				<strong>{{ rule.RULE_DESCRIPTION }}</strong>
+				{% if rule.RULE_EXPLAIN %}
+					<br />{{ rule.RULE_EXPLAIN }}
+				{% endif %}
 			</td>
 			<td class="boardnotice-conditions">
 				{% if rule.RULE_TYPE == 'yesno' %}

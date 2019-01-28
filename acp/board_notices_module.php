@@ -11,6 +11,8 @@
 
 namespace fq\boardnotices\acp;
 
+use \fq\boardnotices\service\constants;
+
 class board_notices_module
 {
 
@@ -336,14 +338,17 @@ class board_notices_module
 		$all_rules = $this->getAllRules();
 		foreach ($all_rules as $rule_name => $rule_descriptions)
 		{
+			$rule_explain = '';
 			if (is_array($rule_descriptions))
 			{
-				$rule_description = $rule_descriptions['display_name'];
+				$rule_description = $rule_descriptions[constants::$RULE_DISPLAY_NAME];
+				$rule_explain = $rule_descriptions[constants::$RULE_DISPLAY_EXPLAIN];
 			}
 			else
 			{
 				$rule_description = $rule_descriptions;
 			}
+
 			$rule_type = $this->rules_manager->getRuleType($rule_name);
 			$rule_selected = isset($data['notice_rule_conditions'][$rule_name])
 						? $data['notice_rule_conditions'][$rule_name]
@@ -366,6 +371,7 @@ class board_notices_module
 				'NOTICE_RULE_CHECKED' => isset($data['notice_rule_checked'][$rule_name]) ? true : false,
 				'RULE_NAME' => $rule_name,
 				'RULE_DESCRIPTION' => $rule_description,
+				'RULE_EXPLAIN' => $rule_explain,
 				'RULE_UNIT' => (is_array($rule_descriptions)) ? $rule_descriptions['display_unit'] : '',
 				// 'RULE_CONDITIONS' => $this->getDisplayConditions(
 				// 		$rule_type,

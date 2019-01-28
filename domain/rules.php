@@ -231,9 +231,10 @@ class rules
 	private function getRuleDisplayValues($rule_name)
 	{
 		$displayName = $this->rules[$rule_name]->getDisplayName();
+		$displayExplain = $this->rules[$rule_name]->getDisplayExplain();
 		$displayUnit = $this->rules[$rule_name]->getDisplayUnit();
 
-		if (empty($displayUnit))
+		if (empty($displayExplain) && empty($displayUnit))
 		{
 			return $displayName;
 		}
@@ -241,6 +242,7 @@ class rules
 		{
 			if (is_array($displayName))
 			{
+				$displayName[constants::$RULE_DISPLAY_EXPLAIN] = $displayExplain;
 				$displayName[constants::$RULE_DISPLAY_UNIT] = $displayUnit;
 				return $displayName;
 			}
@@ -248,6 +250,7 @@ class rules
 			{
 				return array(
 					constants::$RULE_DISPLAY_NAME => $displayName,
+					constants::$RULE_DISPLAY_EXPLAIN => $displayExplain,
 					constants::$RULE_DISPLAY_UNIT => $displayUnit
 				);
 			}

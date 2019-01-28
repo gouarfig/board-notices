@@ -33,6 +33,11 @@ class has_posted_in_forum extends rule_base implements rule_interface
 		return $this->user->lang('RULE_HAS_POSTED_IN_FORUM');
 	}
 
+	public function getDisplayExplain()
+	{
+		return $this->user->lang('RULE_HAS_POSTED_IN_FORUM_EXPLAIN');
+	}
+
 	public function getDisplayUnit()
 	{
 		return '';

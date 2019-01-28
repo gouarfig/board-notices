@@ -33,6 +33,11 @@ class in_forum extends rule_base implements rule_interface
 		return $this->user->lang('RULE_IN_FORUM');
 	}
 
+	public function getDisplayExplain()
+	{
+		return '';
+	}
+
 	public function getDisplayUnit()
 	{
 		return '';

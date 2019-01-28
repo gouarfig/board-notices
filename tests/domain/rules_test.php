@@ -95,6 +95,7 @@ class rules_test extends \PHPUnit_Framework_TestCase
 		$expected = array(
 			'display_name' => 'Mock Rule 2',
 			'display_unit' => 'Mock Unit',
+			'display_explain' => 'Mock Explanation',
 		);
 		$this->assertEquals($expected, $definedRules['mock_rule_2']);
 	}

@@ -33,6 +33,11 @@ class not_in_usergroup extends rule_base implements rule_interface
 		return $this->user->lang('RULE_NOT_IN_USERGROUP');
 	}
 
+	public function getDisplayExplain()
+	{
+		return '';
+	}
+
 	public function getDisplayUnit()
 	{
 		return '';

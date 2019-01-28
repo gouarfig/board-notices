@@ -62,6 +62,11 @@ class anniversary extends rule_base implements rule_interface
 		return $this->user->lang('RULE_ANNIVERSARY');
 	}
 
+	public function getDisplayExplain()
+	{
+		return '';
+	}
+
 	public function getDisplayUnit()
 	{
 		return '';

@@ -13,6 +13,7 @@ namespace fq\boardnotices\rules;
 
 interface rule_interface {
 	public function getDisplayName();
+	public function getDisplayExplain();
 	public function getDisplayUnit();
 	public function getType();
 	public function getDefault();

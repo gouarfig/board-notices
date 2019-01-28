@@ -30,6 +30,11 @@ class has_posted_exactly extends rule_base implements rule_interface
 		return $this->user->lang('RULE_HAS_POSTED_EXACTLY');
 	}
 
+	public function getDisplayExplain()
+	{
+		return '';
+	}
+
 	public function getDisplayUnit()
 	{
 		return '';
