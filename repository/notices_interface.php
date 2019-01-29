@@ -12,7 +12,7 @@
 
 namespace fq\boardnotices\repository;
 
-interface boardnotices_interface
+interface notices_interface
 {
 	function getNotices($active_only = true);
 	function getAllNotices();

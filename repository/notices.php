@@ -12,10 +12,10 @@
 
 namespace fq\boardnotices\repository;
 
-use fq\boardnotices\repository\boardnotices_interface;
+use fq\boardnotices\repository\notices_interface;
 use fq\boardnotices\service\constants;
 
-class boardnotices implements boardnotices_interface
+class notices implements notices_interface
 {
 	/** @var \phpbb\db\driver\driver_interface $db */
 	private $db;

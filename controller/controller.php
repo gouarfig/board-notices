@@ -23,8 +23,11 @@ class controller
 	/** @var \phpbb\user */
 	private $user;
 
-	/** @var \fq\boardnotices\repository\boardnotices_interface $repository */
-	private $repository;
+	/** @var \fq\boardnotices\repository\notices_interface $notices_repository */
+	private $notices_repository;
+
+	/** @var \fq\boardnotices\repository\notices_seen_interface $notices_seen_repository */
+	private $notices_seen_repository;
 
 	/**
 	* Constructor
@@ -32,20 +35,23 @@ class controller
 	* @param \phpbb\config\config                $config         Config object
 	* @param \phpbb\request\request              $request        Request object
 	* @param \phpbb\user                         $user           User object
-	* @param \fq\boardnotices\repository\boardnotices_interface $repository
+	* @param \fq\boardnotices\repository\notices_interface $notices_repository
+	* @param \fq\boardnotices\repository\notices_seen_interface $notices_seen_repository
 	* @access public
 	*/
 	public function __construct(
 		\phpbb\config\config $config,
 		\phpbb\request\request $request,
 		\phpbb\user $user,
-		\fq\boardnotices\repository\boardnotices_interface $repository
+		\fq\boardnotices\repository\notices_interface $notices_repository,
+		\fq\boardnotices\repository\notices_seen_interface $notices_seen_repository
 	)
 	{
 		$this->config = $config;
 		$this->request = $request;
 		$this->user = $user;
-		$this->repository = $repository;
+		$this->notices_repository = $notices_repository;
+		$this->notices_seen_repository = $notices_seen_repository;
 	}
 
 	/**
@@ -63,7 +69,7 @@ class controller
 		{
 			throw new \phpbb\exception\http_exception(403, 'NO_AUTH_OPERATION');
 		}
-		$notice = $this->repository->getNoticeFromId($notice_id);
+		$notice = $this->notices_repository->getNoticeFromId($notice_id);
 		if (empty($notice))
 		{
 			throw new \phpbb\exception\http_exception(403, 'NO_AUTH_OPERATION');
@@ -74,13 +80,17 @@ class controller
 			throw new \phpbb\exception\http_exception(403, 'NO_AUTH_OPERATION');
 		}
 
-		// Set a cookie
-		$response = $this->set_board_notice_cookie();
-
-		// Close the notice for registered users
-		if ($this->user->data['is_registered'])
+		// Do nothing in preview mode
+		if (empty($this->request->variable('preview', 0)))
 		{
-			$response = $this->update_board_notice_status();
+			// Set a cookie
+			$response = $this->set_board_notice_cookie();
+
+			// Close the notice for registered users
+			if ($this->user->data['is_registered'])
+			{
+				$response = $this->update_board_notice_status($notice_id, $this->user->data['user_id']);
+			}
 		}
 
 		// Send a JSON response if an AJAX request was used
@@ -123,16 +133,8 @@ class controller
 	* @return bool True if successful, false otherwise
 	* @access private
 	*/
-	private function update_board_notice_status()
+	private function update_board_notice_status($notice_id, $user_id)
 	{
-		return true;
-		// Set notice status to 0 for registered user
-		// $sql = 'UPDATE ' . USERS_TABLE . '
-		// 	SET board_notices_status = 0
-		// 	WHERE user_id = ' . (int) $this->user->data['user_id'] . '
-		// 	AND user_type <> ' . USER_IGNORE;
-		// $this->db->sql_query($sql);
-
-		// return (bool) $this->db->sql_affectedrows();
+		return $this->notices_seen_repository->setNoticeDismissed($notice_id, $user_id);
 	}
 }

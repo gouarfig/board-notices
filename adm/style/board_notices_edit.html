@@ -144,21 +144,21 @@
 				{% elseif rule.RULE_TYPE == 'date' %}
 					{{ lang('DAY') ~ lang('COLON') }}
 					<select name="notice_rule_conditions[{{ rule.RULE_NAME }}][0]">
-						<option value="0">---</option>
+						<option value="0">{{ lang('RULE_DATE_ANY') }}</option>
 						{% for day in range(1, 31) %}
 							<option value="{{ day }}"{% if rule.RULE_DATA[0] == day %} selected{% endif %}>{{ day }}</option>
 						{% endfor %}
 					</select>
 					{{ lang('MONTH') ~ lang('COLON') }}
 					<select name="notice_rule_conditions[{{ rule.RULE_NAME }}][1]">
-						<option value="0">---</option>
+						<option value="0">{{ lang('RULE_DATE_ANY') }}</option>
 						{% for month in range(1, 12) %}
 							<option value="{{ month }}"{% if rule.RULE_DATA[1] == month %} selected{% endif %}>{{ month }}</option>
 						{% endfor %}
 					</select>
 					{{ lang('YEAR') ~ lang('COLON') }}
 					<select name="notice_rule_conditions[{{ rule.RULE_NAME }}][2]">
-						<option value="0">---</option>
+						<option value="0">{{ lang('RULE_DATE_ANY') }}</option>
 						{% for year in range(2015, 2038) %}
 							<option value="{{ year }}"{% if rule.RULE_DATA[2] == year %} selected{% endif %}>{{ year }}</option>
 						{% endfor %}

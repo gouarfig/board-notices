@@ -30,8 +30,10 @@ class listener implements EventSubscriberInterface
 	private $controller_helper;
 	/** @var \phpbb\language\language $language */
 	private $language;
-	/** @var \fq\boardnotices\repository\boardnotices_interface $repository */
-	private $repository;
+	/** @var \fq\boardnotices\repository\notices_interface $notices_repository */
+	private $notices_repository;
+	/** @var \fq\boardnotices\repository\notices_seen_interface $notices_seen_repository */
+	private $notices_seen_repository;
 
 	static public function getSubscribedEvents()
 	{
@@ -52,7 +54,8 @@ class listener implements EventSubscriberInterface
 		\phpbb\request\request $request,
 		\phpbb\controller\helper $controller_helper,
 		\phpbb\language\language $language,
-		\fq\boardnotices\repository\boardnotices_interface $repository)
+		\fq\boardnotices\repository\notices_interface $notices_repository,
+		\fq\boardnotices\repository\notices_seen_interface $notices_seen_repository)
 	{
 		$this->user = $user;
 		$this->config = $config;
@@ -60,7 +63,8 @@ class listener implements EventSubscriberInterface
 		$this->request = $request;
 		$this->controller_helper = $controller_helper;
 		$this->language = $language;
-		$this->repository = $repository;
+		$this->notices_repository = $notices_repository;
+		$this->notices_seen_repository = $notices_seen_repository;
 	}
 
 	/**
@@ -80,14 +84,14 @@ class listener implements EventSubscriberInterface
 		{
 			// Force the preview of a notice
 			$preview_id = $this->getPreviewId();
-			$raw_notice = $this->repository->getNoticeFromId($preview_id);
+			$raw_notice = $this->notices_repository->getNoticeFromId($preview_id);
 			$notices[] = $this->getNotice($raw_notice);
 			$force_all_rules = true;
 		}
 		else if ($this->extensionEnabled())
 		{
 			// Normal notices mode
-			$raw_notices = $this->repository->getActiveNotices();
+			$raw_notices = $this->notices_repository->getActiveNotices();
 			foreach ($raw_notices as $raw_notice)
 			{
 				$notices[] = $this->getNotice($raw_notice);
@@ -99,8 +103,15 @@ class listener implements EventSubscriberInterface
 		$notice_bgcolor = '';
 		$notice_style = '';
 
+		$notices_seen = $this->notices_seen_repository->getDismissedNotices($this->user->data['user_id']);
+
 		foreach ($notices as $notice)
 		{
+			if (array_key_exists($notice->getId(), $notices_seen))
+			{
+				// Notice has been dismissed
+				continue;
+			}
 			if ($notice->hasValidatedAllRules($force_all_rules, $preview))
 			{
 				// Prepare board notice message for display
@@ -206,7 +217,7 @@ class listener implements EventSubscriberInterface
 	 */
 	private function getNotice($raw_notice)
 	{
-		$rules = $this->repository->getRulesFor($raw_notice['notice_id']);
+		$rules = $this->notices_repository->getRulesFor($raw_notice['notice_id']);
 		return new notice($raw_notice, $rules);
 	}
 
@@ -216,7 +227,7 @@ class listener implements EventSubscriberInterface
 
 		if ($forum_id > 0)
 		{
-			$this->repository->setForumVisited($this->user->data['user_id'], $forum_id);
+			$this->notices_repository->setForumVisited($this->user->data['user_id'], $forum_id);
 		}
 	}
 }

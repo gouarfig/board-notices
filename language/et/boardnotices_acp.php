@@ -110,6 +110,7 @@ $lang = array_merge($lang, array(
 	'RULE_ANNIVERSARY'						=> "Kasutajate registreerimise kuupäev",
 	'RULE_BIRTHDAY'							=> "Kasutajate sünnipäevad",
 	'RULE_DATE'								=> "Kuupäev on",
+	'RULE_DATE_ANY'							=> 'Any', // @todo
 	'RULE_HAS_NEVER_POSTED'					=> "Kasutaja ei ole kunagi postitanud",
 	'RULE_HAS_NEVER_POSTED_EXPLAIN'			=> "(võtab arvesse ka heakskiitu ootavaid postitusi)",
 	'RULE_HAS_NEVER_POSTED_IN_FORUM'		=> "Kasutaja ei ole kunagi ühelegi nendest foorumitest postitanud",

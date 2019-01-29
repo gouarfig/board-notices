@@ -21,6 +21,7 @@ class constants
 	public static $CONFIG_ACTIVE_NOTICES_CACHE_KEY = 'boardnotices_active_notices';
 	public static $CONFIG_ALL_NOTICES_CACHE_KEY = 'boardnotices_all_notices';
 	public static $CONFIG_RULES_CACHE_KEY = 'boardnotices_rules';
+	public static $CONFIG_DISMISSED_CACHE_KEY = 'boardnotices_seen';
 
 	public static $RULES_FOLDER = 'ext/fq/boardnotices/rules';
 	public static $RULES_FILE_EXTENSION = '.php';

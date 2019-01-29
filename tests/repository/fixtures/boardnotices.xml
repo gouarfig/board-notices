@@ -96,6 +96,11 @@
 			<value>json:["100"]</value>
 		</row>
 	</table>
+	<table name="phpbb_notices_seen">
+		<column>notice_id</column>
+		<column>user_id</column>
+		<column>seen</column>
+	</table>
 	<table name="phpbb_forums_visited">
 		<column>forum_id</column>
 		<column>user_id</column>

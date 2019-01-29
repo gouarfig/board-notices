@@ -15,9 +15,7 @@ namespace fq\boardnotices\tests\repository;
 
 define('BOARDNOTICES_DEBUG', false);
 
-use fq\boardnotices\repository\boardnotices;
-
-abstract class boardnotices_testbase extends \phpbb_database_test_case
+abstract class notices_testbase extends \phpbb_database_test_case
 {
 	protected $db;
 

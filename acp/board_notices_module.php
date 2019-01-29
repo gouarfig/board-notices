@@ -211,7 +211,7 @@ class board_notices_module
 	{
 		global $phpbb_root_path, $phpEx;
 
-		/** @var \fq\boardnotices\repository\boardnotices_interface */
+		/** @var \fq\boardnotices\repository\notices_interface */
 		$data_layer = $this->getRepository();
 
 		// Add the board notices ACP lang file
@@ -488,7 +488,7 @@ class board_notices_module
 
 	public function moveNotice($action, $notice_id)
 	{
-		/** @var \fq\boardnotices\repository\boardnotices $data_layer */
+		/** @var \fq\boardnotices\repository\notices $data_layer */
 		$data_layer = $this->getRepository();
 
 		$move_executed = $data_layer->moveNotice($action, $notice_id);
@@ -504,7 +504,7 @@ class board_notices_module
 
 	public function moveNoticeFirst($notice_id)
 	{
-		/** @var \fq\boardnotices\repository\boardnotices $data_layer */
+		/** @var \fq\boardnotices\repository\notices $data_layer */
 		$data_layer = $this->getRepository();
 
 		$move_executed = $data_layer->moveNoticeFirst($notice_id);
@@ -520,7 +520,7 @@ class board_notices_module
 
 	public function moveNoticeLast($notice_id)
 	{
-		/** @var \fq\boardnotices\repository\boardnotices $data_layer */
+		/** @var \fq\boardnotices\repository\notices $data_layer */
 		$data_layer = $this->getRepository();
 
 		$move_executed = $data_layer->moveNoticeLast($notice_id);
@@ -536,7 +536,7 @@ class board_notices_module
 
 	public function deleteNotice($notice_id)
 	{
-		/** @var \fq\boardnotices\repository\boardnotices $data_layer */
+		/** @var \fq\boardnotices\repository\notices $data_layer */
 		$data_layer = $this->getRepository();
 
 		$delete_executed = $data_layer->deleteNotice($notice_id);
@@ -552,7 +552,7 @@ class board_notices_module
 
 	public function enableNotice($action, $notice_id)
 	{
-		/** @var \fq\boardnotices\repository\boardnotices $data_layer */
+		/** @var \fq\boardnotices\repository\notices $data_layer */
 		$data_layer = $this->getRepository();
 
 		$executed = $data_layer->enableNotice($action, $notice_id);
@@ -570,8 +570,8 @@ class board_notices_module
 	 * Returns the current repository
 	 *
 	 * @global type $phpbb_container
-	 * @staticvar \fq\boardnotices\repository\boardnotices $repository
-	 * @return \fq\boardnotices\repository\boardnotices
+	 * @staticvar \fq\boardnotices\repository\notices $repository
+	 * @return \fq\boardnotices\repository\notices
 	 */
 	protected function getRepository()
 	{
@@ -580,7 +580,7 @@ class board_notices_module
 
 		if ($repository === null)
 		{
-			$repository = $phpbb_container->get('fq.boardnotices.repository.boardnotices');
+			$repository = $phpbb_container->get('fq.boardnotices.repository.notices');
 		}
 		return $repository;
 	}
@@ -609,6 +609,7 @@ class board_notices_module
 		$data = array(
 			'active' => false,
 			'title' => '',
+			'dismissable' => false,
 			'message' => '',
 			'message_uid' => '',
 			'message_bitfield' => '',

@@ -23,8 +23,8 @@ services:
       - '%tables.boardnotices.notices_seen%'
       - '%tables.boardnotices.forums_visited%'
 
-  fq.boardnotices.repository.boardnotices:
-    class: fq\boardnotices\repository\boardnotices
+  fq.boardnotices.repository.notices:
+    class: fq\boardnotices\repository\notices
     arguments:
       - '@dbal.conn'
       - '@user'
@@ -35,6 +35,16 @@ services:
       - '%tables.boardnotices.notices_seen%'
       - '%tables.boardnotices.forums_visited%'
 
+  fq.boardnotices.repository.notices_seen:
+    class: fq\boardnotices\repository\notices_seen
+    arguments:
+      - '@dbal.conn'
+      - '@user'
+      - '@cache'
+      - '@config'
+      - '%tables.boardnotices.notices%'
+      - '%tables.boardnotices.notices_seen%'
+
   fq.boardnotices.listener:
     class: fq\boardnotices\event\listener
     arguments:
@@ -44,7 +54,8 @@ services:
       - '@request'
       - '@controller.helper'
       - '@language'
-      - '@fq.boardnotices.repository.boardnotices'
+      - '@fq.boardnotices.repository.notices'
+      - '@fq.boardnotices.repository.notices_seen'
     tags:
       - { name: event.listener }
 
@@ -54,7 +65,8 @@ services:
       - '@config'
       - '@request'
       - '@user'
-      - '@fq.boardnotices.repository.boardnotices'
+      - '@fq.boardnotices.repository.notices'
+      - '@fq.boardnotices.repository.notices_seen'
 
   fq.boardnotices.domain.rules:
     class: fq\boardnotices\domain\rules

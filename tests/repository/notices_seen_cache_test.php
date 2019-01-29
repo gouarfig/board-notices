@@ -13,18 +13,16 @@
 
 namespace fq\boardnotices\tests\repository;
 
-define('BOARDNOTICES_DEBUG', false);
+use fq\boardnotices\repository\notices_seen;
 
-use fq\boardnotices\repository\boardnotices;
-
-class boardnotices_nocache_test extends boardnotices_testbase
+class notices_seen_cache_test extends notices_seen_testbase
 {
 	/**
 	 * A new clean database is re-created on each test
 	 *
-	 * @return boardnotices
+	 * @return \fq\boardnotices\repository\notices_seen
 	 */
-	protected function getBoardNoticesInstance()
+	protected function getInstance()
 	{
 		$phpbb_root_path = $this->getRootFolder();
 		$language_file_loader = new \phpbb\language\language_file_loader($phpbb_root_path, 'php');
@@ -36,17 +34,15 @@ class boardnotices_nocache_test extends boardnotices_testbase
 		);
 		$config = new \phpbb\config\config($default_config);
 		$phpEx = substr(strrchr(__FILE__, '.'), 1);
-		$cache_driver = new \phpbb\cache\driver\dummy();
+		$cache_driver = new mock_cache();
 		$cache = new \phpbb\cache\service($cache_driver, $config, $this->db, $phpbb_root_path, $phpEx);
-		$dac = new boardnotices(
+		$dac = new notices_seen(
 			$this->db,
 			$user,
 			$cache,
 			$config,
 			$this->table_prefix . 'notices',
-			$this->table_prefix . 'notices_rules',
-			$this->table_prefix . 'notices_seen',
-			$this->table_prefix . 'forums_visited'
+			$this->table_prefix . 'notices_seen'
 		);
 
 		return $dac;

@@ -15,9 +15,9 @@ namespace fq\boardnotices\tests\repository;
 
 define('BOARDNOTICES_DEBUG', false);
 
-use fq\boardnotices\repository\boardnotices;
+use fq\boardnotices\repository\notices;
 
-class boardnotices_cache_test extends boardnotices_testbase
+class notices_nocache_test extends notices_testbase
 {
 	/**
 	 * A new clean database is re-created on each test
@@ -36,9 +36,9 @@ class boardnotices_cache_test extends boardnotices_testbase
 		);
 		$config = new \phpbb\config\config($default_config);
 		$phpEx = substr(strrchr(__FILE__, '.'), 1);
-		$cache_driver = new mock_cache();
+		$cache_driver = new \phpbb\cache\driver\dummy();
 		$cache = new \phpbb\cache\service($cache_driver, $config, $this->db, $phpbb_root_path, $phpEx);
-		$dac = new boardnotices(
+		$dac = new notices(
 			$this->db,
 			$user,
 			$cache,
