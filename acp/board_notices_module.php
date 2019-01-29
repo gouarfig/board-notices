@@ -243,8 +243,8 @@ class board_notices_module
 				'TITLE' => $notice['title'],
 				'PREVIEW_LINK' => append_sid("{$phpbb_root_path}index.$phpEx") . "&bnpk=" . $this->config['boardnotices_previewkey'] . "&bnid=" . (int) $notice['notice_id'],
 				'RULES' => count($rules),
-				'ACTIVE' => $notice['active'] ? $this->user->lang('YES') : $this->user->lang('NO'),
 				'ENABLED' => $notice['active'] ? true : false,
+				'DISMISS' => $notice['dismissable'] ? true : false,
 				'U_ENABLE' => $this->u_action . '&amp;action=enable&amp;id=' . (int) $notice['notice_id'],
 				'U_DISABLE' => $this->u_action . '&amp;action=disable&amp;id=' . (int) $notice['notice_id'],
 				'U_EDIT' => $this->u_action . '&amp;action=edit&amp;id=' . (int) $notice['notice_id'],
@@ -315,6 +315,7 @@ class board_notices_module
 			'NOTICE_ID' => isset($data['notice_id']) ? $data['notice_id'] : '',
 			'BOARD_NOTICE_ACTIVE' => $data['active'],
 			'BOARD_NOTICE_TITLE' => $data['title'],
+			'BOARD_NOTICE_DISMISSABLE' => $data['dismissable'],
 			'BOARD_NOTICE_TEXT' => $notice_text_edit['text'],
 			'BOARD_NOTICE_PREVIEW' => $notice_text_preview,
 			'BOARD_NOTICE_BGCOLOR' => $data['message_bgcolor'],
@@ -668,14 +669,13 @@ class board_notices_module
 		}
 
 		// Get new values from the form
+		$data['active'] = $this->request->variable('board_notice_active', false);
 		$data['title'] = $this->request->variable('board_notice_title', '', true);
+		$data['dismissable'] = $this->request->variable('board_notice_dismissable', false);
 		$data['message'] = $this->request->variable('board_notice_text', '', true);
 		$data['title'] = $this->request->variable('board_notice_title', '', true);
 		$data['message_bgcolor'] = $this->request->variable('board_notice_bgcolor', '', true);
 		$data['message_style'] = $this->request->variable('board_notice_style', '', true);
-
-		// Get config options from the form
-		$data['active'] = $this->request->variable('board_notice_active', false);
 
 		if (empty($data['title']) || empty($data['message']))
 		{

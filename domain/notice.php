@@ -90,6 +90,14 @@ class notice
 	}
 
 	/**
+	 * @return int
+	 */
+	public function getId()
+	{
+		return $this->properties['notice_id'];
+	}
+
+	/**
 	 * @return string
 	 */
 	public function getMessage()

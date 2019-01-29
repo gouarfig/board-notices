@@ -39,4 +39,5 @@ class constants
 	public static $RULE_TYPE_YESNO = 'yesno';
 
 	public static $CONTROLLER_ROUTING_ID = 'fq_boardnotices_controller';
+	public static $ROUTING_CLOSE_HASH_ID = 'close_boardnotice';
 }

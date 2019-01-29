@@ -72,8 +72,12 @@ $lang = array_merge($lang, array(
 	'BOARD_NOTICE_ADD'						=> 'Add new notice',
 	'BOARD_NOTICE_RULE_ADD'					=> 'Add new rule',
 
+	'COLUMN_CAN_DISMISS'					=> 'Can dismiss',
+
 	'LABEL_BOARD_NOTICE_ACTIVE'				=> 'Board notice is enabled',
 	'LABEL_BOARD_NOTICE_TITLE'				=> 'Board notice name',
+	'LABEL_BOARD_NOTICE_DISMISSABLE'		=> 'Board notice can be dismissed',
+	'LABEL_BOARD_NOTICE_DISMISS_EXPLAIN'	=> 'The user will have the option to click on a close button (which by default is a cross at the right corner of the notice) to hide the notice. It will come back depending on your configuration.',
 	'LABEL_BOARD_NOTICE_PREVIEW'			=> 'Message preview',
 	'LABEL_BOARD_NOTICE_TEXT'				=> 'Message displayed when conditions are met',
 	'LABEL_BOARD_NOTICE_BGCOLOR'			=> 'Background color of the message',

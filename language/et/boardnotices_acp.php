@@ -73,8 +73,12 @@ $lang = array_merge($lang, array(
 	'BOARD_NOTICE_ADD'						=> 'Lisa uus teade',
 	'BOARD_NOTICE_RULE_ADD'					=> 'Lisa uus reegel',
 
+	'COLUMN_CAN_DISMISS'					=> 'Can dismiss', // @todo
+
 	'LABEL_BOARD_NOTICE_ACTIVE'				=> 'Foorumi teade on lubatud',
 	'LABEL_BOARD_NOTICE_TITLE'				=> 'Foorumi teate nimi',
+	'LABEL_BOARD_NOTICE_DISMISSABLE'		=> 'Board notice can be dismissed', // @todo
+	'LABEL_BOARD_NOTICE_DISMISS_EXPLAIN'	=> 'The user will have the option to click on a close button (which by default is a cross at the right corner of the notice) to hide the notice. It will come back depending on your configuration.', // @todo
 	'LABEL_BOARD_NOTICE_PREVIEW'			=> 'Sõnumi eelvaade',
 	'LABEL_BOARD_NOTICE_TEXT'				=> 'Sõnum kuvatakse, kui tingimused on täidetud',
 	'LABEL_BOARD_NOTICE_BGCOLOR'			=> 'Sõnumi taustavärv',

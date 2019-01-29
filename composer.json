@@ -3,8 +3,8 @@
 	"type": "phpbb-extension",
 	"description": "With this extension, you can manage all sorts of notices for your board",
 	"homepage": "https://github.com/gouarfig/board-notices",
-	"version": "0.5.0-alpha",
-	"time": "2019-01-28",
+	"version": "0.5.0-beta",
+	"time": "2019-01-29",
 	"license": "GPL-2.0-only",
 	"authors": [{
 			"name": "Fred Quointeau",

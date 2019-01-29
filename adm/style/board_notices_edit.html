@@ -29,7 +29,7 @@
 	<fieldset>
 		<legend>{{ lang('GENERAL_OPTIONS') }}</legend>
 		<dl>
-			<dt><label for="board_notice_enable">{{ lang('LABEL_BOARD_NOTICE_ACTIVE') ~ lang('COLON') }}</label></dt>
+			<dt><label for="board_notice_active">{{ lang('LABEL_BOARD_NOTICE_ACTIVE') ~ lang('COLON') }}</label></dt>
 			<dd>
 				<label><input type="radio" class="radio" id="board_notice_active" name="board_notice_active" value="1"{% if BOARD_NOTICE_ACTIVE %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
 				<label><input type="radio" class="radio" name="board_notice_active" value="0"{% if not BOARD_NOTICE_ACTIVE %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
@@ -39,6 +39,14 @@
 			<dt><label for="board_notice_title">{{ lang('LABEL_BOARD_NOTICE_TITLE') ~ lang('COLON') }}</label></dt>
 			<dd>
 				<input name="board_notice_title" type="text" id="board_notice_title" value="{{ BOARD_NOTICE_TITLE }}" size="50" maxlength="100" />
+			</dd>
+		</dl>
+		<dl>
+			<dt><label for="board_notice_dismissable">{{ lang('LABEL_BOARD_NOTICE_DISMISSABLE') ~ lang('COLON') }}</label>
+				<br /><span>{{ lang('LABEL_BOARD_NOTICE_DISMISS_EXPLAIN') }}</span></dt>
+			<dd>
+				<label><input type="radio" class="radio" id="board_notice_dismissable" name="board_notice_dismissable" value="1"{% if BOARD_NOTICE_DISMISSABLE %} checked="checked"{% endif %} /> {{ lang('YES') }}</label>
+				<label><input type="radio" class="radio" name="board_notice_dismissable" value="0"{% if not BOARD_NOTICE_DISMISSABLE %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
 	</fieldset>

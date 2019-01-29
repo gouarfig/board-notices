@@ -10,6 +10,8 @@
 
 namespace fq\boardnotices\controller;
 
+use fq\boardnotices\service\constants;
+
 class controller
 {
 	/** @var \phpbb\config\config */
@@ -55,8 +57,19 @@ class controller
 	*/
 	public function close_notice()
 	{
+		// Check the notice_id first
+		$notice_id = (int) $this->request->variable('notice_id', 0);
+		if (empty($notice_id))
+		{
+			throw new \phpbb\exception\http_exception(403, 'NO_AUTH_OPERATION');
+		}
+		$notice = $this->repository->getNoticeFromId($notice_id);
+		if (empty($notice))
+		{
+			throw new \phpbb\exception\http_exception(403, 'NO_AUTH_OPERATION');
+		}
 		// Check the link hash to protect against CSRF/XSRF attacks
-		if (!$this->config['board_notices_dismiss'] || !check_link_hash($this->request->variable('hash', ''), 'close_boardnotice'))
+		if (!$notice['dismissable'] || !check_link_hash($this->request->variable('hash', ''), constants::$ROUTING_CLOSE_HASH_ID))
 		{
 			throw new \phpbb\exception\http_exception(403, 'NO_AUTH_OPERATION');
 		}
@@ -112,6 +125,7 @@ class controller
 	*/
 	private function update_board_notice_status()
 	{
+		return true;
 		// Set notice status to 0 for registered user
 		// $sql = 'UPDATE ' . USERS_TABLE . '
 		// 	SET board_notices_status = 0

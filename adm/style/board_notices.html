@@ -25,6 +25,7 @@
 			<th>{{ lang('BOARD_NOTICE_TITLE') }}</th>
 			<th></th>
 			<th>{{ lang('BOARD_NOTICE_RULES') }}</th>
+			<th>{{ lang('COLUMN_CAN_DISMISS') }}</th>
 			<th>{{ lang('ACTIVE') }}</th>
 			<th></th>
 			<th>{{ lang('OPTIONS') }}</th>
@@ -36,7 +37,8 @@
 			<td>{{ notice.TITLE }}</td>
 			<td style="text-align: center;"><a href="{{ notice.PREVIEW_LINK }}" target="board-notices-preview">{{ lang('PREVIEW') }}</a></td>
 			<td style="text-align: right;">{{ notice.RULES }}</td>
-			<td style="text-align: center;">{{ notice.ACTIVE }}</td>
+			<td style="text-align: center;">{% if notice.DISMISS %} {{ lang('YES') }} {% else %} {{ lang('NO') }} {% endif %}</td>
+			<td style="text-align: center;">{% if notice.ENABLED %} {{ lang('YES') }} {% else %} {{ lang('NO') }} {% endif %}</td>
 			<td style="white-space: nowrap; text-align: center; vertical-align: middle;">&nbsp;
 				{% if notice.ENABLED %}
 					<a href="{{ notice.U_DISABLE }}">{{ lang('DISABLE') }}</a>

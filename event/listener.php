@@ -134,7 +134,10 @@ class listener implements EventSubscriberInterface
 				'BOARD_NOTICE_STYLE' => $notice_style,
 				'U_BOARD_NOTICE_CLOSE'	=> $this->controller_helper->route(
 					constants::$CONTROLLER_ROUTING_ID,
-					array('hash' => generate_link_hash('close_boardnotice'))
+					array(
+						'notice_id' => $notice->getId(),
+						'hash' => generate_link_hash(constants::$ROUTING_CLOSE_HASH_ID),
+					)
 				),
 			));
 		}
