@@ -66,6 +66,7 @@ class display_notices_test extends \phpbb_functional_test_case
 		$this->assertThat($form, $this->logicalNot($this->equalTo(null)), "form of the 'submit' button not found");
 		$form['board_notice_active'] = 1;
 		$form['board_notice_title'] = 'New test notice';
+		$form['board_notice_dismissable'] = 0;
 		$form['board_notice_text'] = 'Welcome {USERNAME}!';
 		$form['notice_rule_checked[logged_in]']->tick();
 		$form['notice_rule_conditions[logged_in][0]'] = 1;
