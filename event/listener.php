@@ -5,7 +5,7 @@
  * Board Notices Manager
  *
  * @version 1.0.0
- * @copyright (c) 2015 Fred Quointeau
+ * @copyright (c) Fred Quointeau
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -92,9 +92,10 @@ class listener implements EventSubscriberInterface
 		{
 			// Normal notices mode
 			$raw_notices = $this->notices_repository->getActiveNotices();
+			$dismissed_notices = $this->notices_seen_repository->getDismissedNotices($this->user->data['user_id']);
 			foreach ($raw_notices as $raw_notice)
 			{
-				$notices[] = $this->getNotice($raw_notice);
+				$notices[] = $this->getNotice($raw_notice, $dismissed_notices);
 			}
 			unset($raw_notices);
 		}
@@ -103,15 +104,8 @@ class listener implements EventSubscriberInterface
 		$notice_bgcolor = '';
 		$notice_style = '';
 
-		$notices_seen = $this->notices_seen_repository->getDismissedNotices($this->user->data['user_id']);
-
 		foreach ($notices as $notice)
 		{
-			if (array_key_exists($notice->getId(), $notices_seen))
-			{
-				// Notice has been dismissed
-				continue;
-			}
 			if ($notice->hasValidatedAllRules($force_all_rules, $preview))
 			{
 				// Prepare board notice message for display
@@ -213,12 +207,15 @@ class listener implements EventSubscriberInterface
 	}
 
 	/**
+	 * Creates the notice object
+	 * @param array $raw_notice
+	 * @param array $dismissed
 	 * @return notice
 	 */
-	private function getNotice($raw_notice)
+	private function getNotice($raw_notice, $dismissed = array())
 	{
 		$rules = $this->notices_repository->getRulesFor($raw_notice['notice_id']);
-		return new notice($raw_notice, $rules);
+		return new notice($raw_notice, $rules, $dismissed);
 	}
 
 	private function setForumVisited()

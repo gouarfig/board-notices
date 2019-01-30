@@ -5,7 +5,7 @@
  * Board Notices Manager
  *
  * @version 1.0.0
- * @copyright (c) 2015 Fred Quointeau
+ * @copyright (c) Fred Quointeau
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -17,12 +17,14 @@ class notice
 
 	private $properties = array();
 	private $rules = array();
+	private $dismissed = array();
 	private $template_vars = array();
 
-	public function __construct($properties, $rules)
+	public function __construct($properties, $rules, $dismissed = array())
 	{
 		$this->properties = $properties;
 		$this->rules = $rules;
+		$this->dismissed = $dismissed;
 	}
 
 	private function validateRule($rule_details, $preview = false)
@@ -61,9 +63,22 @@ class notice
 		return $valid;
 	}
 
+	/**
+	 * Check the notice is displayable for this user
+	 * @return boolean
+	 */
+	public function isDismissed()
+	{
+		return array_key_exists($this->getId(), $this->dismissed);
+	}
+
 	public function hasValidatedAllRules($force_all_rules = false, $preview = false)
 	{
 		$valid = true;
+		if (!$preview && $this->isDismissed())
+		{
+			return false;
+		}
 		if (!empty($this->rules))
 		{
 			foreach ($this->rules as $rule)

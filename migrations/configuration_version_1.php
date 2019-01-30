@@ -5,7 +5,7 @@
  * Board Notices Manager extension for the phpBB Forum Software package.
  * Records the first internal version in the configuration, for upgrade purposes
  *
- * @copyright (c) 2015 phpBB Limited <https://www.phpbb.com>
+ * @copyright (c) phpBB Limited <https://www.phpbb.com>
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */

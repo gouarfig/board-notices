@@ -5,7 +5,7 @@
  * Board Notices Manager
  *
  * @version 1.0.0
- * @copyright (c) 2015 Fred Quointeau
+ * @copyright (c) Fred Quointeau
  * @license GNU General Public License, version 2 (GPL-2.0)
  *
  */
@@ -64,6 +64,7 @@ class create_tables extends \phpbb\db\migration\migration
 						'user_id' => array('UINT', 0),
 						'seen' => array('TIMESTAMP', 0),
 					),
+					'PRIMARY_KEY' => array('notice_id', 'user_id'),
 				),
 			)
 		);
