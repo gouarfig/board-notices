@@ -23,6 +23,11 @@ class constants
 	public static $CONFIG_RULES_CACHE_KEY = 'boardnotices_rules';
 	public static $CONFIG_DISMISSED_CACHE_KEY = 'boardnotices_seen';
 
+	public static $CONFIG_ENABLED = 'boardnotices_enabled';
+	public static $CONFIG_DEFAULT_BGCOLOR = 'boardnotices_default_bgcolor';
+	public static $CONFIG_TRACK_FORUMS_VISITS = 'track_forums_visits';
+	public static $CONFIG_PREVIEW_KEY = 'boardnotices_previewkey';
+
 	public static $RULES_FOLDER = 'ext/fq/boardnotices/rules';
 	public static $RULES_FILE_EXTENSION = '.php';
 	public static $RULES_CLASS_PREFIX = 'fq.boardnotices.rules';

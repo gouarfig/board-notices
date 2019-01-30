@@ -69,7 +69,23 @@ class notice
 	 */
 	public function isDismissed()
 	{
-		return array_key_exists($this->getId(), $this->dismissed);
+		// Notice does not allow for dismiss
+		if (!$this->getDismissable())
+		{
+			return false;
+		}
+		$hasRecord = array_key_exists($this->getId(), $this->dismissed);
+		if (!$hasRecord)
+		{
+			return false;
+		}
+		$reset_after = $this->getResetAfter();
+		// No reset after n days
+		if (empty($reset_after))
+		{
+			return true;
+		}
+		return ($this->dismissed[$this->getId()]['seen'] + ($reset_after * 86400)) > time();
 	}
 
 	/**
@@ -176,6 +192,21 @@ class notice
 		return !empty($this->properties['dismissable']) ? true : false;
 	}
 
+	/**
+	 * Returns the amount of days to wait before re-displaying a dismissed notice
+	 *
+	 * @return int
+	 */
+	public function getResetAfter()
+	{
+		return $this->properties['reset_after'];
+	}
+
+	/**
+	 * The method hasValidatedAllRules should have been called for the template variables to be populated
+	 *
+	 * @return array
+	 */
 	public function getTemplateVars()
 	{
 		return $this->template_vars;

@@ -65,7 +65,7 @@ class mock_rule_2 extends \fq\boardnotices\rules\rule_base implements \fq\boardn
 
 	public function isTrue($conditions)
 	{
-		return true;
+		return false;
 	}
 
 	public function getAvailableVars()

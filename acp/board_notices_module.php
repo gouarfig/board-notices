@@ -241,7 +241,7 @@ class board_notices_module
 			$this->template->assign_block_vars('notices', array(
 				'S_SPACER' => false,
 				'TITLE' => $notice['title'],
-				'PREVIEW_LINK' => append_sid("{$phpbb_root_path}index.$phpEx") . "&bnpk=" . $this->config['boardnotices_previewkey'] . "&bnid=" . (int) $notice['notice_id'],
+				'PREVIEW_LINK' => append_sid("{$phpbb_root_path}index.$phpEx") . "&bnpk=" . $this->config[constants::$CONFIG_PREVIEW_KEY] . "&bnid=" . (int) $notice['notice_id'],
 				'RULES' => count($rules),
 				'ENABLED' => $notice['active'] ? true : false,
 				'DISMISS' => $notice['dismissable'] ? true : false,
@@ -316,6 +316,7 @@ class board_notices_module
 			'BOARD_NOTICE_ACTIVE' => $data['active'],
 			'BOARD_NOTICE_TITLE' => $data['title'],
 			'BOARD_NOTICE_DISMISSABLE' => $data['dismissable'],
+			'BOARD_NOTICE_RESET_AFTER' => !empty($data['reset_after']) ? $data['reset_after'] : '',
 			'BOARD_NOTICE_TEXT' => $notice_text_edit['text'],
 			'BOARD_NOTICE_PREVIEW' => $notice_text_preview,
 			'BOARD_NOTICE_BGCOLOR' => $data['message_bgcolor'],
@@ -404,8 +405,8 @@ class board_notices_module
 		$this->template->assign_vars(array(
 			'S_BOARD_NOTICES' => true,
 			'BOARD_NOTICES_ACTIVE' => $this->config['boardnotices_enabled'] ? true : false,
-			'BOARD_NOTICE_DEFAULT_BGCOLOR' => $this->config['boardnotices_default_bgcolor'],
-			'FORUMS_VISITS_ACTIVE' => $this->config['track_forums_visits'] ? true : false,
+			'BOARD_NOTICE_DEFAULT_BGCOLOR' => $this->config[constants::$CONFIG_DEFAULT_BGCOLOR],
+			'FORUMS_VISITS_ACTIVE' => $this->config[constants::$CONFIG_TRACK_FORUMS_VISITS] ? true : false,
 			'U_ACTION' => $this->u_action,
 		));
 	}
@@ -668,6 +669,7 @@ class board_notices_module
 		$data['active'] = $this->request->variable('board_notice_active', false);
 		$data['title'] = $this->request->variable('board_notice_title', '', true);
 		$data['dismissable'] = $this->request->variable('board_notice_dismissable', false);
+		$data['reset_after'] = (int) $this->request->variable('board_notice_reset_after', 0);
 		$data['message'] = $this->request->variable('board_notice_text', '', true);
 		$data['title'] = $this->request->variable('board_notice_title', '', true);
 		$data['message_bgcolor'] = $this->request->variable('board_notice_bgcolor', '', true);
@@ -872,9 +874,9 @@ class board_notices_module
 		$data['boardnotices_default_bgcolor'] = $this->request->variable('board_notice_default_bgcolor', '');
 
 		// Save data to the config
-		$this->config->set('boardnotices_enabled', ($data['boardnotices_enabled'] ? true : false));
-		$this->config->set('track_forums_visits', ($data['track_forums_visits'] ? true : false));
-		$this->config->set('boardnotices_default_bgcolor', $data['boardnotices_default_bgcolor']);
+		$this->config->set(constants::$CONFIG_ENABLED, ($data['boardnotices_enabled'] ? true : false));
+		$this->config->set(constants::$CONFIG_TRACK_FORUMS_VISITS, ($data['track_forums_visits'] ? true : false));
+		$this->config->set(constants::$CONFIG_DEFAULT_BGCOLOR, $data['boardnotices_default_bgcolor']);
 
 		// Logs the settings update
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BOARD_NOTICES_SETTINGS', time(), array());

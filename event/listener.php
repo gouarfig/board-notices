@@ -92,7 +92,16 @@ class listener implements EventSubscriberInterface
 		{
 			// Normal notices mode
 			$raw_notices = $this->notices_repository->getActiveNotices();
-			$dismissed_notices = $this->notices_seen_repository->getDismissedNotices($this->user->data['user_id']);
+			$dismissed_notices = array();
+			if (!empty($this->user->data['is_registered']))
+			{
+				$dismissed_notices = $this->notices_seen_repository->getDismissedNotices($this->user->data['user_id']);
+			}
+			else
+			{
+				// The user is probably a guest, so we get that from the cookies
+				$dismissed_notices = $this->getDismissedNoticesFromCookies();
+			}
 			foreach ($raw_notices as $raw_notice)
 			{
 				$notices[] = $this->getNotice($raw_notice, $dismissed_notices);
@@ -116,7 +125,7 @@ class listener implements EventSubscriberInterface
 				$notice_style = $notice->getMessageStyle();
 				if (empty($notice_bgcolor))
 				{
-					$notice_bgcolor = $this->config['boardnotices_default_bgcolor'];
+					$notice_bgcolor = $this->config[constants::$CONFIG_DEFAULT_BGCOLOR];
 				}
 				$notice_dismissable = $notice->getDismissable();
 				$template_vars = array_merge($template_vars, $notice->getTemplateVars());
@@ -180,12 +189,12 @@ class listener implements EventSubscriberInterface
 
 	private function extensionEnabled()
 	{
-		return $this->config['boardnotices_enabled'] ? true : false;
+		return $this->config[constants::$CONFIG_ENABLED] ? true : false;
 	}
 
 	private function forumVisitedEnabled()
 	{
-		return $this->config['track_forums_visits'] ? true : false;
+		return $this->config[constants::$CONFIG_TRACK_FORUMS_VISITS] ? true : false;
 	}
 
 	private function isUserLoggedIn()
@@ -197,7 +206,7 @@ class listener implements EventSubscriberInterface
 	{
 		$preview_key = $this->request->variable('bnpk', '');
 		$preview_id = $this->request->variable('bnid', 0);
-		return (!empty($preview_key) && !empty($preview_id) && ($preview_key == $this->config['boardnotices_previewkey']));
+		return (!empty($preview_key) && !empty($preview_id) && ($preview_key == $this->config[constants::$CONFIG_PREVIEW_KEY]));
 	}
 
 	private function getPreviewId()
@@ -220,11 +229,32 @@ class listener implements EventSubscriberInterface
 
 	private function setForumVisited()
 	{
-		$forum_id = $this->request->variable('f', 0);
+		$forum_id = (int) $this->request->variable('f', 0);
 
 		if ($forum_id > 0)
 		{
 			$this->notices_repository->setForumVisited($this->user->data['user_id'], $forum_id);
 		}
+	}
+
+	private function getDismissedNoticesFromCookies()
+	{
+		$dismissed = array();
+		$prefix = $this->config['cookie_name'] . '_bnd_';
+		$cookies = $this->request->variable_names(\phpbb\request\request_interface::COOKIE);
+		foreach ($cookies as $cookie_name)
+		{
+			if (substr($cookie_name, 0, strlen($prefix)) == $prefix)
+			{
+				// This is ours!
+				$cookie_content = (int) $this->request->variable($cookie_name, 0, false, \phpbb\request\request_interface::COOKIE);
+				if (!empty($cookie_content))
+				{
+					// We can fake the time since the reset_after equals to the cookie expiry
+					$dismissed[$cookie_content] = array('seen' => time());
+				}
+			}
+		}
+		return $dismissed;
 	}
 }

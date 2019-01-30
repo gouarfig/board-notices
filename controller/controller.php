@@ -83,13 +83,15 @@ class controller
 		// Do nothing in preview mode
 		if (empty($this->request->variable('preview', 0)))
 		{
-			// Set a cookie
-			$response = $this->set_board_notice_cookie();
-
-			// Close the notice for registered users
 			if ($this->user->data['is_registered'])
 			{
+				// Close the notice for registered users
 				$response = $this->update_board_notice_status($notice_id, $this->user->data['user_id']);
+			}
+			else
+			{
+				// Set a cookie for guests
+				$response = $this->set_board_notice_cookie($notice_id, $notice['reset_after']);
 			}
 		}
 
@@ -116,13 +118,21 @@ class controller
 	* @return bool True
 	* @access private
 	*/
-	private function set_board_notice_cookie()
+	private function set_board_notice_cookie($notice_id, $reset_after)
 	{
-		// Get board notice data from the DB text object
-		// $notice_timestamp = $this->config_text->get('notice_timestamp');
+		$notice_id = (int) $notice_id;
+		$reset_after = (int) $reset_after;
 
-		// Store the notice timestamp/id in a cookie with a 1 year expiration
-		// $this->user->set_cookie('baid', $notice_timestamp, strtotime('+1 year'));
+		if (empty($reset_after))
+		{
+			$expiry = '+1 year';
+		}
+		else
+		{
+			$expiry = "+{$reset_after} day";
+		}
+		// Store the notice id in a cookie
+		$this->user->set_cookie("bnd_{$notice_id}", $notice_id, strtotime($expiry));
 
 		return true;
 	}

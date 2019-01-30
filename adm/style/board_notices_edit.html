@@ -49,6 +49,13 @@
 				<label><input type="radio" class="radio" name="board_notice_dismissable" value="0"{% if not BOARD_NOTICE_DISMISSABLE %} checked="checked"{% endif %} /> {{ lang('NO') }}</label>
 			</dd>
 		</dl>
+		<dl>
+			<dt><label for="board_notice_reset_after">{{ lang('LABEL_BOARD_NOTICE_RESET_AFTER') ~ lang('COLON') }}</label>
+				<br /><span>{{ lang('LABEL_BOARD_NOTICE_RESET_EXPLAIN') }}</span></dt>
+			<dd>
+				<input name="board_notice_reset_after" type="text" id="board_notice_reset_after" value="{{ BOARD_NOTICE_RESET_AFTER }}" size="10" maxlength="5" /> {{ lang('RULE_DAY(S)') }}
+			</dd>
+		</dl>
 	</fieldset>
 
 	{% if BOARD_NOTICE_PREVIEW %}
