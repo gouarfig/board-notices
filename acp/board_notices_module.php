@@ -374,12 +374,6 @@ class board_notices_module
 				'RULE_DESCRIPTION' => $rule_description,
 				'RULE_EXPLAIN' => $rule_explain,
 				'RULE_UNIT' => (is_array($rule_descriptions)) ? $rule_descriptions['display_unit'] : '',
-				// 'RULE_CONDITIONS' => $this->getDisplayConditions(
-				// 		$rule_type,
-				// 		$rule_values,
-				// 		$rule_selected,
-				// 		"notice_rule_conditions[{$rule_name}]"
-				// ),
 				'RULE_TYPE' => $rule_type,
 				'RULE_VALUES' => $rule_values,
 				'RULE_VALUES_COUNT' => (!empty($rule_values) && is_array($rule_values)) ? count($rule_values) : 0,
@@ -610,6 +604,7 @@ class board_notices_module
 			'active' => false,
 			'title' => '',
 			'dismissable' => false,
+			'reset_after' => 0,
 			'message' => '',
 			'message_uid' => '',
 			'message_bitfield' => '',

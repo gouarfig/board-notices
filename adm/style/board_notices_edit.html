@@ -111,17 +111,6 @@
 	</thead>
 	<tbody>
 	{% for rule in allrules %}
-		{# <tr data-id="{{ rule.RULE_NAME }}" class="{% if rule.NOTICE_RULE_CHECKED %}active-rule{% else %}inactive-rule{% endif %}">
-			<td class="boardnotice-checkbox">
-				<input type="hidden" name="notice_rule_id[{{ rule.RULE_NAME }}]" value="{{ rule.NOTICE_RULE_ID }}" />
-				<input type="checkbox" name="notice_rule_checked[{{ rule.RULE_NAME }}]" data-rule="checkbox" data-id="{{ rule.RULE_NAME }}" value="1"{% if rule.NOTICE_RULE_CHECKED %} checked{% endif %}/>
-			</td>
-			<td class="boardnotice-description">
-				<strong>{{ rule.RULE_DESCRIPTION }}</strong>
-			</td>
-			<td class="boardnotice-conditions">{{ rule.RULE_CONDITIONS }} {{ rule.RULE_UNIT }}</td>
-			<td class="boardnotice-variables">{{ rule.RULE_VARIABLES }}</td>
-		</tr> #}
 		<tr data-id="{{ rule.RULE_NAME }}" class="{% if rule.NOTICE_RULE_CHECKED %}active-rule{% else %}inactive-rule{% endif %}">
 			<td class="boardnotice-checkbox">
 				<input type="hidden" name="notice_rule_id[{{ rule.RULE_NAME }}]" value="{{ rule.NOTICE_RULE_ID }}" />
