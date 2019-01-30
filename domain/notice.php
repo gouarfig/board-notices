@@ -72,6 +72,12 @@ class notice
 		return array_key_exists($this->getId(), $this->dismissed);
 	}
 
+	/**
+	 * Check the notice is valid to be displayed
+	 * @param boolean $force_all_rules
+	 * @param boolean $preview
+	 * @return boolean
+	 */
 	public function hasValidatedAllRules($force_all_rules = false, $preview = false)
 	{
 		$valid = true;

@@ -1,8 +1,7 @@
 {% if S_BOARD_NOTICE %}
 	{% INCLUDECSS '@fq_boardnotices/boardnotices.css' %}
 	{% INCLUDEJS '@fq_boardnotices/boardnotices.js' %}
-	<div id="fq_notice"
-		{% if BOARD_NOTICE_STYLE %} class="{{ BOARD_NOTICE_STYLE }}"{% endif %}
+	<div id="fq_notice" class="{{ BOARD_NOTICE_STYLE|default('fq_notice') }}"
 		{% if BOARD_NOTICE_BGCOLOR %} style="background-color:#{{ BOARD_NOTICE_BGCOLOR }}"{% endif %}>
 		{% if S_BOARD_NOTICE_DISMISS %}<a href="{{ U_BOARD_NOTICE_CLOSE }}" data-ajax="close_notice" data-overlay="false" class="close clearfix" title="{{ lang('BOARD_NOTICE_CLOSE') }}"></a>{% endif %}
 		<div>{{ BOARD_NOTICE }}</div>

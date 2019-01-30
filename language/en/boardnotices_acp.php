@@ -84,7 +84,7 @@ $lang = array_merge($lang, array(
 	'LABEL_BOARD_NOTICE_BGCOLOR_EXPLAIN'	=> 'If not specified, the default color is going to be used. If the default color is empty, the background color will inherit the CSS style.',
 
 	'LABEL_BOARD_NOTICE_STYLE'				=> '[Advanced users:] CSS class of the message container',
-	'LABEL_BOARD_NOTICE_STYLE_EXPLAIN'		=> 'If you need more control on how the notice is displayed, you can specify a CSS class that will be added to the overall DIV.',
+	'LABEL_BOARD_NOTICE_STYLE_EXPLAIN'		=> 'If you need more control on how the notice is displayed, you can specify a CSS class that will replace the default one. You can specify more than one class (separated by a space).',
 
 	'L_INFORMATION'							=> 'Information',
 	'VARIABLES_EXPLAIN'						=> 'You may include the following special variables in your text:<br />'

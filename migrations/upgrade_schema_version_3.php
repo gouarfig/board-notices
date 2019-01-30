@@ -14,7 +14,6 @@ namespace fq\boardnotices\migrations;
 
 class upgrade_schema_version_3 extends \phpbb\db\migration\migration
 {
-	private $version = 3;
 
 	static public function depends_on()
 	{

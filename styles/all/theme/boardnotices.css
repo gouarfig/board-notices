@@ -1,5 +1,5 @@
 /* style the announcement banner */
-#fq_notice {
+.fq_notice {
 	margin: 10px 0;
 	font-size: 1.1em;
 	padding: 10px;
@@ -7,7 +7,7 @@
 }
 
 /* zero out any text margins and scroll any overflow */
-#fq_notice div {
+.fq_notice div {
 	margin: 0;
 	overflow-x: auto;
 	overflow: hidden;
@@ -16,7 +16,7 @@
 }
 
 /* make posted images responsive */
-#fq_notice .postimage {
+.fq_notice .postimage {
 	-moz-box-sizing: border-box;
 	-webkit-box-sizing: border-box;
 	box-sizing: border-box;
@@ -24,7 +24,7 @@
 }
 
 /* style the close button */
-#fq_notice .close {
+.fq_notice .close {
 	background: transparent url('images/close.png') no-repeat 0 0;
 	opacity: 0.6;
 	float: right;
@@ -34,28 +34,28 @@
 }
 
 /* reposition close button for right to left languages */
-.rtl #fq_notice .close {
+.rtl .fq_notice .close {
 	float: left;
 	margin: 0 4px 0 0;
 }
 
 /* hide close button on desktops by default */
-.notouch #fq_notice .close {
+.notouch .fq_notice .close {
 	opacity: 0;
 	transition: opacity 0.5s;
 }
 
 /* display the close button on mouse-over of the banner */
-.notouch #fq_notice:hover .close {
+.notouch .fq_notice:hover .close {
 	opacity: 0.6;
 }
 
 /* fix for lists, force them to display inside containing div */
-#fq_notice ul, #fq_notice ol {
+.fq_notice ul, .fq_notice ol {
 	margin-left: 20px;
 }
 
-.rtl #fq_notice ul, .rtl #fq_notice ol {
+.rtl .fq_notice ul, .rtl .fq_notice ol {
 	margin-left: 0;
 	margin-right: 20px;
 }
