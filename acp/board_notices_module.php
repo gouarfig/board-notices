@@ -94,6 +94,7 @@ class board_notices_module
 
 	public function manage_module($id, $mode)
 	{
+		/** @var string $action */
 		$action = $this->request->variable('action', '');
 		if ($this->request->is_set_post('add'))
 		{
@@ -108,45 +109,11 @@ class board_notices_module
 		switch ($action)
 		{
 			case 'add':
-				$error = '';
-				$data = $this->newBlankNotice();
-				if ($this->request->is_set_post('submit'))
-				{
-					$error = $this->validateNoticeForm($data, true);
-					if (empty($error))
-					{
-						$this->saveNewNotice($data);
-					}
-					else
-					{
-						$this->displayNoticeForm($action, $data, $error);
-					}
-				}
-				else
-				{
-					$this->displayNoticeForm($action, $data);
-				}
+				$this->addNotice($action);
 				break;
 
 			case 'edit':
-				$error = '';
-				$data = $this->loadNotice($notice_id);
-				if ($this->request->is_set_post('submit'))
-				{
-					$error = $this->validateNoticeForm($data, true);
-					if (empty($error))
-					{
-						$this->saveNotice($notice_id, $data);
-					}
-					else
-					{
-						$this->displayNoticeForm($action, $data, $error);
-					}
-				}
-				else
-				{
-					$this->displayNoticeForm($action, $data);
-				}
+				$this->editNotice($action, $notice_id);
 				break;
 
 			case 'enable':
@@ -181,6 +148,50 @@ class board_notices_module
 				break;
 		}
 		return;
+	}
+
+	private function addNotice($action)
+	{
+		$error = '';
+		$data = $this->newBlankNotice();
+		if ($this->request->is_set_post('submit'))
+		{
+			$error = $this->validateNoticeForm($data, true);
+			if (empty($error))
+			{
+				$this->saveNewNotice($data);
+			}
+			else
+			{
+				$this->displayNoticeForm($action, $data, $error);
+			}
+		}
+		else
+		{
+			$this->displayNoticeForm($action, $data);
+		}
+	}
+
+	private function editNotice($action, $notice_id)
+	{
+		$error = '';
+		$data = $this->loadNotice($notice_id);
+		if ($this->request->is_set_post('submit'))
+		{
+			$error = $this->validateNoticeForm($data, true);
+			if (empty($error))
+			{
+				$this->saveNotice($notice_id, $data);
+			}
+			else
+			{
+				$this->displayNoticeForm($action, $data, $error);
+			}
+		}
+		else
+		{
+			$this->displayNoticeForm($action, $data);
+		}
 	}
 
 	public function settings_module($id, $mode)
@@ -342,76 +353,81 @@ class board_notices_module
 		$all_rules = $this->getAllRules();
 		foreach ($all_rules as $rule_name => $rule_descriptions)
 		{
-			$rule_explain = '';
-			if (is_array($rule_descriptions))
-			{
-				$rule_description = $rule_descriptions[constants::$RULE_DISPLAY_NAME];
-				$rule_explain = $rule_descriptions[constants::$RULE_DISPLAY_EXPLAIN];
-			}
-			else
-			{
-				$rule_description = $rule_descriptions;
-			}
-
-			$rule_type = $this->rules_manager->getRuleType($rule_name);
-			$rule_selected = isset($data['notice_rule_conditions'][$rule_name])
-						? $data['notice_rule_conditions'][$rule_name]
-						: $this->rules_manager->getRuleDefaultValue($rule_name);
-			if (!is_array($rule_selected))
-			{
-				if (!is_null($rule_selected))
-				{
-					$rule_selected = array($rule_selected);
-				}
-				else
-				{
-					$rule_selected = array();
-				}
-			}
-			$rule_values = $this->rules_manager->getRuleValues($rule_name);
-
-			$variables = array(
-				'NOTICE_RULE_ID' => isset($data['notice_rule_id'][$rule_name]) ? $data['notice_rule_id'][$rule_name] : '',
-				'NOTICE_RULE_CHECKED' => isset($data['notice_rule_checked'][$rule_name]) ? true : false,
-				'RULE_NAME' => $rule_name,
-				'RULE_DESCRIPTION' => $rule_description,
-				'RULE_EXPLAIN' => $rule_explain,
-				'RULE_VARIABLES' => $this->rules_manager->getAvailableVars($rule_name),
-				'RULE_PARAMETERS_COUNT' => is_array($rule_type) ? count($rule_type) : 1,
-			);
-			if (!$this->rules_manager->ruleHasMultipleParameters($rule_name))
-			{
-				// Only one parameter
-				$variables = array_merge($variables, array('parameters' => array(array(
-					'RULE_TYPE' => $rule_type,
-					'RULE_VALUES' => $rule_values,
-					'RULE_VALUES_COUNT' => (!empty($rule_values) && is_array($rule_values)) ? count($rule_values) : 0,
-					'RULE_DATA' => $rule_selected,
-					'RULE_FORUMS' => ($rule_type == 'forums') ? make_forum_select($rule_selected, false, false, true) : '',
-					'RULE_UNIT' => (is_array($rule_descriptions)) ? $rule_descriptions['display_unit'] : '',
-					'PARAMETER_INDEX' => '',	// Only one parameter
-				))));
-			}
-			else
-			{
-				// Multi parameters rules
-				$params = array();
-				for ($index=0; $index < count($rule_type); $index++)
-				{
-					$params[$index] = array(
-						'RULE_TYPE' => $rule_type[$index],
-						'RULE_VALUES' => $rule_values[$index],
-						'RULE_VALUES_COUNT' => (!empty($rule_values[$index]) && is_array($rule_values[$index])) ? count($rule_values[$index]) : 0,
-						'RULE_DATA' => $rule_selected[$index],
-						'RULE_FORUMS' => ($rule_type[$index] == 'forums') ? make_forum_select($rule_selected[$index], false, false, true) : '',
-						'RULE_UNIT' => (is_array($rule_descriptions)) ? $rule_descriptions['display_unit'][$index] : '',
-						'PARAMETER_INDEX' => $index,
-					);
-				}
-				$variables = array_merge($variables, array('parameters' => $params));
-			}
-			$this->template->assign_block_vars('allrules', $variables);
+			$this->generateTemplateVariablesForRule($data, $rule_name, $rule_descriptions);
 		}
+	}
+
+	private function generateTemplateVariablesForRule(&$data, $rule_name, $rule_descriptions)
+	{
+		$rule_explain = '';
+		if (is_array($rule_descriptions))
+		{
+			$rule_description = $rule_descriptions[constants::$RULE_DISPLAY_NAME];
+			$rule_explain = $rule_descriptions[constants::$RULE_DISPLAY_EXPLAIN];
+		}
+		else
+		{
+			$rule_description = $rule_descriptions;
+		}
+
+		$rule_type = $this->rules_manager->getRuleType($rule_name);
+		$rule_selected = isset($data['notice_rule_conditions'][$rule_name])
+					? $data['notice_rule_conditions'][$rule_name]
+					: $this->rules_manager->getRuleDefaultValue($rule_name);
+		if (!is_array($rule_selected))
+		{
+			if (!is_null($rule_selected))
+			{
+				$rule_selected = array($rule_selected);
+			}
+			else
+			{
+				$rule_selected = array();
+			}
+		}
+		$rule_values = $this->rules_manager->getRuleValues($rule_name);
+
+		$variables = array(
+			'NOTICE_RULE_ID' => isset($data['notice_rule_id'][$rule_name]) ? $data['notice_rule_id'][$rule_name] : '',
+			'NOTICE_RULE_CHECKED' => isset($data['notice_rule_checked'][$rule_name]) ? true : false,
+			'RULE_NAME' => $rule_name,
+			'RULE_DESCRIPTION' => $rule_description,
+			'RULE_EXPLAIN' => $rule_explain,
+			'RULE_VARIABLES' => $this->rules_manager->getAvailableVars($rule_name),
+			'RULE_PARAMETERS_COUNT' => is_array($rule_type) ? count($rule_type) : 1,
+		);
+		if (!$this->rules_manager->ruleHasMultipleParameters($rule_name))
+		{
+			// Only one parameter
+			$variables = array_merge($variables, array('parameters' => array(array(
+				'RULE_TYPE' => $rule_type,
+				'RULE_VALUES' => $rule_values,
+				'RULE_VALUES_COUNT' => (!empty($rule_values) && is_array($rule_values)) ? count($rule_values) : 0,
+				'RULE_DATA' => $rule_selected,
+				'RULE_FORUMS' => ($rule_type == 'forums') ? make_forum_select($rule_selected, false, false, true) : '',
+				'RULE_UNIT' => (is_array($rule_descriptions)) ? $rule_descriptions['display_unit'] : '',
+				'PARAMETER_INDEX' => '',	// Only one parameter
+			))));
+		}
+		else
+		{
+			// Multi parameters rules
+			$params = array();
+			for ($index=0; $index < count($rule_type); $index++)
+			{
+				$params[$index] = array(
+					'RULE_TYPE' => $rule_type[$index],
+					'RULE_VALUES' => $rule_values[$index],
+					'RULE_VALUES_COUNT' => (!empty($rule_values[$index]) && is_array($rule_values[$index])) ? count($rule_values[$index]) : 0,
+					'RULE_DATA' => $rule_selected[$index],
+					'RULE_FORUMS' => ($rule_type[$index] == 'forums') ? make_forum_select($rule_selected[$index], false, false, true) : '',
+					'RULE_UNIT' => (is_array($rule_descriptions)) ? $rule_descriptions['display_unit'][$index] : '',
+					'PARAMETER_INDEX' => $index,
+				);
+			}
+			$variables = array_merge($variables, array('parameters' => $params));
+		}
+		$this->template->assign_block_vars('allrules', $variables);
 	}
 
 	/**
@@ -675,7 +691,6 @@ class board_notices_module
 	/**
 	 * Validates form data and returns the values into $data
 	 * Return value of the function is an empty string if the form is valid, or an error message otherwise
-	 * @todo It can be confusing that it's this method to get the data from the form
 	 * @param array $data
 	 * @param bool $for_submit
 	 * @return string
@@ -727,6 +742,11 @@ class board_notices_module
 				!$this->request->variable('disable_magic_url', false),
 				!$this->request->variable('disable_smilies', false)
 		);
+		// In case the parsing of the message failed
+		if (empty($data['message']))
+		{
+			return $this->user->lang('ERROR_EMPTY_MESSAGE') . "<br />";
+		}
 
 		// Get config for all the rules
 		$all_rules = $this->getAllRules();
@@ -746,20 +766,7 @@ class board_notices_module
 			{
 				unset($data['notice_rule_checked'][$rule_name]);
 			}
-			$notice_param_count = $this->request->variable(array('notice_rule_param_count', $rule_name), 1);
-			if ($notice_param_count == 1)
-			{
-				$notice_rule_conditions = $this->request->variable(array('notice_rule_conditions', $rule_name), array(''));
-			}
-			else
-			{
-				// Multi-parameters (cannot use an array of arrays, it's not supported by the sanitizer)
-				$notice_rule_conditions = array();
-				for ($index=0; $index < $notice_param_count; $index++)
-				{
-					$notice_rule_conditions[$index] = $this->request->variable(array('notice_rule_conditions' . $index, $rule_name), array(''));
-				}
-			}
+			$notice_rule_conditions = $this->getNoticeRuleConditionsFromInput($rule_name);
 			if (!empty($notice_rule_conditions))
 			{
 				$data['notice_rule_conditions'][$rule_name] = $notice_rule_conditions;
@@ -770,19 +777,23 @@ class board_notices_module
 			}
 		}
 
-		if (empty($error) && $for_submit)
-		{
-			if (empty($data['title']))
-			{
-				$error .= $this->user->lang('ERROR_EMPTY_TITLE') . "<br />";
-			}
-			if (empty($data['message']))
-			{
-				$error .= $this->user->lang('ERROR_EMPTY_MESSAGE') . "<br />";
-			}
-		}
-
 		return $error;
+	}
+
+	private function getNoticeRuleConditionsFromInput($rule_name)
+	{
+		$notice_param_count = $this->request->variable(array('notice_rule_param_count', $rule_name), 1);
+		if ($notice_param_count == 1)
+		{
+			return $this->request->variable(array('notice_rule_conditions', $rule_name), array(''));
+		}
+		// Multi-parameters (cannot use an array of arrays, it's not supported by the sanitizer)
+		$notice_rule_conditions = array();
+		for ($index=0; $index < $notice_param_count; $index++)
+		{
+			$notice_rule_conditions[$index] = $this->request->variable(array('notice_rule_conditions' . $index, $rule_name), array(''));
+		}
+		return $notice_rule_conditions;
 	}
 
 	private function saveRules($notice_id, &$data)

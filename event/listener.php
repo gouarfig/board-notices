@@ -76,7 +76,6 @@ class listener implements EventSubscriberInterface
 	public function display_board_notices()
 	{
 		$notices = array();
-		$template_vars = $this->getDefaultTemplateVars();
 		$force_all_rules = false;
 
 		$preview = $this->isPreview();
@@ -109,10 +108,22 @@ class listener implements EventSubscriberInterface
 			unset($raw_notices);
 		}
 
+		$this->generateNoticeTemplate($notices, $force_all_rules, $preview);
+
+		if ($this->forumVisitedEnabled() && $this->isUserLoggedIn())
+		{
+			$this->setForumVisited();
+		}
+	}
+
+	private function generateNoticeTemplate($notices, $force_all_rules, $preview)
+	{
+		$template_vars = $this->getDefaultTemplateVars();
 		$notice_message = '';
 		$notice_bgcolor = '';
 		$notice_style = '';
 
+		/** @var notice[] $notices */
 		foreach ($notices as $notice)
 		{
 			if ($notice->hasValidatedAllRules($force_all_rules, $preview))
@@ -159,11 +170,6 @@ class listener implements EventSubscriberInterface
 					$dismiss_parameters
 				),
 			));
-		}
-
-		if ($this->forumVisitedEnabled() && $this->isUserLoggedIn())
-		{
-			$this->setForumVisited();
 		}
 	}
 
