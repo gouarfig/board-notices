@@ -14,7 +14,7 @@ namespace fq\boardnotices\rules;
 
 use \fq\boardnotices\service\constants;
 
-class has_not_visited_for extends rule_base implements rule_interface
+class has_never_visited extends rule_base implements rule_interface
 {
 	/** @var \phpbb\user $lang */
 	private $user;
@@ -28,18 +28,9 @@ class has_not_visited_for extends rule_base implements rule_interface
 		$this->repository = $repository;
 	}
 
-	/**
-	 * Multiple parameters rule
-	 * @overriden
-	 */
-	public function hasMultipleParameters()
-	{
-		return true;
-	}
-
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_HAS_NOT_VISITED_FOR_1');
+		return $this->user->lang('RULE_HAS_NEVER_VISITED');
 	}
 
 	public function getDisplayExplain()
@@ -49,28 +40,22 @@ class has_not_visited_for extends rule_base implements rule_interface
 
 	public function getDisplayUnit()
 	{
-		return array(
-			$this->user->lang('RULE_HAS_NOT_VISITED_FOR_2'),
-			$this->user->lang('RULE_DAY(S)'),
-		);
+		return '';
 	}
 
 	public function getType()
 	{
-		return array(
-			constants::$RULE_TYPE_FORUMS,
-			constants::$RULE_TYPE_INTEGER,
-		);
+		return constants::$RULE_TYPE_FORUMS;
 	}
 
 	public function getDefault()
 	{
-		return array(array(0), array(0));
+		return array(0);
 	}
 
 	public function getPossibleValues()
 	{
-		return array(null, null);
+		return null;
 	}
 
 	public function validateValues($values)
@@ -80,16 +65,8 @@ class has_not_visited_for extends rule_base implements rule_interface
 
 	public function isTrue($conditions)
 	{
-		$valid = false;
-		$parameters = $this->validateConditions($conditions);
-		// $conditions should be at least an array with 2 elements. If not, there's something going on
-		if (!is_array($parameters) || (count($parameters) != 2))
-		{
-			return false;
-		}
-		$forums = $this->validateArrayOfConditions($parameters[0]);
-		$days = $this->validateUniqueCondition($parameters[1]);
-		if (empty($forums) || empty($days))
+		$forums = $this->validateArrayOfConditions($conditions);
+		if (empty($forums))
 		{
 			return false;
 		}

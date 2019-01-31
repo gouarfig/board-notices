@@ -38,6 +38,8 @@ class rules
 		'birthday',
 		'anniversary',
 		'date',
+		'has_never_visited',
+		'has_not_visited_for',
 		'has_never_posted',
 		'has_not_posted_for',
 		'has_posted_exactly',
@@ -58,7 +60,7 @@ class rules
 	private $hide = array(
 		'not_logged_in',
 		// This one is not ready to be used yet
-		'has_not_visited_for',
+		// 'has_not_visited_for',
 	);
 
 	/**

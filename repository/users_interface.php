@@ -25,6 +25,7 @@ interface users_interface
 	function getStyles($all = false);
 	function getRanks();
 
+	function getForumsLastReadTime($user_id);
 	function getForumLastReadTime($user_id, $forum_id);
 	function trackLastVisit($user_id, $forum_id);
 	function clearLastVisit();

@@ -124,6 +124,7 @@ $lang = array_merge($lang, array(
 	'RULE_HAS_POSTED_MORE'					=> "Nähtavate numberi arv on võrdne või suurem kui",
 	'RULE_HAS_POSTED_IN_FORUM'				=> "Kasutaja on postitanud vähemalt ühes nendest foorumitest,",
 	'RULE_HAS_POSTED_IN_FORUM_EXPLAIN'		=> "(<strong>ei arvestata sisse</strong> kinnitusi ootavad postitused)",
+	'RULE_HAS_NEVER_VISITED'				=> "User has never visited any of these forums", // @todo
 	'RULE_HAS_NOT_VISITED_FOR_1'			=> "Kasutaja ei ole ühtegi nendest valitud foorumitest külastanud ",
 	'RULE_HAS_NOT_VISITED_FOR_2'			=> " vähemalt ",
 	'RULE_IN_DEFAULT_USERGROUP'				=> "Vaikimisi kasutajagrupp on",

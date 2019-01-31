@@ -181,6 +181,13 @@ services:
       - '@fq.boardnotices.service.serializer'
       - '@user'
 
+  fq.boardnotices.rules.has_never_visited:
+    class: fq\boardnotices\rules\has_never_visited
+    arguments:
+      - '@fq.boardnotices.service.serializer'
+      - '@user'
+      - '@fq.boardnotices.repository.users'
+
   fq.boardnotices.rules.has_not_visited_for:
     class: fq\boardnotices\rules\has_not_visited_for
     arguments:

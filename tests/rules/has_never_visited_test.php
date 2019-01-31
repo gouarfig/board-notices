@@ -4,17 +4,24 @@ namespace fq\boardnotices\tests\rules;
 
 include_once 'phpBB/includes/functions.php';
 
-use \fq\boardnotices\rules\has_not_visited_for;
+use \fq\boardnotices\rules\has_never_visited;
 
-class has_not_visited_for_test extends rule_test_base
+class has_never_visited_test extends rule_test_base
 {
 	public function testInstance()
 	{
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
+		$user->data['is_registered'] = true;
+		$user->data['user_id'] = 11;
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
-		$rule = new has_not_visited_for($this->getSerializer(), $user, $datalayer);
+		$datalayer->method('getForumsLastReadTime')->will($this->returnValue(array(
+			1 => time(),
+			2 => time() - 86400,
+			3 => time() - (2 * 86400)
+		)));
+		$rule = new has_never_visited($this->getSerializer(), $user, $datalayer);
 		$this->assertNotNull($rule);
 
 		return array($user, $rule);
@@ -23,19 +30,19 @@ class has_not_visited_for_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_visited_for $rule
+	 * @param has_never_visited $rule
 	 */
-	public function testHasMultipleParameters($args)
+	public function testHasSingleParameter($args)
 	{
 		list($user, $rule) = $args;
 		$multiple = $rule->hasMultipleParameters();
-		$this->assertTrue($multiple, "This rule should have multiple parameters");
+		$this->assertFalse($multiple, "This rule should not have multiple parameters");
 	}
 
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_visited_for $rule
+	 * @param has_never_visited $rule
 	 */
 	public function testGetDisplayName($args)
 	{
@@ -47,31 +54,31 @@ class has_not_visited_for_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_visited_for $rule
+	 * @param has_never_visited $rule
 	 */
 	public function testGetType($args)
 	{
 		list($user, $rule) = $args;
 		$type = $rule->getType();
-		$this->assertThat($type, $this->equalTo(array('forums', 'int')));
+		$this->assertEquals('forums', $type);
 	}
 
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_visited_for $rule
+	 * @param has_never_visited $rule
 	 */
 	public function testGetPossibleValues($args)
 	{
 		list($user, $rule) = $args;
 		$values = $rule->getPossibleValues();
-		$this->assertEquals(array(null, null), $values);
+		$this->assertNull($values);
 	}
 
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_visited_for $rule
+	 * @param has_never_visited $rule
 	 */
 	public function testGetAvailableVars($args)
 	{
@@ -83,7 +90,7 @@ class has_not_visited_for_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_visited_for $rule
+	 * @param has_never_visited $rule
 	 */
 	public function testGetTemplateVars($args)
 	{
@@ -95,7 +102,7 @@ class has_not_visited_for_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_visited_for $rule
+	 * @param has_never_visited $rule
 	 */
 	public function testEmptyConditions($args)
 	{
@@ -110,7 +117,7 @@ class has_not_visited_for_test extends rule_test_base
 			2 => time() - 86400,
 			3 => time() - (2 * 86400)
 		)));
-		$rule = new has_not_visited_for($this->getSerializer(), $user, $datalayer);
+		$rule = new has_never_visited($this->getSerializer(), $user, $datalayer);
 
 		$valid = $rule->isTrue(serialize(null));
 		$this->assertFalse($valid);
@@ -119,7 +126,7 @@ class has_not_visited_for_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \phpbb\user $user
-	 * @param has_not_visited_for $rule
+	 * @param has_never_visited $rule
 	 */
 	public function testNoVisit($args)
 	{
@@ -134,10 +141,57 @@ class has_not_visited_for_test extends rule_test_base
 			2 => time() - 86400,
 			3 => time() - (2 * 86400)
 		)));
-		$rule = new has_not_visited_for($this->getSerializer(), $user, $datalayer);
+		$rule = new has_never_visited($this->getSerializer(), $user, $datalayer);
 
 		$valid = $rule->isTrue(serialize(array(4, 5, 6)));
+		$this->assertTrue($valid);
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \phpbb\user $user
+	 * @param has_never_visited $rule
+	 */
+	public function testPartialVisit($args)
+	{
+		/** @var \phpbb\user $user */
+		$user = $this->getUser();
+		$user->data['is_registered'] = true;
+		$user->data['user_id'] = 11;
+		/** @var \fq\boardnotices\repository\users_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
+		$datalayer->method('getForumsLastReadTime')->will($this->returnValue(array(
+			1 => time(),
+			2 => time() - 86400,
+			3 => time() - (2 * 86400)
+		)));
+		$rule = new has_never_visited($this->getSerializer(), $user, $datalayer);
+
+		$valid = $rule->isTrue(serialize(array(2, 3, 4)));
 		$this->assertFalse($valid);
 	}
 
+	/**
+	 * @depends testInstance
+	 * @param \phpbb\user $user
+	 * @param has_never_visited $rule
+	 */
+	public function testVisit($args)
+	{
+		/** @var \phpbb\user $user */
+		$user = $this->getUser();
+		$user->data['is_registered'] = true;
+		$user->data['user_id'] = 11;
+		/** @var \fq\boardnotices\repository\users_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
+		$datalayer->method('getForumsLastReadTime')->will($this->returnValue(array(
+			1 => time(),
+			2 => time() - 86400,
+			3 => time() - (2 * 86400)
+		)));
+		$rule = new has_never_visited($this->getSerializer(), $user, $datalayer);
+
+		$valid = $rule->isTrue(serialize(array(2, 3)));
+		$this->assertFalse($valid);
+	}
 }

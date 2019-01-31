@@ -264,23 +264,28 @@ class users implements users_interface
 		if (!isset($forums[$user_id]))
 		{
 			$forums[$user_id] = array();
-			$sql = 'SELECT forum_id, mark_time'
-					. ' FROM ' . FORUMS_TRACK_TABLE
+			$sql = 'SELECT forum_id, visited'
+					. ' FROM ' . $this->forums_visited_table
 					. ' WHERE user_id=' . (int) $user_id;
 			$result = $this->db->sql_query($sql);
 			while ($row = $this->db->sql_fetchrow($result))
 			{
-				$forums[$user_id][$row['forum_id']] = $row['mark_time'];
+				$forums[$user_id][$row['forum_id']] = $row['visited'];
 			}
 			$this->db->sql_freeresult($result);
 		}
 		return $forums[$user_id];
 	}
 
+	function getForumsLastReadTime($user_id)
+	{
+		return $this->loadForumLastReadTime($user_id);
+	}
+
 	function getForumLastReadTime($user_id, $forum_id)
 	{
 		$forums = $this->loadForumLastReadTime($user_id);
-		return (isset($forums[$forum_id]) ? $forums[$forum_id] : null);
+		return (!empty($forums[$forum_id]) ? $forums[$forum_id] : null);
 	}
 
 	function trackLastVisit($user_id, $forum_id)

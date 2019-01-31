@@ -124,6 +124,7 @@ $lang = array_merge($lang, array(
 	'RULE_HAS_POSTED_MORE'					=> "Il numero di post visibili è uguale a o più di",
 	'RULE_HAS_POSTED_IN_FORUM'				=> "l'utente ha postato l'ultima volta in questo forum",
 	'RULE_HAS_POSTED_IN_FORUM_EXPLAIN'		=> "(<strong>non</strong> sono inclusi i messaggi in attesa di approvazione)",
+	'RULE_HAS_NEVER_VISITED'				=> "User has never visited any of these forums", // @todo
 	'RULE_HAS_NOT_VISITED_FOR_1'			=> "L’utente non ha visitato nessuno dei forum selezionati",
 	'RULE_HAS_NOT_VISITED_FOR_2'			=> " per almeno ",
 	'RULE_IN_DEFAULT_USERGROUP'				=> "Il gruppo predefinito è",

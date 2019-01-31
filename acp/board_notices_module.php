@@ -729,23 +729,20 @@ class board_notices_module
 			{
 				$error .= $this->user->lang('ERROR_EMPTY_MESSAGE') . "<br />";
 			}
-			return $error;
 		}
 
-		// Prepare notice text for storage
-		generate_text_for_storage(
-				$data['message'],
-				$data['message_uid'],
-				$data['message_bitfield'],
-				$data['message_options'],
-				!$this->request->variable('disable_bbcode', false),
-				!$this->request->variable('disable_magic_url', false),
-				!$this->request->variable('disable_smilies', false)
-		);
-		// In case the parsing of the message failed
-		if (empty($data['message']))
+		if (!empty($data['message']))
 		{
-			return $this->user->lang('ERROR_EMPTY_MESSAGE') . "<br />";
+			// Prepare notice text for storage
+			generate_text_for_storage(
+					$data['message'],
+					$data['message_uid'],
+					$data['message_bitfield'],
+					$data['message_options'],
+					!$this->request->variable('disable_bbcode', false),
+					!$this->request->variable('disable_magic_url', false),
+					!$this->request->variable('disable_smilies', false)
+			);
 		}
 
 		// Get config for all the rules
@@ -777,6 +774,11 @@ class board_notices_module
 			}
 		}
 
+		// In case the parsing of the message failed
+		if (empty($error) && empty($data['message']))
+		{
+			return $this->user->lang('ERROR_EMPTY_MESSAGE') . "<br />";
+		}
 		return $error;
 	}
 

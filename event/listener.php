@@ -75,6 +75,12 @@ class listener implements EventSubscriberInterface
 	 */
 	public function display_board_notices()
 	{
+		// We tag the visit first so that we don't display the message WHEN visiting the forum
+		if ($this->forumVisitedEnabled() && $this->isUserLoggedIn())
+		{
+			$this->setForumVisited();
+		}
+
 		$notices = array();
 		$force_all_rules = false;
 
@@ -109,11 +115,6 @@ class listener implements EventSubscriberInterface
 		}
 
 		$this->generateNoticeTemplate($notices, $force_all_rules, $preview);
-
-		if ($this->forumVisitedEnabled() && $this->isUserLoggedIn())
-		{
-			$this->setForumVisited();
-		}
 	}
 
 	private function generateNoticeTemplate($notices, $force_all_rules, $preview)

@@ -61,7 +61,7 @@ $lang = array_merge($lang, array(
 
 	'L_FORUMS_VISITS'						=> 'Visits',
 	'LABEL_FORUMS_VISITS_ACTIVE'			=> 'Keep track of the last time a user visited a forum',
-	'FORUMS_VISITS_ACTIVE_EXPLAIN'			=> 'This enables or disables the tracking of last visits of each forum for each user. You need to activate it if you want to use the "<i>forum not visited for x days</i>" condition.',
+	'FORUMS_VISITS_ACTIVE_EXPLAIN'			=> 'This enables or disables the tracking of last visits of each forum for each user. You need to activate it if you want to use the "<i>forum never visited</i>" or "<i>forum not visited for x days</i>" conditions.',
 
 	'L_RESET_OPTIONS'						=> 'Reset visits',
 	'L_RESET_FORUM_VISITS'					=> 'Reset last time each forum was visited',
@@ -123,6 +123,7 @@ $lang = array_merge($lang, array(
 	'RULE_HAS_POSTED_MORE'					=> "Number of visible posts equals or more than",
 	'RULE_HAS_POSTED_IN_FORUM'				=> "User has posted in at least one of these forums",
 	'RULE_HAS_POSTED_IN_FORUM_EXPLAIN'		=> "(<strong>not</strong> including posts waiting for approval)",
+	'RULE_HAS_NEVER_VISITED'				=> "User has never visited any of these forums",
 	'RULE_HAS_NOT_VISITED_FOR_1'			=> "User has not visited any of these selected forums ",
 	'RULE_HAS_NOT_VISITED_FOR_2'			=> " for at least ",
 	'RULE_IN_DEFAULT_USERGROUP'				=> "Default user group is",
