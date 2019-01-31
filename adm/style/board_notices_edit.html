@@ -130,50 +130,55 @@
 				{% endif %}
 			</td>
 			<td class="boardnotice-conditions">
-				{% if rule.RULE_TYPE == 'yesno' %}
-					<label>
-						<input type="radio" class="radio" id="notice_rule_conditions[{{ rule.RULE_NAME }}]" name="notice_rule_conditions[{{ rule.RULE_NAME }}][0]" value="1"{% if rule.RULE_DATA[0] %} checked="checked"{% endif %} />
-						{{ lang('YES') }}</label>
-					<label>
-						<input type="radio" class="radio" name="notice_rule_conditions[{{ rule.RULE_NAME }}][0]" value="0"{% if not rule.RULE_DATA[0] %} checked="checked"{% endif %} />
-						{{ lang('NO') }}</label>
-				{% elseif rule.RULE_TYPE == 'date' %}
-					{{ lang('DAY') ~ lang('COLON') }}
-					<select name="notice_rule_conditions[{{ rule.RULE_NAME }}][0]">
-						<option value="0">{{ lang('RULE_DATE_ANY') }}</option>
-						{% for day in range(1, 31) %}
-							<option value="{{ day }}"{% if rule.RULE_DATA[0] == day %} selected{% endif %}>{{ day }}</option>
-						{% endfor %}
-					</select>
-					{{ lang('MONTH') ~ lang('COLON') }}
-					<select name="notice_rule_conditions[{{ rule.RULE_NAME }}][1]">
-						<option value="0">{{ lang('RULE_DATE_ANY') }}</option>
-						{% for month in range(1, 12) %}
-							<option value="{{ month }}"{% if rule.RULE_DATA[1] == month %} selected{% endif %}>{{ month }}</option>
-						{% endfor %}
-					</select>
-					{{ lang('YEAR') ~ lang('COLON') }}
-					<select name="notice_rule_conditions[{{ rule.RULE_NAME }}][2]">
-						<option value="0">{{ lang('RULE_DATE_ANY') }}</option>
-						{% for year in range(2015, 2038) %}
-							<option value="{{ year }}"{% if rule.RULE_DATA[2] == year %} selected{% endif %}>{{ year }}</option>
-						{% endfor %}
-					</select>
-				{% elseif rule.RULE_TYPE == 'int' %}
-					<input type="text" maxlength="5" size="10" name="notice_rule_conditions[{{ rule.RULE_NAME }}][]" value="{{ rule.RULE_DATA[0] }}">
-				{% elseif rule.RULE_TYPE == 'list' or rule.RULE_TYPE == 'multiple choice' %}
-					{% set size = (rule.RULE_VALUES_COUNT < 10) ? rule.RULE_VALUES_COUNT : 10 %}
-					<select{% if rule.RULE_TYPE == 'multiple choice'%} multiple="multiple"{% endif %} size="{{ size }}" name="notice_rule_conditions[{{ rule.RULE_NAME }}][]">
-						{% for key, value in rule.RULE_VALUES %}
-							<option value="{{ key }}"{% if key in rule.RULE_DATA %} selected{% endif %}>{{ value }}</option>
-						{% endfor %}
-					</select>
-				{% elseif rule.RULE_TYPE == 'forums' %}
-					<select multiple="multiple" size="10" name="notice_rule_conditions[{{ rule.RULE_NAME }}][]">
-						{{ rule.RULE_FORUMS }}
-					</select>
-				{% endif %}
-				{{ rule.RULE_UNIT }}
+				<input type="hidden" name="notice_rule_param_count[{{ rule.RULE_NAME }}]" value="{{ rule.RULE_PARAMETERS_COUNT }}" />
+				{% for param in rule.parameters %}
+					{% if param.RULE_TYPE == 'yesno' %}
+						<label>
+							<input type="radio" class="radio" id="notice_rule_conditions[{{ rule.RULE_NAME }}]" name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][0]" value="1"{% if param.RULE_DATA[0] %} checked="checked"{% endif %} />
+							{{ lang('YES') }}
+						</label>
+						<label>
+							<input type="radio" class="radio" name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][0]" value="0"{% if not param.RULE_DATA[0] %} checked="checked"{% endif %} />
+							{{ lang('NO') }}
+						</label>
+					{% elseif param.RULE_TYPE == 'date' %}
+						{{ lang('DAY') ~ lang('COLON') }}
+						<select name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][0]">
+							<option value="0">{{ lang('RULE_DATE_ANY') }}</option>
+							{% for day in range(1, 31) %}
+								<option value="{{ day }}"{% if param.RULE_DATA[0] == day %} selected{% endif %}>{{ day }}</option>
+							{% endfor %}
+						</select>
+						{{ lang('MONTH') ~ lang('COLON') }}
+						<select name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][1]">
+							<option value="0">{{ lang('RULE_DATE_ANY') }}</option>
+							{% for month in range(1, 12) %}
+								<option value="{{ month }}"{% if param.RULE_DATA[1] == month %} selected{% endif %}>{{ month }}</option>
+							{% endfor %}
+						</select>
+						{{ lang('YEAR') ~ lang('COLON') }}
+						<select name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][2]">
+							<option value="0">{{ lang('RULE_DATE_ANY') }}</option>
+							{% for year in range(2015, 2038) %}
+								<option value="{{ year }}"{% if param.RULE_DATA[2] == year %} selected{% endif %}>{{ year }}</option>
+							{% endfor %}
+						</select>
+					{% elseif param.RULE_TYPE == 'int' %}
+						<input type="text" maxlength="5" size="10" name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][]" value="{{ param.RULE_DATA[0] }}">
+					{% elseif param.RULE_TYPE == 'list' or param.RULE_TYPE == 'multiple choice' %}
+						{% set size = (param.RULE_VALUES_COUNT < 10) ? param.RULE_VALUES_COUNT : 10 %}
+						<select{% if param.RULE_TYPE == 'multiple choice'%} multiple="multiple"{% endif %} size="{{ size }}" name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][]">
+							{% for key, value in param.RULE_VALUES %}
+								<option value="{{ key }}"{% if key in param.RULE_DATA %} selected{% endif %}>{{ value }}</option>
+							{% endfor %}
+						</select>
+					{% elseif param.RULE_TYPE == 'forums' %}
+						<select multiple="multiple" size="10" name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][]">
+							{{ param.RULE_FORUMS }}
+						</select>
+					{% endif %}
+					{{ param.RULE_UNIT }}
+				{% endfor %}
 			</td>
 			<td class="boardnotice-variables">
 				{% for variable in rule.RULE_VARIABLES %}

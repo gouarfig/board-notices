@@ -75,6 +75,28 @@ class rules_test extends \PHPUnit_Framework_TestCase
 	 * @depends testInstance
 	 * @param fq\boardnotices\domain\rules $rules
 	 */
+	public function testSingleParameterRule($rules)
+	{
+		global $phpbb_container;
+
+		$this->assertFalse($rules->ruleHasMultipleParameters('mock_rule_1'));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param fq\boardnotices\domain\rules $rules
+	 */
+	public function testMultipleParameterRule($rules)
+	{
+		global $phpbb_container;
+
+		$this->assertTrue($rules->ruleHasMultipleParameters('mock_rule_2'));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param fq\boardnotices\domain\rules $rules
+	 */
 	public function testGetDisplayNameForSimpleName($rules)
 	{
 		global $phpbb_container;
@@ -94,7 +116,10 @@ class rules_test extends \PHPUnit_Framework_TestCase
 		$definedRules = $rules->getDefinedRules();
 		$expected = array(
 			'display_name' => 'Mock Rule 2',
-			'display_unit' => 'Mock Unit',
+			'display_unit' => array(
+				'between parameter 1 and 2',
+				'after parameter 2',
+			),
 			'display_explain' => 'Mock Explanation',
 		);
 		$this->assertEquals($expected, $definedRules['mock_rule_2']);

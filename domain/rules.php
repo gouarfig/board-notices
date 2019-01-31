@@ -104,10 +104,26 @@ class rules
 	}
 
 	/**
+	 * Returns true if the rule has multiple parameters
+	 *
+	 * @param string $rule_name
+	 * @return boolean
+	 */
+	public function ruleHasMultipleParameters($rule_name)
+	{
+		if (!$this->rules_loaded)
+		{
+			$this->loadRules();
+		}
+
+		return isset($this->rules[$rule_name]) ? $this->rules[$rule_name]->hasMultipleParameters() : false;
+	}
+
+	/**
 	 * Returns the type of the rule
 	 *
 	 * @param string $rule_name
-	 * @return string
+	 * @return string|string[]
 	 */
 	public function getRuleType($rule_name)
 	{
@@ -119,6 +135,10 @@ class rules
 		return isset($this->rules[$rule_name]) ? $this->rules[$rule_name]->getType() : '';
 	}
 
+	/**
+	 * Returns the possible values for the parameters of the rule
+	 * @return mixed|mixed[]
+	 */
 	public function getRuleValues($rule_name)
 	{
 		if (!$this->rules_loaded)
@@ -129,6 +149,11 @@ class rules
 		return isset($this->rules[$rule_name]) ? $this->rules[$rule_name]->getPossibleValues() : '';
 	}
 
+
+	/**
+	 * Returns the default values for the parameters of the rule
+	 * @return mixed|mixed[]
+	 */
 	public function getRuleDefaultValue($rule_name)
 	{
 		if (!$this->rules_loaded)

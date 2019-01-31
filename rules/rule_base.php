@@ -17,6 +17,15 @@ abstract class rule_base
 	/** @var \fq\boardnotices\service\serializer $serializer */
 	protected $serializer;
 
+	/**
+	 * Has the rule multiple entries? like: 'not visited [forum] for [n] days'
+	 */
+	public function hasMultipleParameters()
+	{
+		// This is the default. Override this method if the rule has multiple parameters
+		return false;
+	}
+
 	protected function validateUniqueCondition($conditions = null)
 	{
 		$value = $this->validateConditions($conditions);

@@ -17,6 +17,8 @@ class board_notices_module
 {
 
 	private $notice_form_name = 'acp_board_notice';
+
+	/** @var \fq\boardnotices\domain\rules $rules_manager */
 	private $rules_manager = null;
 
 	protected $p_master;
@@ -368,20 +370,47 @@ class board_notices_module
 			}
 			$rule_values = $this->rules_manager->getRuleValues($rule_name);
 
-			$this->template->assign_block_vars('allrules', array(
+			$variables = array(
 				'NOTICE_RULE_ID' => isset($data['notice_rule_id'][$rule_name]) ? $data['notice_rule_id'][$rule_name] : '',
 				'NOTICE_RULE_CHECKED' => isset($data['notice_rule_checked'][$rule_name]) ? true : false,
 				'RULE_NAME' => $rule_name,
 				'RULE_DESCRIPTION' => $rule_description,
 				'RULE_EXPLAIN' => $rule_explain,
-				'RULE_UNIT' => (is_array($rule_descriptions)) ? $rule_descriptions['display_unit'] : '',
-				'RULE_TYPE' => $rule_type,
-				'RULE_VALUES' => $rule_values,
-				'RULE_VALUES_COUNT' => (!empty($rule_values) && is_array($rule_values)) ? count($rule_values) : 0,
-				'RULE_DATA' => $rule_selected,
-				'RULE_FORUMS' => ($rule_type == 'forums') ? make_forum_select($rule_selected, false, false, true) : '',
 				'RULE_VARIABLES' => $this->rules_manager->getAvailableVars($rule_name),
-			));
+				'RULE_PARAMETERS_COUNT' => is_array($rule_type) ? count($rule_type) : 1,
+			);
+			if (!$this->rules_manager->ruleHasMultipleParameters($rule_name))
+			{
+				// Only one parameter
+				$variables = array_merge($variables, array('parameters' => array(array(
+					'RULE_TYPE' => $rule_type,
+					'RULE_VALUES' => $rule_values,
+					'RULE_VALUES_COUNT' => (!empty($rule_values) && is_array($rule_values)) ? count($rule_values) : 0,
+					'RULE_DATA' => $rule_selected,
+					'RULE_FORUMS' => ($rule_type == 'forums') ? make_forum_select($rule_selected, false, false, true) : '',
+					'RULE_UNIT' => (is_array($rule_descriptions)) ? $rule_descriptions['display_unit'] : '',
+					'PARAMETER_INDEX' => '',	// Only one parameter
+				))));
+			}
+			else
+			{
+				// Multi parameters rules
+				$params = array();
+				for ($index=0; $index < count($rule_type); $index++)
+				{
+					$params[$index] = array(
+						'RULE_TYPE' => $rule_type[$index],
+						'RULE_VALUES' => $rule_values[$index],
+						'RULE_VALUES_COUNT' => (!empty($rule_values[$index]) && is_array($rule_values[$index])) ? count($rule_values[$index]) : 0,
+						'RULE_DATA' => $rule_selected[$index],
+						'RULE_FORUMS' => ($rule_type[$index] == 'forums') ? make_forum_select($rule_selected[$index], false, false, true) : '',
+						'RULE_UNIT' => (is_array($rule_descriptions)) ? $rule_descriptions['display_unit'][$index] : '',
+						'PARAMETER_INDEX' => $index,
+					);
+				}
+				$variables = array_merge($variables, array('parameters' => $params));
+			}
+			$this->template->assign_block_vars('allrules', $variables);
 		}
 	}
 
@@ -717,7 +746,20 @@ class board_notices_module
 			{
 				unset($data['notice_rule_checked'][$rule_name]);
 			}
-			$notice_rule_conditions = $this->request->variable(array('notice_rule_conditions', $rule_name), array(''));
+			$notice_param_count = $this->request->variable(array('notice_rule_param_count', $rule_name), 1);
+			if ($notice_param_count == 1)
+			{
+				$notice_rule_conditions = $this->request->variable(array('notice_rule_conditions', $rule_name), array(''));
+			}
+			else
+			{
+				// Multi-parameters (cannot use an array of arrays, it's not supported by the sanitizer)
+				$notice_rule_conditions = array();
+				for ($index=0; $index < $notice_param_count; $index++)
+				{
+					$notice_rule_conditions[$index] = $this->request->variable(array('notice_rule_conditions' . $index, $rule_name), array(''));
+				}
+			}
 			if (!empty($notice_rule_conditions))
 			{
 				$data['notice_rule_conditions'][$rule_name] = $notice_rule_conditions;

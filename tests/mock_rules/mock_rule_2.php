@@ -28,6 +28,15 @@ class mock_rule_2 extends \fq\boardnotices\rules\rule_base implements \fq\boardn
 		);
 	}
 
+	/**
+	 * Multiple parameters rule
+	 * @overriden
+	 */
+	public function hasMultipleParameters()
+	{
+		return true;
+	}
+
 	public function getDisplayName()
 	{
 		return "Mock Rule 2";
@@ -40,12 +49,15 @@ class mock_rule_2 extends \fq\boardnotices\rules\rule_base implements \fq\boardn
 
 	public function getDisplayUnit()
 	{
-		return 'Mock Unit';
+		return array(
+			'between parameter 1 and 2',
+			'after parameter 2',
+		);
 	}
 
 	public function getType()
 	{
-		return 'n/a';
+		return array('list', 'int');
 	}
 
 	public function getDefault()
