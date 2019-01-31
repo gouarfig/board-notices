@@ -94,6 +94,11 @@ class controller
 				$response = $this->set_board_notice_cookie($notice_id, $notice['reset_after']);
 			}
 		}
+		else
+		{
+			// Allow the notice to disappear in preview mode
+			$response = true;
+		}
 
 		// Send a JSON response if an AJAX request was used
 		if ($this->request->is_ajax())
