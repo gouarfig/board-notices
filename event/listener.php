@@ -139,6 +139,14 @@ class listener implements EventSubscriberInterface
 			$this->language->add_lang('boardnotices', 'fq/boardnotices');
 			$notice_message = $this->replaceTemplateVars($notice_message, $template_vars);
 
+			$dismiss_parameters = array(
+				'notice_id' => $notice->getId(),
+				'hash' => generate_link_hash(constants::$ROUTING_CLOSE_HASH_ID),
+			);
+			if ($preview)
+			{
+				$dismiss_parameters['preview'] = 1;
+			}
 			// Output board notice to the template
 			$this->template->assign_vars(array(
 				'S_BOARD_NOTICE' => true,
@@ -148,10 +156,7 @@ class listener implements EventSubscriberInterface
 				'BOARD_NOTICE_STYLE' => $notice_style,
 				'U_BOARD_NOTICE_CLOSE'	=> $this->controller_helper->route(
 					constants::$CONTROLLER_ROUTING_ID,
-					array(
-						'notice_id' => $notice->getId(),
-						'hash' => generate_link_hash(constants::$ROUTING_CLOSE_HASH_ID),
-					)
+					$dismiss_parameters
 				),
 			));
 		}
