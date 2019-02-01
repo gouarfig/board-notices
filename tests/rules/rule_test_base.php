@@ -9,6 +9,11 @@ class rule_test_base extends \phpbb_test_case
 		return dirname(__FILE__) . '/../../../../../';
 	}
 
+	/**
+	 * Creates a dummy user for tests
+	 *
+	 * @return \phpbb\user
+	 */
 	protected function getUser()
 	{
 		$phpbb_root_path = $this->getRootFolder();

@@ -68,8 +68,8 @@ class date extends rule_base implements rule_interface
 		{
 			return false;
 		}
-		$now = getdate();
-		// $current_datetime = $this->user->create_datetime();
+		$offset = $this->user->create_datetime()->getOffset();
+		$now = getdate(time() - date('Z') + $offset);	// This gives the date in the user timezone
 		$valid = ((($date[0] == 0) || ($now['mday'] == $date[0]))
 				&& (($date[1] == 0) || ($now['mon'] == $date[1]))
 				&& (($date[2] == 0) || ($now['year'] == $date[2])));
