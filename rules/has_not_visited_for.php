@@ -16,7 +16,7 @@ use \fq\boardnotices\service\constants;
 
 class has_not_visited_for extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $lang */
+	/** @var \phpbb\user $user */
 	private $user;
 	/** @var \fq\boardnotices\repository\users_interface $repository */
 	private $repository;

@@ -16,7 +16,7 @@ use \fq\boardnotices\service\constants;
 
 class birthday extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $lang */
+	/** @var \phpbb\user $user */
 	private $user;
 	private $template_vars = array();
 

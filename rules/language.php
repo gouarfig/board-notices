@@ -16,7 +16,7 @@ use \fq\boardnotices\service\constants;
 
 class language extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $lang */
+	/** @var \phpbb\user $user */
 	private $user;
 	/** @var \fq\boardnotices\repository\users_interface $data_layer */
 	private $data_layer;

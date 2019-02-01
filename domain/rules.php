@@ -35,6 +35,7 @@ class rules
 	);
 	private $default_order = array(
 		'logged_in',
+		'registered_less_than',
 		'birthday',
 		'anniversary',
 		'date',
@@ -60,7 +61,6 @@ class rules
 	private $hide = array(
 		'not_logged_in',
 		// This one is not ready to be used yet
-		// 'has_not_visited_for',
 	);
 
 	/**

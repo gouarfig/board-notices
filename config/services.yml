@@ -219,3 +219,9 @@ services:
       - '@fq.boardnotices.service.serializer'
       - '@user'
       - '@template'
+
+  fq.boardnotices.rules.registered_less_than:
+    class: fq\boardnotices\rules\registered_less_than
+    arguments:
+      - '@fq.boardnotices.service.serializer'
+      - '@user'

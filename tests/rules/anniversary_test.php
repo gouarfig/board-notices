@@ -4,11 +4,10 @@ namespace fq\boardnotices\tests\rules;
 
 include_once 'phpBB/includes/functions.php';
 
-use \fq\boardnotices\rules\anniversary;
+use fq\boardnotices\rules\anniversary;
 
 class anniversary_test extends rule_test_base
 {
-
 	public function testInstance()
 	{
 		/** @var \phpbb\user $user */

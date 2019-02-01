@@ -134,6 +134,7 @@ $lang = array_merge($lang, array(
 	'RULE_NOT_IN_USERGROUP'					=> "User does not belong to any of these selected groups",
 	'RULE_ON_BOARD_INDEX'					=> "User is browsing the board index",
 	'RULE_RANK'								=> "User rank is any of these selected ranks",
+	'RULE_REGISTERED_LESS_THAN'				=> "User registration is less than",
 	'RULE_STYLE'							=> "User style is either one of these selected styles",
 
 	// Rules units

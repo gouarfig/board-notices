@@ -16,7 +16,7 @@ use \fq\boardnotices\service\constants;
 
 class date extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $lang */
+	/** @var \phpbb\user $user */
 	private $user;
 
 	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user)

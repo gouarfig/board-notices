@@ -16,7 +16,7 @@ use \fq\boardnotices\service\constants;
 
 class in_forum extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $lang */
+	/** @var \phpbb\user $user */
 	private $user;
 	/** @var \phpbb\request\request $request */
 	private $request;

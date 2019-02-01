@@ -135,6 +135,7 @@ $lang = array_merge($lang, array(
 	'RULE_LOGGED_IN'						=> "Kas kasutaja on sisse loginud",
 	'RULE_NOT_IN_USERGROUP'					=> "Kasutaja ei kuulu ühtegi valitud gruppi",
 	'RULE_RANK'								=> "Kasutaja staatus on üks nendest valitud staatustest",
+	'RULE_REGISTERED_LESS_THAN'				=> "User registration is less than", // @todo
 	'RULE_STYLE'							=> "Kasutaja stiil on üks nendest valitud stiilidest",
 
 	// Rules units
