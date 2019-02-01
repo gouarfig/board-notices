@@ -4,7 +4,7 @@ namespace fq\boardnotices\tests\rules;
 
 include_once 'phpBB/includes/functions.php';
 
-use \fq\boardnotices\rules\date;
+use fq\boardnotices\rules\date;
 
 class date_test extends rule_test_base
 {
@@ -103,6 +103,7 @@ class date_test extends rule_test_base
 	}
 
 	/**
+	 * null values mean "any" and zero values mean "current one"
 	 * @return int[]
 	 */
 	private function buildConditions($now, $day = null, $month = null, $year = null)

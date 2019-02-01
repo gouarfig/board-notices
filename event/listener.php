@@ -76,7 +76,7 @@ class listener implements EventSubscriberInterface
 	public function display_board_notices()
 	{
 		// We tag the visit first so that we don't display the message WHEN visiting the forum
-		if ($this->forumVisitedEnabled() && $this->isUserLoggedIn())
+		if ($this->forumVisitedEnabled() && $this->isUserRegistered())
 		{
 			$this->setForumVisited();
 		}
@@ -209,9 +209,9 @@ class listener implements EventSubscriberInterface
 		return $this->config[constants::$CONFIG_TRACK_FORUMS_VISITS] ? true : false;
 	}
 
-	private function isUserLoggedIn()
+	private function isUserRegistered()
 	{
-		return (($this->user->data['user_type'] == USER_NORMAL) || ($this->user->data['user_type'] == USER_FOUNDER));
+		return !empty($this->user->data['is_registered']);
 	}
 
 	private function isPreview()
