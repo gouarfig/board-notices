@@ -16,11 +16,6 @@ class has_never_visited_test extends rule_test_base
 		$user->data['user_id'] = 11;
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
-		$datalayer->method('getForumsLastReadTime')->will($this->returnValue(array(
-			1 => time(),
-			2 => time() - 86400,
-			3 => time() - (2 * 86400)
-		)));
 		$rule = new has_never_visited($this->getSerializer(), $user, $datalayer);
 		$this->assertNotNull($rule);
 
@@ -99,12 +94,35 @@ class has_never_visited_test extends rule_test_base
 		$this->assertEquals(0, count($vars));
 	}
 
+	public function conditionsProvider()
+	{
+		$serializer = $this->getSerializer();
+		return array(
+			// Empty conditions
+			array(null, false),
+			array(serialize(null), false),
+			array($serializer->encode(null), false),
+			// Not visited
+			array(array(4, 5, 6), true),
+			array(serialize(array(4, 5, 6)), true),
+			array($serializer->encode(array(4, 5, 6)), true),
+			// Partial visit
+			array(array(2, 3, 4), false),
+			array(serialize(array(2, 3, 4)), false),
+			array($serializer->encode(array(2, 3, 4)), false),
+			// All visited
+			array(array(2, 3), false),
+			array(serialize(array(2, 3)), false),
+			array($serializer->encode(array(2, 3)), false),
+		);
+	}
+
 	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_never_visited $rule
+	 * @dataProvider conditionsProvider
+	 * @param mixed $conditions
+	 * @param bool $result
 	 */
-	public function testEmptyConditions($args)
+	public function testRuleConditions($conditions, $result)
 	{
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
@@ -119,20 +137,19 @@ class has_never_visited_test extends rule_test_base
 		)));
 		$rule = new has_never_visited($this->getSerializer(), $user, $datalayer);
 
-		$valid = $rule->isTrue(serialize(null));
-		$this->assertFalse($valid);
+		$this->assertEquals($result, $rule->isTrue($conditions));
 	}
 
 	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_never_visited $rule
+	 * @dataProvider conditionsProvider
+	 * @param mixed $conditions
+	 * @param bool $result
 	 */
-	public function testNoVisit($args)
+	public function testRuleConditionsForNonRegisteredUser($conditions, $result)
 	{
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-		$user->data['is_registered'] = true;
+		$user->data['is_registered'] = false;
 		$user->data['user_id'] = 11;
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
@@ -143,16 +160,15 @@ class has_never_visited_test extends rule_test_base
 		)));
 		$rule = new has_never_visited($this->getSerializer(), $user, $datalayer);
 
-		$valid = $rule->isTrue(serialize(array(4, 5, 6)));
-		$this->assertTrue($valid);
+		$this->assertFalse($rule->isTrue($conditions));
 	}
 
 	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_never_visited $rule
+	 * @dataProvider conditionsProvider
+	 * @param mixed $conditions
+	 * @param bool $result
 	 */
-	public function testPartialVisit($args)
+	public function testRuleConditionsForUserWithNoData($conditions, $result)
 	{
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
@@ -160,38 +176,13 @@ class has_never_visited_test extends rule_test_base
 		$user->data['user_id'] = 11;
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
-		$datalayer->method('getForumsLastReadTime')->will($this->returnValue(array(
-			1 => time(),
-			2 => time() - 86400,
-			3 => time() - (2 * 86400)
-		)));
+		$datalayer->method('getForumsLastReadTime')->will($this->returnValue(array()));
 		$rule = new has_never_visited($this->getSerializer(), $user, $datalayer);
 
-		$valid = $rule->isTrue(serialize(array(2, 3, 4)));
-		$this->assertFalse($valid);
+		// It's always going to be true if the conditions are not empty
+		$this->assertEquals(
+			($conditions !== null) && ($conditions !== 'N;') && ($conditions !== 'json:null'),
+			$rule->isTrue($conditions));
 	}
 
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_never_visited $rule
-	 */
-	public function testVisit($args)
-	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$user->data['is_registered'] = true;
-		$user->data['user_id'] = 11;
-		/** @var \fq\boardnotices\repository\users_interface $datalayer */
-		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
-		$datalayer->method('getForumsLastReadTime')->will($this->returnValue(array(
-			1 => time(),
-			2 => time() - 86400,
-			3 => time() - (2 * 86400)
-		)));
-		$rule = new has_never_visited($this->getSerializer(), $user, $datalayer);
-
-		$valid = $rule->isTrue(serialize(array(2, 3)));
-		$this->assertFalse($valid);
-	}
 }

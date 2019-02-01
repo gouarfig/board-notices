@@ -100,16 +100,20 @@ class has_not_visited_for extends rule_base implements rule_interface
 		$visits = $this->repository->getForumsLastReadTime($this->user->data['user_id']);
 		if (empty($visits))
 		{
-			return true;
+			return false;
 		}
 		foreach ($forums as $forum_id)
 		{
 			if (!empty($visits[$forum_id]))
 			{
-				return false;
+				if ((int) $visits[$forum_id] + ($days * 24 * 60 * 60) < time())
+				{
+					// We can stop at the first one that hasn't been visited for n days
+					return true;
+				}
 			}
 		}
-		return true;
+		return false;
 	}
 
 	public function getAvailableVars()
