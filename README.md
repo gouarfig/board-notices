@@ -1,3 +1,8 @@
+![phpBB extension](https://img.shields.io/badge/phpBB-3.2-green.svg)
+![License](https://img.shields.io/github/license/gouarfig/board-notices.svg?style=flat)
+[![Release](https://img.shields.io/github/release-pre/gouarfig/board-notices.svg?style=flat)](https://github.com/gouarfig/board-notices/releases)
+[![Release](https://img.shields.io/github/release-date-pre/gouarfig/board-notices.svg?style=flat)](https://github.com/gouarfig/board-notices/releases)
+![Last commit](https://img.shields.io/github/last-commit/gouarfig/board-notices.svg?style=flat)
 [![Build Status](https://travis-ci.org/gouarfig/board-notices.svg)](https://travis-ci.org/gouarfig/board-notices)
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/4836ae0c5386422eb43a18d301b7119e)](https://www.codacy.com/app/gouarfig/board-notices?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=gouarfig/board-notices&amp;utm_campaign=Badge_Grade)
 
