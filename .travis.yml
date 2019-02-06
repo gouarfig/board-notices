@@ -24,7 +24,7 @@ matrix:
     - php: 7.1
       env: DB=mysqli
     - php: 7.2
-      env: DB=mysqli;CODACY=1
+      env: DB=mysqli;CODECOV=1
   #   - php: 7.3
   #     env: DB=mysqli
   # allow_failures:
@@ -63,3 +63,6 @@ script:
 
 after_script:
   - sh -c "if [ '$CODACY' = '1' ]; then php phpBB/vendor/bin/codacycoverage clover build/coverage/xml; fi"
+
+after_success:
+  - sh -c "if [ '$CODECOV' = '1' ]; then bash <(curl -s https://codecov.io/bash); fi"
