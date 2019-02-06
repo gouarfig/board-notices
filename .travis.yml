@@ -22,10 +22,6 @@ matrix:
     - php: 7.0
       env: DB=mysqli
     - php: 7.1
-      env: DB=mysqli
-    - php: 7.2
-      env: DB=mysqli
-    - php: 7.1
       env: DB=mysqli;CODACY=1
     - php: 7.2
       env: DB=mysqli;CODECOV=1

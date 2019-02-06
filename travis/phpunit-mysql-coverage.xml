@@ -12,17 +12,23 @@
          verbose="true"
          bootstrap="../tests/bootstrap.php">
 
+	<testsuites>
+		<testsuite name="phpBB Extension Test Suite">
+			<directory suffix="_test.php">../tests</directory>
+		</testsuite>
+	</testsuites>
+
 	<filter>
 		<blacklist>
-			<directory>./phpBB/ext/fq/boardnotices/tests/</directory>
+			<directory>../tests/</directory>
 		</blacklist>
 		<whitelist processUncoveredFilesFromWhitelist="true">
-			<directory suffix=".php">./phpBB/ext/fq/boardnotices/</directory>
+			<directory suffix=".php">../</directory>
 			<exclude>
-				<directory suffix=".php">./phpBB/ext/fq/boardnotices/language/</directory>
-				<directory suffix=".php">./phpBB/ext/fq/boardnotices/migrations/</directory>
-				<directory suffix=".php">./phpBB/ext/fq/boardnotices/styles/</directory>
-				<directory suffix=".php">./phpBB/ext/fq/boardnotices/vendor/</directory>
+				<directory suffix=".php">../language/</directory>
+				<directory suffix=".php">../migrations/</directory>
+				<directory suffix=".php">../styles/</directory>
+				<directory suffix=".php">../vendor/</directory>
 			</exclude>
 		</whitelist>
 	</filter>
