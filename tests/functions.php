@@ -1,6 +1,9 @@
 <?php
 
-function get_group_name($group_id)
+if (!function_exists('get_group_name'))
 {
-	return "Group Name";
+	function get_group_name($group_id)
+	{
+		return "Group Name";
+	}
 }
