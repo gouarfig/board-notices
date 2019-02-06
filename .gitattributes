@@ -4,8 +4,9 @@
 .gitignore	export-ignore
 .travis.yml		export-ignore
 clean_chmod.sh		export-ignore
+codecov.yml		export-ignore
 composer.lock		export-ignore
-phpunit.xml.dist	export-ignore
+phpunit.xml		export-ignore
 README.md		export-ignore
 travis			export-ignore
 tests			export-ignore
