@@ -1,0 +1,6 @@
+fixes:
+  - "phpBB/ext/fq/boardnotices::/"
+
+ignore:
+  - "/phpBB"
+  - "/tests"
