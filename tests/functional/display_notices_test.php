@@ -15,6 +15,7 @@ namespace fq\boardnotices\tests\functional;
 
 /**
  * @group functional
+ * @runTestsInSeparateProcesses
  */
 class display_notices_test extends \phpbb_functional_test_case
 {

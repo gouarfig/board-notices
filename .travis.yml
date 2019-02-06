@@ -65,4 +65,5 @@ after_script:
   - sh -c "if [ '$CODACY' = '1' ]; then php phpBB/vendor/bin/codacycoverage --git-commit=$TRAVIS_COMMIT clover phpBB/ext/$EXTNAME/clover.xml; fi"
 
 after_success:
+  - cp phpBB/ext/$EXTNAME/.codecov.yml ./
   - bash -c "if [ '$CODECOV' = '1' ]; then cd phpBB/ext/$EXTNAME; bash <(curl -s https://codecov.io/bash); cd ../../../..; fi"
