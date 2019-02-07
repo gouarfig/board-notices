@@ -28,7 +28,6 @@ class serializer_test extends \phpbb_test_case
 			array(false),
 			array(null),
 			array(0),
-			array(0, 0),
 			array(-1),
 		);
 	}
