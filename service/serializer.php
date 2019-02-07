@@ -2,6 +2,8 @@
 
 namespace fq\boardnotices\service;
 
+use fq\boardnotices\service\SerializerException;
+
 /**
  * Use this class to avoid the use of serialize and unserialize functions (which are unsafe)
  */
@@ -79,7 +81,7 @@ class serializer
 		{
 			$unserialized = $this->getSingleValue($string);
 		}
-		catch (\Exception $exception)
+		catch (SerializerException $exception)
 		{
 			return $this->error();
 		}
@@ -110,7 +112,7 @@ class serializer
 				return $this->getArrayValue($string, $pos);
 
 			default:
-				throw new \Exception("Invalid serialized string: type code '{$string[$pos]}' unknown at position {$pos}.", 101);
+				throw new SerializerException("Invalid serialized string: type code '{$string[$pos]}' unknown at position {$pos}.", 101);
 		}
 	}
 
@@ -121,7 +123,7 @@ class serializer
 		{
 			return substr($string, $start, $end - $start);
 		}
-		throw new \Exception("Invalid serialized string", 102);
+		throw new SerializerException("Invalid serialized string", 102);
 	}
 
 	/**
@@ -136,7 +138,7 @@ class serializer
 		{
 			return (int) substr($string, $start, $end - $start);
 		}
-		throw new \Exception("Invalid serialized string", 103);
+		throw new SerializerException("Invalid serialized string", 103);
 	}
 
 	/**
@@ -172,7 +174,7 @@ class serializer
 		{
 			return true;
 		}
-		throw new \Exception("Invalid serialized string", 111);
+		throw new SerializerException("Invalid serialized string", 111);
 	}
 
 	/**
@@ -193,7 +195,7 @@ class serializer
 	{
 		if (!is_numeric($string))
 		{
-			throw new \Exception("Invalid serialized string", 121);
+			throw new SerializerException("Invalid serialized string", 121);
 		}
 		return (int) $string;
 	}
@@ -231,7 +233,7 @@ class serializer
 		}
 		if ($size < 0)
 		{
-			throw new \Exception("Invalid serialized string", 131);
+			throw new SerializerException("Invalid serialized string", 131);
 		}
 		$pos += strlen((string) $size) +2;
 		for ($element = 0; $element < $size; $element++)
@@ -239,7 +241,7 @@ class serializer
 			$key = $this->getSingleValue($string, $pos);
 			if (!is_scalar($key))
 			{
-				throw new \Exception("Invalid serialized string", 132);
+				throw new SerializerException("Invalid serialized string", 132);
 			}
 			$value = $this->getSingleValue($string, $pos);
 			$array[$key] = $value;
