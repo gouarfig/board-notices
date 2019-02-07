@@ -103,7 +103,6 @@ class serializer
 	 */
 	private function getSingleValue($string, &$pos = 0)
 	{
-		$value = null;
 		switch ($string[$pos])
 		{
 			case 'N':
@@ -124,7 +123,6 @@ class serializer
 			default:
 				throw new \Exception("Invalid serialized string: type code '{$string[$pos]}' unknown at position {$pos}.", 101);
 		}
-		return $value;
 	}
 
 	private function getSerializedValue($string, $start)
@@ -179,12 +177,10 @@ class serializer
 	{
 		if ($string == '0')
 		{
-			$pos++;
 			return false;
 		}
 		if ($string == '1')
 		{
-			$pos++;
 			return true;
 		}
 		throw new \Exception("Invalid serialized string", 111);
