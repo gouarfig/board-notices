@@ -3,6 +3,9 @@
 [![Release](https://img.shields.io/github/release-pre/gouarfig/board-notices.svg?style=flat)](https://github.com/gouarfig/board-notices/releases)
 [![Release](https://img.shields.io/github/release-date-pre/gouarfig/board-notices.svg?style=flat)](https://github.com/gouarfig/board-notices/releases)
 ![Last commit](https://img.shields.io/github/last-commit/gouarfig/board-notices.svg?style=flat)
+[![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=gouarfig_board-notices&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=gouarfig_board-notices)
+[![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=gouarfig_board-notices&metric=security_rating)](https://sonarcloud.io/dashboard?id=gouarfig_board-notices)
+[![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=gouarfig_board-notices&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=gouarfig_board-notices)
 
 # Board Notices Manager for phpBB 3.2
 
