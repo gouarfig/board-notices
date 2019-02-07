@@ -41,7 +41,6 @@ class serializer
 			$this->lastJsonError = json_last_error();
 			return $decoded;
 		}
-		/** @todo Remove compatibility before releasing version 1.0 */
 		$decoded = $this->safeUnserialize($string);
 		if (($decoded === false) && ($string !== 'b:0;'))
 		{
@@ -68,16 +67,6 @@ class serializer
 		$this->lastError = true;
 		return null;
 	}
-
-	// private function safeUnserialize($string)
-	// {
-	// 	$this->lastError = false;
-	// 	if (intval(substr(phpversion(), 0, 1)) >= 7)
-	// 	{
-	// 		return @unserialize($string, ['allowed_classes' => false]);
-	// 	}
-	// 	return @unserialize($string);
-	// }
 
 	private function safeUnserialize($string)
 	{
