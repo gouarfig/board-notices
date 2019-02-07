@@ -2,7 +2,7 @@
 
 namespace fq\boardnotices\service;
 
-class SerializerException extends \Exception
+class serializer_exception extends \Exception
 {
 
 }
