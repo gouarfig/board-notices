@@ -98,7 +98,7 @@ class listener implements EventSubscriberInterface
 			// Normal notices mode
 			$raw_notices = $this->notices_repository->getActiveNotices();
 			$dismissed_notices = array();
-			if (!empty($this->user->data['is_registered']))
+			if ($this->isUserRegistered())
 			{
 				$dismissed_notices = $this->notices_seen_repository->getDismissedNotices($this->getUserId());
 			}
@@ -107,9 +107,12 @@ class listener implements EventSubscriberInterface
 				// The user is probably a guest, so we get that from the cookies
 				$dismissed_notices = $this->getDismissedNoticesFromCookies();
 			}
-			foreach ($raw_notices as $raw_notice)
+			if (!empty($raw_notices))
 			{
-				$notices[] = $this->getNotice($raw_notice, $dismissed_notices);
+				foreach ($raw_notices as $raw_notice)
+				{
+					$notices[] = $this->getNotice($raw_notice, $dismissed_notices);
+				}
 			}
 			unset($raw_notices);
 		}
