@@ -12,21 +12,23 @@ namespace fq\boardnotices\acp;
 
 class board_notices_info
 {
+	const TITLE = 'ACP_BOARD_NOTICES';
+
 	function module()
 	{
 		return array(
 			'filename'	=> '\phpbb\boardnotices\acp\board_notices_module',
-			'title'		=> 'ACP_BOARD_NOTICES',
+			'title'		=> TITLE,
 			'modes'		=> array(
 				'settings'	=> array(
-					'title' => 'ACP_BOARD_NOTICES_SETTINGS',
+					'title' => TITLE . '_SETTINGS',
 					'auth' => 'ext_fq/boardnotices && acl_a_board',
-					'cat' => array('ACP_BOARD_NOTICES')
+					'cat' => array(TITLE)
 				),
 				'manage'	=> array(
-					'title' => 'ACP_BOARD_NOTICES_MANAGE',
+					'title' => TITLE . '_MANAGE',
 					'auth' => 'ext_fq/boardnotices && acl_a_board',
-					'cat' => array('ACP_BOARD_NOTICES')
+					'cat' => array(TITLE)
 				),
 			),
 		);
