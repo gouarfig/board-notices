@@ -76,7 +76,7 @@ class listener implements EventSubscriberInterface
 	public function display_board_notices()
 	{
 		// We tag the visit first so that we don't display the message WHEN visiting the forum
-		if ($this->forumVisitedEnabled() && $this->isUserRegistered())
+		if ($this->extensionEnabled() && $this->forumVisitedEnabled() && $this->isUserRegistered())
 		{
 			$this->setForumVisited();
 		}
