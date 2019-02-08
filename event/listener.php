@@ -114,7 +114,10 @@ class listener implements EventSubscriberInterface
 			unset($raw_notices);
 		}
 
-		$this->generateNoticeTemplate($notices, $force_all_rules, $preview);
+		if (!empty($notices))
+		{
+			$this->generateNoticeTemplate($notices, $force_all_rules, $preview);
+		}
 	}
 
 	private function generateNoticeTemplate($notices, $force_all_rules, $preview)
