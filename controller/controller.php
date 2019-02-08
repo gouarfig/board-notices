@@ -12,10 +12,10 @@ namespace fq\boardnotices\controller;
 
 use fq\boardnotices\service\constants;
 
+define('NO_AUTH_OPERATION', 'NO_AUTH_OPERATION');
+
 class controller
 {
-	const NO_AUTH_OPERATION = 'NO_AUTH_OPERATION';
-
 	/** @var \phpbb\config\config $config */
 	private $config;
 
