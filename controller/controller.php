@@ -81,8 +81,10 @@ class controller
 			throw new \phpbb\exception\http_exception(403, NO_AUTH_OPERATION);
 		}
 
-		// Do nothing in preview mode
-		if (empty($this->request->variable('preview', 0)))
+		// Allow the notice to disappear in preview mode
+		$response = true;
+
+		if (!$this->request->variable('preview', 0))
 		{
 			if ($this->user->data['is_registered'])
 			{
@@ -94,11 +96,6 @@ class controller
 				// Set a cookie for guests
 				$response = $this->set_board_notice_cookie($notice_id, $notice['reset_after']);
 			}
-		}
-		else
-		{
-			// Allow the notice to disappear in preview mode
-			$response = true;
 		}
 
 		// Send a JSON response if an AJAX request was used
