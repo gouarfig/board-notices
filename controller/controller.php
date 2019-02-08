@@ -14,13 +14,15 @@ use fq\boardnotices\service\constants;
 
 class controller
 {
-	/** @var \phpbb\config\config */
+	const NO_AUTH_OPERATION = 'NO_AUTH_OPERATION';
+
+	/** @var \phpbb\config\config $config */
 	private $config;
 
-	/** @var \phpbb\request\request */
+	/** @var \phpbb\request\request $request */
 	private $request;
 
-	/** @var \phpbb\user */
+	/** @var \phpbb\user $user */
 	private $user;
 
 	/** @var \fq\boardnotices\repository\notices_interface $notices_repository */
@@ -32,9 +34,9 @@ class controller
 	/**
 	* Constructor
 	*
-	* @param \phpbb\config\config                $config         Config object
-	* @param \phpbb\request\request              $request        Request object
-	* @param \phpbb\user                         $user           User object
+	* @param \phpbb\config\config $config
+	* @param \phpbb\request\request $request
+	* @param \phpbb\user $user
 	* @param \fq\boardnotices\repository\notices_interface $notices_repository
 	* @param \fq\boardnotices\repository\notices_seen_interface $notices_seen_repository
 	* @access public
@@ -59,7 +61,6 @@ class controller
 	*
 	* @throws \phpbb\exception\http_exception An http exception
 	* @return \Symfony\Component\HttpFoundation\JsonResponse A Symfony JSON Response object
-	* @access public
 	*/
 	public function close_notice()
 	{
@@ -67,17 +68,17 @@ class controller
 		$notice_id = (int) $this->request->variable('notice_id', 0);
 		if (empty($notice_id))
 		{
-			throw new \phpbb\exception\http_exception(403, 'NO_AUTH_OPERATION');
+			throw new \phpbb\exception\http_exception(403, NO_AUTH_OPERATION);
 		}
 		$notice = $this->notices_repository->getNoticeFromId($notice_id);
 		if (empty($notice))
 		{
-			throw new \phpbb\exception\http_exception(403, 'NO_AUTH_OPERATION');
+			throw new \phpbb\exception\http_exception(403, NO_AUTH_OPERATION);
 		}
 		// Check the link hash to protect against CSRF/XSRF attacks
 		if (!$notice['dismissable'] || !check_link_hash($this->request->variable('hash', ''), constants::$ROUTING_CLOSE_HASH_ID))
 		{
-			throw new \phpbb\exception\http_exception(403, 'NO_AUTH_OPERATION');
+			throw new \phpbb\exception\http_exception(403, NO_AUTH_OPERATION);
 		}
 
 		// Do nothing in preview mode
@@ -121,7 +122,6 @@ class controller
 	* Set a cookie to keep the notice closed
 	*
 	* @return bool True
-	* @access private
 	*/
 	private function set_board_notice_cookie($notice_id, $reset_after)
 	{
@@ -146,7 +146,6 @@ class controller
 	* Close the notice for a registered user
 	*
 	* @return bool True if successful, false otherwise
-	* @access private
 	*/
 	private function update_board_notice_status($notice_id, $user_id)
 	{
