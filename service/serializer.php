@@ -209,9 +209,23 @@ class serializer
 	{
 		$pos += 2;
 		$size = $this->getSizeValue($string, $pos);
-		$pos += strlen((string) $size) +2;
+		if ($size < 0)
+		{
+			throw new serializer_exception("Invalid serialized string", 141);
+		}
+		$pos += strlen((string) $size) +1;
+		if ($string{$pos} != '"')
+		{
+			throw new serializer_exception("Invalid serialized string", 142);
+		}
+		$pos++;
 		$value = substr($string, $pos, $size);
-		$pos += (int) $size +2;
+		$pos += (int) $size;
+		if ($string{$pos} != '"')
+		{
+			throw new serializer_exception("Invalid serialized string", 143);
+		}
+		$pos+=2;
 		return $value;
 	}
 
