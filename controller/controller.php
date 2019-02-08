@@ -19,7 +19,7 @@ class controller
 	/** @var \phpbb\config\config $config */
 	private $config;
 
-	/** @var \phpbb\request\request $request */
+	/** @var \phpbb\request\request_interface $request */
 	private $request;
 
 	/** @var \phpbb\user $user */
@@ -35,7 +35,7 @@ class controller
 	* Constructor
 	*
 	* @param \phpbb\config\config $config
-	* @param \phpbb\request\request $request
+	* @param \phpbb\request\request_interface $request
 	* @param \phpbb\user $user
 	* @param \fq\boardnotices\repository\notices_interface $notices_repository
 	* @param \fq\boardnotices\repository\notices_seen_interface $notices_seen_repository
@@ -43,7 +43,7 @@ class controller
 	*/
 	public function __construct(
 		\phpbb\config\config $config,
-		\phpbb\request\request $request,
+		\phpbb\request\request_interface $request,
 		\phpbb\user $user,
 		\fq\boardnotices\repository\notices_interface $notices_repository,
 		\fq\boardnotices\repository\notices_seen_interface $notices_seen_repository
@@ -113,9 +113,6 @@ class controller
 		$redirect = $this->request->variable('redirect', $this->user->data['session_page']);
 		$redirect = reapply_sid($redirect);
 		redirect($redirect);
-
-		// We shouldn't get here, but throw an http exception just in case
-		throw new \phpbb\exception\http_exception(500, 'GENERAL_ERROR');
 	}
 
 	/**

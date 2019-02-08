@@ -20,7 +20,7 @@ class style_test extends rule_test_base
 		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')->disableOriginalConstructor()->getMock();
 
-		/** @var \phpbb\request\config $config */
+		/** @var \phpbb\config\config $config */
 		$config = $this->getMockBuilder('\phpbb\config\config')->disableOriginalConstructor()->getMock();
 
 		$rule = new style($this->getSerializer(), $user, $datalayer, $request, $config);

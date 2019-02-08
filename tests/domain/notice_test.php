@@ -4,8 +4,8 @@ namespace fq\boardnotices\tests;
 
 use \fq\boardnotices\domain\notice;
 use \fq\boardnotices\service\serializer;
-use \fq\boardnotices\tests\mock_rules\mock_rule_1;
-use \fq\boardnotices\tests\mock_rules\mock_rule_2;
+use \fq\boardnotices\tests\mock\rules\mock_rule_1;
+use \fq\boardnotices\tests\mock\rules\mock_rule_2;
 
 class notice_test extends \PHPUnit_Framework_TestCase
 {

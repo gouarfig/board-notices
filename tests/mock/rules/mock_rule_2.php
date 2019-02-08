@@ -10,9 +10,9 @@
  *
  */
 
-namespace fq\boardnotices\tests\mock_rules;
+namespace fq\boardnotices\tests\mock\rules;
 
-class mock_rule_1 extends \fq\boardnotices\rules\rule_base implements \fq\boardnotices\rules\rule_interface
+class mock_rule_2 extends \fq\boardnotices\rules\rule_base implements \fq\boardnotices\rules\rule_interface
 {
 	private $template_vars = array();
 
@@ -21,34 +21,53 @@ class mock_rule_1 extends \fq\boardnotices\rules\rule_base implements \fq\boardn
 		$this->serializer = $serializer;
 	}
 
+	private function setTemplateVars($value)
+	{
+		$this->template_vars = array(
+			'MOCK2' => $value
+		);
+	}
+
+	/**
+	 * Multiple parameters rule
+	 * @overriden
+	 */
+	public function hasMultipleParameters()
+	{
+		return true;
+	}
+
 	public function getDisplayName()
 	{
-		return "Mock Rule 1";
+		return "Mock Rule 2";
 	}
 
 	public function getDisplayExplain()
 	{
-		return '';
+		return 'Mock Explanation';
 	}
 
 	public function getDisplayUnit()
 	{
-		return '';
+		return array(
+			'between parameter 1 and 2',
+			'after parameter 2',
+		);
 	}
 
 	public function getType()
 	{
-		return 'n/a';
+		return array('list', 'int');
 	}
 
 	public function getDefault()
 	{
-		return null;
+		return array(0, 0);
 	}
 
 	public function getPossibleValues()
 	{
-		return null;
+		return array('en' => 'English', 'fr' => 'French');
 	}
 
 	public function validateValues($values)
@@ -58,12 +77,12 @@ class mock_rule_1 extends \fq\boardnotices\rules\rule_base implements \fq\boardn
 
 	public function isTrue($conditions)
 	{
-		return true;
+		return false;
 	}
 
 	public function getAvailableVars()
 	{
-		return array();
+		return array('MOCK2');
 	}
 
 	public function getTemplateVars()

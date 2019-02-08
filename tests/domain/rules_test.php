@@ -5,16 +5,16 @@ namespace fq\boardnotices\tests;
 use \fq\boardnotices\domain\rules;
 use \fq\boardnotices\service\constants;
 use \fq\boardnotices\service\serializer;
-use \fq\boardnotices\tests\mock_rules\mock_rule_1;
-use \fq\boardnotices\tests\mock_rules\mock_rule_2;
+use \fq\boardnotices\tests\mock\rules\mock_rule_1;
+use \fq\boardnotices\tests\mock\rules\mock_rule_2;
 
 class rules_test extends \PHPUnit_Framework_TestCase
 {
 
 	public static function setUpBeforeClass()
 	{
-		constants::$RULES_FOLDER = 'mock_rules';
-		constants::$RULES_CLASS_PREFIX = 'fq.boardnotices.tests.mock_rules';
+		constants::$RULES_FOLDER = 'mock/rules';
+		constants::$RULES_CLASS_PREFIX = 'fq.boardnotices.tests.mock.rules';
 	}
 
 	public function setUp()
@@ -26,8 +26,8 @@ class rules_test extends \PHPUnit_Framework_TestCase
 
 		$serializer = new serializer();
 		// Creates the mock rules an adds them to the container
-		$phpbb_container->set("fq.boardnotices.tests.mock_rules.mock_rule_1", new mock_rule_1($serializer));
-		$phpbb_container->set("fq.boardnotices.tests.mock_rules.mock_rule_2", new mock_rule_2($serializer));
+		$phpbb_container->set(constants::$RULES_CLASS_PREFIX . ".mock_rule_1", new mock_rule_1($serializer));
+		$phpbb_container->set(constants::$RULES_CLASS_PREFIX . ".mock_rule_2", new mock_rule_2($serializer));
 	}
 
 	public function tearDown()
