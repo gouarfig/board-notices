@@ -14,8 +14,6 @@ namespace fq\boardnotices\tests\mock\rules;
 
 class mock_rule_1 extends \fq\boardnotices\rules\rule_base implements \fq\boardnotices\rules\rule_interface
 {
-	private $template_vars = array();
-
 	public function __construct(\fq\boardnotices\service\serializer $serializer)
 	{
 		$this->serializer = $serializer;
@@ -26,34 +24,9 @@ class mock_rule_1 extends \fq\boardnotices\rules\rule_base implements \fq\boardn
 		return "Mock Rule 1";
 	}
 
-	public function getDisplayExplain()
-	{
-		return '';
-	}
-
-	public function getDisplayUnit()
-	{
-		return '';
-	}
-
 	public function getType()
 	{
 		return 'n/a';
-	}
-
-	public function getDefault()
-	{
-		return null;
-	}
-
-	public function getPossibleValues()
-	{
-		return null;
-	}
-
-	public function validateValues($values)
-	{
-		return true;
 	}
 
 	public function isTrue($conditions)
@@ -64,11 +37,6 @@ class mock_rule_1 extends \fq\boardnotices\rules\rule_base implements \fq\boardn
 	public function getAvailableVars()
 	{
 		return array();
-	}
-
-	public function getTemplateVars()
-	{
-		return $this->template_vars;
 	}
 
 }

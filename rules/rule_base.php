@@ -13,9 +13,12 @@ namespace fq\boardnotices\rules;
 
 abstract class rule_base
 {
-
 	/** @var \fq\boardnotices\service\serializer $serializer */
 	protected $serializer;
+	/** @var \fq\boardnotices\service\phpbb\api_interface $api */
+	protected $api;
+
+	protected $template_vars = array();
 
 	/**
 	 * Has the rule multiple entries? like: 'not visited [forum] for [n] days'
@@ -24,6 +27,41 @@ abstract class rule_base
 	{
 		// This is the default. Override this method if the rule has multiple parameters
 		return false;
+	}
+
+	public function getDisplayExplain()
+	{
+		// This is the default when no explain
+		return '';
+	}
+
+	public function getDisplayUnit()
+	{
+		// This is the default when no unit
+		return '';
+	}
+
+	public function getDefault()
+	{
+		// Default default value
+		return null;
+	}
+
+	public function getPossibleValues()
+	{
+		// Default possible values
+		return null;
+	}
+
+	public function validateValues($values)
+	{
+		// Default value validation
+		return true;
+	}
+
+	public function getTemplateVars()
+	{
+		return $this->template_vars;
 	}
 
 	protected function validateUniqueCondition($conditions = null)

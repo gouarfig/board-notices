@@ -16,22 +16,15 @@ use \fq\boardnotices\service\constants;
 
 class anniversary extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $user */
-	private $user;
-	private $template_vars = array();
-
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
+		$this->api = $api;
 	}
 
-	private function getUserRegistrationDate()
-	{
-		return isset($this->user->data['user_regdate']) ? $this->user->data['user_regdate'] : null;
-	}
-
-	private function anniversary($now, $regdate)
+	private function calculateYears($now, $regdate)
 	{
 		$anniversary = 0;
 		if ($regdate['year'])
@@ -59,17 +52,7 @@ class anniversary extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_ANNIVERSARY');
-	}
-
-	public function getDisplayExplain()
-	{
-		return '';
-	}
-
-	public function getDisplayUnit()
-	{
-		return '';
+		return $this->api->lang('RULE_ANNIVERSARY');
 	}
 
 	public function getType()
@@ -77,34 +60,19 @@ class anniversary extends rule_base implements rule_interface
 		return constants::$RULE_WITH_NO_TYPE;
 	}
 
-	public function getDefault()
-	{
-		return null;
-	}
-
-	public function getPossibleValues()
-	{
-		return null;
-	}
-
-	public function validateValues($values)
-	{
-		return true;
-	}
-
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		if ($this->user->data['user_type'] != USER_IGNORE)
+		if ($this->api->isUserRegistered())
 		{
-			$user_regdate = date('r', $this->getUserRegistrationDate());
-			$now = $this->user->create_datetime();
-			$regdate = $this->user->create_datetime($user_regdate);
+			$user_regdate = date('r', $this->api->getUserRegistrationDate());
+			$now = $this->api->createDateTime();
+			$regdate = $this->api->createDateTime($user_regdate);
 			$now = getdate($now->getTimestamp());
 			$regdate = getdate($regdate->getTimestamp());
 			$valid = (($regdate['mday'] == $now['mday']) && ($regdate['mon'] == $now['mon']) && ($regdate['year'] < $now['year']));
 			// We create the 'anniversary' variable in all cases (so it can be displayed in preview mode)
-			$this->setTemplateVars($this->anniversary($now, $regdate));
+			$this->setTemplateVars($this->calculateYears($now, $regdate));
 		}
 		return $valid;
 	}
@@ -112,11 +80,6 @@ class anniversary extends rule_base implements rule_interface
 	public function getAvailableVars()
 	{
 		return array('ANNIVERSARY');
-	}
-
-	public function getTemplateVars()
-	{
-		return $this->template_vars;
 	}
 
 }

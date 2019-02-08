@@ -14,7 +14,6 @@ namespace fq\boardnotices\tests\mock\rules;
 
 class mock_rule_2 extends \fq\boardnotices\rules\rule_base implements \fq\boardnotices\rules\rule_interface
 {
-	private $template_vars = array();
 
 	public function __construct(\fq\boardnotices\service\serializer $serializer)
 	{
@@ -70,11 +69,6 @@ class mock_rule_2 extends \fq\boardnotices\rules\rule_base implements \fq\boardn
 		return array('en' => 'English', 'fr' => 'French');
 	}
 
-	public function validateValues($values)
-	{
-		return true;
-	}
-
 	public function isTrue($conditions)
 	{
 		return false;
@@ -83,11 +77,6 @@ class mock_rule_2 extends \fq\boardnotices\rules\rule_base implements \fq\boardn
 	public function getAvailableVars()
 	{
 		return array('MOCK2');
-	}
-
-	public function getTemplateVars()
-	{
-		return $this->template_vars;
 	}
 
 }

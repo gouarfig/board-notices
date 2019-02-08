@@ -11,6 +11,18 @@ services:
   fq.boardnotices.service.serializer:
     class: fq\boardnotices\service\serializer
 
+  fq.boardnotices.service.phpbb.api:
+    class: fq\boardnotices\service\phpbb\api
+    arguments:
+      - '@user'
+      - '@language'
+      - '@cache'
+      - '@config'
+      - '@template'
+      - '@request'
+      - '@controller.helper'
+      - '@dbal.conn'
+
   fq.boardnotices.repository.users:
     class: fq\boardnotices\repository\users
     arguments:
@@ -77,7 +89,7 @@ services:
     class: fq\boardnotices\rules\anniversary
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
 
   fq.boardnotices.rules.birthday:
     class: fq\boardnotices\rules\birthday

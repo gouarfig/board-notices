@@ -5,14 +5,14 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\anniversary;
+use fq\boardnotices\tests\mock\mock_api;
 
 class anniversary_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$rule = new anniversary($this->getSerializer(), $user);
+		$api = new mock_api();
+		$rule = new anniversary($this->getSerializer(), $api);
 		$this->assertNotNull($rule);
 
 		return $rule;
@@ -20,7 +20,7 @@ class anniversary_test extends rule_test_base
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \fq\boardnotices\rules\anniversary $rule
 	 */
 	public function testGetDisplayName($rule)
 	{
@@ -82,10 +82,10 @@ class anniversary_test extends rule_test_base
 	public function testTodayIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$user->data['user_regdate'] = time();
-		$rule = new anniversary($this->getSerializer(), $user);
+		$api = new mock_api();
+		$api->setTimezone($timezone);
+		$api->setUserRegistrationDate(time());
+		$rule = new anniversary($this->getSerializer(), $api);
 		$this->assertFalse($rule->isTrue(null));
 	}
 
@@ -96,10 +96,10 @@ class anniversary_test extends rule_test_base
 	public function testOneHourBeforeTodayIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$user->data['user_regdate'] = time() - (60*60);
-		$rule = new anniversary($this->getSerializer(), $user);
+		$api = new mock_api();
+		$api->setTimezone($timezone);
+		$api->setUserRegistrationDate(time() - (60*60));
+		$rule = new anniversary($this->getSerializer(), $api);
 		$this->assertFalse($rule->isTrue(null));
 	}
 
@@ -110,10 +110,10 @@ class anniversary_test extends rule_test_base
 	public function testOneMonthBeforeTodayIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$user->data['user_regdate'] = time() - (60*60*24*32);
-		$rule = new anniversary($this->getSerializer(), $user);
+		$api = new mock_api();
+		$api->setTimezone($timezone);
+		$api->setUserRegistrationDate(time() - (60*60*24*32));
+		$rule = new anniversary($this->getSerializer(), $api);
 		$this->assertFalse($rule->isTrue(null));
 	}
 
@@ -124,10 +124,10 @@ class anniversary_test extends rule_test_base
 	public function testTodayPlusOneHourIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$user->data['user_regdate'] = time() + (60*60);
-		$rule = new anniversary($this->getSerializer(), $user);
+		$api = new mock_api();
+		$api->setTimezone($timezone);
+		$api->setUserRegistrationDate(time() + (60*60));
+		$rule = new anniversary($this->getSerializer(), $api);
 		$this->assertFalse($rule->isTrue(null));
 	}
 
@@ -138,24 +138,21 @@ class anniversary_test extends rule_test_base
 	public function testTodayPlusOneMonthIsFalse($timezone)
 	{
 		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$user->data['user_regdate'] = time() + (60*60*24*32);
-		$rule = new anniversary($this->getSerializer(), $user);
+		$api = new mock_api();
+		$api->setTimezone($timezone);
+		$api->setUserRegistrationDate(time() + (60*60*24*32));
+		$rule = new anniversary($this->getSerializer(), $api);
 		$this->assertFalse($rule->isTrue(null));
 	}
 
-	/**
-	 *
-	 * @return anniversary
-	 */
+
 	private function buildRuleWithLastYearUserRegistration($timezone)
 	{
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$user->data['user_regdate'] = strtotime('last year');
-		$rule = new anniversary($this->getSerializer(), $user);
-		return array($user, $rule);
+		$api = new mock_api();
+		$api->setTimezone($timezone);
+		$api->setUserRegistrationDate(strtotime('last year'));
+		$rule = new anniversary($this->getSerializer(), $api);
+		return array($api, $rule);
 	}
 	/**
 	 * @dataProvider getTimezones
@@ -164,8 +161,8 @@ class anniversary_test extends rule_test_base
 	public function testLastYearIsTrue($timezone)
 	{
 		date_default_timezone_set($timezone);
-		list($user, $rule) = $this->buildRuleWithLastYearUserRegistration($timezone);
-		$this->assertTrue($rule->isTrue(null), date('r', $user->data['user_regdate']) . ' is not last year!');
+		list($api, $rule) = $this->buildRuleWithLastYearUserRegistration($timezone);
+		$this->assertTrue($rule->isTrue(null), date('r', $api->getUserRegistrationDate()) . ' is not last year!');
 		return $rule;
 	}
 
@@ -176,7 +173,7 @@ class anniversary_test extends rule_test_base
 	public function testOneYearAfter($timezone)
 	{
 		date_default_timezone_set($timezone);
-		list($user, $rule) = $this->buildRuleWithLastYearUserRegistration($timezone);
+		list($api, $rule) = $this->buildRuleWithLastYearUserRegistration($timezone);
 		// Run the rule to calculate the anniversary
 		$rule->isTrue(null);
 		$vars = $rule->getTemplateVars();
