@@ -132,6 +132,7 @@ class listener_test extends \PHPUnit_Framework_TestCase
 
 		global $cache;
 		$cache = $this->getMockBuilder('\phpbb\cache\service')->disableOriginalConstructor()->getMock();
+		$cache->method('obtain_word_list')->will($this->returnValue(array()));
 
 		global $user;
 		/** @var \phpbb\user $user */

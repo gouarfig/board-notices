@@ -6,6 +6,7 @@
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=gouarfig_board-notices&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=gouarfig_board-notices)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=gouarfig_board-notices&metric=security_rating)](https://sonarcloud.io/dashboard?id=gouarfig_board-notices)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=gouarfig_board-notices&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=gouarfig_board-notices)
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=gouarfig_board-notices&metric=alert_status)](https://sonarcloud.io/dashboard?id=gouarfig_board-notices)
 
 # Board Notices Manager for phpBB 3.2
 
