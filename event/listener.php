@@ -100,7 +100,7 @@ class listener implements EventSubscriberInterface
 			$dismissed_notices = array();
 			if (!empty($this->user->data['is_registered']))
 			{
-				$dismissed_notices = $this->notices_seen_repository->getDismissedNotices($this->user->data['user_id']);
+				$dismissed_notices = $this->notices_seen_repository->getDismissedNotices($this->getUserId());
 			}
 			else
 			{
@@ -179,15 +179,14 @@ class listener implements EventSubscriberInterface
 
 	private function getDefaultTemplateVars()
 	{
-		$template_vars = array(
+		return array(
 			'SESSIONID' => $this->user->data['session_id'],
-			'USERID' => $this->user->data['user_id'],
+			'USERID' => $this->getUserId(),
 			'USERNAME' => $this->user->data['username'],
 			'LASTVISIT' => $this->user->format_date($this->user->data['user_lastvisit']),
 			'LASTPOST' => $this->user->format_date($this->user->data['user_lastpost_time']),
 			'REGISTERED' => $this->user->format_date($this->user->data['user_regdate']),
 		);
-		return $template_vars;
 	}
 
 	private function replaceTemplateVars($notice_message, $template_vars)
@@ -204,17 +203,26 @@ class listener implements EventSubscriberInterface
 
 	private function extensionEnabled()
 	{
-		return $this->config[constants::$CONFIG_ENABLED] ? true : false;
+		return !empty($this->config[constants::$CONFIG_ENABLED]);
 	}
 
 	private function forumVisitedEnabled()
 	{
-		return $this->config[constants::$CONFIG_TRACK_FORUMS_VISITS] ? true : false;
+		return !empty($this->config[constants::$CONFIG_TRACK_FORUMS_VISITS]);
 	}
 
 	private function isUserRegistered()
 	{
 		return !empty($this->user->data['is_registered']);
+	}
+
+	/**
+	 * Returns user ID or 0
+	 * @return int
+	 */
+	private function getUserId()
+	{
+		return $this->user->data['user_id'] || 0;
 	}
 
 	private function isPreview()
@@ -226,8 +234,7 @@ class listener implements EventSubscriberInterface
 
 	private function getPreviewId()
 	{
-		$preview_id = $this->request->variable('bnid', 0);
-		return $preview_id;
+		return $this->request->variable('bnid', 0);
 	}
 
 	/**
@@ -248,7 +255,7 @@ class listener implements EventSubscriberInterface
 
 		if ($forum_id > 0)
 		{
-			$this->notices_repository->setForumVisited($this->user->data['user_id'], $forum_id);
+			$this->notices_repository->setForumVisited($this->getUserId(), $forum_id);
 		}
 	}
 
