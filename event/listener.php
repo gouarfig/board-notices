@@ -24,7 +24,7 @@ class listener implements EventSubscriberInterface
 	private $config = null;
 	/** @var \phpbb\template\template $template */
 	private $template = '';
-	/** @var \phpbb\request\request $request */
+	/** @var \phpbb\request\request_interface $request */
 	private $request;
 	/** @var \phpbb\controller\helper $controller_helper */
 	private $controller_helper;
@@ -51,7 +51,7 @@ class listener implements EventSubscriberInterface
 		\phpbb\user $user,
 		\phpbb\config\config $config,
 		\phpbb\template\template $template,
-		\phpbb\request\request $request,
+		\phpbb\request\request_interface $request,
 		\phpbb\controller\helper $controller_helper,
 		\phpbb\language\language $language,
 		\fq\boardnotices\repository\notices_interface $notices_repository,
