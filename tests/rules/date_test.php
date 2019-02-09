@@ -51,6 +51,33 @@ class date_test extends rule_test_base
 
 	/**
 	 * @depends testInstance
+	 * @param \fq\boardnotices\rules\anniversary $rule
+	 */
+	public function testCannotValidateNullConditions($rule)
+	{
+		$this->assertFalse($rule->validateValues(null));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\rules\anniversary $rule
+	 */
+	public function testCannotValidateEmptyConditions($rule)
+	{
+		$this->assertFalse($rule->validateValues(array(0, 0, 0)));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\rules\anniversary $rule
+	 */
+	public function testCannotValidateWrongConditions($rule)
+	{
+		$this->assertFalse($rule->validateValues(array(1, 2, 3, 4)));
+	}
+
+	/**
+	 * @depends testInstance
 	 * @param \fq\boardnotices\rules\date $rule
 	 */
 	public function testGetAvailableVars($rule)

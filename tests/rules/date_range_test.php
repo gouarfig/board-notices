@@ -92,6 +92,33 @@ class date_range_test extends rule_test_base
 	 * @depends testInstance
 	 * @param \fq\boardnotices\rules\date $rule
 	 */
+	public function testCannotValidateNullConditions($rule)
+	{
+		$this->assertFalse($rule->validateValues(null));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\rules\date $rule
+	 */
+	public function testCannotValidateEmptyConditions($rule)
+	{
+		$this->assertFalse($rule->validateValues(array(array(0, 0, 0), array(0, 0, 0))));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\rules\date $rule
+	 */
+	public function testCannotValidateWrongConditions($rule)
+	{
+		$this->assertFalse($rule->validateValues(array(array(1, 2, 3, 4), array(1, 2, 3, 4))));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\rules\date $rule
+	 */
 	public function testIsFalseWithNullConditions($rule)
 	{
 		$this->assertFalse($rule->isTrue(null));

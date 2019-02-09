@@ -137,4 +137,22 @@ class date_range extends rule_base implements rule_interface
 		return array();
 	}
 
+	public function validateValues($values)
+	{
+		// There are two parts
+		if (!is_array($values) || (count($values) != 2))
+		{
+			return false;
+		}
+		if (!is_array($values[0]) || (count($values[0]) != 3)
+		|| !is_array($values[1]) || (count($values[1]) != 3))
+		{
+			return false;
+		}
+		// Make sure at least one value is specified
+		return ($values[0][0] > 0) || ($values[1][0] > 0)
+			|| ($values[0][1] > 0) || ($values[1][1] > 0)
+			|| ($values[0][2] > 0) || ($values[1][2] > 0);
+	}
+
 }

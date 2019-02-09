@@ -25,8 +25,7 @@ abstract class rule_base
 	 */
 	public function hasMultipleParameters()
 	{
-		// This is the default. Override this method if the rule has multiple parameters
-		return false;
+		return is_array($this->getType());
 	}
 
 	public function getDisplayExplain()

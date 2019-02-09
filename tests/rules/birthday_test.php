@@ -52,6 +52,15 @@ class birthday_test extends rule_test_base
 	 * @depends testInstance
 	 * @param \fq\boardnotices\rules\anniversary $rule
 	 */
+	public function testCanValidateRuleValues($rule)
+	{
+		$this->assertTrue($rule->validateValues(null));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\rules\anniversary $rule
+	 */
 	public function testGetAvailableVars($rule)
 	{
 		$vars = $rule->getAvailableVars();

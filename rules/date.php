@@ -65,4 +65,10 @@ class date extends rule_base implements rule_interface
 		return array();
 	}
 
+	public function validateValues($values)
+	{
+		// Make sure there's a least one value (either day, month or year)
+		return is_array($values) && (count($values) == 3)
+			&& (($values[0] > 0) || ($values[1] > 0) || ($values[2] > 0));
+	}
 }

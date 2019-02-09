@@ -767,6 +767,10 @@ class board_notices_module
 			if (!empty($notice_rule_conditions))
 			{
 				$data['notice_rule_conditions'][$rule_name] = $notice_rule_conditions;
+				if ($notice_rule_checked && !$this->rules_manager->validateRuleValues($rule_name, $notice_rule_conditions))
+				{
+					$error .= "Invalid value entered for rule {$rule_name}<br />";
+				}
 			}
 			else
 			{

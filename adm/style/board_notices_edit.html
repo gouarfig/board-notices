@@ -159,7 +159,7 @@
 						{{ lang('YEAR') ~ lang('COLON') }}
 						<select name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][2]">
 							<option value="0">{{ lang('RULE_DATE_ANY') }}</option>
-							{% for year in range(2015, 2038) %}
+							{% for year in range(2018, 2038) %}
 								<option value="{{ year }}"{% if param.RULE_DATA[2] == year %} selected{% endif %}>{{ year }}</option>
 							{% endfor %}
 						</select>

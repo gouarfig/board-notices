@@ -39,7 +39,7 @@ class rules
 		'birthday',
 		'anniversary',
 		'date',
-		// 'date_range',
+		'date_range',
 		'has_never_visited',
 		'has_not_visited_for',
 		'has_never_posted',
@@ -62,7 +62,7 @@ class rules
 	private $hide = array(
 		'not_logged_in',
 		// This one is not ready to be used yet
-		'date_range',
+		// 'date_range',
 	);
 
 	/**
@@ -166,6 +166,19 @@ class rules
 		}
 
 		return isset($this->rules[$rule_name]) ? $this->rules[$rule_name]->getDefault() : '';
+	}
+
+	/**
+	 * Check the selected values are valid
+	 * @return boolean
+	 */
+	public function validateRuleValues($rule_name, $values)
+	{
+		if (!$this->rules_loaded)
+		{
+			$this->loadRules();
+		}
+		return isset($this->rules[$rule_name]) ? $this->rules[$rule_name]->validateValues($values) : false;
 	}
 
 	/**
