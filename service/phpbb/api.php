@@ -47,6 +47,11 @@ class api implements api_interface
 		return isset($this->user->data['user_regdate']) ? $this->user->data['user_regdate'] : null;
 	}
 
+	public function getUserBirthday()
+	{
+		return isset($this->user->data['user_birthday']) ? $this->user->data['user_birthday'] : '';
+	}
+
 	public function createDateTime($time = 'now', \DateTimeZone $timezone = null)
 	{
 		return $this->user->create_datetime($time, $timezone);

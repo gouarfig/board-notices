@@ -16,28 +16,17 @@ use \fq\boardnotices\service\constants;
 
 class date extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $user */
-	private $user;
-
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
+		$this->api = $api;
 	}
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_DATE');
-	}
-
-	public function getDisplayExplain()
-	{
-		return '';
-	}
-
-	public function getDisplayUnit()
-	{
-		return '';
+		return $this->api->lang('RULE_DATE');
 	}
 
 	public function getType()
@@ -50,16 +39,6 @@ class date extends rule_base implements rule_interface
 		return array(0, 0, 0);
 	}
 
-	public function getPossibleValues()
-	{
-		return null;
-	}
-
-	public function validateValues($values)
-	{
-		return true;
-	}
-
 	public function isTrue($conditions)
 	{
 		$valid = false;
@@ -68,7 +47,7 @@ class date extends rule_base implements rule_interface
 		{
 			return false;
 		}
-		$offset = $this->user->create_datetime()->getOffset();
+		$offset = $this->api->createDateTime()->getOffset();
 		$now = getdate(time() - date('Z') + $offset);	// This gives the date in the user timezone
 		$valid = ((($date[0] == 0) || ($now['mday'] == $date[0]))
 				&& (($date[1] == 0) || ($now['mon'] == $date[1]))

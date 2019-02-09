@@ -143,4 +143,35 @@ class api_test extends \phpbb_test_case
 		$api = new api($user, $language);
 		$this->assertEquals(100, $api->createDateTime());
 	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
+	public function testUserHasNoBirthday()
+	{
+		/** @var \phpbb\user $user */
+		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
+
+		/** @var \phpbb\language\language $language */
+		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
+
+		$api = new api($user, $language);
+		$this->assertEquals('', $api->getUserBirthday());
+	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
+	public function testGetUserBirthday()
+	{
+		/** @var \phpbb\user $user */
+		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
+		$user->data['user_birthday'] = '31-12-2010';
+
+		/** @var \phpbb\language\language $language */
+		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
+
+		$api = new api($user, $language);
+		$this->assertEquals('31-12-2010', $api->getUserBirthday());
+	}
 }

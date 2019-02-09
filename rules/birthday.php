@@ -16,18 +16,12 @@ use \fq\boardnotices\service\constants;
 
 class birthday extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $user */
-	private $user;
-
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
-	}
-
-	private function getUserBirthday()
-	{
-		return isset($this->user->data['user_birthday']) ? $this->user->data['user_birthday'] : '';
+		$this->api = $api;
 	}
 
 	private function age($bday_day, $bday_month, $bday_year)
@@ -35,7 +29,7 @@ class birthday extends rule_base implements rule_interface
 		$age = 0;
 		if ($bday_year)
 		{
-			$now = $this->user->create_datetime();
+			$now = $this->api->createDateTime();
 			$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset());
 
 			$diff = $now['mon'] - $bday_month;
@@ -61,17 +55,7 @@ class birthday extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_BIRTHDAY');
-	}
-
-	public function getDisplayExplain()
-	{
-		return '';
-	}
-
-	public function getDisplayUnit()
-	{
-		return '';
+		return $this->api->lang('RULE_BIRTHDAY');
 	}
 
 	public function getType()
@@ -79,29 +63,14 @@ class birthday extends rule_base implements rule_interface
 		return constants::$RULE_WITH_NO_TYPE;
 	}
 
-	public function getDefault()
-	{
-		return null;
-	}
-
-	public function getPossibleValues()
-	{
-		return null;
-	}
-
-	public function validateValues($values)
-	{
-		return true;
-	}
-
 	public function isTrue($conditions)
 	{
 		$valid = false;
-		if ($this->user->data['user_type'] != USER_IGNORE)
+		if ($this->api->isUserRegistered())
 		{
-			$user_birthday = $this->getUserBirthday();
+			$user_birthday = $this->api->getUserBirthday();
 			list($bday_day, $bday_month, $bday_year) = array_map('intval', explode('-', $user_birthday));
-			$now = $this->user->create_datetime();
+			$now = $this->api->createDateTime();
 			$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset());
 			$valid = (($bday_day == $now['mday']) && ($bday_month == $now['mon']));
 			// We create the 'age' variable in all cases (so it can be displayed in preview mode)
@@ -113,11 +82,6 @@ class birthday extends rule_base implements rule_interface
 	public function getAvailableVars()
 	{
 		return array('AGE');
-	}
-
-	public function getTemplateVars()
-	{
-		return $this->template_vars;
 	}
 
 }

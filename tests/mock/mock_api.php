@@ -21,6 +21,7 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	private $userRegistered = false;
 	private $userId = null;
 	private $userRegistrationDate = 0;
+	private $userBirthday = '';
 
 	public function __construct()
 	{
@@ -45,6 +46,16 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 		return $this;
 	}
 
+	/**
+	 * Please note this method will also set the user registered
+	 */
+	public function setUserBirthday($birthday)
+	{
+		$this->userRegistered = true;
+		$this->userBirthday = $birthday;
+		return $this;
+	}
+
 	public function isUserRegistered()
 	{
 		return $this->userRegistered;
@@ -58,6 +69,11 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	public function getUserRegistrationDate()
 	{
 		return $this->userRegistrationDate;
+	}
+
+	public function getUserBirthday()
+	{
+		return $this->userBirthday;
 	}
 
 	public function createDateTime($time = 'now', \DateTimeZone $timezone = null)

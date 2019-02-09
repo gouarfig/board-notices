@@ -33,6 +33,12 @@ interface api_interface
 	public function getUserRegistrationDate();
 
 	/**
+	 * Returns user birthday date in the format DD-MM-YYYY
+	 * @return string
+	 */
+	public function getUserBirthday();
+
+	/**
 	* Create a \phpbb\datetime object in the context of the current user
 	*
 	* @param string $time String in a format accepted by strtotime().

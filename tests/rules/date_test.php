@@ -5,14 +5,15 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\date;
+use fq\boardnotices\tests\mock\mock_api;
 
 class date_test extends rule_test_base
 {
 
 	public function testInstance()
 	{
-		$user = $this->getUser();
-		$rule = new date($this->getSerializer(), $user);
+		$api = new mock_api();
+		$rule = new date($this->getSerializer(), $api);
 		$this->assertNotNull($rule);
 
 		return $rule;
@@ -95,9 +96,9 @@ class date_test extends rule_test_base
 		);
 	}
 
-	private function getDatetime(\phpbb\user $user, $time = null)
+	private function getDatetime(\fq\boardnotices\service\phpbb\api_interface $api, $time = null)
 	{
-		$now = $user->create_datetime($time);
+		$now = $api->createDateTime($time);
 		$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset());
 		return $now;
 	}
@@ -180,17 +181,19 @@ class date_test extends rule_test_base
 		$this->assertEquals(23, $utc['hours'], "It should be 23H");
 		$this->assertEquals(31, $utc['mday'], "It should be the 31th");
 		$this->assertEquals(1, $utc['mon'], "It should be January");
+
 		// All good for local timezone, now try with user timezone
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone('Pacific/Midway');
-		$offset = $user->create_datetime()->getOffset();
+		$api = new mock_api();
+		$api->setTimezone('Pacific/Midway');
+		$offset = $api->createDateTime()->getOffset();
 		$date_in_timezone = getdate($local_timestamp + $offset);
 		// 12h over there, same day
 		$this->assertEquals(12, $date_in_timezone['hours']);
 		$this->assertEquals(31, $date_in_timezone['mday']);
 		$this->assertEquals(1, $date_in_timezone['mon']);
-		$user->timezone = new \DateTimeZone('Pacific/Auckland');
-		$offset = $user->create_datetime()->getOffset();
+
+		$api->setTimezone('Pacific/Auckland');
+		$offset = $api->createDateTime()->getOffset();
 		$date_in_timezone = getdate($local_timestamp + $offset);
 		// 12h over there, but the next day
 		$this->assertEquals(12, $date_in_timezone['hours']);
@@ -200,339 +203,63 @@ class date_test extends rule_test_base
 		date_default_timezone_set($current_timezone);
 	}
 
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testEmptyConditionIsTrue($timezone)
+	public function getTestData()
 	{
-		$current_timezone = date_default_timezone_get();
-		// Make sure this calculation is independant of the server timezone
-		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user);
-		$conditions = $this->buildConditions($now);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-		// Put the timezone back
-		date_default_timezone_set($current_timezone);
-	}
-
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testSameDayIsTrue($timezone)
-	{
-		$current_timezone = date_default_timezone_get();
-		// Make sure this calculation is independant of the server timezone
-		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user);
-		$conditions = $this->buildConditions($now, 0);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-		// Put the timezone back
-		date_default_timezone_set($current_timezone);
-	}
-
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testSameMonthIsTrue($timezone)
-	{
-		$current_timezone = date_default_timezone_get();
-		// Make sure this calculation is independant of the server timezone
-		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user);
-		$conditions = $this->buildConditions($now, null, 0);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-		// Put the timezone back
-		date_default_timezone_set($current_timezone);
-	}
-
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testSameYearIsTrue($timezone)
-	{
-		$current_timezone = date_default_timezone_get();
-		// Make sure this calculation is independant of the server timezone
-		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user);
-		$conditions = $this->buildConditions($now, null, null, 0);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-		// Put the timezone back
-		date_default_timezone_set($current_timezone);
-	}
-
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testSameDayAndMonthIsTrue($timezone)
-	{
-		$current_timezone = date_default_timezone_get();
-		// Make sure this calculation is independant of the server timezone
-		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user);
-		$conditions = $this->buildConditions($now, 0, 0);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-		// Put the timezone back
-		date_default_timezone_set($current_timezone);
-	}
-
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testSameDayAndYearIsTrue($timezone)
-	{
-		$current_timezone = date_default_timezone_get();
-		// Make sure this calculation is independant of the server timezone
-		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user);
-		$conditions = $this->buildConditions($now, 0, null, 0);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-		// Put the timezone back
-		date_default_timezone_set($current_timezone);
-	}
-
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testSameMonthAndYearIsTrue($timezone)
-	{
-		$current_timezone = date_default_timezone_get();
-		// Make sure this calculation is independant of the server timezone
-		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user);
-		$conditions = $this->buildConditions($now, null, 0, 0);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-		// Put the timezone back
-		date_default_timezone_set($current_timezone);
-	}
-
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testSameDayAndMonthAndYearIsTrue($timezone)
-	{
-		$current_timezone = date_default_timezone_get();
-		// Make sure this calculation is independant of the server timezone
-		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user);
-		$conditions = $this->buildConditions($now, 0, 0, 0);
-		$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-		// Put the timezone back
-		date_default_timezone_set($current_timezone);
-	}
-
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testPreviousDayOfFirstDayOfTheMonthIsFalse($timezone)
-	{
-		$current_timezone = date_default_timezone_get();
-		// Make sure this calculation is independant of the server timezone
-		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user, '2019-10-01');
-		$conditions = $this->buildConditions($now, -1, 0, 0);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-
-		$conditions = $this->buildConditions($now, -1, null, null);
 		$now = getdate();
-		if ($now['mday'] == 30)
+		$data = array();
+		$timezones = $this->getTimezones();
+		foreach ($timezones as $timezone)
 		{
-			$this->assertTrue($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
+			// array(timezone, now, day, month, year, result)
+			$data = array_merge($data, array(
+				array($timezone[0], null, null, null, null, true),			// Empty
+				array($timezone[0], null, 0, null, null, true),				// Same day
+				array($timezone[0], null, null, 0, null, true),				// Same month
+				array($timezone[0], null, null, null, 0, true),				// Same year
+				array($timezone[0], null, 0, 0, null, true),				// Same day and month
+				array($timezone[0], null, 0, null, 0, true),				// Same day and year
+				array($timezone[0], null, null, 0, 0, true),				// Same month and year
+				array($timezone[0], null, 0, 0, 0, true),					// Same day, month and year
+				array($timezone[0], null, -1, 0, 0, false),					// Previous day, same month and year
+				array($timezone[0], null, -1, null, null, false),			// Previous day
+				array($timezone[0], '2019-10-01', -1, 0, 0, false),						// Previous day, same month and year
+				array($timezone[0], '2019-10-01', -1, null, null, $now['mday'] == 30),	// Previous day
+				array($timezone[0], null, 1, 0, 0, false),					// Next day, same month and year
+				array($timezone[0], null, 1, null, null, false),			// Next day
+				array($timezone[0], null, 0, -1, 0, false),					// Previous month, same day and year
+				array($timezone[0], null, null, -1, null, false),			// Previous month
+				array($timezone[0], '2019-10-01', 0, -1, 0, false),			// Previous month of january, same day and year
+				array($timezone[0], '2019-10-01', null, -1, null, false),	// Previous month of january
+				array($timezone[0], null, 0, 1, 0, false),					// Next month, same day and year
+				array($timezone[0], null, null, 1, null, false),			// Next month
+				array($timezone[0], null, 0, 0, -1, false),					// Same day and month, previous year
+				array($timezone[0], null, null, null, -1, false),			// Previous year
+				array($timezone[0], null, 0, 0, 1, false),					// Same day and month, next year
+				array($timezone[0], null, null, null, 1, false),			// Next year
+			));
 		}
-		else
-		{
-			$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-		}
-		// Put the timezone back
-		date_default_timezone_set($current_timezone);
+		return $data;
 	}
 
 	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
+	 * @dataProvider getTestData
 	 */
-	public function testPreviousDayIsFalse($timezone)
+	public function testConditions($timezone, $date, $day, $month, $year, $result)
 	{
 		$current_timezone = date_default_timezone_get();
 		// Make sure this calculation is independant of the server timezone
 		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user);
-		$conditions = $this->buildConditions($now, -1, 0, 0);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-
-		$conditions = $this->buildConditions($now, -1, null, null);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
+		$api = new mock_api();
+		$api->setTimezone($timezone);
+		$rule = new date($this->getSerializer(), $api);
+		$now = $this->getDatetime($api, $date);
+		$conditions = $this->buildConditions($now, $day, $month, $year);
+		$this->assertEquals(
+			$result,
+			$rule->isTrue(serialize($conditions)),
+			"Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]}");
 		// Put the timezone back
 		date_default_timezone_set($current_timezone);
 	}
 
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testNextDayIsFalse($timezone)
-	{
-		$current_timezone = date_default_timezone_get();
-		// Make sure this calculation is independant of the server timezone
-		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user);
-		$conditions = $this->buildConditions($now, 1, 0, 0);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-
-		$conditions = $this->buildConditions($now, 1, null, null);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-		// Put the timezone back
-		date_default_timezone_set($current_timezone);
-	}
-
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testPreviousMonthOfJanuaryIsFalse($timezone)
-	{
-		$current_timezone = date_default_timezone_get();
-		// Make sure this calculation is independant of the server timezone
-		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user, '2019-01-10');
-		$conditions = $this->buildConditions($now, 0, -1, 0);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-
-		$conditions = $this->buildConditions($now, null, -1, null);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-		// Put the timezone back
-		date_default_timezone_set($current_timezone);
-	}
-
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testPreviousMonthIsFalse($timezone)
-	{
-		$current_timezone = date_default_timezone_get();
-		// Make sure this calculation is independant of the server timezone
-		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user);
-		$conditions = $this->buildConditions($now, 0, -1, 0);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-
-		$conditions = $this->buildConditions($now, null, -1, null);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-		// Put the timezone back
-		date_default_timezone_set($current_timezone);
-	}
-
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testNextMonthIsFalse($timezone)
-	{
-		$current_timezone = date_default_timezone_get();
-		// Make sure this calculation is independant of the server timezone
-		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user);
-		$conditions = $this->buildConditions($now, 0, 1, 0);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-
-		$conditions = $this->buildConditions($now, null, 1, null);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-		// Put the timezone back
-		date_default_timezone_set($current_timezone);
-	}
-
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testPreviousYearIsFalse($timezone)
-	{
-		$current_timezone = date_default_timezone_get();
-		// Make sure this calculation is independant of the server timezone
-		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user);
-		$conditions = $this->buildConditions($now, 0, 0, -1);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-
-		$conditions = $this->buildConditions($now, null, null, -1);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-		// Put the timezone back
-		date_default_timezone_set($current_timezone);
-	}
-
-	/**
-	 * @dataProvider getTimezones
-	 * @param string $timezone
-	 */
-	public function testNextYearIsFalse($timezone)
-	{
-		$current_timezone = date_default_timezone_get();
-		// Make sure this calculation is independant of the server timezone
-		date_default_timezone_set($timezone);
-		$user = $this->getUser();
-		$user->timezone = new \DateTimeZone($timezone);
-		$rule = new date($this->getSerializer(), $user);
-		$now = $this->getDatetime($user);
-		$conditions = $this->buildConditions($now, 0, 0, 1);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-
-		$conditions = $this->buildConditions($now, null, null, 1);
-		$this->assertFalse($rule->isTrue(serialize($conditions)), "Conditions should be met: mday={$conditions[0]} month={$conditions[1]} year={$conditions[2]} (array count=" . count($conditions) . ")");
-		// Put the timezone back
-		date_default_timezone_set($current_timezone);
-	}
 }

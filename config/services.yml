@@ -95,13 +95,13 @@ services:
     class: fq\boardnotices\rules\birthday
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
 
   fq.boardnotices.rules.date:
     class: fq\boardnotices\rules\date
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
 
   fq.boardnotices.rules.in_default_usergroup:
     class: fq\boardnotices\rules\in_default_usergroup
