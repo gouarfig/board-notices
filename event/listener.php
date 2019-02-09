@@ -75,11 +75,8 @@ class listener implements EventSubscriberInterface
 	 */
 	public function display_board_notices()
 	{
-		// We tag the visit first so that we don't display the message WHEN visiting the forum
-		if ($this->extensionEnabled() && $this->forumVisitedEnabled() && $this->isUserRegistered())
-		{
-			$this->setForumVisited();
-		}
+		// We tag the visit first so that we don't display a message WHEN visiting the forum (if any)
+		$this->setForumVisited();
 
 		$notices = array();
 		$force_all_rules = false;
@@ -107,13 +104,7 @@ class listener implements EventSubscriberInterface
 				// The user is probably a guest, so we get that from the cookies
 				$dismissed_notices = $this->getDismissedNoticesFromCookies();
 			}
-			if (!empty($raw_notices))
-			{
-				foreach ($raw_notices as $raw_notice)
-				{
-					$notices[] = $this->getNotice($raw_notice, $dismissed_notices);
-				}
-			}
+			$notices = $this->getNotices($raw_notices, $dismissed_notices);
 			unset($raw_notices);
 		}
 
@@ -121,6 +112,19 @@ class listener implements EventSubscriberInterface
 		{
 			$this->generateNoticeTemplate($notices, $force_all_rules, $preview);
 		}
+	}
+
+	private function getNotices(&$raw_notices, $dismissed_notices)
+	{
+		$notices = array();
+		if (!empty($raw_notices))
+		{
+			foreach ($raw_notices as $raw_notice)
+			{
+				$notices[] = $this->getNotice($raw_notice, $dismissed_notices);
+			}
+		}
+		return $notices;
 	}
 
 	private function generateNoticeTemplate($notices, $force_all_rules, $preview)
@@ -252,13 +256,19 @@ class listener implements EventSubscriberInterface
 		return new notice($raw_notice, $rules, $dismissed);
 	}
 
+	/**
+	 * Sets a user visit to a forum (if enabled)
+	 */
 	private function setForumVisited()
 	{
-		$forum_id = (int) $this->request->variable('f', 0);
-
-		if ($forum_id > 0)
+		if ($this->extensionEnabled() && $this->forumVisitedEnabled() && $this->isUserRegistered())
 		{
-			$this->notices_repository->setForumVisited($this->getUserId(), $forum_id);
+			$forum_id = (int) $this->request->variable('f', 0);
+
+			if ($forum_id > 0)
+			{
+				$this->notices_repository->setForumVisited($this->getUserId(), $forum_id);
+			}
 		}
 	}
 

@@ -27,6 +27,12 @@ interface api_interface
 	public function getUserId();
 
 	/**
+	 * Returns Session ID
+	 * @return string
+	 */
+	public function getSessionId();
+
+	/**
 	 * Returns user registration date
 	 * @return int|null
 	 */

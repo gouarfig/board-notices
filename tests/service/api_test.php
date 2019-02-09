@@ -174,4 +174,20 @@ class api_test extends \phpbb_test_case
 		$api = new api($user, $language);
 		$this->assertEquals('31-12-2010', $api->getUserBirthday());
 	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
+	public function testGetSessionId()
+	{
+		/** @var \phpbb\user $user */
+		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
+		$user->data['session_id'] = 'session_id';
+
+		/** @var \phpbb\language\language $language */
+		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
+
+		$api = new api($user, $language);
+		$this->assertEquals('session_id', $api->getSessionId());
+	}
 }
