@@ -103,6 +103,12 @@ services:
       - '@fq.boardnotices.service.serializer'
       - '@fq.boardnotices.service.phpbb.api'
 
+  fq.boardnotices.rules.date_range:
+    class: fq\boardnotices\rules\date_range
+    arguments:
+      - '@fq.boardnotices.service.serializer'
+      - '@fq.boardnotices.service.phpbb.api'
+
   fq.boardnotices.rules.in_default_usergroup:
     class: fq\boardnotices\rules\in_default_usergroup
     arguments:
