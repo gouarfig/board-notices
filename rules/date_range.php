@@ -101,7 +101,7 @@ class date_range extends rule_base implements rule_interface
 
 	private function emptyDate($date)
 	{
-		return empty($date[0]) && empty($date[1] && empty($date[2]));
+		return empty($date[0]) && empty($date[1]) && empty($date[2]);
 	}
 
 	private function fullDate($date)
