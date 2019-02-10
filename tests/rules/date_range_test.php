@@ -230,7 +230,7 @@ class date_range_test extends rule_test_base
 		$timezones = $this->getTimezones();
 		foreach ($timezones as $timezone)
 		{
-			foreach (array(null, '2019-01-01', '2018-12-31', '2019-02-28', '2019-03-01') as $now)
+			foreach (array(null, /*'2019-01-01', '2018-12-31', '2019-02-28', '2019-03-01'*/) as $now)
 			{
 				// array(timezone, now, start, end, result)
 				$data = array_merge($data, array(

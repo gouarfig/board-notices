@@ -95,32 +95,14 @@ class date_range extends rule_base implements rule_interface
 
 		if (!$this->isDateParameterValid($startDate) || !$this->isDateParameterValid($endDate))
 		{
-			$valid = false;
-		}
-		else if ($this->emptyDate($startDate) && $this->emptyDate($endDate))
-		{
-			$valid = true;
-		}
-		else if ($this->fullDate($startDate) && $this->fullDate($endDate))
-		{
-			// Full date comparison
-			$today = $this->api->createDateTime();
-			$start = $this->createDateTime($startDate);
-			$end = $this->createDateTime($endDate, "23:59:59");
-
-			$valid = ($start <= $today) && ($today <= $end);
-		}
-		else
-		{
-			$now = $this->getDate();
-			var_dump($now);
-			$valid = true;
-			$valid = $valid && $this->yearConditionValid($now, $startDate, $endDate);
-			$valid = $valid && $this->monthConditionValid($now, $startDate, $endDate);
-			$valid = $valid && $this->dayConditionValid($now, $startDate, $endDate);
+			return false;
 		}
 
-		return $valid;
+		$now = $this->getDate();
+		$start = new \fq\boardnotices\domain\date_condition($startDate, $now);
+		$end = new \fq\boardnotices\domain\date_condition($endDate, $now);
+
+		return $this->validateDateCondition($now, $start, $end);
 	}
 
 	private function isDateParameterValid($date)
@@ -128,56 +110,29 @@ class date_range extends rule_base implements rule_interface
 		return (is_array($date) && (count($date) == 3));
 	}
 
-	private function emptyDate($date)
+	private function validateDateCondition($now, \fq\boardnotices\domain\date_condition $start, \fq\boardnotices\domain\date_condition $end)
 	{
-		return empty($date[0]) && empty($date[1]) && empty($date[2]);
-	}
+		if ($start->isEmpty() && $end->isEmpty())
+		{
+			return true;
+		}
+		if (!$start->hasDay())
+		{
+			$start->setFirstDay();
+		}
+		if (!$end->hasDay())
+		{
+			$end->setLastDay();
+		}
+		if ($start->isFullDate() && $end->isFullDate())
+		{
+			// Full date comparison
+			$today = $this->api->createDateTime();
+			$startDateTime = $this->createDateTime($startDate->getValue());
+			$endDateTime = $this->createDateTime($endDate->getValue(), "23:59:59");
 
-	private function fullDate($date)
-	{
-		return !empty($date[0]) && !empty($date[1]) && !empty($date[2]);
-	}
-
-	private function yearConditionValid($now, $startDate, $endDate)
-	{
-		$valid = true;
-		if ($startDate[2] > 0)
-		{
-			$valid = $valid && ($startDate[2] <= $now['year']);
+			return ($start <= $today) && ($today <= $end);
 		}
-		if ($endDate[2] > 0)
-		{
-			$valid = $valid && ($now['year'] <= $endDate[2]);
-		}
-		return $valid;
-	}
-
-	private function monthConditionValid($now, $startDate, $endDate)
-	{
-		$valid = true;
-		if ($startDate[1] > 0)
-		{
-			$valid = $valid && ($startDate[1] <= $now['mon']);
-		}
-		if ($endDate[1] > 0)
-		{
-			$valid = $valid && ($now['mon'] <= $endDate[1]);
-		}
-		return $valid;
-	}
-
-	private function dayConditionValid($now, $startDate, $endDate)
-	{
-		$valid = true;
-		if ($startDate[0] > 0)
-		{
-			$valid = $valid && ($startDate[0] <= $now['mday']);
-		}
-		if ($endDate[0] > 0)
-		{
-			$valid = $valid && ($now['mday'] <= $endDate[0]);
-		}
-		return $valid;
 	}
 
 	private function createDateTime($date, $time = "")
