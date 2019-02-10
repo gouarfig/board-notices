@@ -16,6 +16,8 @@ use \fq\boardnotices\service\constants;
 
 class date_range extends rule_base implements rule_interface
 {
+	private $time = null;
+
 	public function __construct(
 		\fq\boardnotices\service\serializer $serializer,
 		\fq\boardnotices\service\phpbb\api_interface $api)
@@ -59,6 +61,26 @@ class date_range extends rule_base implements rule_interface
 		return array(array(0, 0, 0), array(0, 0, 0));
 	}
 
+	/**
+	 * Overrides the current date: This is only to be used by unit testing!
+	 */
+	public function setDate($date)
+	{
+		// 0123-56-89
+		$this->time = gmmktime(12, 0, 0, substr($date, 8, 2), substr($date, 5, 2), substr($date, 0, 4));
+	}
+
+	private function getDate()
+	{
+		if ($this->time === null)
+		{
+			$this->time = time();
+		}
+		$offset = $this->api->createDateTime()->getOffset();
+		$now = getdate($this->time - date('Z') + $offset);	// This gives the date in the user timezone
+		return $now;
+	}
+
 	public function isTrue($conditions)
 	{
 		$valid = false;
@@ -73,13 +95,13 @@ class date_range extends rule_base implements rule_interface
 
 		if (!$this->isDateParameterValid($startDate) || !$this->isDateParameterValid($endDate))
 		{
-			return false;
+			$valid = false;
 		}
-		if ($this->emptyDate($startDate) && $this->emptyDate($endDate))
+		else if ($this->emptyDate($startDate) && $this->emptyDate($endDate))
 		{
-			return true;
+			$valid = true;
 		}
-		if ($this->fullDate($startDate) && $this->fullDate($endDate))
+		else if ($this->fullDate($startDate) && $this->fullDate($endDate))
 		{
 			// Full date comparison
 			$today = $this->api->createDateTime();
@@ -88,8 +110,15 @@ class date_range extends rule_base implements rule_interface
 
 			$valid = ($start <= $today) && ($today <= $end);
 		}
-		$offset = $this->api->createDateTime()->getOffset();
-		$now = getdate(time() - date('Z') + $offset);	// This gives the date in the user timezone
+		else
+		{
+			$now = $this->getDate();
+			var_dump($now);
+			$valid = true;
+			$valid = $valid && $this->yearConditionValid($now, $startDate, $endDate);
+			$valid = $valid && $this->monthConditionValid($now, $startDate, $endDate);
+			$valid = $valid && $this->dayConditionValid($now, $startDate, $endDate);
+		}
 
 		return $valid;
 	}
@@ -107,6 +136,48 @@ class date_range extends rule_base implements rule_interface
 	private function fullDate($date)
 	{
 		return !empty($date[0]) && !empty($date[1]) && !empty($date[2]);
+	}
+
+	private function yearConditionValid($now, $startDate, $endDate)
+	{
+		$valid = true;
+		if ($startDate[2] > 0)
+		{
+			$valid = $valid && ($startDate[2] <= $now['year']);
+		}
+		if ($endDate[2] > 0)
+		{
+			$valid = $valid && ($now['year'] <= $endDate[2]);
+		}
+		return $valid;
+	}
+
+	private function monthConditionValid($now, $startDate, $endDate)
+	{
+		$valid = true;
+		if ($startDate[1] > 0)
+		{
+			$valid = $valid && ($startDate[1] <= $now['mon']);
+		}
+		if ($endDate[1] > 0)
+		{
+			$valid = $valid && ($now['mon'] <= $endDate[1]);
+		}
+		return $valid;
+	}
+
+	private function dayConditionValid($now, $startDate, $endDate)
+	{
+		$valid = true;
+		if ($startDate[0] > 0)
+		{
+			$valid = $valid && ($startDate[0] <= $now['mday']);
+		}
+		if ($endDate[0] > 0)
+		{
+			$valid = $valid && ($now['mday'] <= $endDate[0]);
+		}
+		return $valid;
 	}
 
 	private function createDateTime($date, $time = "")
@@ -144,6 +215,7 @@ class date_range extends rule_base implements rule_interface
 		{
 			return false;
 		}
+		// Each part is an array of 3 values
 		if (!is_array($values[0]) || (count($values[0]) != 3)
 		|| !is_array($values[1]) || (count($values[1]) != 3))
 		{

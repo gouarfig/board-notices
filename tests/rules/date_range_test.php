@@ -21,7 +21,7 @@ class date_range_test extends rule_test_base
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \fq\boardnotices\rules\date_range $rule
 	 */
 	public function testMultipleParameters($rule)
 	{
@@ -30,7 +30,7 @@ class date_range_test extends rule_test_base
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \fq\boardnotices\rules\date_range $rule
 	 */
 	public function testGetDisplayName($rule)
 	{
@@ -40,7 +40,7 @@ class date_range_test extends rule_test_base
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \fq\boardnotices\rules\date_range $rule
 	 */
 	public function testGetDisplayUnit($rule)
 	{
@@ -50,7 +50,7 @@ class date_range_test extends rule_test_base
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \fq\boardnotices\rules\date_range $rule
 	 */
 	public function testGetType($rule)
 	{
@@ -60,7 +60,7 @@ class date_range_test extends rule_test_base
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \fq\boardnotices\rules\date_range $rule
 	 */
 	public function testGetPossibleValues($rule)
 	{
@@ -70,7 +70,7 @@ class date_range_test extends rule_test_base
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \fq\boardnotices\rules\date_range $rule
 	 */
 	public function testGetAvailableVars($rule)
 	{
@@ -80,7 +80,7 @@ class date_range_test extends rule_test_base
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \fq\boardnotices\rules\date_range $rule
 	 */
 	public function testGetTemplateVars($rule)
 	{
@@ -90,7 +90,16 @@ class date_range_test extends rule_test_base
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \fq\boardnotices\rules\date_range $rule
+	 */
+	public function getDefaultValue($rule)
+	{
+		$this->assertEquals(array(array(0, 0, 0, array(0, 0, 0))), $rule->getDefault());
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\rules\date_range $rule
 	 */
 	public function testCannotValidateNullConditions($rule)
 	{
@@ -99,7 +108,7 @@ class date_range_test extends rule_test_base
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \fq\boardnotices\rules\date_range $rule
 	 */
 	public function testCannotValidateEmptyConditions($rule)
 	{
@@ -108,7 +117,7 @@ class date_range_test extends rule_test_base
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \fq\boardnotices\rules\date_range $rule
 	 */
 	public function testCannotValidateWrongConditions($rule)
 	{
@@ -117,7 +126,7 @@ class date_range_test extends rule_test_base
 
 	/**
 	 * @depends testInstance
-	 * @param \fq\boardnotices\rules\date $rule
+	 * @param \fq\boardnotices\rules\date_range $rule
 	 */
 	public function testIsFalseWithNullConditions($rule)
 	{
@@ -144,8 +153,8 @@ class date_range_test extends rule_test_base
 
 	private function getDatetime(\fq\boardnotices\service\phpbb\api_interface $api, $time = null)
 	{
-		$now = $api->createDateTime($time);
-		$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset());
+		$datetime = $api->createDateTime($time);
+		$now = phpbb_gmgetdate($datetime->getTimestamp() + $datetime->getOffset());
 		return $now;
 	}
 
@@ -217,22 +226,39 @@ class date_range_test extends rule_test_base
 
 	public function getTestData()
 	{
-		$now = getdate();
 		$data = array();
 		$timezones = $this->getTimezones();
 		foreach ($timezones as $timezone)
 		{
-			// array(timezone, now, start, end, result)
-			$data = array_merge($data, array(
-				array($timezone[0], null, array(null, null, null), array(null, null, null), true),		// Empty
-				array($timezone[0], null, array(0, 0, 0), array(0, 0, 0), true),						// Empty
-				array($timezone[0], null, array(-1, 0, 0), array(0, 0, 0), true),						// Previous day until today
-				array($timezone[0], null, array(0, 0, 0), array(1, 0, 0), true),						// From today to tomorrow
-				array($timezone[0], null, array(0, -1, 0), array(0, 0, 0), true),						// Previous month until this month
-				array($timezone[0], null, array(0, 0, 0), array(0, 1, 0), true),						// From this month to next
-				array($timezone[0], null, array(0, 0, -1), array(0, 0, 0), true),						// Previous year until this year
-				array($timezone[0], null, array(0, 0, 0), array(0, 0, 1), true),						// From this year to next
-			));
+			foreach (array(null, '2019-01-01', '2018-12-31', '2019-02-28', '2019-03-01') as $now)
+			{
+				// array(timezone, now, start, end, result)
+				$data = array_merge($data, array(
+					array($timezone[0], $now, array(null, null, null), array(null, null, null), true),		// Empty
+					array($timezone[0], $now, array(0, 0, 0), array(0, 0, 0), true),						// Empty
+					array($timezone[0], $now, array(-1, 0, 0), array(0, 0, 0), true),						// Previous day until today
+					array($timezone[0], $now, array(0, 0, 0), array(1, 0, 0), true),						// From today to tomorrow
+					array($timezone[0], $now, array(0, -1, 0), array(0, 0, 0), true),						// Previous month until this month
+					array($timezone[0], $now, array(0, 0, 0), array(0, 1, 0), true),						// From this month to next
+					array($timezone[0], $now, array(0, 0, -1), array(0, 0, 0), true),						// Previous year until this year
+					array($timezone[0], $now, array(0, 0, 0), array(0, 0, 1), true),						// From this year to next
+					array($timezone[0], $now, array(null, null, 0), array(null, null, 0), true),			// This year
+					array($timezone[0], $now, array(null, null, 0), array(null, null, 1), true),			// This year and next
+					array($timezone[0], $now, array(null, null, -1), array(null, null, 0), true),			// This year and previous
+					array($timezone[0], $now, array(null, null, -1), array(null, null, -1), false),			// Last year
+					array($timezone[0], $now, array(null, null, 1), array(null, null, 1), false),			// Next year
+					array($timezone[0], $now, array(null, 0, null), array(null, 0, null), true),			// This month
+					array($timezone[0], $now, array(null, 0, null), array(null, 1, null), true),			// This month and next
+					array($timezone[0], $now, array(null, -1, null), array(null, 0, null), true),			// This month and previous
+					array($timezone[0], $now, array(null, -1, null), array(null, -1, null), false),			// Last month
+					array($timezone[0], $now, array(null, 1, null), array(null, 1, null), false),			// Next month
+					array($timezone[0], $now, array(0, null, null), array(0, null, null), true),			// This day
+					array($timezone[0], $now, array(0, null, null), array(1, null, null), true),			// This day and next
+					array($timezone[0], $now, array(-1, null, null), array(0, null, null), true),			// This day and previous
+					array($timezone[0], $now, array(-1, null, null), array(-1, null, null), false),			// Last day
+					array($timezone[0], $now, array(1, null, null), array(1, null, null), false),			// Next day
+				));
+			}
 		}
 		return $data;
 	}
@@ -250,9 +276,15 @@ class date_range_test extends rule_test_base
 		$rule = new date_range($this->getSerializer(), $api);
 		$now = $this->getDatetime($api, $date);
 		$conditions = $this->buildConditions($now, $start, $end);
+		if ($date !== null)
+		{
+			// Fix current date for testing
+			$rule->setDate($date);
+		}
 		$this->assertEquals(
 			$result,
 			$rule->isTrue(serialize($conditions)),
+			"With mday={$now['mday']} month={$now['mon']} year={$now['year']} " .
 			"From: mday={$conditions[0][0]} month={$conditions[0][1]} year={$conditions[0][2]}; " .
 			" To: mday={$conditions[1][0]} month={$conditions[1][1]} year={$conditions[1][2]}");
 		// Put the timezone back

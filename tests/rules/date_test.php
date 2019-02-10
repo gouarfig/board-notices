@@ -51,6 +51,15 @@ class date_test extends rule_test_base
 
 	/**
 	 * @depends testInstance
+	 * @param \fq\boardnotices\rules\date $rule
+	 */
+	public function getDefaultValue($rule)
+	{
+		$this->assertEquals(array(0, 0, 0), $rule->getDefault());
+	}
+
+	/**
+	 * @depends testInstance
 	 * @param \fq\boardnotices\rules\anniversary $rule
 	 */
 	public function testCannotValidateNullConditions($rule)
