@@ -13,6 +13,7 @@
 namespace fq\boardnotices\rules;
 
 use \fq\boardnotices\service\constants;
+use fq\boardnotices\domain\date_comparator;
 
 class date_range extends rule_base implements rule_interface
 {
@@ -83,7 +84,6 @@ class date_range extends rule_base implements rule_interface
 
 	public function isTrue($conditions)
 	{
-		$valid = false;
 		$parameters = $this->validateConditions($conditions);
 		// $conditions should be at least an array with 2 elements. If not, there's something going on
 		if (!is_array($parameters) || (count($parameters) != 2))
@@ -112,7 +112,8 @@ class date_range extends rule_base implements rule_interface
 
 	private function validateDateCondition($now, \fq\boardnotices\domain\date_condition $start, \fq\boardnotices\domain\date_condition $end)
 	{
-		if ($start->isEmpty() && $end->isEmpty())
+		$dates = new date_comparator($start, $end, $now);
+		if ($dates->areBothEmpty())
 		{
 			return true;
 		}
@@ -127,11 +128,11 @@ class date_range extends rule_base implements rule_interface
 		if ($start->isFullDate() && $end->isFullDate())
 		{
 			// Full date comparison
-			$today = $this->api->createDateTime();
+			$today = $this->api->createDateTime($now[2] . '-' . $now[1] . '-' . $now[0]);
 			$startDateTime = $this->createDateTime($startDate->getValue());
 			$endDateTime = $this->createDateTime($endDate->getValue(), "23:59:59");
 
-			return ($start <= $today) && ($today <= $end);
+			return ($startDateTime <= $today) && ($today <= $endDateTime);
 		}
 	}
 
