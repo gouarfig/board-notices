@@ -9,6 +9,11 @@
 			"type": "php",
 			"request": "launch",
 			"port": 9050,
+			"log": false,
+			"pathMappings": {
+				"/phpbb": "${workspaceFolder:phpbb}",
+				"/boardnotices": "${workspaceFolder:boardnotices}",
+			}
 		},
 		{
 			"name": "Launch currently open script",

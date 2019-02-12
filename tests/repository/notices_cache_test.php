@@ -13,8 +13,6 @@
 
 namespace fq\boardnotices\tests\repository;
 
-define('BOARDNOTICES_DEBUG', false);
-
 use fq\boardnotices\repository\notices;
 
 class notices_cache_test extends notices_testbase

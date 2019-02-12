@@ -13,8 +13,6 @@
 
 namespace fq\boardnotices\tests\repository;
 
-define('BOARDNOTICES_DEBUG', false);
-
 abstract class notices_testbase extends \phpbb_database_test_case
 {
 	protected $db;

@@ -6,7 +6,7 @@
 		{
 			"label": "Run phpunit tests on current file",
 			"type": "shell",
-			"command": "../dev/vstests.sh ../phpbb/phpBB/ext/fq/boardnotices/${relativeFile}",
-		}
+			"command": "docker exec -t phpbb_php /phpbb/phpunit.sh /phpbb/phpBB/ext/fq/boardnotices/${relativeFile}",
+        }
 	]
 }
