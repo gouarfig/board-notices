@@ -117,20 +117,45 @@ class date_range extends rule_base implements rule_interface
 		{
 			return true;
 		}
-		if (!$start->hasDay())
+		if ($dates->areSymmetrical())
 		{
-			$start->setFirstDay();
+			return $this->validateSymmetricalDateCondition($now, $dates);
 		}
-		if (!$end->hasDay())
+		return false;
+	}
+
+	private function validateSymmetricalDateCondition($now, \fq\boardnotices\domain\date_comparator $dates)
+	{
+		if ($dates->hasOnlyBothDays())
 		{
-			$end->setLastDay();
+			if ($dates->getStartDateCondition()->getDay() <= $dates->getEndDateCondition()->getDay())
+			{
+				return ($dates->getStartDateCondition()->getDay() <= $now["mday"]) && ($now["mday"] <= $dates->getEndDateCondition()->getDay());
+			}
+			return ($dates->getStartDateCondition()->getDay() >= $now["mday"]) || ($now["mday"] >= $dates->getEndDateCondition()->getDay());
 		}
-		if ($start->isFullDate() && $end->isFullDate())
+		if ($dates->hasOnlyBothMonths())
+		{
+			if ($dates->getStartDateCondition()->getMonth() <= $dates->getEndDateCondition()->getMonth())
+			{
+				return ($dates->getStartDateCondition()->getMonth() <= $now["mon"]) && ($now["mon"] <= $dates->getEndDateCondition()->getMonth());
+			}
+			return ($dates->getStartDateCondition()->getMonth() >= $now["mon"]) || ($now["mon"] >= $dates->getEndDateCondition()->getMonth());
+		}
+		if ($dates->hasOnlyBothYears())
+		{
+			if ($dates->getStartDateCondition()->getYear() <= $dates->getEndDateCondition()->getYear())
+			{
+				return ($dates->getStartDateCondition()->getYear() <= $now["year"]) && ($now["year"] <= $dates->getEndDateCondition()->getYear());
+			}
+			return false;
+		}
+		if ($dates->hasBothFullDate())
 		{
 			// Full date comparison
-			$today = $this->api->createDateTime($now[2] . '-' . $now[1] . '-' . $now[0]);
-			$startDateTime = $this->createDateTime($startDate->getValue());
-			$endDateTime = $this->createDateTime($endDate->getValue(), "23:59:59");
+			$today = $this->api->createDateTime($now["year"] . '-' . $now["mon"] . '-' . $now["mday"]);
+			$startDateTime = $this->createDateTime($dates->getStartDateCondition()->getValue());
+			$endDateTime = $this->createDateTime($dates->getEndDateCondition()->getValue(), "23:59:59");
 
 			return ($startDateTime <= $today) && ($today <= $endDateTime);
 		}

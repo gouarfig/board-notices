@@ -19,6 +19,26 @@ class date_comparator
 	}
 
 	/**
+	 * Return the start date
+	 *
+	 * @return \fq\boardnotices\domain\date_condition
+	 */
+	public function getStartDateCondition()
+	{
+		return $this->start;
+	}
+
+	/**
+	 * Return the start date
+	 *
+	 * @return \fq\boardnotices\domain\date_condition
+	 */
+	public function getEndDateCondition()
+	{
+		return $this->end;
+	}
+
+	/**
 	 * @return boolean
 	 */
 	public function areBothEmpty()
