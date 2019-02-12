@@ -78,8 +78,7 @@ class date_range extends rule_base implements rule_interface
 			$this->time = time();
 		}
 		$offset = $this->api->createDateTime()->getOffset();
-		$now = getdate($this->time - date('Z') + $offset);	// This gives the date in the user timezone
-		return $now;
+		return getdate($this->time - date('Z') + $offset);	// This gives the date in the user timezone
 	}
 
 	public function isTrue($conditions)

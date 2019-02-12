@@ -245,6 +245,7 @@ class date_range_test extends rule_test_base
 					array($timezone[0], $now, array(null, null, 0), array(null, null, 0), true),			// This year
 					array($timezone[0], $now, array(null, null, 0), array(null, null, 1), true),			// This year and next
 					array($timezone[0], $now, array(null, null, -1), array(null, null, 0), true),			// This year and previous
+					array($timezone[0], $now, array(null, null, 1), array(null, null, -1), false),			// Years the other way around
 					array($timezone[0], $now, array(null, null, -1), array(null, null, -1), false),			// Last year
 					array($timezone[0], $now, array(null, null, 1), array(null, null, 1), false),			// Next year
 					array($timezone[0], $now, array(null, 0, null), array(null, 0, null), true),			// This month
