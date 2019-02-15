@@ -23,23 +23,23 @@ class board_notices_module
 
 	protected $p_master;
 
-	/** @var \phpbb\config\config */
+	/** @var \phpbb\config\config $config */
 	protected $config;
 
-	/** @var \phpbb\db\driver\driver_interface */
-	protected $db;
-
-	/** @var \phpbb\log\log */
+	/** @var \phpbb\log\log $log */
 	protected $log;
 
-	/** @var \phpbb\request\request */
+	/** @var \phpbb\request\request $request */
 	protected $request;
 
-	/** @var \phpbb\template\template */
+	/** @var \phpbb\template\template $template */
 	protected $template;
 
-	/** @var \phpbb\user */
+	/** @var \phpbb\user $user */
 	protected $user;
+
+	/** @var \phpbb\language\language $language */
+	protected $language;
 
 	/** @var ContainerInterface */
 	protected $phpbb_container;
@@ -78,11 +78,11 @@ class board_notices_module
 
 		// This cannot be injected at this point. Hopefully in a future version :-)
 		$this->config = $phpbb_container->get('config');
-		$this->db = $phpbb_container->get('dbal.conn');
 		$this->log = $phpbb_container->get('log');
 		$this->request = $phpbb_container->get('request');
 		$this->template = $phpbb_container->get('template');
 		$this->user = $phpbb_container->get('user');
+		$this->language = $phpbb_container->get('language');
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $phpEx;
 
@@ -250,17 +250,17 @@ class board_notices_module
 		$this->tpl_name = 'board_notices';
 
 		// Set the page title for our ACP page
-		$this->page_title = $this->user->lang('ACP_BOARD_NOTICES_MANAGER');
+		$this->page_title = $this->lang('ACP_BOARD_NOTICES_MANAGER');
 
 		// Output data to the template
 		$this->template->assign_vars(array(
 			'S_BOARD_NOTICES' => true,
-			'BOARD_NOTICE_ADD' => $this->user->lang('BOARD_NOTICE_ADD'),
+			'BOARD_NOTICE_ADD' => $this->lang('BOARD_NOTICE_ADD'),
 			'COLSPAN' => 6,
-			'ICON_MOVE_FIRST'			=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first.gif" alt="' . $this->user->lang['MOVE_FIRST'] . '" title="' . $this->user->lang['MOVE_FIRST'] . '" />',
-			'ICON_MOVE_FIRST_DISABLED'	=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first_disabled.gif" alt="' . $this->user->lang['MOVE_FIRST'] . '" title="' . $this->user->lang['MOVE_FIRST'] . '" />',
-			'ICON_MOVE_LAST'			=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last.gif" alt="' . $this->user->lang['MOVE_LAST'] . '" title="' . $this->user->lang['MOVE_LAST'] . '" />',
-			'ICON_MOVE_LAST_DISABLED'	=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last_disabled.gif" alt="' . $this->user->lang['MOVE_LAST'] . '" title="' . $this->user->lang['MOVE_LAST'] . '" />',
+			'ICON_MOVE_FIRST'			=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first.gif" title="' . $this->lang('MOVE_FIRST') . '" />',
+			'ICON_MOVE_FIRST_DISABLED'	=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first_disabled.gif" title="' . $this->lang('MOVE_FIRST') . '" />',
+			'ICON_MOVE_LAST'			=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last.gif" title="' . $this->lang('MOVE_LAST') . '" />',
+			'ICON_MOVE_LAST_DISABLED'	=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last_disabled.gif" title="' . $this->lang('MOVE_LAST') . '" />',
 		));
 
 		$notices = $data_layer->getAllNotices();
@@ -307,7 +307,7 @@ class board_notices_module
 		$this->tpl_name = 'board_notices_edit';
 
 		// Set the page title for our ACP page
-		$this->page_title = $this->user->lang('ACP_BOARD_NOTICE_SETTINGS');
+		$this->page_title = $this->lang('ACP_BOARD_NOTICE_SETTINGS');
 
 		// Define the name of the form for use as a form key
 		add_form_key($this->notice_form_name);
@@ -460,7 +460,7 @@ class board_notices_module
 		$this->tpl_name = 'board_notices_settings';
 
 		// Set the page title for our ACP page
-		$this->page_title = $this->user->lang('ACP_BOARD_NOTICES_MANAGER');
+		$this->page_title = $this->lang('ACP_BOARD_NOTICES_MANAGER');
 
 		// Output data to the template
 		$this->template->assign_vars(array(
@@ -721,7 +721,7 @@ class board_notices_module
 		// Test if form key is valid
 		if (!check_form_key($this->notice_form_name))
 		{
-			$error = $this->user->lang('FORM_INVALID');
+			$error = $this->lang('FORM_INVALID');
 			return $error;
 		}
 
@@ -739,11 +739,11 @@ class board_notices_module
 		{
 			if (empty($data['title']))
 			{
-				$error .= $this->user->lang('ERROR_EMPTY_TITLE') . "<br />";
+				$error .= $this->lang('ERROR_EMPTY_TITLE') . "<br />";
 			}
 			if (empty($data['message']))
 			{
-				$error .= $this->user->lang('ERROR_EMPTY_MESSAGE') . "<br />";
+				$error .= $this->lang('ERROR_EMPTY_MESSAGE') . "<br />";
 			}
 		}
 
@@ -797,7 +797,7 @@ class board_notices_module
 		// In case the parsing of the message failed
 		if (empty($error) && empty($data['message']))
 		{
-			return $this->user->lang('ERROR_EMPTY_MESSAGE') . "<br />";
+			return $this->lang('ERROR_EMPTY_MESSAGE') . "<br />";
 		}
 		return $error;
 	}
@@ -897,7 +897,7 @@ class board_notices_module
 		// Log the new notice
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BOARD_NOTICES_ADDED', time(), array($data['title']));
 		// Output message to user for the update
-		trigger_error($this->user->lang('BOARD_NOTICE_SAVED') . adm_back_link($this->u_action));
+		trigger_error($this->lang('BOARD_NOTICE_SAVED') . adm_back_link($this->u_action));
 	}
 
 	private function saveNotice($notice_id, &$data)
@@ -921,7 +921,7 @@ class board_notices_module
 		// Log the update
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BOARD_NOTICES_UPDATED', time(), array($data['title']));
 		// Output message to user for the update
-		trigger_error($this->user->lang('BOARD_NOTICE_SAVED') . adm_back_link($this->u_action));
+		trigger_error($this->lang('BOARD_NOTICE_SAVED') . adm_back_link($this->u_action));
 	}
 
 	private function getAllRules()
@@ -956,7 +956,7 @@ class board_notices_module
 		// Logs the settings update
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BOARD_NOTICES_SETTINGS', time(), array());
 		// Output message to user for the update
-		trigger_error($this->user->lang('BOARD_NOTICES_SETTINGS_SAVED') . adm_back_link($this->u_action));
+		trigger_error($this->lang('BOARD_NOTICES_SETTINGS_SAVED') . adm_back_link($this->u_action));
 	}
 
 	private function resetForumVisits($id, $mode, $action)
@@ -966,7 +966,7 @@ class board_notices_module
 
 		if (!confirm_box(true))
 		{
-			confirm_box(false, $this->user->lang['RESET_FORUM_VISITS_CONFIRMATION'], build_hidden_fields(array(
+			confirm_box(false, $this->lang('RESET_FORUM_VISITS_CONFIRMATION'), build_hidden_fields(array(
 				'i'			=> $id,
 				'mode'		=> $mode,
 				'action'	=> $action,
@@ -988,7 +988,7 @@ class board_notices_module
 	{
 		if (isset($this->language))
 		{
-			$this->language->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+			$this->language->add_lang('boardnotices_acp', 'fq/boardnotices');
 		}
 		// Keep compatibility with phpBB 3.1
 		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
