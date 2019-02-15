@@ -18,40 +18,53 @@ class board_notices_module
 
 	private $notice_form_name = 'acp_board_notice';
 
-	/** @var \fq\boardnotices\domain\rules $rules_manager */
-	private $rules_manager = null;
+	private $p_master;
 
-	protected $p_master;
+	/** @var \fq\boardnotices\domain\rules $rules_manager */
+	private $rules_manager;
+
+	/** @var \fq\boardnotices\service\serializer $serializer */
+	private $serializer;
+
+	/** @var \fq\boardnotices\repository\notices $notices_repository */
+	private $notices_repository;
 
 	/** @var \phpbb\config\config $config */
-	protected $config;
+	private $config;
 
 	/** @var \phpbb\log\log $log */
-	protected $log;
+	private $log;
 
 	/** @var \phpbb\request\request $request */
-	protected $request;
+	private $request;
 
 	/** @var \phpbb\template\template $template */
-	protected $template;
+	private $template;
 
 	/** @var \phpbb\user $user */
-	protected $user;
+	private $user;
 
 	/** @var \phpbb\language\language $language */
-	protected $language;
+	private $language;
 
 	/** @var ContainerInterface */
-	protected $phpbb_container;
+	private $phpbb_container;
 
 	/** @var string */
-	protected $phpbb_root_path;
+	private $phpbb_root_path;
 
 	/** @var string */
-	protected $php_ext;
+	private $php_ext;
 
-	/** @var string */
+	/** This needs to be kept public, phpBB needs access to these properties */
+	/** @var string $u_action */
 	public $u_action;
+	/** @var string $module_path */
+	public $module_path;	// Usually contain "./../includes/acp/"
+	/** @var string $tpl_name */
+	public $tpl_name;
+	/** @var string $page_title */
+	public $page_title;
 
 	/**
 	 * I find it rather annoying that this class won't be instanciated on the common phpBB/Symfony model,
@@ -77,6 +90,9 @@ class board_notices_module
 		global $phpbb_container, $phpbb_root_path, $phpEx;
 
 		// This cannot be injected at this point. Hopefully in a future version :-)
+		$this->rules_manager = $phpbb_container->get('fq.boardnotices.domain.rules');
+		$this->serializer = $phpbb_container->get('fq.boardnotices.service.serializer');
+		$this->notices_repository = $phpbb_container->get('fq.boardnotices.repository.notices');
 		$this->config = $phpbb_container->get('config');
 		$this->log = $phpbb_container->get('log');
 		$this->request = $phpbb_container->get('request');
@@ -240,9 +256,6 @@ class board_notices_module
 	{
 		global $phpbb_root_path, $phpEx;
 
-		/** @var \fq\boardnotices\repository\notices_interface */
-		$data_layer = $this->getRepository();
-
 		// Add the board notices ACP lang file
 		$this->addAdminLanguage();
 
@@ -263,10 +276,10 @@ class board_notices_module
 			'ICON_MOVE_LAST_DISABLED'	=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last_disabled.gif" title="' . $this->lang('MOVE_LAST') . '" />',
 		));
 
-		$notices = $data_layer->getAllNotices();
+		$notices = $this->notices_repository->getAllNotices();
 		foreach ($notices as $notice)
 		{
-			$rules = $data_layer->getRulesFor($notice['notice_id']);
+			$rules = $this->notices_repository->getRulesFor($notice['notice_id']);
 			$this->template->assign_block_vars('notices', array(
 				'S_SPACER' => false,
 				'TITLE' => $notice['title'],
@@ -544,10 +557,7 @@ class board_notices_module
 
 	public function moveNotice($action, $notice_id)
 	{
-		/** @var \fq\boardnotices\repository\notices $data_layer */
-		$data_layer = $this->getRepository();
-
-		$move_executed = $data_layer->moveNotice($action, $notice_id);
+		$move_executed = $this->notices_repository->moveNotice($action, $notice_id);
 
 		if ($this->request->is_ajax())
 		{
@@ -560,10 +570,7 @@ class board_notices_module
 
 	public function moveNoticeFirst($notice_id)
 	{
-		/** @var \fq\boardnotices\repository\notices $data_layer */
-		$data_layer = $this->getRepository();
-
-		$move_executed = $data_layer->moveNoticeFirst($notice_id);
+		$move_executed = $this->notices_repository->moveNoticeFirst($notice_id);
 
 		if ($this->request->is_ajax())
 		{
@@ -576,10 +583,7 @@ class board_notices_module
 
 	public function moveNoticeLast($notice_id)
 	{
-		/** @var \fq\boardnotices\repository\notices $data_layer */
-		$data_layer = $this->getRepository();
-
-		$move_executed = $data_layer->moveNoticeLast($notice_id);
+		$move_executed = $this->notices_repository->moveNoticeLast($notice_id);
 
 		if ($this->request->is_ajax())
 		{
@@ -592,10 +596,7 @@ class board_notices_module
 
 	public function deleteNotice($notice_id)
 	{
-		/** @var \fq\boardnotices\repository\notices $data_layer */
-		$data_layer = $this->getRepository();
-
-		$delete_executed = $data_layer->deleteNotice($notice_id);
+		$delete_executed = $this->notices_repository->deleteNotice($notice_id);
 
 		if ($this->request->is_ajax())
 		{
@@ -608,10 +609,7 @@ class board_notices_module
 
 	public function enableNotice($action, $notice_id)
 	{
-		/** @var \fq\boardnotices\repository\notices $data_layer */
-		$data_layer = $this->getRepository();
-
-		$executed = $data_layer->enableNotice($action, $notice_id);
+		$executed = $this->notices_repository->enableNotice($action, $notice_id);
 
 		if ($this->request->is_ajax())
 		{
@@ -620,44 +618,6 @@ class board_notices_module
 				'success' => $executed,
 			));
 		}
-	}
-
-	/**
-	 * Returns the current repository
-	 *
-	 * @global type $phpbb_container
-	 * @staticvar \fq\boardnotices\repository\notices $repository
-	 * @return \fq\boardnotices\repository\notices
-	 */
-	protected function getRepository()
-	{
-		global $phpbb_container;
-		static $repository = null;
-
-		if ($repository === null)
-		{
-			$repository = $phpbb_container->get('fq.boardnotices.repository.notices');
-		}
-		return $repository;
-	}
-
-	/**
-	 * Returns the current serializer service
-	 *
-	 * @global type $phpbb_container
-	 * @staticvar \fq\boardnotices\service\serializer $serializer
-	 * @return \fq\boardnotices\service\serializer
-	 */
-	protected function getSerializer()
-	{
-		global $phpbb_container;
-		static $serializer = null;
-
-		if ($serializer === null)
-		{
-			$serializer = $phpbb_container->get('fq.boardnotices.service.serializer');
-		}
-		return $serializer;
 	}
 
 	private function newBlankNotice()
@@ -682,19 +642,17 @@ class board_notices_module
 
 	private function loadNotice($notice_id)
 	{
-		$data_layer = $this->getRepository();
-		$serializer = $this->getSerializer();
-		$notice = $data_layer->getNoticeFromId($notice_id);
+		$notice = $this->notices_repository->getNoticeFromId($notice_id);
 		$notice['notice_rule_id'] = array();
 		$notice['notice_rule_checked'] = array();
 		$notice['notice_rule_conditions'] = array();
 
-		$rules = $data_layer->getRulesFor($notice_id);
+		$rules = $this->notices_repository->getRulesFor($notice_id);
 		foreach ($rules as $rule)
 		{
 			$notice['notice_rule_id'][$rule['rule']] = $rule['notice_rule_id'];
 			$notice['notice_rule_checked'][$rule['rule']] = 1;
-			$conditions = $serializer->decode($rule['conditions']);
+			$conditions = $this->serializer->decode($rule['conditions']);
 			if ($conditions === false)
 			{
 				$conditions = array($rule['conditions']);
@@ -820,7 +778,6 @@ class board_notices_module
 
 	private function saveRules($notice_id, &$data)
 	{
-		$serializer = $this->getSerializer();
 		$to_delete = array();
 		foreach ($data['notice_rule_id'] as $rule_name => $rule_id)
 		{
@@ -841,7 +798,7 @@ class board_notices_module
 						'notice_rule_id' => $data['notice_rule_id'][$rule_name],
 						'notice_id' => $notice_id,
 						'rule' => $rule_name,
-						'conditions' => $serializer->encode($data['notice_rule_conditions'][$rule_name]),
+						'conditions' => $this->serializer->encode($data['notice_rule_conditions'][$rule_name]),
 					);
 				}
 				else
@@ -849,27 +806,25 @@ class board_notices_module
 					$to_insert[] = array(
 						'notice_id' => $notice_id,
 						'rule' => $rule_name,
-						'conditions' => $serializer->encode($data['notice_rule_conditions'][$rule_name]),
+						'conditions' => $this->serializer->encode($data['notice_rule_conditions'][$rule_name]),
 					);
 				}
 			}
 		}
-		$data_layer = $this->getRepository();
-
 		if (!empty($to_delete))
 		{
 			//echo "<br />to delete:"; var_dump($to_delete);
-			$data_layer->deleteRules($to_delete);
+			$this->notices_repository->deleteRules($to_delete);
 		}
 		if (!empty($to_update))
 		{
 			//echo "<br />to update:"; var_dump($to_update);
-			$data_layer->updateRules($to_update);
+			$this->notices_repository->updateRules($to_update);
 		}
 		if (!empty($to_insert))
 		{
 			//echo "<br />to insert:"; var_dump($to_insert);
-			$data_layer->insertRules($to_insert);
+			$this->notices_repository->insertRules($to_insert);
 		}
 	}
 
@@ -887,8 +842,7 @@ class board_notices_module
 		unset($data['notice_rule_checked']);
 		unset($data['notice_rule_conditions']);
 
-		$data_layer = $this->getRepository();
-		$notice_id = $data_layer->saveNewNotice($data);
+		$notice_id = $this->notices_repository->saveNewNotice($data);
 		if ($notice_id > 0)
 		{
 			$this->saveRules($notice_id, $rules_data);
@@ -914,8 +868,7 @@ class board_notices_module
 		unset($data['notice_rule_checked']);
 		unset($data['notice_rule_conditions']);
 
-		$data_layer = $this->getRepository();
-		$data_layer->saveNotice($notice_id, $data);
+		$this->notices_repository->saveNotice($notice_id, $data);
 		$this->saveRules($notice_id, $rules_data);
 
 		// Log the update
@@ -926,14 +879,7 @@ class board_notices_module
 
 	private function getAllRules()
 	{
-		global $phpbb_container;
-
-		if (is_null($this->rules_manager))
-		{
-			$this->rules_manager = $phpbb_container->get('fq.boardnotices.domain.rules');
-		}
-		$all_rules = $this->rules_manager->getDefinedRules();
-		return $all_rules;
+		return $this->rules_manager->getDefinedRules();
 	}
 
 	private function saveSettings()
@@ -974,8 +920,7 @@ class board_notices_module
 		}
 		else
 		{
-			$repository = $this->getRepository();
-			$repository->clearForumVisited();
+			$this->notices_repository->clearForumVisited();
 
 			if ($this->request->is_ajax())
 			{
