@@ -281,7 +281,7 @@ class board_notices_module
 			$this->template->assign_block_vars('notices', array(
 				'S_SPACER' => false,
 				'TITLE' => $notice['title'],
-				'PREVIEW_LINK' => append_sid("{$this->phpbb_root_path}index.{$this->phpEx}") . "&bnpk=" . $this->config[constants::$CONFIG_PREVIEW_KEY] . "&bnid=" . (int) $notice['notice_id'],
+				'PREVIEW_LINK' => append_sid("{$this->phpbb_root_path}index.{$this->php_ext}") . "&bnpk=" . $this->config[constants::$CONFIG_PREVIEW_KEY] . "&bnid=" . (int) $notice['notice_id'],
 				'RULES' => count($rules),
 				'ENABLED' => $notice['active'] ? true : false,
 				'DISMISS' => $notice['dismissable'] ? true : false,
