@@ -65,16 +65,24 @@ class board_notices_module
 		$this->p_master = &$p_master;
 	}
 
+	/**
+	 * This is the entry point when the user selects the settings or manage menu
+	 *
+	 * @param string $id
+	 * @param string $mode
+	 * @return string $error_message
+	 */
 	public function main($id, $mode)
 	{
-		global $config, $db, $request, $template, $user, $phpbb_root_path, $phpEx, $phpbb_container;
+		global $phpbb_container, $phpbb_root_path, $phpEx;
 
-		$this->config = $config;
-		$this->db = $db;
+		// This cannot be injected at this point. Hopefully in a future version :-)
+		$this->config = $phpbb_container->get('config');
+		$this->db = $phpbb_container->get('dbal.conn');
 		$this->log = $phpbb_container->get('log');
-		$this->request = $request;
-		$this->template = $template;
-		$this->user = $user;
+		$this->request = $phpbb_container->get('request');
+		$this->template = $phpbb_container->get('template');
+		$this->user = $phpbb_container->get('user');
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $phpEx;
 
@@ -88,6 +96,40 @@ class board_notices_module
 		}
 	}
 
+	/**
+	 * Global settings of the extension
+	 *
+	 * @param string $id
+	 * @param string $mode
+	 * @return void
+	 */
+	public function settings_module($id, $mode)
+	{
+		$action = $this->request->variable('action', '');
+		if ($action == 'reset_forum_visits')
+		{
+			$this->resetForumVisits($id, $mode, $action);
+		}
+		else
+		{
+			if ($this->request->is_set_post('submit'))
+			{
+				$this->saveSettings();
+			}
+			else
+			{
+				$this->displaySettingsForm();
+			}
+		}
+	}
+
+	/**
+	 * Admin module to manage the notices
+	 *
+	 * @param string $id
+	 * @param string $mode
+	 * @return void
+	 */
 	public function manage_module($id, $mode)
 	{
 		/** @var string $action */
@@ -143,7 +185,6 @@ class board_notices_module
 				$this->displayManager();
 				break;
 		}
-		return;
 	}
 
 	private function addNotice($action)
@@ -188,27 +229,6 @@ class board_notices_module
 		{
 			$this->displayNoticeForm($action, $data);
 		}
-	}
-
-	public function settings_module($id, $mode)
-	{
-		$action = $this->request->variable('action', '');
-		if ($action == 'reset_forum_visits')
-		{
-			$this->resetForumVisits($id, $mode, $action);
-		}
-		else
-		{
-			if ($this->request->is_set_post('submit'))
-			{
-				$this->saveSettings();
-			}
-			else
-			{
-				$this->displaySettingsForm();
-			}
-		}
-		return;
 	}
 
 	/**
@@ -966,7 +986,28 @@ class board_notices_module
 
 	private function addAdminLanguage()
 	{
-		// Keep compatibility with phpBB 3.1 (for now)
+		if (isset($this->language))
+		{
+			$this->language->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+		}
+		// Keep compatibility with phpBB 3.1
 		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+	}
+
+	/**
+	 * Wrapper for the $language->lang() OR $user->lang() functions (depending on phpBB version 3.1 or 3.2)
+	 *
+	 * @return string
+	 */
+	private function lang()
+	{
+		$args = func_get_args();
+		if (isset($this->language))
+		{
+			// phpBB 3.2
+			return call_user_func_array(array($this->language, 'lang'), $args);
+		}
+		// phpBB 3.1
+		return call_user_func_array(array($this->user, 'lang'), $args);
 	}
 }
