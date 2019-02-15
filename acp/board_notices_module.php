@@ -119,7 +119,7 @@ class board_notices_module
 	 * @param string $mode
 	 * @return void
 	 */
-	public function settings_module($id, $mode)
+	private function settings_module($id, $mode)
 	{
 		$action = $this->request->variable('action', '');
 		if ($action == 'reset_forum_visits')
@@ -146,7 +146,7 @@ class board_notices_module
 	 * @param string $mode
 	 * @return void
 	 */
-	public function manage_module($id, $mode)
+	private function manage_module($id, $mode)
 	{
 		/** @var string $action */
 		$action = $this->request->variable('action', '');
@@ -252,7 +252,7 @@ class board_notices_module
 	 *
 	 * @return void
 	 */
-	public function displayManager()
+	private function displayManager()
 	{
 		// Add the board notices ACP lang file
 		$this->addAdminLanguage();
@@ -306,7 +306,7 @@ class board_notices_module
 	 * @param string $error
 	 * @return void
 	 */
-	public function displayNoticeForm($action, $data, $error = '')
+	private function displayNoticeForm($action, $data, $error = '')
 	{
 		// Add the posting lang file needed by BBCodes
 		$this->user->add_lang(array('posting'));
@@ -462,7 +462,7 @@ class board_notices_module
 	 *
 	 * @return void
 	 */
-	public function displaySettingsForm()
+	private function displaySettingsForm()
 	{
 		// Add the board notices ACP lang file
 		$this->addAdminLanguage();
@@ -553,7 +553,7 @@ class board_notices_module
 	// 	return $display;
 	// }
 
-	public function moveNotice($action, $notice_id)
+	private function moveNotice($action, $notice_id)
 	{
 		$move_executed = $this->notices_repository->moveNotice($action, $notice_id);
 
@@ -566,7 +566,7 @@ class board_notices_module
 		}
 	}
 
-	public function moveNoticeFirst($notice_id)
+	private function moveNoticeFirst($notice_id)
 	{
 		$move_executed = $this->notices_repository->moveNoticeFirst($notice_id);
 
@@ -579,7 +579,7 @@ class board_notices_module
 		}
 	}
 
-	public function moveNoticeLast($notice_id)
+	private function moveNoticeLast($notice_id)
 	{
 		$move_executed = $this->notices_repository->moveNoticeLast($notice_id);
 
@@ -592,7 +592,7 @@ class board_notices_module
 		}
 	}
 
-	public function deleteNotice($notice_id)
+	private function deleteNotice($notice_id)
 	{
 		$delete_executed = $this->notices_repository->deleteNotice($notice_id);
 
@@ -605,7 +605,7 @@ class board_notices_module
 		}
 	}
 
-	public function enableNotice($action, $notice_id)
+	private function enableNotice($action, $notice_id)
 	{
 		$executed = $this->notices_repository->enableNotice($action, $notice_id);
 
