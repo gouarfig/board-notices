@@ -26,9 +26,6 @@ class board_notices_module
 	/** @var \phpbb\config\config */
 	protected $config;
 
-	/** @var \phpbb\config\db_text */
-	protected $config_text;
-
 	/** @var \phpbb\db\driver\driver_interface */
 	protected $db;
 
@@ -73,7 +70,6 @@ class board_notices_module
 		global $config, $db, $request, $template, $user, $phpbb_root_path, $phpEx, $phpbb_container;
 
 		$this->config = $config;
-		$this->config_text = $phpbb_container->get('config_text');
 		$this->db = $db;
 		$this->log = $phpbb_container->get('log');
 		$this->request = $request;
