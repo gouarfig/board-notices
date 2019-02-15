@@ -254,8 +254,6 @@ class board_notices_module
 	 */
 	public function displayManager()
 	{
-		global $phpbb_root_path, $phpEx;
-
 		// Add the board notices ACP lang file
 		$this->addAdminLanguage();
 
@@ -270,10 +268,10 @@ class board_notices_module
 			'S_BOARD_NOTICES' => true,
 			'BOARD_NOTICE_ADD' => $this->lang('BOARD_NOTICE_ADD'),
 			'COLSPAN' => 6,
-			'ICON_MOVE_FIRST'			=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first.gif" title="' . $this->lang('MOVE_FIRST') . '" />',
-			'ICON_MOVE_FIRST_DISABLED'	=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first_disabled.gif" title="' . $this->lang('MOVE_FIRST') . '" />',
-			'ICON_MOVE_LAST'			=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last.gif" title="' . $this->lang('MOVE_LAST') . '" />',
-			'ICON_MOVE_LAST_DISABLED'	=> '<img src="' . $phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last_disabled.gif" title="' . $this->lang('MOVE_LAST') . '" />',
+			'ICON_MOVE_FIRST'			=> '<img src="' . $this->phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first.gif" title="' . $this->lang('MOVE_FIRST') . '" />',
+			'ICON_MOVE_FIRST_DISABLED'	=> '<img src="' . $this->phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first_disabled.gif" title="' . $this->lang('MOVE_FIRST') . '" />',
+			'ICON_MOVE_LAST'			=> '<img src="' . $this->phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last.gif" title="' . $this->lang('MOVE_LAST') . '" />',
+			'ICON_MOVE_LAST_DISABLED'	=> '<img src="' . $this->phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last_disabled.gif" title="' . $this->lang('MOVE_LAST') . '" />',
 		));
 
 		$notices = $this->notices_repository->getAllNotices();
@@ -283,7 +281,7 @@ class board_notices_module
 			$this->template->assign_block_vars('notices', array(
 				'S_SPACER' => false,
 				'TITLE' => $notice['title'],
-				'PREVIEW_LINK' => append_sid("{$phpbb_root_path}index.$phpEx") . "&bnpk=" . $this->config[constants::$CONFIG_PREVIEW_KEY] . "&bnid=" . (int) $notice['notice_id'],
+				'PREVIEW_LINK' => append_sid("{$this->phpbb_root_path}index.{$this->phpEx}") . "&bnpk=" . $this->config[constants::$CONFIG_PREVIEW_KEY] . "&bnid=" . (int) $notice['notice_id'],
 				'RULES' => count($rules),
 				'ENABLED' => $notice['active'] ? true : false,
 				'DISMISS' => $notice['dismissable'] ? true : false,
