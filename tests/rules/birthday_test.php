@@ -104,9 +104,12 @@ class birthday_test extends rule_test_base
 	 */
 	public function testBirthdayIsTrue($timezone)
 	{
+		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
 		list($api, $rule) = $this->buildRuleWithBirthday($timezone, 0);
 		$this->assertTrue($rule->isTrue(null), $api->getUserBirthday() . ' birthday is not today!');
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 
 	/**
@@ -115,9 +118,12 @@ class birthday_test extends rule_test_base
 	 */
 	public function testBirthdayLastMonthIsFalse($timezone)
 	{
+		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
 		list($api, $rule) = $this->buildRuleWithBirthday($timezone, -(24*60*60*32));
 		$this->assertFalse($rule->isTrue(null), $api->getUserBirthday() . ' birthday is not today!');
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 
 	/**
@@ -126,9 +132,12 @@ class birthday_test extends rule_test_base
 	 */
 	public function testBirthdayYesterdayIsFalse($timezone)
 	{
+		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
 		list($api, $rule) = $this->buildRuleWithBirthday($timezone, -(24*60*60));
 		$this->assertFalse($rule->isTrue(null), $api->getUserBirthday() . ' birthday is not today!');
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 
 	/**
@@ -137,9 +146,12 @@ class birthday_test extends rule_test_base
 	 */
 	public function testBirthdayTomorrowIsFalse($timezone)
 	{
+		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
 		list($api, $rule) = $this->buildRuleWithBirthday($timezone, 24*60*60);
 		$this->assertFalse($rule->isTrue(null), $api->getUserBirthday() . ' birthday is not today!');
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 
 	/**
@@ -148,9 +160,12 @@ class birthday_test extends rule_test_base
 	 */
 	public function testBirthdayNextMonthIsFalse($timezone)
 	{
+		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
 		list($api, $rule) = $this->buildRuleWithBirthday($timezone, 24*60*60*32);
 		$this->assertFalse($rule->isTrue(null), $api->getUserBirthday() . ' birthday is not today!');
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 
 	/**
@@ -159,10 +174,13 @@ class birthday_test extends rule_test_base
 	 */
 	public function testAge($timezone)
 	{
+		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
 		list($api, $rule) = $this->buildRuleWithBirthday($timezone, 0, 30);
 		$rule->isTrue(null);
 		$age = $rule->getTemplateVars();
 		$this->assertTrue($age['AGE'] == 30, "Age is not 30 but {$age['AGE']}");
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 }

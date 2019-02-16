@@ -118,6 +118,7 @@ class registered_less_than_test extends rule_test_base
 	 */
 	public function testConditions($timezone, $registration, $days, $result)
 	{
+		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
@@ -126,6 +127,8 @@ class registered_less_than_test extends rule_test_base
 		$user->data['user_regdate'] = time() + $registration;
 		$rule = new registered_less_than($this->getSerializer(), $user);
 		$this->assertEquals($result, $rule->isTrue($days));
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 
 	/**
@@ -137,6 +140,7 @@ class registered_less_than_test extends rule_test_base
 	 */
 	public function testConditionsUnregisteredUser($timezone, $registration, $days, $result)
 	{
+		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
@@ -145,6 +149,8 @@ class registered_less_than_test extends rule_test_base
 		$user->data['user_regdate'] = time() + $registration;
 		$rule = new registered_less_than($this->getSerializer(), $user);
 		$this->assertFalse($rule->isTrue($days));
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 
 }

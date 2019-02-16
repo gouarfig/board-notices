@@ -90,12 +90,15 @@ class anniversary_test extends rule_test_base
 	 */
 	public function testTodayIsFalse($timezone)
 	{
+		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
 		$api = new mock_api();
 		$api->setTimezone($timezone);
 		$api->setUserRegistrationDate(time());
 		$rule = new anniversary($this->getSerializer(), $api);
 		$this->assertFalse($rule->isTrue(null));
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 
 	/**
@@ -104,12 +107,15 @@ class anniversary_test extends rule_test_base
 	 */
 	public function testOneHourBeforeTodayIsFalse($timezone)
 	{
+		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
 		$api = new mock_api();
 		$api->setTimezone($timezone);
 		$api->setUserRegistrationDate(time() - (60*60));
 		$rule = new anniversary($this->getSerializer(), $api);
 		$this->assertFalse($rule->isTrue(null));
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 
 	/**
@@ -118,12 +124,15 @@ class anniversary_test extends rule_test_base
 	 */
 	public function testOneMonthBeforeTodayIsFalse($timezone)
 	{
+		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
 		$api = new mock_api();
 		$api->setTimezone($timezone);
 		$api->setUserRegistrationDate(time() - (60*60*24*32));
 		$rule = new anniversary($this->getSerializer(), $api);
 		$this->assertFalse($rule->isTrue(null));
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 
 	/**
@@ -132,12 +141,15 @@ class anniversary_test extends rule_test_base
 	 */
 	public function testTodayPlusOneHourIsFalse($timezone)
 	{
+		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
 		$api = new mock_api();
 		$api->setTimezone($timezone);
 		$api->setUserRegistrationDate(time() + (60*60));
 		$rule = new anniversary($this->getSerializer(), $api);
 		$this->assertFalse($rule->isTrue(null));
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 
 	/**
@@ -146,12 +158,15 @@ class anniversary_test extends rule_test_base
 	 */
 	public function testTodayPlusOneMonthIsFalse($timezone)
 	{
+		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
 		$api = new mock_api();
 		$api->setTimezone($timezone);
 		$api->setUserRegistrationDate(time() + (60*60*24*32));
 		$rule = new anniversary($this->getSerializer(), $api);
 		$this->assertFalse($rule->isTrue(null));
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 
 
@@ -169,10 +184,12 @@ class anniversary_test extends rule_test_base
 	 */
 	public function testLastYearIsTrue($timezone)
 	{
+		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
 		list($api, $rule) = $this->buildRuleWithLastYearUserRegistration($timezone);
 		$this->assertTrue($rule->isTrue(null), date('r', $api->getUserRegistrationDate()) . ' is not last year!');
-		return $rule;
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 
 	/**
@@ -181,11 +198,14 @@ class anniversary_test extends rule_test_base
 	 */
 	public function testOneYearAfter($timezone)
 	{
+		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
 		list($api, $rule) = $this->buildRuleWithLastYearUserRegistration($timezone);
 		// Run the rule to calculate the anniversary
 		$rule->isTrue(null);
 		$vars = $rule->getTemplateVars();
 		$this->assertEquals(1, $vars['ANNIVERSARY']);
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 }
