@@ -47,9 +47,6 @@ class board_notices_module
 	/** @var \phpbb\language\language $language */
 	private $language;
 
-	/** @var ContainerInterface */
-	private $phpbb_container;
-
 	/** @var string */
 	private $phpbb_root_path;
 
