@@ -29,6 +29,9 @@ class board_notices_module
 	/** @var \fq\boardnotices\repository\notices $notices_repository */
 	private $notices_repository;
 
+	/** @var \fq\boardnotices\acp\settings $settings */
+	private $settings;
+
 	/** @var \phpbb\config\config $config */
 	private $config;
 
@@ -90,6 +93,7 @@ class board_notices_module
 		$this->rules_manager = $phpbb_container->get('fq.boardnotices.domain.rules');
 		$this->serializer = $phpbb_container->get('fq.boardnotices.service.serializer');
 		$this->notices_repository = $phpbb_container->get('fq.boardnotices.repository.notices');
+		$this->settings = $phpbb_container->get('fq.boardnotices.acp.settings');
 		$this->config = $phpbb_container->get('config');
 		$this->log = $phpbb_container->get('log');
 		$this->request = $phpbb_container->get('request');

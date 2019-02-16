@@ -18,7 +18,10 @@ class settings
 	/** @var \fq\boardnotices\service\phpbb\api_interface $api */
 	private $api;
 
-	/** @var \phpbb\request\request $request */
+	/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+	private $functions;
+
+	/** @var \phpbb\request\request_interface $request */
 	private $request;
 
 	/** @var \fq\boardnotices\repository\notices_interface $notices_repository */
@@ -26,11 +29,13 @@ class settings
 
 	public function __construct(
 		\fq\boardnotices\service\phpbb\api_interface $api,
-		\phpbb\request\request $request,
+		\fq\boardnotices\service\phpbb\functions_interface $functions,
+		\phpbb\request\request_interface $request,
 		\fq\boardnotices\repository\notices_interface $notices_repository
 	)
 	{
 		$this->api = $api;
+		$this->functions = $functions;
 		$this->request = $request;
 		$this->notices_repository = $notices_repository;
 	}
@@ -41,13 +46,17 @@ class settings
 		$this->api->addAdminLanguage();
 
 		// Asks for confirmation first
-		if (!confirm_box(true))
+		if (!$this->functions->confirm_box(true))
 		{
-			confirm_box(false, $this->api->lang('RESET_FORUM_VISITS_CONFIRMATION'), build_hidden_fields(array(
-				'i'			=> $id,
-				'mode'		=> $mode,
-				'action'	=> $action,
-			)));
+			$this->functions->confirm_box(
+				false,
+				$this->api->lang('RESET_FORUM_VISITS_CONFIRMATION'),
+				build_hidden_fields(array(
+					'i'			=> $id,
+					'mode'		=> $mode,
+					'action'	=> $action,
+				))
+			);
 		}
 		else
 		{

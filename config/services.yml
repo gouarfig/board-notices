@@ -23,6 +23,9 @@ services:
       - '@controller.helper'
       - '@dbal.conn'
 
+  fq.boardnotices.service.phpbb.functions:
+    class: fq\boardnotices\service\phpbb\functions
+
   fq.boardnotices.repository.users:
     class: fq\boardnotices\repository\users
     arguments:
@@ -84,6 +87,7 @@ services:
     class: fq\boardnotices\acp\settings
     arguments:
       - '@fq.boardnotices.service.phpbb.api'
+      - '@fq.boardnotices.service.phpbb.functions'
       - '@request'
       - '@fq.boardnotices.repository.notices'
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace fq\boardnotices\tests;
+namespace fq\boardnotices\tests\acp;
 
 class board_notices_module_test extends \PHPUnit_Framework_TestCase
 {
