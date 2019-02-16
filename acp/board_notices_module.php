@@ -111,7 +111,7 @@ class board_notices_module
 	}
 
 	/**
-	 * Global settings of the extension
+	 * Global settings module of the extension
 	 *
 	 * @param string $id
 	 * @param string $mode
@@ -122,6 +122,7 @@ class board_notices_module
 		$action = $this->request->variable('action', '');
 		if ($action == 'reset_forum_visits')
 		{
+			// @todo
 			$this->resetForumVisits($id, $mode, $action);
 		}
 		else
@@ -266,10 +267,10 @@ class board_notices_module
 			'S_BOARD_NOTICES' => true,
 			'BOARD_NOTICE_ADD' => $this->lang('BOARD_NOTICE_ADD'),
 			'COLSPAN' => 6,
-			'ICON_MOVE_FIRST'			=> '<img src="' . $this->phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first.gif" title="' . $this->lang('MOVE_FIRST') . '" />',
-			'ICON_MOVE_FIRST_DISABLED'	=> '<img src="' . $this->phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_first_disabled.gif" title="' . $this->lang('MOVE_FIRST') . '" />',
-			'ICON_MOVE_LAST'			=> '<img src="' . $this->phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last.gif" title="' . $this->lang('MOVE_LAST') . '" />',
-			'ICON_MOVE_LAST_DISABLED'	=> '<img src="' . $this->phpbb_root_path . 'ext/fq/boardnotices/adm/images/icon_last_disabled.gif" title="' . $this->lang('MOVE_LAST') . '" />',
+			'ICON_MOVE_FIRST'			=> $this->getIconTemplate('icon_first.gif', 'MOVE_FIRST'),
+			'ICON_MOVE_FIRST_DISABLED'	=> $this->getIconTemplate('icon_first_disabled.gif', 'MOVE_FIRST'),
+			'ICON_MOVE_LAST'			=> $this->getIconTemplate('icon_last.gif', 'MOVE_LAST'),
+			'ICON_MOVE_LAST_DISABLED'	=> $this->getIconTemplate('icon_last_disabled.gif', 'MOVE_LAST'),
 		));
 
 		$notices = $this->notices_repository->getAllNotices();
@@ -294,6 +295,11 @@ class board_notices_module
 			));
 			unset($rules);
 		}
+	}
+
+	private function getIconTemplate($icon, $title)
+	{
+		return '<img src="' . $this->phpbb_root_path . 'ext/fq/boardnotices/adm/images/' . $icon . '" title="' . $this->lang($title) . '" />';
 	}
 
 	/**
@@ -720,17 +726,14 @@ class board_notices_module
 		}
 		if (!empty($to_delete))
 		{
-			//echo "<br />to delete:"; var_dump($to_delete);
 			$this->notices_repository->deleteRules($to_delete);
 		}
 		if (!empty($to_update))
 		{
-			//echo "<br />to update:"; var_dump($to_update);
 			$this->notices_repository->updateRules($to_update);
 		}
 		if (!empty($to_insert))
 		{
-			//echo "<br />to insert:"; var_dump($to_insert);
 			$this->notices_repository->insertRules($to_insert);
 		}
 	}
@@ -810,30 +813,6 @@ class board_notices_module
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BOARD_NOTICES_SETTINGS', time(), array());
 		// Output message to user for the update
 		trigger_error($this->lang('BOARD_NOTICES_SETTINGS_SAVED') . adm_back_link($this->u_action));
-	}
-
-	private function resetForumVisits($id, $mode, $action)
-	{
-		// Add the board notices ACP lang file
-		$this->addAdminLanguage();
-
-		if (!confirm_box(true))
-		{
-			confirm_box(false, $this->lang('RESET_FORUM_VISITS_CONFIRMATION'), build_hidden_fields(array(
-				'i'			=> $id,
-				'mode'		=> $mode,
-				'action'	=> $action,
-			)));
-		}
-		else
-		{
-			$this->notices_repository->clearForumVisited();
-
-			if ($this->request->is_ajax())
-			{
-				trigger_error('RESET_FORUM_VISITS_SUCCESS');
-			}
-		}
 	}
 
 	private function addAdminLanguage()

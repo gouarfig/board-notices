@@ -62,9 +62,14 @@ class api implements api_interface
 		return $this->user->create_datetime($time, $timezone);
 	}
 
-	function lang()
+	public function lang()
 	{
 		$args = func_get_args();
 		return call_user_func_array(array($this->language, 'lang'), $args);
+	}
+
+	public function addAdminLanguage()
+	{
+		$this->language->add_lang('boardnotices_acp', 'fq/boardnotices');
 	}
 }

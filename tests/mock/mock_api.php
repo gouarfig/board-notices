@@ -87,9 +87,14 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 		return $this->user->create_datetime($time, $timezone);
 	}
 
-	function lang()
+	public function lang()
 	{
 		$args = func_get_args();
 		return $args[0];
+	}
+
+	public function addAdminLanguage()
+	{
+		// Nothing to do here
 	}
 }

@@ -57,5 +57,12 @@ interface api_interface
 	 * Get translated value into current language
 	 * @return string	Return localized string or the language key if the translation is not available
 	 */
-	function lang();
+	public function lang();
+
+	/**
+	 * Installs admin module language
+	 *
+	 * @return void
+	 */
+	public function addAdminLanguage();
 }

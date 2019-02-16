@@ -80,6 +80,13 @@ services:
       - '@fq.boardnotices.repository.notices'
       - '@fq.boardnotices.repository.notices_seen'
 
+  fq.boardnotices.acp.settings:
+    class: fq\boardnotices\acp\settings
+    arguments:
+      - '@fq.boardnotices.service.phpbb.api'
+      - '@request'
+      - '@fq.boardnotices.repository.notices'
+
   fq.boardnotices.domain.rules:
     class: fq\boardnotices\domain\rules
     arguments:
