@@ -102,6 +102,7 @@ class board_notices_module
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $phpEx;
 
+		// This function won't be fired with a unknown $mode so there's no need to send an error at the end
 		if ($mode == "manage")
 		{
 			return $this->manage_module($id, $mode);
