@@ -483,139 +483,50 @@ class board_notices_module
 		));
 	}
 
-	// private function getDisplayConditions($type, $values, $selected, $input_name)
-	// {
-	// 	$display = '';
-	// 	if (!is_array($selected))
-	// 	{
-	// 		if (!is_null($selected))
-	// 		{
-	// 			$selected = array($selected);
-	// 		}
-	// 		else
-	// 		{
-	// 			$selected = array();
-	// 		}
-	// 	}
-	// 	if (strpos($type, '|') === false)
-	// 	{
-	// 		$display .= $this->getSingleDisplayConditions($type, $input_name, $selected, $values);
-	// 	}
-	// 	else
-	// 	{
-	// 		$types = explode('|', $type);
-	// 		$i = 0;
-	// 		foreach ($types as $single_type)
-	// 		{
-	// 			$display .= $this->getSingleDisplayConditions($single_type, $input_name, $selected[$i], $values[$i], $i);
-	// 			$i++;
-	// 			$display .= '&nbsp;';
-	// 		}
-	// 	}
-	// 	return $display;
-	// }
-
-	// private function getSingleDisplayConditions($type, $input_name, $selected, $values, $index = 0)
-	// {
-	// 	$display = '';
-
-	// 	if ($index > 0)
-	// 	{
-	// 		$input_name .= $index;
-	// 	}
-
-	// 	switch ($type)
-	// 	{
-	// 		case 'int':
-	// 			$display .= $this->getDisplayIntConditions($input_name, $selected[0]);
-	// 			break;
-
-	// 		case 'date':
-	// 			$display .= $this->getDisplayDateConditions($input_name, $selected);
-	// 			break;
-
-	// 		case 'list':
-	// 		case 'multiple choice':
-	// 			$display .= $this->getDisplayListConditions($type, $input_name, $values, $selected);
-	// 			break;
-
-	// 		case 'forums':
-	// 			$display .= $this->getDisplayForumsConditions($input_name, $selected);
-	// 			break;
-
-	// 		case 'yesno':
-	// 			$display .= $this->getDisplayYesNoConditions($input_name, $selected[0]);
-	// 			break;
-
-	// 		default:
-	// 			break;
-	// 	}
-	// 	return $display;
-	// }
-
-	private function moveNotice($action, $notice_id)
+	private function sendResponse($success)
 	{
-		$move_executed = $this->notices_repository->moveNotice($action, $notice_id);
-
 		if ($this->request->is_ajax())
 		{
 			$json_response = new \phpbb\json_response;
 			$json_response->send(array(
-				'success' => $move_executed,
+				'success' => $success,
 			));
 		}
+	}
+
+	private function moveNotice($action, $notice_id)
+	{
+		$this->sendResponse(
+			$this->notices_repository->moveNotice($action, $notice_id)
+		);
 	}
 
 	private function moveNoticeFirst($notice_id)
 	{
-		$move_executed = $this->notices_repository->moveNoticeFirst($notice_id);
-
-		if ($this->request->is_ajax())
-		{
-			$json_response = new \phpbb\json_response;
-			$json_response->send(array(
-				'success' => $move_executed,
-			));
-		}
+		$this->sendResponse(
+			$this->notices_repository->moveNoticeFirst($notice_id)
+		);
 	}
 
 	private function moveNoticeLast($notice_id)
 	{
-		$move_executed = $this->notices_repository->moveNoticeLast($notice_id);
-
-		if ($this->request->is_ajax())
-		{
-			$json_response = new \phpbb\json_response;
-			$json_response->send(array(
-				'success' => $move_executed,
-			));
-		}
+		$this->sendResponse(
+			$this->notices_repository->moveNoticeLast($notice_id)
+		);
 	}
 
 	private function deleteNotice($notice_id)
 	{
-		$delete_executed = $this->notices_repository->deleteNotice($notice_id);
-
-		if ($this->request->is_ajax())
-		{
-			$json_response = new \phpbb\json_response;
-			$json_response->send(array(
-				'success' => $delete_executed,
-			));
-		}
+		$this->sendResponse(
+			$this->notices_repository->deleteNotice($notice_id)
+		);
 	}
 
 	private function enableNotice($action, $notice_id)
 	{
-		$executed = $this->notices_repository->enableNotice($action, $notice_id);
-
-		if ($this->request->is_ajax())
-		{
-			$json_response = new \phpbb\json_response;
-			$json_response->send(array(
-				'success' => $executed,
-			));
-		}
+		$this->sendResponse(
+			$this->notices_repository->enableNotice($action, $notice_id)
+		);
 	}
 
 	private function newBlankNotice()
