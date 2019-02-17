@@ -126,8 +126,7 @@ class board_notices_module
 		$action = $this->request->variable('action', '');
 		if ($action == 'reset_forum_visits')
 		{
-			// @todo
-			$this->resetForumVisits($id, $mode, $action);
+			$this->settings->resetForumVisits($id, $mode, $action);
 		}
 		else
 		{
