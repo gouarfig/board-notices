@@ -24,6 +24,9 @@ class settings
 	/** @var \phpbb\request\request_interface $request */
 	private $request;
 
+	/** @var \phpbb\config\config $config */
+	private $config;
+
 	/** @var \fq\boardnotices\repository\notices_interface $notices_repository */
 	private $notices_repository;
 
@@ -31,12 +34,14 @@ class settings
 		\fq\boardnotices\service\phpbb\api_interface $api,
 		\fq\boardnotices\service\phpbb\functions_interface $functions,
 		\phpbb\request\request_interface $request,
+		\phpbb\config\config $config,
 		\fq\boardnotices\repository\notices_interface $notices_repository
 	)
 	{
 		$this->api = $api;
 		$this->functions = $functions;
 		$this->request = $request;
+		$this->config = $config;
 		$this->notices_repository = $notices_repository;
 	}
 

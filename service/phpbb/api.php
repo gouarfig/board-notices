@@ -42,6 +42,11 @@ class api implements api_interface
 		return $this->user->data['user_id'] || 0;
 	}
 
+	public function getUserIpAddress()
+	{
+		return $this->user->ip;
+	}
+
 	public function getSessionId()
 	{
 		return $this->user->data['session_id'];

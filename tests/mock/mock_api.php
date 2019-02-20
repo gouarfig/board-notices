@@ -20,6 +20,7 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	private $user;
 	private $userRegistered = false;
 	private $userId = null;
+	private $ipAddress = '127.0.0.1';
 	private $sessionId = 'session_id';
 	private $userRegistrationDate = 0;
 	private $userBirthday = '';
@@ -65,6 +66,11 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	public function getUserId()
 	{
 		return $this->userId;
+	}
+
+	public function getUserIpAddress()
+	{
+		return $this->ipAddress;
 	}
 
 	public function getSessionId()

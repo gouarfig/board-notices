@@ -27,6 +27,12 @@ interface api_interface
 	public function getUserId();
 
 	/**
+	 * Returns the user current IP address
+	 * @return string
+	 */
+	public function getUserIpAddress();
+
+	/**
 	 * Returns Session ID
 	 * @return string
 	 */

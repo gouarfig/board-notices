@@ -89,6 +89,7 @@ services:
       - '@fq.boardnotices.service.phpbb.api'
       - '@fq.boardnotices.service.phpbb.functions'
       - '@request'
+      - '@config'
       - '@fq.boardnotices.repository.notices'
 
   fq.boardnotices.domain.rules:
