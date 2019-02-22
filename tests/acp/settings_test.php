@@ -93,4 +93,29 @@ class settings_test extends \PHPUnit_Framework_TestCase
 			'boardnotices_default_bgcolor' => '',
 		));
 	}
+
+	public function testCanLoadNotices()
+	{
+		$api = new \fq\boardnotices\tests\mock\mock_api();
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+		/** @var \phpbb\request\request_interface $request */
+		$request = new \phpbb_mock_request();
+		$config = $this->getDefaultConfig();
+		$log = $this->getMockBuilder('\phpbb\log\log_interface')->getMock();
+		/** @var \fq\boardnotices\repository\notices_interface $notices_repository */
+		$notices_repository = $this->getMockBuilder('\fq\boardnotices\repository\notices_interface')->getMock();
+		$notices_repository->expects($this->once())->method('getAllNotices')->willReturn(array(
+			array('notice_id' => 1),
+			array('notice_id' => 2),
+		));
+		$notices_repository->expects($this->exactly(2))->method('getRulesFor')->willReturn(array(
+			array(),
+			array(),
+		));
+		$module = new \fq\boardnotices\acp\settings($api, $functions, $request, $config, $log, $notices_repository);
+		$notices = $module->loadNotices();
+		$this->assertCount(2, $notices);
+		$this->assertEquals(2, $notices[0]['rulesCount']);
+		$this->assertEquals(2, $notices[1]['rulesCount']);
+	}
 }
