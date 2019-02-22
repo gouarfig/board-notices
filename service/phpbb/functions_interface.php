@@ -24,6 +24,14 @@ interface functions_interface
 	* @param string $hidden Hidden variables
 	* @param string $html_body Template used for confirm box
 	* @param string $u_action Custom form action
+	* @return boolean
 	*/
 	function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_body.html', $u_action = '');
+
+	/**
+	* Generate back link for acp pages
+	* @param string $u_action
+	* @return string
+	*/
+	function adm_back_link($u_action);
 }

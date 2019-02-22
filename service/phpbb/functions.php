@@ -16,6 +16,11 @@ class functions implements functions_interface
 {
 	public function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_body.html', $u_action = '')
 	{
-		confirm_box($check, $title, $hidden, $html_body, $u_action);
+		return confirm_box($check, $title, $hidden, $html_body, $u_action);
+	}
+
+	public function adm_back_link($u_action)
+	{
+		return adm_back_link($u_action);
 	}
 }

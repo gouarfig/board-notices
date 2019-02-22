@@ -71,7 +71,7 @@ class board_notices_module
 	 * but with this unique (and useless) parameter instead.
 	 * => No dependency injection is possible here
 	 *
-	 * @param type $p_master
+	 * @param mixed $p_master
 	 */
 	public function __construct(&$p_master)
 	{
@@ -94,6 +94,7 @@ class board_notices_module
 		$this->serializer = $phpbb_container->get('fq.boardnotices.service.serializer');
 		$this->notices_repository = $phpbb_container->get('fq.boardnotices.repository.notices');
 		$this->settings = $phpbb_container->get('fq.boardnotices.acp.settings');
+		$this->functions = $phpbb_container->get('fq.boardnotices.service.phpbb.functions_interface');
 		$this->config = $phpbb_container->get('config');
 		$this->log = $phpbb_container->get('log');
 		$this->request = $phpbb_container->get('request');
@@ -102,6 +103,9 @@ class board_notices_module
 		$this->language = $phpbb_container->get('language');
 		$this->phpbb_root_path = $phpbb_root_path;
 		$this->php_ext = $phpEx;
+
+		// Add the board notices ACP lang file
+		$this->addAdminLanguage();
 
 		// This function won't be fired with a unknown $mode so there's no need to send an error at the end
 		if ($mode == "manage")
@@ -132,13 +136,44 @@ class board_notices_module
 		{
 			if ($this->request->is_set_post('submit'))
 			{
-				$this->saveSettings();
+				$this->settings->saveSettings(array(
+					'boardnotices_enabled' => $this->request->variable('board_notices_active', true),
+					'track_forums_visits' => $this->request->variable('forums_visits_active', true),
+					'boardnotices_default_bgcolor' => $this->request->variable('board_notice_default_bgcolor', ''),
+				));
+				// Output confirmation message to user
+				trigger_error($this->lang('BOARD_NOTICES_SETTINGS_SAVED') . $this->functions->adm_back_link($this->u_action));
 			}
 			else
 			{
 				$this->displaySettingsForm();
 			}
 		}
+	}
+
+	/**
+	 * Display the global settings form
+	 *
+	 * @return void
+	 */
+	private function displaySettingsForm()
+	{
+		// Load a template from adm/style for our ACP page
+		$this->tpl_name = 'board_notices_settings';
+
+		// Set the page title for our ACP page
+		$this->page_title = $this->lang('ACP_BOARD_NOTICES_MANAGER');
+
+		$settings = $this->settings->loadSettings();
+
+		// Output data to the template
+		$this->template->assign_vars(array(
+			'S_BOARD_NOTICES' => true,
+			'BOARD_NOTICES_ACTIVE' => $settings['boardnotices_enabled'],
+			'FORUMS_VISITS_ACTIVE' => $settings['track_forums_visits'],
+			'BOARD_NOTICE_DEFAULT_BGCOLOR' => $settings['boardnotices_default_bgcolor'],
+			'U_ACTION' => $this->u_action,
+		));
 	}
 
 	/**
@@ -464,32 +499,6 @@ class board_notices_module
 		$this->template->assign_block_vars('allrules', $variables);
 	}
 
-	/**
-	 * Display the global settings form
-	 *
-	 * @return void
-	 */
-	private function displaySettingsForm()
-	{
-		// Add the board notices ACP lang file
-		$this->addAdminLanguage();
-
-		// Load a template from adm/style for our ACP page
-		$this->tpl_name = 'board_notices_settings';
-
-		// Set the page title for our ACP page
-		$this->page_title = $this->lang('ACP_BOARD_NOTICES_MANAGER');
-
-		// Output data to the template
-		$this->template->assign_vars(array(
-			'S_BOARD_NOTICES' => true,
-			'BOARD_NOTICES_ACTIVE' => $this->config['boardnotices_enabled'] ? true : false,
-			'BOARD_NOTICE_DEFAULT_BGCOLOR' => $this->config[constants::$CONFIG_DEFAULT_BGCOLOR],
-			'FORUMS_VISITS_ACTIVE' => $this->config[constants::$CONFIG_TRACK_FORUMS_VISITS] ? true : false,
-			'U_ACTION' => $this->u_action,
-		));
-	}
-
 	private function sendResponse($success)
 	{
 		if ($this->request->is_ajax())
@@ -795,53 +804,19 @@ class board_notices_module
 		return $this->rules_manager->getDefinedRules();
 	}
 
-	private function saveSettings()
-	{
-		$data = array();
-
-		// Add the board notices ACP lang file
-		$this->addAdminLanguage();
-
-		// Get config options from the form
-		$data['boardnotices_enabled'] = $this->request->variable('board_notices_active', true);
-		$data['track_forums_visits'] = $this->request->variable('forums_visits_active', true);
-		$data['boardnotices_default_bgcolor'] = $this->request->variable('board_notice_default_bgcolor', '');
-
-		// Save data to the config
-		$this->config->set(constants::$CONFIG_ENABLED, ($data['boardnotices_enabled'] ? true : false));
-		$this->config->set(constants::$CONFIG_TRACK_FORUMS_VISITS, ($data['track_forums_visits'] ? true : false));
-		$this->config->set(constants::$CONFIG_DEFAULT_BGCOLOR, $data['boardnotices_default_bgcolor']);
-
-		// Logs the settings update
-		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BOARD_NOTICES_SETTINGS', time(), array());
-		// Output message to user for the update
-		trigger_error($this->lang('BOARD_NOTICES_SETTINGS_SAVED') . adm_back_link($this->u_action));
-	}
-
 	private function addAdminLanguage()
 	{
-		if (isset($this->language))
-		{
-			$this->language->add_lang('boardnotices_acp', 'fq/boardnotices');
-		}
-		// Keep compatibility with phpBB 3.1
-		$this->user->add_lang_ext('fq/boardnotices', 'boardnotices_acp');
+		$this->language->add_lang('boardnotices_acp', 'fq/boardnotices');
 	}
 
 	/**
-	 * Wrapper for the $language->lang() OR $user->lang() functions (depending on phpBB version 3.1 or 3.2)
+	 * Deprecated
 	 *
 	 * @return string
 	 */
 	private function lang()
 	{
 		$args = func_get_args();
-		if (isset($this->language))
-		{
-			// phpBB 3.2
-			return call_user_func_array(array($this->language, 'lang'), $args);
-		}
-		// phpBB 3.1
-		return call_user_func_array(array($this->user, 'lang'), $args);
+		return call_user_func_array(array($this->language, 'lang'), $args);
 	}
 }
