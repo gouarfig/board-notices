@@ -190,4 +190,36 @@ class api_test extends \phpbb_test_case
 		$api = new api($user, $language);
 		$this->assertEquals('session_id', $api->getSessionId());
 	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
+	public function testGetUserIpAddress()
+	{
+		/** @var \phpbb\user $user */
+		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
+		$user->ip = '10.0.0.1';
+
+		/** @var \phpbb\language\language $language */
+		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
+
+		$api = new api($user, $language);
+		$this->assertEquals('10.0.0.1', $api->getUserIpAddress());
+	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
+	public function testCanLoadLanguageForAdminModule()
+	{
+		/** @var \phpbb\user $user */
+		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
+
+		/** @var \phpbb\language\language $language */
+		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
+		$language->expects($this->once())->method('add_lang');
+
+		$api = new api($user, $language);
+		$api->addAdminLanguage();
+	}
 }

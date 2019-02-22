@@ -4,10 +4,18 @@ namespace fq\boardnotices\tests\acp;
 
 class board_notices_module_test extends \PHPUnit_Framework_TestCase
 {
-	private $request = null;
-	private $settings = null;
-	private $template = null;
-	private $functions = null;
+	private $request;
+	private $settings;
+	private $template;
+	private $functions;
+
+	public function setUp()
+	{
+		$this->request = null;
+		$this->settings = null;
+		$this->template = null;
+		$this->functions = null;
+	}
 
 	public function testCanInstanciate()
 	{
@@ -103,4 +111,29 @@ class board_notices_module_test extends \PHPUnit_Framework_TestCase
 		unset($phpbb_root_path);
 		unset($phpEx);
 	}
+
+	public function testCanResetForumsVisits()
+	{
+		global $phpbb_container, $phpbb_root_path, $phpEx;
+
+		$this->request = new \phpbb_mock_request(
+			/* GET  */ array('action' => 'reset_forum_visits')
+		);
+		$this->settings = $this->getMockBuilder('fq\boardnotices\acp\settings')->disableOriginalConstructor()->getMock();
+		$this->settings->expects($this->once())->method('resetForumVisits');
+		$this->template = $this->getMock('phpbb\template\template');
+		$this->functions = $this->getMock('fq\boardnotices\service\phpbb\functions_interface');
+		$phpbb_container = $this->getMock('Symfony\Component\DependencyInjection\ContainerInterface');
+		$phpbb_container
+			->method('get')
+			->willReturnCallback(array($this, 'container'));
+		$p_master = null;
+		$module = new \fq\boardnotices\acp\board_notices_module($p_master);
+		$module->main('\fq\boardnotices\acp\board_notices_module', 'settings');
+
+		unset($phpbb_container);
+		unset($phpbb_root_path);
+		unset($phpEx);
+	}
+
 }
