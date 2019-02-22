@@ -13,6 +13,8 @@ namespace fq\boardnotices\acp;
 
 use \fq\boardnotices\service\constants;
 
+const NEW_LINE = "<br />";
+
 class board_notices_module
 {
 
@@ -94,7 +96,7 @@ class board_notices_module
 		$this->serializer = $phpbb_container->get('fq.boardnotices.service.serializer');
 		$this->notices_repository = $phpbb_container->get('fq.boardnotices.repository.notices');
 		$this->settings = $phpbb_container->get('fq.boardnotices.acp.settings');
-		$this->functions = $phpbb_container->get('fq.boardnotices.service.phpbb.functions_interface');
+		$this->functions = $phpbb_container->get('fq.boardnotices.service.phpbb.functions');
 		$this->config = $phpbb_container->get('config');
 		$this->log = $phpbb_container->get('log');
 		$this->request = $phpbb_container->get('request');
@@ -291,9 +293,6 @@ class board_notices_module
 	 */
 	private function displayManager()
 	{
-		// Add the board notices ACP lang file
-		$this->addAdminLanguage();
-
 		// Load a template from adm/style for our ACP page
 		$this->tpl_name = 'board_notices';
 
@@ -305,39 +304,43 @@ class board_notices_module
 			'S_BOARD_NOTICES' => true,
 			'BOARD_NOTICE_ADD' => $this->lang('BOARD_NOTICE_ADD'),
 			'COLSPAN' => 6,
-			'ICON_MOVE_FIRST'			=> $this->getIconTemplate('icon_first.gif', 'MOVE_FIRST'),
-			'ICON_MOVE_FIRST_DISABLED'	=> $this->getIconTemplate('icon_first_disabled.gif', 'MOVE_FIRST'),
-			'ICON_MOVE_LAST'			=> $this->getIconTemplate('icon_last.gif', 'MOVE_LAST'),
-			'ICON_MOVE_LAST_DISABLED'	=> $this->getIconTemplate('icon_last_disabled.gif', 'MOVE_LAST'),
+			'ICON_MOVE_FIRST'			=> $this->getIconImageTemplate('icon_first.gif', 'MOVE_FIRST'),
+			'ICON_MOVE_FIRST_DISABLED'	=> $this->getIconImageTemplate('icon_first_disabled.gif', 'MOVE_FIRST'),
+			'ICON_MOVE_LAST'			=> $this->getIconImageTemplate('icon_last.gif', 'MOVE_LAST'),
+			'ICON_MOVE_LAST_DISABLED'	=> $this->getIconImageTemplate('icon_last_disabled.gif', 'MOVE_LAST'),
 		));
 
-		$notices = $this->notices_repository->getAllNotices();
+		$notices = $this->settings->loadNotices();
 		foreach ($notices as $notice)
 		{
-			$rules = $this->notices_repository->getRulesFor($notice['notice_id']);
+			$notice_id = $notice['notice_id'];
 			$this->template->assign_block_vars('notices', array(
 				'S_SPACER' => false,
 				'TITLE' => $notice['title'],
-				'PREVIEW_LINK' => append_sid("{$this->phpbb_root_path}index.{$this->php_ext}") . "&bnpk=" . $this->config[constants::$CONFIG_PREVIEW_KEY] . "&bnid=" . (int) $notice['notice_id'],
-				'RULES' => count($rules),
+				'PREVIEW_LINK' => append_sid("{$this->phpbb_root_path}index.{$this->php_ext}") . "&bnpk=" . $this->config[constants::$CONFIG_PREVIEW_KEY] . "&bnid=" . (int) $notice_id,
+				'RULES' => $notice['rulesCount'],
 				'ENABLED' => $notice['active'] ? true : false,
 				'DISMISS' => $notice['dismissable'] ? true : false,
-				'U_ENABLE' => $this->u_action . '&amp;action=enable&amp;id=' . (int) $notice['notice_id'],
-				'U_DISABLE' => $this->u_action . '&amp;action=disable&amp;id=' . (int) $notice['notice_id'],
-				'U_EDIT' => $this->u_action . '&amp;action=edit&amp;id=' . (int) $notice['notice_id'],
-				'U_DELETE' => $this->u_action . '&amp;action=delete&amp;id=' . (int) $notice['notice_id'],
-				'U_MOVE_UP' => $this->u_action . '&amp;action=move_up&amp;id=' . (int) $notice['notice_id'],
-				'U_MOVE_DOWN' => $this->u_action . '&amp;action=move_down&amp;id=' . (int) $notice['notice_id'],
-				'U_MOVE_FIRST' => $this->u_action . '&amp;action=move_first&amp;id=' . (int) $notice['notice_id'],
-				'U_MOVE_LAST' => $this->u_action . '&amp;action=move_last&amp;id=' . (int) $notice['notice_id'],
+				'U_ENABLE' => $this->getIconLinkTemplate('enable', $notice_id),
+				'U_DISABLE' => $this->getIconLinkTemplate('disable', $notice_id),
+				'U_EDIT' => $this->getIconLinkTemplate('edit', $notice_id),
+				'U_DELETE' => $this->getIconLinkTemplate('delete', $notice_id),
+				'U_MOVE_UP' => $this->getIconLinkTemplate('move_up', $notice_id),
+				'U_MOVE_DOWN' => $this->getIconLinkTemplate('move_down', $notice_id),
+				'U_MOVE_FIRST' => $this->getIconLinkTemplate('move_first', $notice_id),
+				'U_MOVE_LAST' => $this->getIconLinkTemplate('move_last', $notice_id),
 			));
-			unset($rules);
 		}
 	}
 
-	private function getIconTemplate($icon, $title)
+	private function getIconImageTemplate($icon, $title)
 	{
 		return '<img src="' . $this->phpbb_root_path . 'ext/fq/boardnotices/adm/images/' . $icon . '" title="' . $this->lang($title) . '" />';
+	}
+
+	private function getIconLinkTemplate($action, $notice_id)
+	{
+		return $this->u_action . '&amp;action=' . $action . '&amp;id=' . (int) $notice_id;
 	}
 
 	/**
@@ -604,8 +607,7 @@ class board_notices_module
 		// Test if form key is valid
 		if (!check_form_key($this->notice_form_name))
 		{
-			$error = $this->lang('FORM_INVALID');
-			return $error;
+			return $this->lang('FORM_INVALID');
 		}
 
 		// Get new values from the form
@@ -622,11 +624,11 @@ class board_notices_module
 		{
 			if (empty($data['title']))
 			{
-				$error .= $this->lang('ERROR_EMPTY_TITLE') . "<br />";
+				$error .= $this->lang('ERROR_EMPTY_TITLE') . NEW_LINE;
 			}
 			if (empty($data['message']))
 			{
-				$error .= $this->lang('ERROR_EMPTY_MESSAGE') . "<br />";
+				$error .= $this->lang('ERROR_EMPTY_MESSAGE') . NEW_LINE;
 			}
 		}
 
@@ -680,7 +682,7 @@ class board_notices_module
 		// In case the parsing of the message failed
 		if (empty($error) && empty($data['message']))
 		{
-			return $this->lang('ERROR_EMPTY_MESSAGE') . "<br />";
+			return $this->lang('ERROR_EMPTY_MESSAGE') . NEW_LINE;
 		}
 		return $error;
 	}

@@ -97,4 +97,16 @@ class settings
 		$this->log->add('admin', $this->api->getUserId(), $this->api->getUserIpAddress(), 'LOG_BOARD_NOTICES_SETTINGS', time(), array());
 	}
 
+	public function loadNotices()
+	{
+		$rawNotices = $this->notices_repository->getAllNotices();
+		$notices = [];
+		foreach ($rawNotices as $notice)
+		{
+			$rules = $this->notices_repository->getRulesFor($notice['notice_id']);
+			$notice['rulesCount'] = count($rules);
+			$notices[] = $notice;
+		}
+		return $notices;
+	}
 }
