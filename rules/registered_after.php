@@ -41,7 +41,6 @@ class registered_after extends rule_base implements rule_interface
 
 	public function isTrue($conditions)
 	{
-		$valid = false;
 		$date = $this->validateArrayOfConditions($conditions);
 		if (is_null($date) || !is_array($date) || (count($date) != 3))
 		{
