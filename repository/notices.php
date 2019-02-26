@@ -89,7 +89,7 @@ class notices implements notices_interface
 
 	private function getNoticesCacheName($active_only = true)
 	{
-		if ($active_only)
+		if ($active_only === true)
 		{
 			return constants::$CONFIG_ACTIVE_NOTICES_CACHE_KEY;
 		}
@@ -105,9 +105,9 @@ class notices implements notices_interface
 	 * @param boolean $active_only
 	 * @return array
 	 */
-	public function getNotices($active_only = true)
+	private function getNotices($active_only = true)
 	{
-		if (!$this->notices_loaded || ($this->active_notices_loaded != $active_only))
+		if (!$this->notices_loaded || ($this->active_notices_loaded !== $active_only))
 		{
 			$notices = $this->cache->get($this->getNoticesCacheName($active_only));
 			if (!empty($notices))
@@ -155,8 +155,8 @@ class notices implements notices_interface
 	{
 		$notice = null;
 		$notice_id = (int) $notice_id;
-		$this->getAllNotices();
-		foreach ($this->notices as $row)
+		$notices = $this->getAllNotices();
+		foreach ($notices as $row)
 		{
 			if ($row['notice_id'] == $notice_id)
 			{
@@ -362,8 +362,8 @@ class notices implements notices_interface
 	private function getNextNoticeId()
 	{
 		$next_id = 0;
-		$this->getAllNotices();
-		foreach ($this->notices as $row)
+		$notices = $this->getAllNotices();
+		foreach ($notices as $row)
 		{
 			if ($row['notice_id'] > $next_id)
 			{
@@ -376,8 +376,8 @@ class notices implements notices_interface
 	private function getNextNoticeOrder()
 	{
 		$next_order = 0;
-		$this->getAllNotices();
-		foreach ($this->notices as $row)
+		$notices = $this->getAllNotices();
+		foreach ($notices as $row)
 		{
 			if ($row['notice_order'] > $next_order)
 			{

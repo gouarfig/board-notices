@@ -14,7 +14,6 @@ namespace fq\boardnotices\repository;
 
 interface notices_interface
 {
-	function getNotices($active_only = true);
 	function getAllNotices();
 	function getActiveNotices();
 	function getNoticeFromId($notice_id);

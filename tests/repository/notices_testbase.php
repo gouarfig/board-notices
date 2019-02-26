@@ -104,9 +104,37 @@ abstract class notices_testbase extends \phpbb_database_test_case
 		$this->assertThat(count($notices), $this->equalTo(2));
 	}
 
+	public function testGetAllNoticesAfterGetActiveNoticesUsingPhpbbCache()
+	{
+		$dac = $this->getBoardNoticesInstance();
+		$notices = $dac->getActiveNotices();
+		$this->assertThat(count($notices), $this->equalTo(1));
+		$notices = $dac->getAllNotices();
+		$this->assertThat(count($notices), $this->equalTo(2));
+		// These should be using the phpBB cache (if configured)
+		$notices = $dac->getActiveNotices();
+		$this->assertThat(count($notices), $this->equalTo(1));
+		$notices = $dac->getAllNotices();
+		$this->assertThat(count($notices), $this->equalTo(2));
+	}
+
 	public function testGetActiveNoticesAfterGetAllNotices()
 	{
 		$dac = $this->getBoardNoticesInstance();
+		$notices = $dac->getAllNotices();
+		$this->assertThat(count($notices), $this->equalTo(2));
+		$notices = $dac->getActiveNotices();
+		$this->assertThat(count($notices), $this->equalTo(1));
+	}
+
+	public function testGetActiveNoticesAfterGetAllNoticesUsingPhpbbCache()
+	{
+		$dac = $this->getBoardNoticesInstance();
+		$notices = $dac->getAllNotices();
+		$this->assertThat(count($notices), $this->equalTo(2));
+		$notices = $dac->getActiveNotices();
+		$this->assertThat(count($notices), $this->equalTo(1));
+		// These should be using the phpBB cache (if configured)
 		$notices = $dac->getAllNotices();
 		$this->assertThat(count($notices), $this->equalTo(2));
 		$notices = $dac->getActiveNotices();
