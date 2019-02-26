@@ -48,4 +48,14 @@ class functions implements functions_interface
 	{
 		return generate_text_for_storage($text, $uid, $bitfield, $flags, $allow_bbcode, $allow_urls, $allow_smilies, $allow_img_bbcode, $allow_flash_bbcode, $allow_quote_bbcode, $allow_url_bbcode, $mode);
 	}
+
+	public function generate_text_for_edit($text, $uid, $flags)
+	{
+		return generate_text_for_edit($text, $uid, $flags);
+	}
+
+	public function generate_text_for_display($text, $uid, $bitfield, $flags, $censor_text = true)
+	{
+		return generate_text_for_display($text, $uid, $bitfield, $flags, $censor_text = true);
+	}
 }

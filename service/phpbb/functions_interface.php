@@ -81,4 +81,17 @@ interface functions_interface
 	*/
 	function generate_text_for_storage(&$text, &$uid, &$bitfield, &$flags, $allow_bbcode = false, $allow_urls = false, $allow_smilies = false, $allow_img_bbcode = true, $allow_flash_bbcode = true, $allow_quote_bbcode = true, $allow_url_bbcode = true, $mode = 'post');
 
+	/**
+	* For decoding custom parsed text for edits as well as extracting the flags
+	* Expects $text to be the value directly from the database (pre-parsed content)
+	* @return array
+	*/
+	function generate_text_for_edit($text, $uid, $flags);
+
+	/**
+	* For display of custom parsed text on user-facing pages
+	* Expects $text to be the value directly from the database (stored value)
+	* @return string
+	*/
+	function generate_text_for_display($text, $uid, $bitfield, $flags, $censor_text = true);
 }

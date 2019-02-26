@@ -153,13 +153,32 @@
 						<select name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][1]">
 							<option value="0">{{ lang('RULE_DATE_ANY') }}</option>
 							{% for month in range(1, 12) %}
-								<option value="{{ month }}"{% if param.RULE_DATA[1] == month %} selected{% endif %}>{{ month }}</option>
+								<option value="{{ month }}"{% if param.RULE_DATA[1] == month %} selected{% endif %}>{{ MONTH_FULLNAME[month] }}</option>
 							{% endfor %}
 						</select>
 						{{ lang('YEAR') ~ lang('COLON') }}
 						<select name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][2]">
 							<option value="0">{{ lang('RULE_DATE_ANY') }}</option>
 							{% for year in range(2018, 2038) %}
+								<option value="{{ year }}"{% if param.RULE_DATA[2] == year %} selected{% endif %}>{{ year }}</option>
+							{% endfor %}
+						</select>
+					{% elseif param.RULE_TYPE == 'fulldate' %}
+						{{ lang('DAY') ~ lang('COLON') }}
+						<select name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][0]">
+							{% for day in range(1, 31) %}
+								<option value="{{ day }}"{% if param.RULE_DATA[0] == day %} selected{% endif %}>{{ day }}</option>
+							{% endfor %}
+						</select>
+						{{ lang('MONTH') ~ lang('COLON') }}
+						<select name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][1]">
+							{% for month in range(1, 12) %}
+								<option value="{{ month }}"{% if param.RULE_DATA[1] == month %} selected{% endif %}>{{ MONTH_FULLNAME[month] }}</option>
+							{% endfor %}
+						</select>
+						{{ lang('YEAR') ~ lang('COLON') }}
+						<select name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][2]">
+							{% for year in range(2000, 2038) %}
 								<option value="{{ year }}"{% if param.RULE_DATA[2] == year %} selected{% endif %}>{{ year }}</option>
 							{% endfor %}
 						</select>

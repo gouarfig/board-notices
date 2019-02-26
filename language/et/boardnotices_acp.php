@@ -139,6 +139,8 @@ $lang = array_merge($lang, array(
 	'RULE_RANK'								=> "Kasutaja staatus on üks nendest valitud staatustest",
 	'RULE_REGISTERED_LESS_THAN'				=> "User registration is less than", // @todo
 	'RULE_STYLE'							=> "Kasutaja stiil on üks nendest valitud stiilidest",
+	'RULE_REGISTERED_BEFORE'				=> "User registered before", //@todo
+	'RULE_REGISTERED_AFTER'					=> "User registered after", //@todo
 
 	// Rules units
 	'RULE_DAY(S)'							=> 'päev(ad)',

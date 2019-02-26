@@ -58,6 +58,16 @@ abstract class rule_base
 		return true;
 	}
 
+	/**
+	 * No variable by default
+	 *
+	 * @return void
+	 */
+	public function getAvailableVars()
+	{
+		return array();
+	}
+
 	public function getTemplateVars()
 	{
 		return $this->template_vars;

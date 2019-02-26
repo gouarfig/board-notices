@@ -92,6 +92,7 @@ services:
       - '@config'
       - '@log'
       - '@fq.boardnotices.repository.notices'
+      - '@fq.boardnotices.domain.rules'
 
   fq.boardnotices.domain.rules:
     class: fq\boardnotices\domain\rules
@@ -118,6 +119,18 @@ services:
 
   fq.boardnotices.rules.date_range:
     class: fq\boardnotices\rules\date_range
+    arguments:
+      - '@fq.boardnotices.service.serializer'
+      - '@fq.boardnotices.service.phpbb.api'
+
+  fq.boardnotices.rules.registered_before:
+    class: fq\boardnotices\rules\registered_before
+    arguments:
+      - '@fq.boardnotices.service.serializer'
+      - '@fq.boardnotices.service.phpbb.api'
+
+  fq.boardnotices.rules.registered_after:
+    class: fq\boardnotices\rules\registered_after
     arguments:
       - '@fq.boardnotices.service.serializer'
       - '@fq.boardnotices.service.phpbb.api'

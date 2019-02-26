@@ -138,6 +138,8 @@ $lang = array_merge($lang, array(
 	'RULE_RANK'								=> "User rank is any of these selected ranks",
 	'RULE_REGISTERED_LESS_THAN'				=> "User registration is less than",
 	'RULE_STYLE'							=> "User style is either one of these selected styles",
+	'RULE_REGISTERED_BEFORE'				=> "User registered before",
+	'RULE_REGISTERED_AFTER'					=> "User registered after",
 
 	// Rules units
 	'RULE_DAY(S)'							=> 'day(s)',

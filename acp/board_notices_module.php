@@ -357,7 +357,7 @@ class board_notices_module
 	private function displayNoticeForm($action, $data, $error = '')
 	{
 		// Add the posting lang file needed by BBCodes
-		$this->user->add_lang(array('posting'));
+		$this->language->add_lang(array('posting'));
 
 		// Load a template from adm/style for our ACP page
 		$this->tpl_name = 'board_notices_edit';
@@ -379,12 +379,12 @@ class board_notices_module
 		if ($this->request->is_set_post('preview'))
 		{
 			// @todo The preview message does not replace the extension variables
-			$notice_text_preview = generate_text_for_display(
+			$notice_text_preview = $this->functions->generate_text_for_display(
 					$data['message'], $data['message_uid'], $data['message_bitfield'], $data['message_options']);
 		}
 
 		// prepare the notice text for editing inside the textbox
-		$notice_text_edit = generate_text_for_edit(
+		$notice_text_edit = $this->functions->generate_text_for_edit(
 				$data['message'], $data['message_uid'], $data['message_options']);
 
 		// Output data to the template
@@ -411,16 +411,35 @@ class board_notices_module
 			'U_BACK' => $this->u_action,
 			'U_ACTION' => $this->u_action . '&amp;action=' . $action,
 			'ALLRULES_COLSPAN' => 4,
+			'MONTH_FULLNAME' => $this->getMonthFullNameArray(),
 		));
 
 		// Assigning custom bbcodes
 		$this->functions->display_custom_bbcodes();
 
-		$all_rules = $this->getAllRules();
+		$all_rules = $this->settings->getAllRules();
 		foreach ($all_rules as $rule_name => $rule_descriptions)
 		{
 			$this->generateTemplateVariablesForRule($data, $rule_name, $rule_descriptions);
 		}
+	}
+
+	private function getMonthFullNameArray()
+	{
+		return array(
+			1 => $this->language->lang(array('datetime', 'January')),
+			2 => $this->language->lang(array('datetime', 'February')),
+			3 => $this->language->lang(array('datetime', 'March')),
+			4 => $this->language->lang(array('datetime', 'April')),
+			5 => $this->language->lang(array('datetime', 'May')),
+			6 => $this->language->lang(array('datetime', 'June')),
+			7 => $this->language->lang(array('datetime', 'July')),
+			8 => $this->language->lang(array('datetime', 'August')),
+			9 => $this->language->lang(array('datetime', 'September')),
+			10 => $this->language->lang(array('datetime', 'October')),
+			11=> $this->language->lang(array('datetime', 'November')),
+			12 => $this->language->lang(array('datetime', 'December')),
+		);
 	}
 
 	private function generateTemplateVariablesForRule(&$data, $rule_name, $rule_descriptions)
@@ -638,7 +657,7 @@ class board_notices_module
 		}
 
 		// Get config for all the rules
-		$all_rules = $this->getAllRules();
+		$all_rules = $this->settings->getAllRules();
 		foreach ($all_rules as $rule_name => $rule_description)
 		{
 			$notice_rule_id = $this->request->variable(array('notice_rule_id', $rule_name), 0);
@@ -784,11 +803,6 @@ class board_notices_module
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BOARD_NOTICES_UPDATED', time(), array($data['title']));
 		// Output message to user for the update
 		trigger_error($this->language->lang('BOARD_NOTICE_SAVED') . $this->functions->adm_back_link($this->u_action));
-	}
-
-	private function getAllRules()
-	{
-		return $this->rules_manager->getDefinedRules();
 	}
 
 	private function addAdminLanguage()

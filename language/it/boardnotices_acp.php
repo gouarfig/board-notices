@@ -139,6 +139,8 @@ $lang = array_merge($lang, array(
 	'RULE_RANK'								=> "Il rank dell'utente è uno qualsiasi di questi ranghi selezionati",
 	'RULE_REGISTERED_LESS_THAN'				=> "La registrazione dell'utente è inferiore a",
 	'RULE_STYLE'							=> "Lo stile dell'utente è uno di questi stili selezionati",
+	'RULE_REGISTERED_BEFORE'				=> "User registered before", //@todo
+	'RULE_REGISTERED_AFTER'					=> "User registered after", //@todo
 
 	// Rules units
 	'RULE_DAY(S)'							=> 'giorno (i) ',

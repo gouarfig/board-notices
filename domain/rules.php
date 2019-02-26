@@ -38,6 +38,8 @@ class rules
 		'registered_less_than',
 		'birthday',
 		'anniversary',
+		'registered_after',
+		'registered_before',
 		'date',
 		'date_range',
 		'has_never_visited',
@@ -58,11 +60,9 @@ class rules
 		'in_usergroup',
 		'not_in_usergroup',
 	);
-	// Hide obsolete rules
+	// Hide obsolete rules (or rules not ready to be released)
 	private $hide = array(
 		'not_logged_in',
-		// This one is not ready to be used yet
-		// 'date_range',
 	);
 
 	/**
@@ -235,7 +235,8 @@ class rules
 					$this->rules[$entry] = $rule;
 				} catch (\Symfony\Component\DependencyInjection\Exception\InvalidArgumentException $exc)
 				{
-					// The installation is obviously corrupted, but should we bother the user with it?
+					// The installation of the extension is obviously corrupted
+					trigger_error("Cannot instantiate rule named '{$entry}'. Some files should be missing: please reinstall the extension.", E_USER_WARNING);
 				}
 			}
 		}

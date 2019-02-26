@@ -33,13 +33,17 @@ class settings
 	/** @var \fq\boardnotices\repository\notices_interface $notices_repository */
 	private $notices_repository;
 
+	/** @var \fq\boardnotices\domain\rules $rules_manager */
+	private $rules_manager;
+
 	public function __construct(
 		\fq\boardnotices\service\phpbb\api_interface $api,
 		\fq\boardnotices\service\phpbb\functions_interface $functions,
 		\phpbb\request\request_interface $request,
 		\phpbb\config\config $config,
 		\phpbb\log\log_interface $log,
-		\fq\boardnotices\repository\notices_interface $notices_repository
+		\fq\boardnotices\repository\notices_interface $notices_repository,
+		\fq\boardnotices\domain\rules $rules_manager
 	)
 	{
 		$this->api = $api;
@@ -48,6 +52,7 @@ class settings
 		$this->config = $config;
 		$this->log = $log;
 		$this->notices_repository = $notices_repository;
+		$this->rules_manager = $rules_manager;
 	}
 
 	public function resetForumVisits($id, $mode, $action)
@@ -108,5 +113,10 @@ class settings
 			$notices[] = $notice;
 		}
 		return $notices;
+	}
+
+	public function getAllRules()
+	{
+		return $this->rules_manager->getDefinedRules();
 	}
 }

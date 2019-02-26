@@ -23,7 +23,8 @@ class settings_test extends \PHPUnit_Framework_TestCase
 		$log = $this->getMockBuilder('\phpbb\log\log_interface')->getMock();
 		/** @var \fq\boardnotices\repository\notices_interface $notices_repository */
 		$notices_repository = $this->getMockBuilder('\fq\boardnotices\repository\notices_interface')->getMock();
-		$module = new \fq\boardnotices\acp\settings($api, $functions, $request, $config, $log, $notices_repository);
+		$rules_manager = $this->getMockBuilder('\fq\boardnotices\domain\rules')->disableOriginalConstructor()->getMock();
+		$module = new \fq\boardnotices\acp\settings($api, $functions, $request, $config, $log, $notices_repository, $rules_manager);
 		$this->assertNotNull($module);
 	}
 
@@ -40,7 +41,9 @@ class settings_test extends \PHPUnit_Framework_TestCase
 		$notices_repository = $this->getMockBuilder('\fq\boardnotices\repository\notices_interface')->getMock();
 		$notices_repository->expects($this->never())->method('clearForumVisited');
 
-		$module = new \fq\boardnotices\acp\settings($api, $functions, $request, $config, $log, $notices_repository);
+		$rules_manager = $this->getMockBuilder('\fq\boardnotices\domain\rules')->disableOriginalConstructor()->getMock();
+
+		$module = new \fq\boardnotices\acp\settings($api, $functions, $request, $config, $log, $notices_repository, $rules_manager);
 		$module->resetForumVisits('', '', '');
 	}
 
@@ -57,7 +60,9 @@ class settings_test extends \PHPUnit_Framework_TestCase
 		$notices_repository = $this->getMockBuilder('\fq\boardnotices\repository\notices_interface')->getMock();
 		$notices_repository->expects($this->once())->method('clearForumVisited');
 
-		$module = new \fq\boardnotices\acp\settings($api, $functions, $request, $config, $log, $notices_repository);
+		$rules_manager = $this->getMockBuilder('\fq\boardnotices\domain\rules')->disableOriginalConstructor()->getMock();
+
+		$module = new \fq\boardnotices\acp\settings($api, $functions, $request, $config, $log, $notices_repository, $rules_manager);
 		$module->resetForumVisits('', '', '');
 	}
 
@@ -71,7 +76,8 @@ class settings_test extends \PHPUnit_Framework_TestCase
 		$log = $this->getMockBuilder('\phpbb\log\log_interface')->getMock();
 		/** @var \fq\boardnotices\repository\notices_interface $notices_repository */
 		$notices_repository = $this->getMockBuilder('\fq\boardnotices\repository\notices_interface')->getMock();
-		$module = new \fq\boardnotices\acp\settings($api, $functions, $request, $config, $log, $notices_repository);
+		$rules_manager = $this->getMockBuilder('\fq\boardnotices\domain\rules')->disableOriginalConstructor()->getMock();
+		$module = new \fq\boardnotices\acp\settings($api, $functions, $request, $config, $log, $notices_repository, $rules_manager);
 		$settings = $module->loadSettings();
 		$this->assertNotNull($settings);
 	}
@@ -86,7 +92,8 @@ class settings_test extends \PHPUnit_Framework_TestCase
 		$log = $this->getMockBuilder('\phpbb\log\log_interface')->getMock();
 		/** @var \fq\boardnotices\repository\notices_interface $notices_repository */
 		$notices_repository = $this->getMockBuilder('\fq\boardnotices\repository\notices_interface')->getMock();
-		$module = new \fq\boardnotices\acp\settings($api, $functions, $request, $config, $log, $notices_repository);
+		$rules_manager = $this->getMockBuilder('\fq\boardnotices\domain\rules')->disableOriginalConstructor()->getMock();
+		$module = new \fq\boardnotices\acp\settings($api, $functions, $request, $config, $log, $notices_repository, $rules_manager);
 		$module->saveSettings(array(
 			'boardnotices_enabled' => true,
 			'track_forums_visits' => true,
@@ -112,7 +119,8 @@ class settings_test extends \PHPUnit_Framework_TestCase
 			array(),
 			array(),
 		));
-		$module = new \fq\boardnotices\acp\settings($api, $functions, $request, $config, $log, $notices_repository);
+		$rules_manager = $this->getMockBuilder('\fq\boardnotices\domain\rules')->disableOriginalConstructor()->getMock();
+		$module = new \fq\boardnotices\acp\settings($api, $functions, $request, $config, $log, $notices_repository, $rules_manager);
 		$notices = $module->loadNotices();
 		$this->assertCount(2, $notices);
 		$this->assertEquals(2, $notices[0]['rulesCount']);
