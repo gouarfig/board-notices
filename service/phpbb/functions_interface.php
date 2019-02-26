@@ -34,4 +34,51 @@ interface functions_interface
 	* @return string
 	*/
 	function adm_back_link($u_action);
+
+	/**
+	* Assign/Build custom bbcodes for display in screens supporting using of bbcodes
+	* The custom bbcodes buttons will be placed within the template block 'custom_tags'
+	*/
+	function display_custom_bbcodes();
+
+	/**
+	* Add a secret token to the form (requires the S_FORM_TOKEN template variable)
+	* @param string  $form_name The name of the form; has to match the name used in check_form_key, otherwise no restrictions apply
+	* @param string  $template_variable_suffix A string that is appended to the name of the template variable to which the form elements are assigned
+	*/
+	function add_form_key($form_name, $template_variable_suffix = '');
+
+	/**
+	 * Check the form key. Required for all altering actions not secured by confirm_box
+	 *
+	 * @param	string	$form_name	The name of the form; has to match the name used
+	 *								in add_form_key, otherwise no restrictions apply
+	 * @param	int		$timespan	The maximum acceptable age for a submitted form
+	 *								in seconds. Defaults to the config setting.
+	 * @return	bool	True, if the form key was valid, false otherwise
+	 */
+	function check_form_key($form_name, $timespan = false);
+
+	/**
+	* For parsing custom parsed text to be stored within the database.
+	* This function additionally returns the uid and bitfield that needs to be stored.
+	* Expects $text to be the value directly from $request->variable() and in it's non-parsed form
+	*
+	* @param string $text The text to be replaced with the parsed one
+	* @param string $uid The BBCode uid for this parse
+	* @param string $bitfield The BBCode bitfield for this parse
+	* @param int $flags The allow_bbcode, allow_urls and allow_smilies compiled into a single integer.
+	* @param bool $allow_bbcode If BBCode is allowed (i.e. if BBCode is parsed)
+	* @param bool $allow_urls If urls is allowed
+	* @param bool $allow_smilies If smilies are allowed
+	* @param bool $allow_img_bbcode
+	* @param bool $allow_flash_bbcode
+	* @param bool $allow_quote_bbcode
+	* @param bool $allow_url_bbcode
+	* @param string $mode Mode to parse text as, e.g. post or sig
+	*
+	* @return array	An array of string with the errors that occurred while parsing
+	*/
+	function generate_text_for_storage(&$text, &$uid, &$bitfield, &$flags, $allow_bbcode = false, $allow_urls = false, $allow_smilies = false, $allow_img_bbcode = true, $allow_flash_bbcode = true, $allow_quote_bbcode = true, $allow_url_bbcode = true, $mode = 'post');
+
 }

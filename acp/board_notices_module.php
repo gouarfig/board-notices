@@ -34,6 +34,9 @@ class board_notices_module
 	/** @var \fq\boardnotices\acp\settings $settings */
 	private $settings;
 
+	/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+	private $functions;
+
 	/** @var \phpbb\config\config $config */
 	private $config;
 
@@ -144,7 +147,7 @@ class board_notices_module
 					'boardnotices_default_bgcolor' => $this->request->variable('board_notice_default_bgcolor', ''),
 				));
 				// Output confirmation message to user
-				trigger_error($this->lang('BOARD_NOTICES_SETTINGS_SAVED') . $this->functions->adm_back_link($this->u_action));
+				trigger_error($this->language->lang('BOARD_NOTICES_SETTINGS_SAVED') . $this->functions->adm_back_link($this->u_action));
 			}
 			else
 			{
@@ -164,7 +167,7 @@ class board_notices_module
 		$this->tpl_name = 'board_notices_settings';
 
 		// Set the page title for our ACP page
-		$this->page_title = $this->lang('ACP_BOARD_NOTICES_MANAGER');
+		$this->page_title = $this->language->lang('ACP_BOARD_NOTICES_MANAGER');
 
 		$settings = $this->settings->loadSettings();
 
@@ -297,12 +300,12 @@ class board_notices_module
 		$this->tpl_name = 'board_notices';
 
 		// Set the page title for our ACP page
-		$this->page_title = $this->lang('ACP_BOARD_NOTICES_MANAGER');
+		$this->page_title = $this->language->lang('ACP_BOARD_NOTICES_MANAGER');
 
 		// Output data to the template
 		$this->template->assign_vars(array(
 			'S_BOARD_NOTICES' => true,
-			'BOARD_NOTICE_ADD' => $this->lang('BOARD_NOTICE_ADD'),
+			'BOARD_NOTICE_ADD' => $this->language->lang('BOARD_NOTICE_ADD'),
 			'COLSPAN' => 6,
 			'ICON_MOVE_FIRST'			=> $this->getIconImageTemplate('icon_first.gif', 'MOVE_FIRST'),
 			'ICON_MOVE_FIRST_DISABLED'	=> $this->getIconImageTemplate('icon_first_disabled.gif', 'MOVE_FIRST'),
@@ -335,7 +338,7 @@ class board_notices_module
 
 	private function getIconImageTemplate($icon, $title)
 	{
-		return '<img src="' . $this->phpbb_root_path . 'ext/fq/boardnotices/adm/images/' . $icon . '" title="' . $this->lang($title) . '" />';
+		return '<img src="' . $this->phpbb_root_path . 'ext/fq/boardnotices/adm/images/' . $icon . '" title="' . $this->language->lang($title) . '" />';
 	}
 
 	private function getIconLinkTemplate($action, $notice_id)
@@ -356,23 +359,14 @@ class board_notices_module
 		// Add the posting lang file needed by BBCodes
 		$this->user->add_lang(array('posting'));
 
-		// Add the board notices ACP lang file
-		$this->addAdminLanguage();
-
 		// Load a template from adm/style for our ACP page
 		$this->tpl_name = 'board_notices_edit';
 
 		// Set the page title for our ACP page
-		$this->page_title = $this->lang('ACP_BOARD_NOTICE_SETTINGS');
+		$this->page_title = $this->language->lang('ACP_BOARD_NOTICE_SETTINGS');
 
 		// Define the name of the form for use as a form key
-		add_form_key($this->notice_form_name);
-
-		// Include files needed for displaying BBCodes
-		if (!function_exists('display_custom_bbcodes'))
-		{
-			include "{$this->phpbb_root_path}includes/functions_display.{$this->php_ext}";
-		}
+		$this->functions->add_form_key($this->notice_form_name);
 
 		// If form is previewed
 		if ($this->request->is_set_post('preview'))
@@ -420,7 +414,7 @@ class board_notices_module
 		));
 
 		// Assigning custom bbcodes
-		display_custom_bbcodes();
+		$this->functions->display_custom_bbcodes();
 
 		$all_rules = $this->getAllRules();
 		foreach ($all_rules as $rule_name => $rule_descriptions)
@@ -601,13 +595,10 @@ class board_notices_module
 	{
 		$error = '';
 
-		// Add the board notices ACP lang file
-		$this->addAdminLanguage();
-
 		// Test if form key is valid
-		if (!check_form_key($this->notice_form_name))
+		if (!$this->functions->check_form_key($this->notice_form_name))
 		{
-			return $this->lang('FORM_INVALID');
+			return $this->language->lang('FORM_INVALID');
 		}
 
 		// Get new values from the form
@@ -624,18 +615,18 @@ class board_notices_module
 		{
 			if (empty($data['title']))
 			{
-				$error .= $this->lang('ERROR_EMPTY_TITLE') . NEW_LINE;
+				$error .= $this->language->lang('ERROR_EMPTY_TITLE') . NEW_LINE;
 			}
 			if (empty($data['message']))
 			{
-				$error .= $this->lang('ERROR_EMPTY_MESSAGE') . NEW_LINE;
+				$error .= $this->language->lang('ERROR_EMPTY_MESSAGE') . NEW_LINE;
 			}
 		}
 
 		if (!empty($data['message']))
 		{
 			// Prepare notice text for storage
-			generate_text_for_storage(
+			$this->functions->generate_text_for_storage(
 					$data['message'],
 					$data['message_uid'],
 					$data['message_bitfield'],
@@ -682,7 +673,7 @@ class board_notices_module
 		// In case the parsing of the message failed
 		if (empty($error) && empty($data['message']))
 		{
-			return $this->lang('ERROR_EMPTY_MESSAGE') . NEW_LINE;
+			return $this->language->lang('ERROR_EMPTY_MESSAGE') . NEW_LINE;
 		}
 		return $error;
 	}
@@ -754,9 +745,6 @@ class board_notices_module
 
 	private function saveNewNotice(&$data)
 	{
-		// Add the board notices ACP lang file
-		$this->addAdminLanguage();
-
 		$rules_data = array(
 			'notice_rule_id' => $data['notice_rule_id'],
 			'notice_rule_checked' => $data['notice_rule_checked'],
@@ -775,14 +763,11 @@ class board_notices_module
 		// Log the new notice
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BOARD_NOTICES_ADDED', time(), array($data['title']));
 		// Output message to user for the update
-		trigger_error($this->lang('BOARD_NOTICE_SAVED') . adm_back_link($this->u_action));
+		trigger_error($this->language->lang('BOARD_NOTICE_SAVED') . $this->functions->adm_back_link($this->u_action));
 	}
 
 	private function saveNotice($notice_id, &$data)
 	{
-		// Add the board notices ACP lang file
-		$this->addAdminLanguage();
-
 		$rules_data = array(
 			'notice_rule_id' => $data['notice_rule_id'],
 			'notice_rule_checked' => $data['notice_rule_checked'],
@@ -798,7 +783,7 @@ class board_notices_module
 		// Log the update
 		$this->log->add('admin', $this->user->data['user_id'], $this->user->ip, 'LOG_BOARD_NOTICES_UPDATED', time(), array($data['title']));
 		// Output message to user for the update
-		trigger_error($this->lang('BOARD_NOTICE_SAVED') . adm_back_link($this->u_action));
+		trigger_error($this->language->lang('BOARD_NOTICE_SAVED') . $this->functions->adm_back_link($this->u_action));
 	}
 
 	private function getAllRules()
@@ -809,16 +794,5 @@ class board_notices_module
 	private function addAdminLanguage()
 	{
 		$this->language->add_lang('boardnotices_acp', 'fq/boardnotices');
-	}
-
-	/**
-	 * Deprecated
-	 *
-	 * @return string
-	 */
-	private function lang()
-	{
-		$args = func_get_args();
-		return call_user_func_array(array($this->language, 'lang'), $args);
 	}
 }
