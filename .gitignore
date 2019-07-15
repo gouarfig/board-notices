@@ -1,3 +1,5 @@
 /logs
 /vendor
 xdebug_remote_log.txt
+/.scannerwork
+local_sonar.sh
