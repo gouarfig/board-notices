@@ -63,4 +63,4 @@ script:
   - sh -c "if [ '$NOTESTS' != '1' ]; then phpBB/vendor/bin/phpunit --configuration phpBB/ext/$EXTNAME/travis/phpunit-$DB-coverage.xml --bootstrap ./tests/bootstrap.php --log-junit phpBB/ext/$EXTNAME/phpunit.xml --coverage-clover phpBB/ext/$EXTNAME/phpunit.coverage.xml; fi"
 
 after_script:
-  - sh -c "if [ '$SONAR' = '1' ]; then cd phpBB/ext/$EXTNAME/; sonar-scanner -X; cd ../../../../; fi"
+  - sh -c "if [ '$SONAR' = '1' ]; then sed -i '/ext/d' .gitignore; cd phpBB/ext/$EXTNAME/; sonar-scanner -X; cd ../../../../; fi"
