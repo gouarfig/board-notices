@@ -1,5 +1,6 @@
 language: php
 sudo: required
+dist: trusty
 
 matrix:
   include:
@@ -33,6 +34,7 @@ matrix:
 
 services:
   - mysql
+  - postgresql
 
 addons:
   sonarcloud:
