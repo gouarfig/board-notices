@@ -141,6 +141,8 @@ $lang = array_merge($lang, array(
 	'RULE_STYLE'							=> "Lo stile dell'utente è uno di questi stili selezionati",
 	'RULE_REGISTERED_BEFORE'				=> "User registered before", //@todo
 	'RULE_REGISTERED_AFTER'					=> "User registered after", //@todo
+	'RULE_IN_TOPIC'							=> "User is currently browsing one of these topic(s)", //@todo
+	'RULE_IN_TOPIC_EXPLAIN'					=> "(please input coma separated IDs of topics)", //@todo
 
 	// Rules units
 	'RULE_DAY(S)'							=> 'giorno (i) ',

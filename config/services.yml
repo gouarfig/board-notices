@@ -269,3 +269,10 @@ services:
     arguments:
       - '@fq.boardnotices.service.serializer'
       - '@user'
+
+  fq.boardnotices.rules.in_topic:
+    class: fq\boardnotices\rules\in_topic
+    arguments:
+      - '@fq.boardnotices.service.serializer'
+      - '@user'
+      - '@request'

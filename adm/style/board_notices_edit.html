@@ -195,6 +195,8 @@
 						<select multiple="multiple" size="10" name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][]">
 							{{ param.RULE_FORUMS }}
 						</select>
+					{% elseif param.RULE_TYPE == 'multiple int' %}
+						<input type="text" size="50" name="notice_rule_conditions{{ param.PARAMETER_INDEX }}[{{ rule.RULE_NAME }}][]" value="{{ param.RULE_DATA[0] }}">
 					{% endif %}
 					{{ param.RULE_UNIT }}
 				{% endfor %}

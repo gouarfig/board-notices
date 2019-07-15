@@ -44,6 +44,7 @@ class constants
 	public static $RULE_TYPE_LIST = 'list';
 	public static $RULE_TYPE_MULTIPLE_CHOICE = 'multiple choice';
 	public static $RULE_TYPE_YESNO = 'yesno';
+	public static $RULE_TYPE_MULTIPLE_INTEGERS = 'multiple int';
 
 	public static $CONTROLLER_ROUTING_ID = 'fq_boardnotices_controller';
 	public static $ROUTING_CLOSE_HASH_ID = 'close_boardnotice';

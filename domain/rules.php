@@ -59,6 +59,7 @@ class rules
 		'in_default_usergroup',
 		'in_usergroup',
 		'not_in_usergroup',
+		'in_topic',
 	);
 	// Hide obsolete rules (or rules not ready to be released)
 	private $hide = array(
