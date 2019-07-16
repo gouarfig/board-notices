@@ -18,6 +18,7 @@ use fq\boardnotices\domain\date_comparator;
 class date_range extends rule_base implements rule_interface
 {
 	private $time = null;
+	private $date = null;
 
 	public function __construct(
 		\fq\boardnotices\service\serializer $serializer,
@@ -69,16 +70,21 @@ class date_range extends rule_base implements rule_interface
 	{
 		// 0123-56-89
 		$this->time = gmmktime(12, 0, 0, substr($date, 8, 2), substr($date, 5, 2), substr($date, 0, 4));
+		$this->date = $date;
 	}
 
 	private function getDate()
 	{
-		if ($this->time === null)
+		$datetime = new \DateTime();
+		if ($this->date !== null)
 		{
-			$this->time = time();
+			$datetime = \DateTime::createFromFormat('!Y-m-d', $this->date);
 		}
-		$offset = $this->api->createDateTime()->getOffset();
-		return getdate($this->time - date('Z') + $offset);	// This gives the date in the user timezone
+		return array(
+			'mday' => $datetime->format('d'),
+			'mon' => $datetime->format('m'),
+			'year' => $datetime->format('Y')
+		);
 	}
 
 	public function isTrue($conditions)
@@ -127,6 +133,7 @@ class date_range extends rule_base implements rule_interface
 	{
 		if ($dates->hasOnlyBothDays())
 		{
+			// Symmetrical type 1
 			if ($dates->getStartDateCondition()->getDay() <= $dates->getEndDateCondition()->getDay())
 			{
 				return ($dates->getStartDateCondition()->getDay() <= $now["mday"]) && ($now["mday"] <= $dates->getEndDateCondition()->getDay());
@@ -135,6 +142,7 @@ class date_range extends rule_base implements rule_interface
 		}
 		if ($dates->hasOnlyBothMonths())
 		{
+			// Symmetrical type 2
 			if ($dates->getStartDateCondition()->getMonth() <= $dates->getEndDateCondition()->getMonth())
 			{
 				return ($dates->getStartDateCondition()->getMonth() <= $now["mon"]) && ($now["mon"] <= $dates->getEndDateCondition()->getMonth());
@@ -143,15 +151,28 @@ class date_range extends rule_base implements rule_interface
 		}
 		if ($dates->hasOnlyBothYears())
 		{
+			// Symmetrical type 3
 			if ($dates->getStartDateCondition()->getYear() <= $dates->getEndDateCondition()->getYear())
 			{
 				return ($dates->getStartDateCondition()->getYear() <= $now["year"]) && ($now["year"] <= $dates->getEndDateCondition()->getYear());
 			}
 			return false;
 		}
+		if ($dates->hasOnlyBothDaysMonths())
+		{
+			// Symmetrical type 4
+		}
+		if ($dates->hasOnlyBothMonthsYears())
+		{
+			// Symmetrical type 5
+		}
+		if ($dates->hasOnlyBothDaysYears())
+		{
+			// Symmetrical type 6
+		}
 		if ($dates->hasBothFullDate())
 		{
-			// Full date comparison
+			// Symmetrical type 7 (full date comparison)
 			$today = $this->api->createDateTime($now["year"] . '-' . $now["mon"] . '-' . $now["mday"]);
 			$startDateTime = $this->createDateTime($dates->getStartDateCondition()->getValue());
 			$endDateTime = $this->createDateTime($dates->getEndDateCondition()->getValue(), "23:59:59");
@@ -176,16 +197,6 @@ class date_range extends rule_base implements rule_interface
 			$dateTime = $this->api->createDateTime("{$date[2]}-{$date[1]}-{$date[0]}" . $time);
 		}
 		return $dateTime;
-	}
-
-	public function getAvailableVars()
-	{
-		return array();
-	}
-
-	public function getTemplateVars()
-	{
-		return array();
 	}
 
 	public function validateValues($values)

@@ -62,6 +62,16 @@ class date_range_test extends rule_test_base
 	 * @depends testInstance
 	 * @param \fq\boardnotices\rules\date_range $rule
 	 */
+	public function testGetDefault($rule)
+	{
+		$default = $rule->getDefault();
+		$this->assertThat($default, $this->equalTo(array(array(0, 0, 0), array(0, 0, 0))));
+	}
+
+	/**
+	 * @depends testInstance
+	 * @param \fq\boardnotices\rules\date_range $rule
+	 */
 	public function testGetPossibleValues($rule)
 	{
 		$values = $rule->getPossibleValues();
@@ -158,11 +168,11 @@ class date_range_test extends rule_test_base
 		return $now;
 	}
 
-	private function buildConditions($now, $start, $end)
+	private function buildConditions(\DateTime $datetime, $start, $end)
 	{
 		$conditions = array();
-		$conditions[] = $this->buildDateCondition($now, $start[0], $start[1], $start[2]);
-		$conditions[] = $this->buildDateCondition($now, $end[0], $end[1], $end[2]);
+		$conditions[] = $this->buildDateCondition($datetime, $start[0], $start[1], $start[2]);
+		$conditions[] = $this->buildDateCondition($datetime, $end[0], $end[1], $end[2]);
 		return $conditions;
 	}
 
@@ -170,7 +180,7 @@ class date_range_test extends rule_test_base
 	 * null values mean "any" and zero values mean "current one"
 	 * @return int[]
 	 */
-	private function buildDateCondition($now, $day = null, $month = null, $year = null)
+	private function buildDateCondition(\DateTime $datetime, $day = null, $month = null, $year = null)
 	{
 		$conditions = array(0, 0, 0);
 		if (!is_null($day))
@@ -178,11 +188,11 @@ class date_range_test extends rule_test_base
 			$day = intval($day);
 			if ($day == 0)
 			{
-				$conditions[0] = $now['mday'];
+				$conditions[0] = $datetime->format('d');
 			}
 			else
 			{
-				$conditions[0] = $now['mday'] + $day;
+				$conditions[0] = $datetime->format('d') + $day;
 				// We can't get to zero, it means "any"
 				if ($conditions[0] == 0)
 				{
@@ -196,11 +206,11 @@ class date_range_test extends rule_test_base
 			$month = intval($month);
 			if ($month == 0)
 			{
-				$conditions[1] = $now['mon'];
+				$conditions[1] = $datetime->format('m');
 			}
 			else
 			{
-				$conditions[1] = $now['mon'] + $month;
+				$conditions[1] = $datetime->format('m') + $month;
 				// We can't get to zero, it means "any"
 				if ($conditions[1] == 0)
 				{
@@ -214,14 +224,44 @@ class date_range_test extends rule_test_base
 			$year = intval($year);
 			if ($year == 0)
 			{
-				$conditions[2] = $now['year'];
+				$conditions[2] = $datetime->format('Y');
 			}
 			else
 			{
-				$conditions[2] = $now['year'] + $year;
+				$conditions[2] = $datetime->format('Y') + $year;
 			}
 		}
 		return $conditions;
+	}
+
+	public function getTestBuildConditionData()
+	{
+		$data = array();
+		$timezones = $this->getTimezones();
+		foreach ($timezones as $timezone)
+		{
+			$data = array_merge($data, array(
+				array($timezone[0], '2010-01-01', null, null, null, array(0, 0, 0)),
+				array($timezone[0], '2010-01-01', 0, 0, 0, array(1, 1, 2010)),
+				array($timezone[0], '2011-10-05', 0, 0, 0, array(5, 10, 2011)),
+			));
+		}
+		return $data;
+	}
+
+	/**
+	 * @dataProvider getTestBuildConditionData
+	 */
+	public function testBuildCondition($timezone, $date, $day, $month, $year, $result)
+	{
+		$current_timezone = date_default_timezone_get();
+		date_default_timezone_set($timezone);
+		$datetime = \DateTime::createFromFormat('!Y-m-d', $date, new \DateTimeZone($timezone));
+		$condition = $this->buildDateCondition($datetime, $day, $month, $year);
+		$this->assertEquals($result, $condition);
+
+		// Put the timezone back
+		date_default_timezone_set($current_timezone);
 	}
 
 	public function getTestData()
@@ -230,34 +270,31 @@ class date_range_test extends rule_test_base
 		$timezones = $this->getTimezones();
 		foreach ($timezones as $timezone)
 		{
-			foreach (array(null, /*'2019-01-01', '2018-12-31', '2019-02-28', '2019-03-01'*/) as $now)
+			foreach (array(null, '2019-01-01', '2018-12-31', '2019-02-28', '2019-03-01') as $now)
 			{
 				// array(timezone, now, start, end, result)
 				$data = array_merge($data, array(
 					array($timezone[0], $now, array(null, null, null), array(null, null, null), true),		// Empty
 					array($timezone[0], $now, array(0, 0, 0), array(0, 0, 0), true),						// Empty
-					array($timezone[0], $now, array(-1, 0, 0), array(0, 0, 0), true),						// Previous day until today
-					array($timezone[0], $now, array(0, 0, 0), array(1, 0, 0), true),						// From today to tomorrow
-					array($timezone[0], $now, array(0, -1, 0), array(0, 0, 0), true),						// Previous month until this month
-					array($timezone[0], $now, array(0, 0, 0), array(0, 1, 0), true),						// From this month to next
-					array($timezone[0], $now, array(0, 0, -1), array(0, 0, 0), true),						// Previous year until this year
-					array($timezone[0], $now, array(0, 0, 0), array(0, 0, 1), true),						// From this year to next
+					// Symmetrical type 1
+					array($timezone[0], $now, array(0, null, null), array(0, null, null), true),			// This day
+					array($timezone[0], $now, array(0, null, null), array(1, null, null), true),			// This day and next
+					array($timezone[0], $now, array(-1, null, null), array(0, null, null), true),			// This day and previous
+					array($timezone[0], $now, array(-1, null, null), array(-1, null, null), false),			// Last day
+					array($timezone[0], $now, array(1, null, null), array(1, null, null), false),			// Next day
+					// Symmetrical type 2
+					array($timezone[0], $now, array(null, 0, null), array(null, 0, null), true),			// This month
+					array($timezone[0], $now, array(null, 0, null), array(null, 1, null), true),			// This month and next
+					array($timezone[0], $now, array(null, -1, null), array(null, 0, null), true),			// This month and previous
+					array($timezone[0], $now, array(null, -1, null), array(null, -1, null), false),			// Last month
+					array($timezone[0], $now, array(null, 1, null), array(null, 1, null), false),			// Next month
+					// Symmetrical type 3
 					array($timezone[0], $now, array(null, null, 0), array(null, null, 0), true),			// This year
 					array($timezone[0], $now, array(null, null, 0), array(null, null, 1), true),			// This year and next
 					array($timezone[0], $now, array(null, null, -1), array(null, null, 0), true),			// This year and previous
 					array($timezone[0], $now, array(null, null, 1), array(null, null, -1), false),			// Years the other way around
 					array($timezone[0], $now, array(null, null, -1), array(null, null, -1), false),			// Last year
 					array($timezone[0], $now, array(null, null, 1), array(null, null, 1), false),			// Next year
-					array($timezone[0], $now, array(null, 0, null), array(null, 0, null), true),			// This month
-					array($timezone[0], $now, array(null, 0, null), array(null, 1, null), true),			// This month and next
-					array($timezone[0], $now, array(null, -1, null), array(null, 0, null), true),			// This month and previous
-					array($timezone[0], $now, array(null, -1, null), array(null, -1, null), false),			// Last month
-					array($timezone[0], $now, array(null, 1, null), array(null, 1, null), false),			// Next month
-					array($timezone[0], $now, array(0, null, null), array(0, null, null), true),			// This day
-					array($timezone[0], $now, array(0, null, null), array(1, null, null), true),			// This day and next
-					array($timezone[0], $now, array(-1, null, null), array(0, null, null), true),			// This day and previous
-					array($timezone[0], $now, array(-1, null, null), array(-1, null, null), false),			// Last day
-					array($timezone[0], $now, array(1, null, null), array(1, null, null), false),			// Next day
 				));
 			}
 		}
@@ -275,19 +312,23 @@ class date_range_test extends rule_test_base
 		$api = new mock_api();
 		$api->setTimezone($timezone);
 		$rule = new date_range($this->getSerializer(), $api);
-		$now = $this->getDatetime($api, $date);
-		$conditions = $this->buildConditions($now, $start, $end);
 		if ($date !== null)
 		{
 			// Fix current date for testing
 			$rule->setDate($date);
 		}
+		if ($date == null)
+		{
+			$date = date('Y-m-d');
+		}
+		$datetime = \DateTime::createFromFormat('!Y-m-d', $date, new \DateTimeZone($timezone));
+		$conditions = $this->buildConditions($datetime, $start, $end);
 		$this->assertEquals(
 			$result,
 			$rule->isTrue(serialize($conditions)),
-			"With mday={$now['mday']} month={$now['mon']} year={$now['year']} " .
+			"Datetime: {$datetime->format('Y-m-d')}; " .
 			"From: mday={$conditions[0][0]} month={$conditions[0][1]} year={$conditions[0][2]}; " .
-			" To: mday={$conditions[1][0]} month={$conditions[1][1]} year={$conditions[1][2]}");
+			"To: mday={$conditions[1][0]} month={$conditions[1][1]} year={$conditions[1][2]}");
 		// Put the timezone back
 		date_default_timezone_set($current_timezone);
 	}
