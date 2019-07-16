@@ -126,6 +126,18 @@ abstract class rule_base
 		return $new_array;
 	}
 
+	protected function getArrayOfConditionsForMultipleIntegers($input)
+	{
+		if (empty($input) || !is_array($input) || empty($input[0]))
+		{
+			return array();
+		}
+		$list = explode(',', $input[0]);
+		$list = array_map('trim', $list);
+		$filtered_list = array_values(array_filter($list, 'is_numeric'));
+		return array_map('intval', $filtered_list);
+	}
+
 	/**
 	 * @codeCoverageIgnore
 	 */

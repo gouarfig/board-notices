@@ -37,16 +37,6 @@ class style extends rule_base implements rule_interface
 		return $this->user->lang('RULE_STYLE');
 	}
 
-	public function getDisplayExplain()
-	{
-		return '';
-	}
-
-	public function getDisplayUnit()
-	{
-		return '';
-	}
-
 	public function getType()
 	{
 		return constants::$RULE_TYPE_MULTIPLE_CHOICE;
@@ -60,11 +50,6 @@ class style extends rule_base implements rule_interface
 	public function getPossibleValues()
 	{
 		return $this->data_layer->getStyles();
-	}
-
-	public function validateValues($values)
-	{
-		return true;
 	}
 
 	public function isTrue($conditions)

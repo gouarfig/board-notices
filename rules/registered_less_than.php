@@ -30,11 +30,6 @@ class registered_less_than extends rule_base implements rule_interface
 		return $this->user->lang('RULE_REGISTERED_LESS_THAN');
 	}
 
-	public function getDisplayExplain()
-	{
-		return '';
-	}
-
 	public function getDisplayUnit()
 	{
 		return $this->user->lang('RULE_DAY(S)');
@@ -53,11 +48,6 @@ class registered_less_than extends rule_base implements rule_interface
 	public function getPossibleValues()
 	{
 		return null;
-	}
-
-	public function validateValues($values)
-	{
-		return true;
 	}
 
 	public function isTrue($conditions)

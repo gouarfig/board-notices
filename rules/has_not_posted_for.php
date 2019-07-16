@@ -30,11 +30,6 @@ class has_not_posted_for extends rule_base implements rule_interface
 		return $this->user->lang('RULE_HAS_NOT_POSTED_FOR_1');
 	}
 
-	public function getDisplayExplain()
-	{
-		return '';
-	}
-
 	public function getDisplayUnit()
 	{
 		return $this->user->lang('RULE_HAS_NOT_POSTED_FOR_2');
@@ -53,11 +48,6 @@ class has_not_posted_for extends rule_base implements rule_interface
 	public function getPossibleValues()
 	{
 		return null;
-	}
-
-	public function validateValues($values)
-	{
-		return true;
 	}
 
 	public function isTrue($conditions)

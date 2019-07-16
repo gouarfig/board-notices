@@ -42,11 +42,6 @@ class has_not_visited_for extends rule_base implements rule_interface
 		return $this->user->lang('RULE_HAS_NOT_VISITED_FOR_1');
 	}
 
-	public function getDisplayExplain()
-	{
-		return '';
-	}
-
 	public function getDisplayUnit()
 	{
 		return array(
@@ -71,11 +66,6 @@ class has_not_visited_for extends rule_base implements rule_interface
 	public function getPossibleValues()
 	{
 		return array(null, null);
-	}
-
-	public function validateValues($values)
-	{
-		return true;
 	}
 
 	public function isTrue($conditions)

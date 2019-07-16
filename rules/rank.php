@@ -70,16 +70,6 @@ class rank extends rule_base implements rule_interface
 		return $this->user->lang('RULE_RANK');
 	}
 
-	public function getDisplayExplain()
-	{
-		return '';
-	}
-
-	public function getDisplayUnit()
-	{
-		return '';
-	}
-
 	public function getType()
 	{
 		return constants::$RULE_TYPE_MULTIPLE_CHOICE;
@@ -93,11 +83,6 @@ class rank extends rule_base implements rule_interface
 	public function getPossibleValues()
 	{
 		return $this->data_layer->getRanks();
-	}
-
-	public function validateValues($values)
-	{
-		return true;
 	}
 
 	public function isTrue($conditions)

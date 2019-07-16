@@ -38,11 +38,6 @@ class in_topic extends rule_base implements rule_interface
 		return $this->user->lang('RULE_IN_TOPIC_EXPLAIN');
 	}
 
-	public function getDisplayUnit()
-	{
-		return '';
-	}
-
 	public function getType()
 	{
 		return constants::$RULE_TYPE_MULTIPLE_INTEGERS;

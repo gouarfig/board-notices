@@ -58,11 +58,6 @@ class has_never_posted_in_forum extends rule_base implements rule_interface
 		return null;
 	}
 
-	public function validateValues($values)
-	{
-		return true;
-	}
-
 	public function isTrue($conditions)
 	{
 		$valid = false;

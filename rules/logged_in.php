@@ -30,11 +30,6 @@ class logged_in extends rule_base implements rule_interface
 		return $this->user->lang('RULE_LOGGED_IN');
 	}
 
-	public function getDisplayExplain()
-	{
-		return '';
-	}
-
 	public function getDisplayUnit()
 	{
 		return $this->user->lang('NO_GUEST_OR_BOT');
@@ -53,11 +48,6 @@ class logged_in extends rule_base implements rule_interface
 	public function getPossibleValues()
 	{
 		return null;
-	}
-
-	public function validateValues($values)
-	{
-		return true;
 	}
 
 	public function isTrue($conditions)

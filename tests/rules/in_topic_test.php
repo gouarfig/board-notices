@@ -8,21 +8,24 @@ use fq\boardnotices\rules\in_topic;
 
 class in_topic_test extends rule_test_base
 {
+	private $current_topic = 10;
+	private $another_topic = 11;
+
 	public function testInstance()
 	{
 		$serializer = $this->getSerializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-		$user->data['f'] = 10;
-		$user->data['t'] = 110;
+		$user->data['f'] = 3;
+		$user->data['t'] = $this->current_topic;
 
 		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
 			->getMock();
-		$request->method('variable')->will($this->returnValue(110));
+		$request->method('variable')->will($this->returnValue($this->current_topic));
 		// Make sure the mock works
-		$this->assertEquals(110, $request->variable('t', 0));
+		$this->assertEquals($this->current_topic, $request->variable('t', 0));
 
 		$rule = new in_topic($this->getSerializer(), $user, $request);
 		$this->assertNotNull($rule);
@@ -95,233 +98,57 @@ class in_topic_test extends rule_test_base
 		$this->assertEquals(0, count($vars));
 	}
 
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_topic $rule
-	 */
-	public function testRuleEmpty($args)
+	public function getTestData()
 	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue(110));
-
-		$rule = new in_topic($this->getSerializer(), $user, $request);
-
-		$this->assertFalse($rule->isTrue(null));
+		$serializer = $this->getSerializer();
+		return array(
+			array(null, false),
+			array($this->current_topic, true),
+			array($this->another_topic, false),
+			array("{$this->current_topic}, {$this->another_topic}", true),
+			array("100, 101,102", false),
+			array(serialize(null), false),
+			array(serialize($this->current_topic), true),
+			array(serialize($this->another_topic), false),
+			array(serialize("{$this->current_topic}, {$this->another_topic}"), true),
+			array(serialize("100, 101,102"), false),
+			array(serialize(array($this->current_topic)), true),
+			array(serialize(array($this->another_topic)), false),
+			array(serialize(array("{$this->current_topic}, {$this->another_topic}")), true),
+			array(serialize(array("100, 101,102")), false),
+			array($serializer->encode(null), false),
+			array($serializer->encode($this->current_topic), true),
+			array($serializer->encode($this->another_topic), false),
+			array($serializer->encode("{$this->current_topic}, {$this->another_topic}"), true),
+			array($serializer->encode("100, 101,102"), false),
+			array($serializer->encode(array($this->current_topic)), true),
+			array($serializer->encode(array($this->another_topic)), false),
+			array($serializer->encode(array("{$this->current_topic}, {$this->another_topic}")), true),
+			array($serializer->encode(array("100, 101,102")), false),
+		);
 	}
 
 	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_topic $rule
+	 * Test all conditions
+	 * @dataProvider getTestData
+	 * @param mixed $condition
+	 * @param bool $result
+	 * @return void
 	 */
-	public function testRuleNotInForumSerialize($args)
+	public function testRule($condition, $result)
 	{
-		list($serializer, $user, $rule) = $args;
+		/** @var \phpbb\user $user */
+		$user = $this->getUser();
+		$user->data['f'] = 3;
+		$user->data['t'] = $this->current_topic;
+
 		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
 			->getMock();
-		$request->method('variable')->will($this->returnValue(110));
+		$request->method('variable')->will($this->returnValue($this->current_topic));
 
 		$rule = new in_topic($this->getSerializer(), $user, $request);
-
-		$topic = serialize(array(11));
-		$this->assertFalse($rule->isTrue($topic));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_topic $rule
-	 */
-	public function testRuleNotInForumNewSerialize($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue(110));
-
-		$rule = new in_topic($this->getSerializer(), $user, $request);
-
-		$topic = $serializer->encode(array(11));
-		$this->assertFalse($rule->isTrue($topic));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_topic $rule
-	 */
-	public function testRuleInForumSerialize($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue(110));
-
-		$rule = new in_topic($this->getSerializer(), $user, $request);
-
-		$topic = serialize(array(110));
-		$this->assertTrue($rule->isTrue($topic)); ///
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_topic $rule
-	 */
-	public function testRuleInForumNewSerialize($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue(110));
-
-		$rule = new in_topic($this->getSerializer(), $user, $request);
-
-		$topic = $serializer->encode(array(110));
-		$this->assertTrue($rule->isTrue($topic)); ///
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_topic $rule
-	 */
-	public function testRuleInForumNotArray($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue(110));
-
-		$rule = new in_topic($this->getSerializer(), $user, $request);
-
-		$topic = 110;
-		$this->assertTrue($rule->isTrue($topic)); ///
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_topic $rule
-	 */
-	public function testRuleNotInForumNotArray($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue(110));
-
-		$rule = new in_topic($this->getSerializer(), $user, $request);
-
-		$topic = 11;
-		$this->assertFalse($rule->isTrue($topic));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_topic $rule
-	 */
-	public function testRuleInForumNotArraySerialize($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue(110));
-
-		$rule = new in_topic($this->getSerializer(), $user, $request);
-
-		$topic = serialize(110);
-		$this->assertTrue($rule->isTrue($topic)); ///
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_topic $rule
-	 */
-	public function testRuleInForumNotArrayNewSerialize($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue(110));
-
-		$rule = new in_topic($this->getSerializer(), $user, $request);
-
-		$topic = $serializer->encode(110);
-		$this->assertTrue($rule->isTrue($topic)); ///
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_topic $rule
-	 */
-	public function testRuleNotInForumNotArraySerialize($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue(110));
-
-		$rule = new in_topic($this->getSerializer(), $user, $request);
-
-		$topic = serialize(11);
-		$this->assertFalse($rule->isTrue($topic));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_topic $rule
-	 */
-	public function testRuleNotInForumNotArrayNewSerialize($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue(110));
-
-		$rule = new in_topic($this->getSerializer(), $user, $request);
-
-		$topic = $serializer->encode(11);
-		$this->assertFalse($rule->isTrue($topic));
+		$this->assertEquals($result, $rule->isTrue($condition));
 	}
 }

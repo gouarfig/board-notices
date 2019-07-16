@@ -33,16 +33,6 @@ class language extends rule_base implements rule_interface
 		return $this->user->lang('RULE_LANGUAGE');
 	}
 
-	public function getDisplayExplain()
-	{
-		return '';
-	}
-
-	public function getDisplayUnit()
-	{
-		return '';
-	}
-
 	public function getType()
 	{
 		return constants::$RULE_TYPE_MULTIPLE_CHOICE;
@@ -56,11 +46,6 @@ class language extends rule_base implements rule_interface
 	public function getPossibleValues()
 	{
 		return $this->data_layer->getLanguages();
-	}
-
-	public function validateValues($values)
-	{
-		return true;
 	}
 
 	public function isTrue($conditions)

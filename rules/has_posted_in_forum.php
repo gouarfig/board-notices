@@ -38,11 +38,6 @@ class has_posted_in_forum extends rule_base implements rule_interface
 		return $this->user->lang('RULE_HAS_POSTED_IN_FORUM_EXPLAIN');
 	}
 
-	public function getDisplayUnit()
-	{
-		return '';
-	}
-
 	public function getType()
 	{
 		return constants::$RULE_TYPE_FORUMS;
@@ -56,11 +51,6 @@ class has_posted_in_forum extends rule_base implements rule_interface
 	public function getPossibleValues()
 	{
 		return null;
-	}
-
-	public function validateValues($values)
-	{
-		return true;
 	}
 
 	public function isTrue($conditions)

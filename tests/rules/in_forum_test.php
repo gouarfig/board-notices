@@ -8,19 +8,23 @@ use fq\boardnotices\rules\in_forum;
 
 class in_forum_test extends rule_test_base
 {
+	private $current_forum = 10;
+	private $another_forum = 11;
+
 	public function testInstance()
 	{
 		$serializer = $this->getSerializer();
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
-		$user->data['f'] = 10;
+		$user->data['f'] = $this->current_forum;
 
+		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
 			->getMock();
-		$request->method('variable')->will($this->returnValue(10));
+		$request->method('variable')->will($this->returnValue($this->current_forum));
 		// Make sure the mock works
-		$this->assertEquals(10, $request->variable('f', 0));
+		$this->assertEquals($this->current_forum, $request->variable('f', 0));
 
 		$rule = new in_forum($this->getSerializer(), $user, $request);
 		$this->assertNotNull($rule);
@@ -102,12 +106,11 @@ class in_forum_test extends rule_test_base
 	public function testRuleEmpty($args)
 	{
 		list($serializer, $user, $rule) = $args;
-		// The fecking mock stops working after being passed to the test method,
-		// so we have to recreate it on each test
+		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
 			->getMock();
-		$request->method('variable')->will($this->returnValue(10));
+		$request->method('variable')->will($this->returnValue($this->current_forum));
 
 		$rule = new in_forum($this->getSerializer(), $user, $request);
 
@@ -123,16 +126,15 @@ class in_forum_test extends rule_test_base
 	public function testRuleNotInForumSerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
-		// The fecking mock stops working after being passed to the test method,
-		// so we have to recreate it on each test
+		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
 			->getMock();
-		$request->method('variable')->will($this->returnValue(10));
+		$request->method('variable')->will($this->returnValue($this->current_forum));
 
 		$rule = new in_forum($this->getSerializer(), $user, $request);
 
-		$forum = serialize(array(11));
+		$forum = serialize(array($this->another_forum));
 		$this->assertFalse($rule->isTrue($forum));
 	}
 
@@ -145,16 +147,15 @@ class in_forum_test extends rule_test_base
 	public function testRuleNotInForumNewSerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
-		// The fecking mock stops working after being passed to the test method,
-		// so we have to recreate it on each test
+		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
 			->getMock();
-		$request->method('variable')->will($this->returnValue(10));
+		$request->method('variable')->will($this->returnValue($this->current_forum));
 
 		$rule = new in_forum($this->getSerializer(), $user, $request);
 
-		$forum = $serializer->encode(array(11));
+		$forum = $serializer->encode(array($this->another_forum));
 		$this->assertFalse($rule->isTrue($forum));
 	}
 
@@ -167,16 +168,15 @@ class in_forum_test extends rule_test_base
 	public function testRuleInForumSerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
-		// The fecking mock stops working after being passed to the test method,
-		// so we have to recreate it on each test
+		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
 			->getMock();
-		$request->method('variable')->will($this->returnValue(10));
+		$request->method('variable')->will($this->returnValue($this->current_forum));
 
 		$rule = new in_forum($this->getSerializer(), $user, $request);
 
-		$forum = serialize(array(10));
+		$forum = serialize(array($this->current_forum));
 		$this->assertTrue($rule->isTrue($forum)); ///
 	}
 
@@ -189,16 +189,15 @@ class in_forum_test extends rule_test_base
 	public function testRuleInForumNewSerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
-		// The fecking mock stops working after being passed to the test method,
-		// so we have to recreate it on each test
+		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
 			->getMock();
-		$request->method('variable')->will($this->returnValue(10));
+		$request->method('variable')->will($this->returnValue($this->current_forum));
 
 		$rule = new in_forum($this->getSerializer(), $user, $request);
 
-		$forum = $serializer->encode(array(10));
+		$forum = $serializer->encode(array($this->current_forum));
 		$this->assertTrue($rule->isTrue($forum)); ///
 	}
 
@@ -211,16 +210,15 @@ class in_forum_test extends rule_test_base
 	public function testRuleInForumNotArray($args)
 	{
 		list($serializer, $user, $rule) = $args;
-		// The fecking mock stops working after being passed to the test method,
-		// so we have to recreate it on each test
+		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
 			->getMock();
-		$request->method('variable')->will($this->returnValue(10));
+		$request->method('variable')->will($this->returnValue($this->current_forum));
 
 		$rule = new in_forum($this->getSerializer(), $user, $request);
 
-		$forum = 10;
+		$forum = $this->current_forum;
 		$this->assertTrue($rule->isTrue($forum)); ///
 	}
 
@@ -233,16 +231,15 @@ class in_forum_test extends rule_test_base
 	public function testRuleNotInForumNotArray($args)
 	{
 		list($serializer, $user, $rule) = $args;
-		// The fecking mock stops working after being passed to the test method,
-		// so we have to recreate it on each test
+		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
 			->getMock();
-		$request->method('variable')->will($this->returnValue(10));
+		$request->method('variable')->will($this->returnValue($this->current_forum));
 
 		$rule = new in_forum($this->getSerializer(), $user, $request);
 
-		$forum = 11;
+		$forum = $this->another_forum;
 		$this->assertFalse($rule->isTrue($forum));
 	}
 
@@ -255,16 +252,15 @@ class in_forum_test extends rule_test_base
 	public function testRuleInForumNotArraySerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
-		// The fecking mock stops working after being passed to the test method,
-		// so we have to recreate it on each test
+		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
 			->getMock();
-		$request->method('variable')->will($this->returnValue(10));
+		$request->method('variable')->will($this->returnValue($this->current_forum));
 
 		$rule = new in_forum($this->getSerializer(), $user, $request);
 
-		$forum = serialize(10);
+		$forum = serialize($this->current_forum);
 		$this->assertTrue($rule->isTrue($forum)); ///
 	}
 
@@ -277,16 +273,15 @@ class in_forum_test extends rule_test_base
 	public function testRuleInForumNotArrayNewSerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
-		// The fecking mock stops working after being passed to the test method,
-		// so we have to recreate it on each test
+		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
 			->getMock();
-		$request->method('variable')->will($this->returnValue(10));
+		$request->method('variable')->will($this->returnValue($this->current_forum));
 
 		$rule = new in_forum($this->getSerializer(), $user, $request);
 
-		$forum = $serializer->encode(10);
+		$forum = $serializer->encode($this->current_forum);
 		$this->assertTrue($rule->isTrue($forum)); ///
 	}
 
@@ -299,16 +294,15 @@ class in_forum_test extends rule_test_base
 	public function testRuleNotInForumNotArraySerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
-		// The fecking mock stops working after being passed to the test method,
-		// so we have to recreate it on each test
+		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
 			->getMock();
-		$request->method('variable')->will($this->returnValue(10));
+		$request->method('variable')->will($this->returnValue($this->current_forum));
 
 		$rule = new in_forum($this->getSerializer(), $user, $request);
 
-		$forum = serialize(11);
+		$forum = serialize($this->another_forum);
 		$this->assertFalse($rule->isTrue($forum));
 	}
 
@@ -321,16 +315,15 @@ class in_forum_test extends rule_test_base
 	public function testRuleNotInForumNotArrayNewSerialize($args)
 	{
 		list($serializer, $user, $rule) = $args;
-		// The fecking mock stops working after being passed to the test method,
-		// so we have to recreate it on each test
+		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')
 			->disableOriginalConstructor()
 			->getMock();
-		$request->method('variable')->will($this->returnValue(10));
+		$request->method('variable')->will($this->returnValue($this->current_forum));
 
 		$rule = new in_forum($this->getSerializer(), $user, $request);
 
-		$forum = $serializer->encode(11);
+		$forum = $serializer->encode($this->another_forum);
 		$this->assertFalse($rule->isTrue($forum));
 	}
 }

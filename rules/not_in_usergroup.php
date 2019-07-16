@@ -33,16 +33,6 @@ class not_in_usergroup extends rule_base implements rule_interface
 		return $this->user->lang('RULE_NOT_IN_USERGROUP');
 	}
 
-	public function getDisplayExplain()
-	{
-		return '';
-	}
-
-	public function getDisplayUnit()
-	{
-		return '';
-	}
-
 	public function getType()
 	{
 		return constants::$RULE_TYPE_MULTIPLE_CHOICE;
@@ -56,11 +46,6 @@ class not_in_usergroup extends rule_base implements rule_interface
 	public function getPossibleValues()
 	{
 		return $this->data_layer->getAllGroups();
-	}
-
-	public function validateValues($values)
-	{
-		return true;
 	}
 
 	public function isTrue($conditions)
