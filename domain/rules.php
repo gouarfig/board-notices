@@ -41,7 +41,7 @@ class rules
 		'registered_after',
 		'registered_before',
 		'date',
-		'date_range',
+		// 'date_range',
 		'has_never_visited',
 		'has_not_visited_for',
 		'has_never_posted',
@@ -64,7 +64,7 @@ class rules
 	// Hide obsolete rules (or rules not ready to be released)
 	private $hide = array(
 		'not_logged_in',
-		// 'date_range',
+		'date_range',
 	);
 
 	/**
