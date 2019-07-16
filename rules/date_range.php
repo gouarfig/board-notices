@@ -75,6 +75,7 @@ class date_range extends rule_base implements rule_interface
 
 	private function getDate()
 	{
+		// @todo Sould we get the user timestamp instead of the server one?
 		$datetime = new \DateTime();
 		if ($this->date !== null)
 		{
