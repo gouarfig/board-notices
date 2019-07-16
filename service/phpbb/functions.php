@@ -12,6 +12,9 @@
 
 namespace fq\boardnotices\service\phpbb;
 
+/**
+ * @codeCoverageIgnore
+ */
 class functions implements functions_interface
 {
 	public function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_body.html', $u_action = '')

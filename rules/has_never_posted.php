@@ -38,11 +38,6 @@ class has_never_posted extends rule_base implements rule_interface
 		return $this->user->lang('RULE_HAS_NEVER_POSTED_EXPLAIN');
 	}
 
-	public function getDisplayUnit()
-	{
-		return '';
-	}
-
 	public function getType()
 	{
 		return constants::$RULE_WITH_NO_TYPE;
