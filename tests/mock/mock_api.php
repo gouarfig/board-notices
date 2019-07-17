@@ -34,6 +34,8 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	private $userLang = 'en';
 	private $userRankId = 0;
 	private $userRankTitle = '';
+	private $userAnonymous = false;
+	private $userStyle = null;
 
 	public function __construct()
 	{
@@ -89,6 +91,11 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 		}
 	}
 
+	public function setUserAnonymous($anonymous = true)
+	{
+		$this->userAnonymous = $anonymous ? true : false;
+	}
+
 	public function setUserLoggedIn($loggedIn)
 	{
 		$this->userLoggedIn = $loggedIn ? true : false;
@@ -120,6 +127,11 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 		$this->userRankTitle = $rankTitle;
 	}
 
+	public function setUserStyle($style)
+	{
+		$this->userStyle = $style;
+	}
+
 	public function setCurrentForum($forumId, $topicId = null)
 	{
 		$this->currentForum = $forumId;
@@ -136,6 +148,11 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	public function isUserRegistered()
 	{
 		return $this->userRegistered;
+	}
+
+	public function isUserAnonymous()
+	{
+		return $this->userAnonymous;
 	}
 
 	public function isUserLoggedIn()
@@ -191,6 +208,11 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	public function getUserRankTitle()
 	{
 		return $this->userRankTitle;
+	}
+
+	public function getUserStyle()
+	{
+		return $this->userStyle;
 	}
 
 	public function createDateTime($time = 'now', \DateTimeZone $timezone = null)

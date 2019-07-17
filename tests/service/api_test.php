@@ -59,6 +59,30 @@ class api_test extends \phpbb_test_case
 	/**
 	 * @depends testCanInstantiate
 	 */
+	public function testUserIsNotAnonymous()
+	{
+		list($functions, $user, $language, $request) = $this->createDependencies();
+		$user->data['user_id'] = 1001;
+
+		$api = new api($functions, $user, $language, $request);
+		$this->assertFalse($api->isUserAnonymous());
+	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
+	public function testUserIsAnonymous()
+	{
+		list($functions, $user, $language, $request) = $this->createDependencies();
+		$user->data['user_id'] = ANONYMOUS;
+
+		$api = new api($functions, $user, $language, $request);
+		$this->assertTrue($api->isUserAnonymous());
+	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
 	public function testUserHasNoId()
 	{
 		list($functions, $user, $language, $request) = $this->createDependencies();
@@ -218,6 +242,18 @@ class api_test extends \phpbb_test_case
 
 		$api = new api($functions, $user, $language, $request);
 		$this->assertEquals(110, $api->getUserPostCount());
+	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
+	public function testGetUserStyle()
+	{
+		list($functions, $user, $language, $request) = $this->createDependencies();
+		$user->data['user_style'] = 110;
+
+		$api = new api($functions, $user, $language, $request);
+		$this->assertEquals(110, $api->getUserStyle());
 	}
 
 	/**

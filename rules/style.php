@@ -23,10 +23,15 @@ class style extends rule_base implements rule_interface
 	private $request;
 	private $config;
 
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\users_interface $data_layer, \phpbb\request\request $request, \phpbb\config\config $config)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api,
+		\fq\boardnotices\repository\users_interface $data_layer,
+		\phpbb\request\request $request,
+		\phpbb\config\config $config)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
+		$this->api = $api;
 		$this->data_layer = $data_layer;
 		$this->request = $request;
 		$this->config = $config;
@@ -34,7 +39,7 @@ class style extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_STYLE');
+		return $this->api->lang('RULE_STYLE');
 	}
 
 	public function getType()
@@ -57,13 +62,13 @@ class style extends rule_base implements rule_interface
 		$valid = false;
 
 		$user_style = null;
-		if ($this->user->data['user_id'] == ANONYMOUS)
+		if ($this->api->isUserAnonymous())
 		{
-			$user_style = $this->getStyleFromCookie();
+			$user_style = $this->getStyleFromCookie();	// @codeCoverageIgnore
 		}
 		if (empty($user_style))
 		{
-			$user_style = $this->user->data['user_style'];
+			$user_style = $this->api->getUserStyle();
 		}
 
 		$styles = $this->validateArrayOfConditions($conditions);
@@ -82,16 +87,9 @@ class style extends rule_base implements rule_interface
 		return $valid;
 	}
 
-	public function getAvailableVars()
-	{
-		return array();
-	}
-
-	public function getTemplateVars()
-	{
-		return array();
-	}
-
+	/**
+	 * @codeCoverageIgnore
+	 */
 	private function getStyleFromCookie($default = null)
 	{
 		$name = $this->config['cookie_name'] . '_style';

@@ -5,14 +5,14 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\style;
+use fq\boardnotices\tests\mock\mock_api;
 
 class style_test extends rule_test_base
 {
 	public function testInstance()
 	{
 		$serializer = $this->getSerializer();
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
+		$api = new mock_api();
 
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
@@ -23,21 +23,21 @@ class style_test extends rule_test_base
 		/** @var \phpbb\config\config $config */
 		$config = $this->getMockBuilder('\phpbb\config\config')->disableOriginalConstructor()->getMock();
 
-		$rule = new style($this->getSerializer(), $user, $datalayer, $request, $config);
+		$rule = new style($serializer, $api, $datalayer, $request, $config);
 		$this->assertNotNull($rule);
 
-		return array($serializer, $user, $rule);
+		return array($serializer, $api, $rule);
 	}
 
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param style $rule
 	 */
 	public function testGetDisplayName($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$display = $rule->getDisplayName();
 		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
@@ -45,12 +45,12 @@ class style_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param style $rule
 	 */
 	public function testGetType($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$type = $rule->getType();
 		$this->assertThat($type, $this->equalTo('multiple choice'));
 	}
@@ -58,12 +58,12 @@ class style_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param style $rule
 	 */
 	public function testGetPossibleValues($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$values = $rule->getPossibleValues();
 		$this->assertThat($values, $this->isNull());
 	}
@@ -71,12 +71,12 @@ class style_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param style $rule
 	 */
 	public function testGetAvailableVars($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$vars = $rule->getAvailableVars();
 		$this->assertEquals(0, count($vars));
 	}
@@ -84,12 +84,12 @@ class style_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param style $rule
 	 */
 	public function testGetTemplateVars($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$vars = $rule->getTemplateVars();
 		$this->assertEquals(0, count($vars));
 	}
@@ -138,20 +138,19 @@ class style_test extends rule_test_base
 	public function testRuleConditionsForNormalUser($userStyle, $conditions, $result)
 	{
 		$serializer = $this->getSerializer();
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$user->data['user_id'] = 10;
-		$user->data['user_style'] = $userStyle;
+		$api = new mock_api();
+		$api->setUserAnonymous(false);
+		$api->setUserStyle($userStyle);
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 
 		/** @var \phpbb\request\request $request */
 		$request = $this->getMockBuilder('\phpbb\request\request')->disableOriginalConstructor()->getMock();
 
-		/** @var \phpbb\request\config $config */
+		/** @var \phpbb\config\config $config */
 		$config = $this->getMockBuilder('\phpbb\config\config')->disableOriginalConstructor()->getMock();
 
-		$rule = new style($serializer, $user, $datalayer, $request, $config);
+		$rule = new style($serializer, $api, $datalayer, $request, $config);
 
 		$this->assertEquals($result, $rule->isTrue($conditions));
 	}

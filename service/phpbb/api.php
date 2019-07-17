@@ -45,6 +45,11 @@ class api implements api_interface
 		return !empty($this->user->data['is_registered']);
 	}
 
+	public function isUserAnonymous()
+	{
+		return $this->user->data['user_id'] == ANONYMOUS;
+	}
+
 	public function isUserLoggedIn()
 	{
 		return $this->user->data['user_type'] != USER_IGNORE;
@@ -101,6 +106,11 @@ class api implements api_interface
 			$this->user->data,
 			($this->user->data['user_id'] == ANONYMOUS) ? false : $this->getUserPostCount()
 		);
+	}
+
+	public function getUserStyle()
+	{
+		return !empty($this->user->data['user_style']) ? $this->user->data['user_style'] : null;
 	}
 
 	public function createDateTime($time = 'now', \DateTimeZone $timezone = null)

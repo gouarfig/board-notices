@@ -21,6 +21,13 @@ interface api_interface
 	public function isUserRegistered();
 
 	/**
+	 * Returns true if the user is anonymous
+	 *
+	 * @return boolean
+	 */
+	public function isUserAnonymous();
+
+	/**
 	 * Returns true if the user is logged in
 	 *
 	 * @return boolean
@@ -91,6 +98,13 @@ interface api_interface
 	 * @return string
 	 */
 	public function getUserRankTitle();
+
+	/**
+	 * Returns user style ID
+	 *
+	 * @return int
+	 */
+	public function getUserStyle();
 
 	/**
 	* Create a \phpbb\datetime object in the context of the current user

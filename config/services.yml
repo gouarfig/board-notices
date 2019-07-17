@@ -178,12 +178,6 @@ services:
       - '@fq.boardnotices.service.phpbb.api'
       - '@fq.boardnotices.repository.users'
 
-  fq.boardnotices.rules.not_logged_in:
-    class: fq\boardnotices\rules\not_logged_in
-    arguments:
-      - '@fq.boardnotices.service.serializer'
-      - '@user'
-
   fq.boardnotices.rules.logged_in:
     class: fq\boardnotices\rules\logged_in
     arguments:
@@ -194,7 +188,7 @@ services:
     class: fq\boardnotices\rules\style
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
       - '@fq.boardnotices.repository.users'
       - '@request'
       - '@config'
