@@ -55,16 +55,6 @@ class date extends rule_base implements rule_interface
 		return $valid;
 	}
 
-	public function getAvailableVars()
-	{
-		return array();
-	}
-
-	public function getTemplateVars()
-	{
-		return array();
-	}
-
 	public function validateValues($values)
 	{
 		// Make sure there's a least one value (either day, month or year)

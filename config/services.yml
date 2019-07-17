@@ -276,3 +276,9 @@ services:
       - '@fq.boardnotices.service.serializer'
       - '@user'
       - '@request'
+
+  fq.boardnotices.rules.random:
+    class: fq\boardnotices\rules\random
+    arguments:
+      - '@fq.boardnotices.service.serializer'
+      - '@fq.boardnotices.service.phpbb.api'

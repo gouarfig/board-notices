@@ -66,19 +66,15 @@ class in_topic extends rule_base implements rule_interface
 			return false;
 		}
 
-		$topics = $this->validateArrayOfConditions($conditions);
-		$topics = $this->cleanEmptyStringsFromArray($topics);
-		if (!empty($topics) && is_array($topics) && !empty($topics[0]))
+		$topics = $this->validateUniqueCondition($conditions);
+		$topic_list = $this->getArrayOfConditionsForMultipleIntegers($topics);
+		if (!empty($topic_list))
 		{
-			$topic_list = explode(',', $topics[0]);
-			if (!empty($topic_list))
+			foreach ($topic_list as $topic_id)
 			{
-				foreach ($topic_list as $forum_id)
+				if ($current_topic_id == $topic_id)
 				{
-					if ($current_topic_id == $forum_id)
-					{
-						return true;
-					}
+					return true;
 				}
 			}
 		}

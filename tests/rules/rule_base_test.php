@@ -15,14 +15,13 @@ class rule_base_test extends rule_test_base
 	{
 		return array(
 			array(null, array()),
-			array(array(), array()),
-			array(array(""), array()),
-			array(array("toto"), array()),
-			array(array("10"), array(10)),
-			array(array(" 10 "), array(10)),
-			array(array("10,11"), array(10, 11)),
-			array(array(" 10 , 11 "), array(10, 11)),
-			array(array("10, toto ,11"), array(10, 11)),
+			array("toto", array()),
+			array("10", array(10)),
+			array("", array()),
+			array(" 10 ", array(10)),
+			array("10,11", array(10, 11)),
+			array(" 10 , 11 ", array(10, 11)),
+			array("10, toto ,11", array(10, 11)),
 		);
 	}
 
