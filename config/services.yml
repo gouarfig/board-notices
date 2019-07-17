@@ -269,7 +269,7 @@ services:
     class: fq\boardnotices\rules\registered_less_than
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
 
   fq.boardnotices.rules.in_topic:
     class: fq\boardnotices\rules\in_topic

@@ -16,23 +16,22 @@ use \fq\boardnotices\service\constants;
 
 class registered_less_than extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $user */
-	private $user;
-
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
+		$this->api = $api;
 	}
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_REGISTERED_LESS_THAN');
+		return $this->api->lang('RULE_REGISTERED_LESS_THAN');
 	}
 
 	public function getDisplayUnit()
 	{
-		return $this->user->lang('RULE_DAY(S)');
+		return $this->api->lang('RULE_DAY(S)');
 	}
 
 	public function getType()
@@ -45,18 +44,13 @@ class registered_less_than extends rule_base implements rule_interface
 		return 1;
 	}
 
-	public function getPossibleValues()
-	{
-		return null;
-	}
-
 	public function isTrue($conditions)
 	{
-		if (!$this->user->data['is_registered'])
+		if (!$this->api->isUserRegistered())
 		{
 			return false;
 		}
-		$registration_date = $this->getUserRegistrationDate();
+		$registration_date = $this->api->getUserRegistrationDate();
 		if (empty($registration_date))
 		{
 			return false;
@@ -81,11 +75,6 @@ class registered_less_than extends rule_base implements rule_interface
 	public function getTemplateVars()
 	{
 		return $this->template_vars;
-	}
-
-	private function getUserRegistrationDate()
-	{
-		return isset($this->user->data['user_regdate']) ? $this->user->data['user_regdate'] : null;
 	}
 
 	private function setTemplateVars($days)

@@ -5,14 +5,14 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\registered_less_than;
+use fq\boardnotices\tests\mock\mock_api;
 
 class registered_less_than_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$rule = new registered_less_than($this->getSerializer(), $user);
+		$api = new mock_api();
+		$rule = new registered_less_than($this->getSerializer(), $api);
 		$this->assertNotNull($rule);
 
 		return $rule;
@@ -116,16 +116,14 @@ class registered_less_than_test extends rule_test_base
 	 * @param int $days
 	 * @param boolean $result
 	 */
-	public function testConditions($timezone, $registration, $days, $result)
+	public function testConditionsRegisteredUser($timezone, $registration, $days, $result)
 	{
 		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$user->data['is_registered'] = true;
-		$user->timezone = new \DateTimeZone($timezone);
-		$user->data['user_regdate'] = time() + $registration;
-		$rule = new registered_less_than($this->getSerializer(), $user);
+		$api = new mock_api();
+		$api->setTimezone($timezone);
+		$api->setUserRegistrationDate(time() + $registration);
+		$rule = new registered_less_than($this->getSerializer(), $api);
 		$this->assertEquals($result, $rule->isTrue($days));
 		// Put the timezone back
 		date_default_timezone_set($current_timezone);
@@ -142,12 +140,10 @@ class registered_less_than_test extends rule_test_base
 	{
 		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$user->data['is_registered'] = false;
-		$user->timezone = new \DateTimeZone($timezone);
-		$user->data['user_regdate'] = time() + $registration;
-		$rule = new registered_less_than($this->getSerializer(), $user);
+		$api = new mock_api();
+		$api->setTimezone($timezone);
+		$api->setUserRegistered(false);
+		$rule = new registered_less_than($this->getSerializer(), $api);
 		$this->assertFalse($rule->isTrue($days));
 		// Put the timezone back
 		date_default_timezone_set($current_timezone);

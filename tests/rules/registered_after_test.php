@@ -144,7 +144,7 @@ class registered_after_test extends rule_test_base
 				array($timezone[0], null, null, null, true),			// Empty
 				array($timezone[0], 1, 1, 2010, true),					// Before
 				array($timezone[0], 1, 3, 2010, false),					// After
-				array($timezone[0], 28, 2, 2010, false),					// Same day
+				array($timezone[0], 28, 2, 2010, false),				// Same day
 			));
 		}
 		return $data;
