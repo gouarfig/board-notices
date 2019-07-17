@@ -167,7 +167,7 @@ services:
     class: fq\boardnotices\rules\has_never_posted_in_forum
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
       - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.has_posted_in_forum:

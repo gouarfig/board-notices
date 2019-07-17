@@ -5,16 +5,16 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\has_never_posted_in_forum;
+use fq\boardnotices\tests\mock\mock_api;
 
 class has_never_posted_in_forum_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
+		$api = new mock_api();
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
-		$rule = new has_never_posted_in_forum($this->getSerializer(), $user, $datalayer);
+		$rule = new has_never_posted_in_forum($this->getSerializer(), $api, $datalayer);
 		$this->assertNotNull($rule);
 
 		return $rule;
@@ -72,13 +72,12 @@ class has_never_posted_in_forum_test extends rule_test_base
 
 	public function testFalseOnEmptyCondition()
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
+		$api = new mock_api();
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->will($this->returnCallback(array($this, 'getNonDeletedUserPosts')));
 
-		$rule = new has_never_posted_in_forum($this->getSerializer(), $user, $datalayer);
+		$rule = new has_never_posted_in_forum($this->getSerializer(), $api, $datalayer);
 		$this->assertFalse($rule->isTrue(null), "null value doesn't return false");
 		$this->assertFalse($rule->isTrue(serialize(null)), "serialize(null) value doesn't return false");
 		$this->assertFalse($rule->isTrue(''), "'' value doesn't return false");
@@ -88,13 +87,12 @@ class has_never_posted_in_forum_test extends rule_test_base
 
 	public function testTrueConditions()
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
+		$api = new mock_api();
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->will($this->returnCallback(array($this, 'getNonDeletedUserPosts')));
 
-		$rule = new has_never_posted_in_forum($this->getSerializer(), $user, $datalayer);
+		$rule = new has_never_posted_in_forum($this->getSerializer(), $api, $datalayer);
 		$this->assertTrue($rule->isTrue(serialize(array(4))));
 		$this->assertTrue($rule->isTrue(serialize(array(5))));
 		$this->assertTrue($rule->isTrue(serialize(array(4,5))));
@@ -102,13 +100,12 @@ class has_never_posted_in_forum_test extends rule_test_base
 
 	public function testFalseConditions()
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
+		$api = new mock_api();
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->will($this->returnCallback(array($this, 'getNonDeletedUserPosts')));
 
-		$rule = new has_never_posted_in_forum($this->getSerializer(), $user, $datalayer);
+		$rule = new has_never_posted_in_forum($this->getSerializer(), $api, $datalayer);
 		$this->assertFalse($rule->isTrue(serialize(array(1))));
 		$this->assertFalse($rule->isTrue(serialize(1)));
 		$this->assertFalse($rule->isTrue(2));
