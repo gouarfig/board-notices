@@ -20,12 +20,14 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	private $user;
 	private $userRegistered = false;
 	private $userId = null;
+	private $defaultGroupId = null;
 	private $ipAddress = '127.0.0.1';
 	private $sessionId = 'session_id';
 	private $userRegistrationDate = 0;
 	private $userBirthday = '';
 	private $userLastPostTime = 0;
 	private $userPostCount = 0;
+	private $groupNames = array(10 => 'Group Name');
 
 	public function __construct()
 	{
@@ -51,12 +53,12 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	}
 
 	/**
-	 * Please note this function will also set the registration date AND user ID
+	 * Please note this function will also set the registration date, user ID and default group ID
 	 *
 	 * @param bool $registered
 	 * @return void
 	 */
-	public function setUserRegistered($registered, $userId = null)
+	public function setUserRegistered($registered, $userId = null, $defaultGroupId = null)
 	{
 		$this->userRegistered = $registered ? true : false;
 		if ($this->userRegistered && empty($this->userRegistrationDate))
@@ -67,11 +69,17 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 			{
 				$this->userId = 1;
 			}
+			$this->defaultGroupId = $defaultGroupId;
+			if (empty($this->defaultGroupId))
+			{
+				$this->defaultGroupId = 1;
+			}
 		}
 		else if (!$this->userRegistered)
 		{
 			$this->userRegistrationDate = 0;
 			$this->userId = null;
+			$this->defaultGroupId = null;
 		}
 	}
 
@@ -103,6 +111,11 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	public function getUserId()
 	{
 		return $this->userId;
+	}
+
+	public function getUserDefaultGroupId()
+	{
+		return $this->defaultGroupId;
 	}
 
 	public function getUserIpAddress()
@@ -149,5 +162,10 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	public function addAdminLanguage()
 	{
 		// Nothing to do here
+	}
+
+	public function getGroupName($groupId)
+	{
+		return !empty($this->groupNames[$groupId]) ? $this->groupNames[$groupId] : null;
 	}
 }

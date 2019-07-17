@@ -16,21 +16,22 @@ use \fq\boardnotices\service\constants;
 
 class in_default_usergroup extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $user */
-	private $user;
 	/** @var \fq\boardnotices\repository\users_interface $data_layer */
 	private $data_layer;
 
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\users_interface $data_layer)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api,
+		\fq\boardnotices\repository\users_interface $data_layer)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
+		$this->api = $api;
 		$this->data_layer = $data_layer;
 	}
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_IN_DEFAULT_USERGROUP');
+		return $this->api->lang('RULE_IN_DEFAULT_USERGROUP');
 	}
 
 	public function getType()
@@ -52,7 +53,7 @@ class in_default_usergroup extends rule_base implements rule_interface
 	{
 		$valid = false;
 		$group_id = $this->validateUniqueCondition($conditions);
-		$valid = $this->user->data['group_id'] == $group_id;
+		$valid = $this->api->getUserDefaultGroupId() == $group_id;
 		return $valid;
 	}
 
@@ -70,8 +71,8 @@ class in_default_usergroup extends rule_base implements rule_interface
 		}
 		// @codeCoverageIgnoreEnd
 		return array(
-			'GROUPID' => $this->user->data['group_id'],
-			'GROUPNAME' => get_group_name($this->user->data['group_id']),
+			'GROUPID' => $this->api->getUserDefaultGroupId(),
+			'GROUPNAME' => $this->api->getGroupName($this->api->getUserDefaultGroupId()),
 		);
 	}
 

@@ -94,4 +94,12 @@ interface functions_interface
 	* @return string
 	*/
 	function generate_text_for_display($text, $uid, $bitfield, $flags, $censor_text = true);
+
+	/**
+	 * Get group name (defined in functions_user.php)
+	 *
+	 * @param int $group_id
+	 * @return string
+	 */
+	public function get_group_name($group_id);
 }

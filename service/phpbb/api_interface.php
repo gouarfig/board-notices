@@ -27,6 +27,13 @@ interface api_interface
 	public function getUserId();
 
 	/**
+	 * Returns default group ID (or 0)
+	 *
+	 * @return int
+	 */
+	public function getUserDefaultGroupId();
+
+	/**
 	 * Returns the user current IP address
 	 * @return string
 	 */
@@ -85,4 +92,12 @@ interface api_interface
 	 * @return void
 	 */
 	public function addAdminLanguage();
+
+	/**
+	 * Returns group name from group ID
+	 *
+	 * @param int $groupId
+	 * @return string
+	 */
+	public function getGroupName($groupId);
 }

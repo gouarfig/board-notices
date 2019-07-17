@@ -11,9 +11,13 @@ services:
   fq.boardnotices.service.serializer:
     class: fq\boardnotices\service\serializer
 
+  fq.boardnotices.service.phpbb.functions:
+    class: fq\boardnotices\service\phpbb\functions
+
   fq.boardnotices.service.phpbb.api:
     class: fq\boardnotices\service\phpbb\api
     arguments:
+      - '@fq.boardnotices.service.phpbb.functions'
       - '@user'
       - '@language'
       - '@cache'
@@ -22,9 +26,6 @@ services:
       - '@request'
       - '@controller.helper'
       - '@dbal.conn'
-
-  fq.boardnotices.service.phpbb.functions:
-    class: fq\boardnotices\service\phpbb\functions
 
   fq.boardnotices.repository.users:
     class: fq\boardnotices\repository\users
@@ -139,7 +140,7 @@ services:
     class: fq\boardnotices\rules\in_default_usergroup
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
       - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.in_usergroup:

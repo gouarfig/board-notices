@@ -19,15 +19,19 @@ namespace fq\boardnotices\service\phpbb;
  */
 class api implements api_interface
 {
+	/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+	private $functions;
 	/** @var \phpbb\user $user */
 	private $user;
 	/** @var \phpbb\language\language $language */
 	private $language;
 
 	public function __construct(
+		\fq\boardnotices\service\phpbb\functions_interface $functions,
 		\phpbb\user $user,
 		\phpbb\language\language $language)
 	{
+		$this->functions = $functions;
 		$this->user = $user;
 		$this->language = $language;
 	}
@@ -40,6 +44,11 @@ class api implements api_interface
 	public function getUserId()
 	{
 		return $this->user->data['user_id'] || 0;
+	}
+
+	public function getUserDefaultGroupId()
+	{
+		return $this->user->data['group_id'] || 0;
 	}
 
 	public function getUserIpAddress()
@@ -86,5 +95,10 @@ class api implements api_interface
 	public function addAdminLanguage()
 	{
 		$this->language->add_lang('boardnotices_acp', 'fq/boardnotices');
+	}
+
+	public function getGroupName($groupId)
+	{
+		return $this->functions->get_group_name($groupId);
 	}
 }

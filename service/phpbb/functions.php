@@ -61,4 +61,9 @@ class functions implements functions_interface
 	{
 		return generate_text_for_display($text, $uid, $bitfield, $flags, $censor_text = true);
 	}
+
+	public function get_group_name($group_id)
+	{
+		return get_group_name($group_id);
+	}
 }

@@ -8,13 +8,16 @@ class api_test extends \phpbb_test_case
 {
 	public function testCanInstantiate()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 
 		/** @var \phpbb\language\language $language */
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertNotNull($api);
 	}
 
@@ -23,6 +26,9 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testUserIsRegistered()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 		$user->data['is_registered'] = true;
@@ -30,7 +36,7 @@ class api_test extends \phpbb_test_case
 		/** @var \phpbb\language\language $language */
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertTrue($api->isUserRegistered());
 	}
 
@@ -39,6 +45,9 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testUserIsNotRegistered()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 		$user->data['is_registered'] = false;
@@ -46,7 +55,7 @@ class api_test extends \phpbb_test_case
 		/** @var \phpbb\language\language $language */
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertFalse($api->isUserRegistered());
 	}
 
@@ -55,13 +64,16 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testUserHasNoId()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 
 		/** @var \phpbb\language\language $language */
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertEquals(0, $api->getUserId());
 	}
 
@@ -70,6 +82,9 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testGetUserId()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 		$user->data['user_id'] = 11;
@@ -77,8 +92,27 @@ class api_test extends \phpbb_test_case
 		/** @var \phpbb\language\language $language */
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertEquals(11, $api->getUserId());
+	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
+	public function testGetDefaultGroupId()
+	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
+		/** @var \phpbb\user $user */
+		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
+		$user->data['group_id'] = 11;
+
+		/** @var \phpbb\language\language $language */
+		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
+
+		$api = new api($functions, $user, $language);
+		$this->assertEquals(11, $api->getUserDefaultGroupId());
 	}
 
 	/**
@@ -86,13 +120,16 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testUserHasNoRegistrationDate()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 
 		/** @var \phpbb\language\language $language */
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertNull($api->getUserRegistrationDate());
 	}
 
@@ -101,6 +138,9 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testUserRegistrationDate()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 		$user->data['user_regdate'] = 100;
@@ -108,7 +148,7 @@ class api_test extends \phpbb_test_case
 		/** @var \phpbb\language\language $language */
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertEquals(100, $api->getUserRegistrationDate());
 	}
 
@@ -117,6 +157,9 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testCanGetEmptyLanguageString()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 
@@ -124,7 +167,7 @@ class api_test extends \phpbb_test_case
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 		$language->method('lang')->will($this->returnArgument(0));
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertEquals('TEST_LANG', $api->lang('TEST_LANG'));
 	}
 
@@ -133,6 +176,9 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testCanGetDateTime()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 		$user->method('create_datetime')->will($this->returnValue(100));
@@ -140,7 +186,7 @@ class api_test extends \phpbb_test_case
 		/** @var \phpbb\language\language $language */
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertEquals(100, $api->createDateTime());
 	}
 
@@ -149,13 +195,16 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testUserHasNoBirthday()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 
 		/** @var \phpbb\language\language $language */
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertEquals('', $api->getUserBirthday());
 	}
 
@@ -164,6 +213,9 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testGetUserBirthday()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 		$user->data['user_birthday'] = '31-12-2010';
@@ -171,7 +223,7 @@ class api_test extends \phpbb_test_case
 		/** @var \phpbb\language\language $language */
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertEquals('31-12-2010', $api->getUserBirthday());
 	}
 
@@ -180,6 +232,9 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testGetSessionId()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 		$user->data['session_id'] = 'session_id';
@@ -187,7 +242,7 @@ class api_test extends \phpbb_test_case
 		/** @var \phpbb\language\language $language */
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertEquals('session_id', $api->getSessionId());
 	}
 
@@ -196,6 +251,9 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testGetUserIpAddress()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 		$user->ip = '10.0.0.1';
@@ -203,7 +261,7 @@ class api_test extends \phpbb_test_case
 		/** @var \phpbb\language\language $language */
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertEquals('10.0.0.1', $api->getUserIpAddress());
 	}
 
@@ -212,13 +270,16 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testGetLastPostTimeIfNeverPosted()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 
 		/** @var \phpbb\language\language $language */
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertEquals(0, $api->getUserLastPostTime());
 	}
 
@@ -227,6 +288,9 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testGetUserLastPostTime()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 		$user->data['user_lastpost_time'] = 11;
@@ -234,7 +298,7 @@ class api_test extends \phpbb_test_case
 		/** @var \phpbb\language\language $language */
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertEquals(11, $api->getUserLastPostTime());
 	}
 
@@ -243,6 +307,9 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testGetUserPostCount()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 		$user->data['user_posts'] = 110;
@@ -250,7 +317,7 @@ class api_test extends \phpbb_test_case
 		/** @var \phpbb\language\language $language */
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$this->assertEquals(110, $api->getUserPostCount());
 	}
 
@@ -259,6 +326,9 @@ class api_test extends \phpbb_test_case
 	 */
 	public function testCanLoadLanguageForAdminModule()
 	{
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
 
@@ -266,7 +336,7 @@ class api_test extends \phpbb_test_case
 		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
 		$language->expects($this->once())->method('add_lang');
 
-		$api = new api($user, $language);
+		$api = new api($functions, $user, $language);
 		$api->addAdminLanguage();
 	}
 }

@@ -5,66 +5,66 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\in_default_usergroup;
+use fq\boardnotices\tests\mock\mock_api;
 
 class in_default_usergroup_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$user->data['group_id'] = 10;
+		$api = new mock_api();
+		$api->setUserRegistered(true, 11, 10);
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
-		$rule = new in_default_usergroup($this->getSerializer(), $user, $datalayer);
+		$rule = new in_default_usergroup($this->getSerializer(), $api, $datalayer);
 		$this->assertNotNull($rule);
 
-		return array($user, $rule);
+		return array($api, $rule);
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param in_default_usergroup $rule
 	 */
 	public function testGetDisplayName($args)
 	{
-		list($user, $rule) = $args;
+		list($api, $rule) = $args;
 		$display = $rule->getDisplayName();
 		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param in_default_usergroup $rule
 	 */
 	public function testGetType($args)
 	{
-		list($user, $rule) = $args;
+		list($api, $rule) = $args;
 		$type = $rule->getType();
 		$this->assertThat($type, $this->equalTo('list'));
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param in_default_usergroup $rule
 	 */
 	public function testGetPossibleValues($args)
 	{
-		list($user, $rule) = $args;
+		list($api, $rule) = $args;
 		$values = $rule->getPossibleValues();
 		$this->assertThat($values, $this->isNull());
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param in_default_usergroup $rule
 	 */
 	public function testGetAvailableVars($args)
 	{
-		list($user, $rule) = $args;
+		list($api, $rule) = $args;
 		$vars = $rule->getAvailableVars();
 		$this->assertContains('GROUPID', $vars);
 		$this->assertContains('GROUPNAME', $vars);
@@ -73,170 +73,54 @@ class in_default_usergroup_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @runInSeparateProcess
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param in_default_usergroup $rule
 	 */
 	public function testGetTemplateVars($args)
 	{
-		include 'phpBB/ext/fq/boardnotices/tests/functions.php';
+		// include 'phpBB/ext/fq/boardnotices/tests/functions.php';
 
-		list($user, $rule) = $args;
+		list($api, $rule) = $args;
 		$vars = $rule->getTemplateVars();
 		$this->assertEquals(10, $vars['GROUPID']);
 		$this->assertEquals('Group Name', $vars['GROUPNAME']);
 	}
 
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param in_default_usergroup $rule
-	 */
-	public function testRuleEmpty($args)
+	public function getTestData()
 	{
-		list($user, $rule) = $args;
-		$user->data['group_id'] = 10;
-
-		$this->assertFalse($rule->isTrue(null));
+		$serializer = $this->getSerializer();
+		return array(
+			array(null, false),
+			array(10, true),
+			array(serialize(10), true),
+			array(serialize(array(10)), true),
+			array($serializer->encode(10), true),
+			array($serializer->encode(array(10)), true),
+			array(11, false),
+			array(serialize(11), false),
+			array(serialize(array(11)), false),
+			array($serializer->encode(11), false),
+			array($serializer->encode(array(11)), false),
+		);
 	}
 
 	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param in_default_usergroup $rule
+	 * @dataProvider getTestData
+	 *
+	 * @param mixed $condition
+	 * @param bool $result
+	 * @return void
 	 */
-	public function testRuleNotInGroup($args)
+	public function testRules($condition, $result)
 	{
-		list($user, $rule) = $args;
-		$user->data['group_id'] = 10;
+		$api = new mock_api();
+		$api->setUserRegistered(true, 11, 10);
 
-		$groups = serialize(array(11));
-		$this->assertFalse($rule->isTrue($groups));
-	}
+		/** @var \fq\boardnotices\repository\users_interface $datalayer */
+		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
+		$rule = new in_default_usergroup($this->getSerializer(), $api, $datalayer);
 
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param in_default_usergroup $rule
-	 */
-	public function testRuleNotInGroupNew($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['group_id'] = 10;
-
-		$groups = $this->getSerializer()->encode(array(11));
-		$this->assertFalse($rule->isTrue($groups));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param in_default_usergroup $rule
-	 */
-	public function testRuleInGroup($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['group_id'] = 10;
-
-		$groups = serialize(array(10));
-		$this->assertTrue($rule->isTrue($groups));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param in_default_usergroup $rule
-	 */
-	public function testRuleInGroupNew($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['group_id'] = 10;
-
-		$groups = $this->getSerializer()->encode(array(10));
-		$this->assertTrue($rule->isTrue($groups));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param in_default_usergroup $rule
-	 */
-	public function testRuleInGroupNotArray($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['group_id'] = 10;
-
-		$groups = 10;
-		$this->assertTrue($rule->isTrue($groups));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param in_default_usergroup $rule
-	 */
-	public function testRuleNotInGroupNotArray($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['group_id'] = 10;
-
-		$groups = 11;
-		$this->assertFalse($rule->isTrue($groups));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param in_default_usergroup $rule
-	 */
-	public function testRuleInGroupNotArraySerialize($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['group_id'] = 10;
-
-		$groups = serialize(10);
-		$this->assertTrue($rule->isTrue($groups));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param in_default_usergroup $rule
-	 */
-	public function testRuleInGroupNotArrayNewSerialize($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['group_id'] = 10;
-
-		$groups = $this->getSerializer()->encode(10);
-		$this->assertTrue($rule->isTrue($groups));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param in_default_usergroup $rule
-	 */
-	public function testRuleNotInGroupNotArraySerialize($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['group_id'] = 10;
-
-		$groups = serialize(11);
-		$this->assertFalse($rule->isTrue($groups));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param in_default_usergroup $rule
-	 */
-	public function testRuleNotInGroupNotArrayNewSerialize($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['group_id'] = 10;
-
-		$groups = $this->getSerializer()->encode(11);
-		$this->assertFalse($rule->isTrue($groups));
+		$this->assertEquals($result, $rule->isTrue($condition));
 	}
 
 }
