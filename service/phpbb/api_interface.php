@@ -58,6 +58,13 @@ interface api_interface
 	public function getUserLastPostTime();
 
 	/**
+	 * Returns the number of posts
+	 *
+	 * @return int
+	 */
+	public function getUserPostCount();
+
+	/**
 	* Create a \phpbb\datetime object in the context of the current user
 	*
 	* @param string $time String in a format accepted by strtotime().

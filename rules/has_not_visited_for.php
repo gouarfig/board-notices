@@ -16,15 +16,16 @@ use \fq\boardnotices\service\constants;
 
 class has_not_visited_for extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $user */
-	private $user;
 	/** @var \fq\boardnotices\repository\users_interface $repository */
 	private $repository;
 
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\users_interface $repository)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api,
+		\fq\boardnotices\repository\users_interface $repository)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
+		$this->api = $api;
 		$this->repository = $repository;
 	}
 
@@ -39,14 +40,14 @@ class has_not_visited_for extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_HAS_NOT_VISITED_FOR_1');
+		return $this->api->lang('RULE_HAS_NOT_VISITED_FOR_1');
 	}
 
 	public function getDisplayUnit()
 	{
 		return array(
-			$this->user->lang('RULE_HAS_NOT_VISITED_FOR_2'),
-			$this->user->lang('RULE_DAY(S)'),
+			$this->api->lang('RULE_HAS_NOT_VISITED_FOR_2'),
+			$this->api->lang('RULE_DAY(S)'),
 		);
 	}
 
@@ -83,11 +84,11 @@ class has_not_visited_for extends rule_base implements rule_interface
 		{
 			return false;
 		}
-		if (!$this->user->data['is_registered'])
+		if (!$this->api->isUserRegistered())
 		{
 			return false;
 		}
-		$visits = $this->repository->getForumsLastReadTime($this->user->data['user_id']);
+		$visits = $this->repository->getForumsLastReadTime($this->api->getUserId());
 		if (empty($visits))
 		{
 			return false;
@@ -104,16 +105,6 @@ class has_not_visited_for extends rule_base implements rule_interface
 			}
 		}
 		return false;
-	}
-
-	public function getAvailableVars()
-	{
-		return array();
-	}
-
-	public function getTemplateVars()
-	{
-		return array();
 	}
 
 }

@@ -67,6 +67,11 @@ class api implements api_interface
 		return isset($this->user->data['user_lastpost_time']) ? $this->user->data['user_lastpost_time'] : 0;
 	}
 
+	public function getUserPostCount()
+	{
+		return isset($this->user->data['user_posts']) ? $this->user->data['user_posts'] : 0;
+	}
+
 	public function createDateTime($time = 'now', \DateTimeZone $timezone = null)
 	{
 		return $this->user->create_datetime($time, $timezone);

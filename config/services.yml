@@ -236,14 +236,14 @@ services:
     class: fq\boardnotices\rules\has_not_visited_for
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
       - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.has_posted_exactly:
     class: fq\boardnotices\rules\has_posted_exactly
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
 
   fq.boardnotices.rules.has_posted_less:
     class: fq\boardnotices\rules\has_posted_less

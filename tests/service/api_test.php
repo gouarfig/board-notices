@@ -241,6 +241,22 @@ class api_test extends \phpbb_test_case
 	/**
 	 * @depends testCanInstantiate
 	 */
+	public function testGetUserPostCount()
+	{
+		/** @var \phpbb\user $user */
+		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
+		$user->data['user_posts'] = 110;
+
+		/** @var \phpbb\language\language $language */
+		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
+
+		$api = new api($user, $language);
+		$this->assertEquals(110, $api->getUserPostCount());
+	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
 	public function testCanLoadLanguageForAdminModule()
 	{
 		/** @var \phpbb\user $user */
