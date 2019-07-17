@@ -5,16 +5,16 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\has_never_posted;
+use fq\boardnotices\tests\mock\mock_api;
 
 class has_never_posted_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
+		$api = new mock_api();
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
-		$rule = new has_never_posted($this->getSerializer(), $user, $datalayer);
+		$rule = new has_never_posted($this->getSerializer(), $api, $datalayer);
 		$this->assertNotNull($rule);
 
 		return $rule;
@@ -72,23 +72,21 @@ class has_never_posted_test extends rule_test_base
 
 	public function testRuleTrue()
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
+		$api = new mock_api();
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->willReturn(0);
-		$rule = new has_never_posted($this->getSerializer(), $user, $datalayer);
+		$rule = new has_never_posted($this->getSerializer(), $api, $datalayer);
 		$this->assertTrue($rule->isTrue(null));
 	}
 
 	public function testRuleFalse()
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
+		$api = new mock_api();
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 		$datalayer->method('nonDeletedUserPosts')->willReturn(1);
-		$rule = new has_never_posted($this->getSerializer(), $user, $datalayer);
+		$rule = new has_never_posted($this->getSerializer(), $api, $datalayer);
 		$this->assertFalse($rule->isTrue(null));
 	}
 
