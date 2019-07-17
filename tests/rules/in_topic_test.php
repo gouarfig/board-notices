@@ -5,6 +5,7 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\in_topic;
+use fq\boardnotices\tests\mock\mock_api;
 
 class in_topic_test extends rule_test_base
 {
@@ -14,34 +15,24 @@ class in_topic_test extends rule_test_base
 	public function testInstance()
 	{
 		$serializer = $this->getSerializer();
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$user->data['f'] = 3;
-		$user->data['t'] = $this->current_topic;
+		$api = new mock_api();
+		$api->setCurrentForum(3, $this->current_topic);
 
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue($this->current_topic));
-		// Make sure the mock works
-		$this->assertEquals($this->current_topic, $request->variable('t', 0));
-
-		$rule = new in_topic($this->getSerializer(), $user, $request);
+		$rule = new in_topic($this->getSerializer(), $api);
 		$this->assertNotNull($rule);
 
-		return array($serializer, $user, $rule);
+		return array($serializer, $api, $rule);
 	}
 
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param in_topic $rule
 	 */
 	public function testGetDisplayName($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$display = $rule->getDisplayName();
 		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
@@ -49,12 +40,12 @@ class in_topic_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param in_topic $rule
 	 */
 	public function testGetType($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$type = $rule->getType();
 		$this->assertThat($type, $this->equalTo('multiple int'));
 	}
@@ -62,12 +53,12 @@ class in_topic_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param in_topic $rule
 	 */
 	public function testGetPossibleValues($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$values = $rule->getPossibleValues();
 		$this->assertThat($values, $this->isNull());
 	}
@@ -75,12 +66,12 @@ class in_topic_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param in_topic $rule
 	 */
 	public function testGetAvailableVars($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$vars = $rule->getAvailableVars();
 		$this->assertEquals(0, count($vars));
 	}
@@ -88,12 +79,12 @@ class in_topic_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param in_topic $rule
 	 */
 	public function testGetTemplateVars($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$vars = $rule->getTemplateVars();
 		$this->assertEquals(0, count($vars));
 	}
@@ -137,18 +128,10 @@ class in_topic_test extends rule_test_base
 	 */
 	public function testRule($condition, $result)
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$user->data['f'] = 3;
-		$user->data['t'] = $this->current_topic;
+		$api = new mock_api();
+		$api->setCurrentForum(3, $this->current_topic);
 
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue($this->current_topic));
-
-		$rule = new in_topic($this->getSerializer(), $user, $request);
+		$rule = new in_topic($this->getSerializer(), $api);
 		$this->assertEquals($result, $rule->isTrue($condition));
 	}
 }

@@ -16,26 +16,22 @@ use \fq\boardnotices\service\constants;
 
 class in_topic extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $user */
-	private $user;
-	/** @var \phpbb\request\request $request */
-	private $request;
-
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \phpbb\request\request $request)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
-		$this->request = $request;
+		$this->api = $api;
 	}
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_IN_TOPIC');
+		return $this->api->lang('RULE_IN_TOPIC');
 	}
 
 	public function getDisplayExplain()
 	{
-		return $this->user->lang('RULE_IN_TOPIC_EXPLAIN');
+		return $this->api->lang('RULE_IN_TOPIC_EXPLAIN');
 	}
 
 	public function getType()
@@ -48,11 +44,6 @@ class in_topic extends rule_base implements rule_interface
 		return '';
 	}
 
-	public function getPossibleValues()
-	{
-		return null;
-	}
-
 	public function validateValues($values)
 	{
 		return !empty($values) && is_array($values) && !empty($values[0]);
@@ -60,7 +51,7 @@ class in_topic extends rule_base implements rule_interface
 
 	public function isTrue($conditions)
 	{
-		$current_topic_id = $this->request->variable('t', 0);
+		$current_topic_id = $this->api->getCurrentTopic();
 		if ($current_topic_id == 0)
 		{
 			return false;
@@ -79,16 +70,6 @@ class in_topic extends rule_base implements rule_interface
 			}
 		}
 		return false;
-	}
-
-	public function getAvailableVars()
-	{
-		return array();
-	}
-
-	public function getTemplateVars()
-	{
-		return array();
 	}
 
 }

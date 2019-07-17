@@ -274,8 +274,7 @@ services:
     class: fq\boardnotices\rules\in_topic
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
-      - '@request'
+      - '@fq.boardnotices.service.phpbb.api'
 
   fq.boardnotices.rules.random:
     class: fq\boardnotices\rules\random
