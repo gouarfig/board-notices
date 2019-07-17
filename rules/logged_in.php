@@ -16,23 +16,22 @@ use \fq\boardnotices\service\constants;
 
 class logged_in extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $user */
-	private $user;
-
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
+		$this->api = $api;
 	}
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_LOGGED_IN');
+		return $this->api->lang('RULE_LOGGED_IN');
 	}
 
 	public function getDisplayUnit()
 	{
-		return $this->user->lang('NO_GUEST_OR_BOT');
+		return $this->api->lang('NO_GUEST_OR_BOT');
 	}
 
 	public function getType()
@@ -45,28 +44,11 @@ class logged_in extends rule_base implements rule_interface
 		return false;
 	}
 
-	public function getPossibleValues()
-	{
-		return null;
-	}
-
 	public function isTrue($conditions)
 	{
-		$valid = false;
 		$logged_in_conditions = $this->validateUniqueCondition($conditions);
-		$logged_in = ($this->user->data['user_type'] != USER_IGNORE);
-		$valid = ($logged_in_conditions && $logged_in) || (!$logged_in_conditions && !$logged_in);
-		return $valid;
-	}
-
-	public function getAvailableVars()
-	{
-		return array();
-	}
-
-	public function getTemplateVars()
-	{
-		return array();
+		$logged_in = $this->api->isUserLoggedIn();
+		return ($logged_in_conditions && $logged_in) || (!$logged_in_conditions && !$logged_in);
 	}
 
 }

@@ -5,19 +5,20 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\logged_in;
+use fq\boardnotices\tests\mock\mock_api;
+use fq\boardnotices\service\phpbb\api;
 
 class logged_in_test extends rule_test_base
 {
 	public function testInstance()
 	{
 		$serializer = $this->getSerializer();
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
+		$api = new mock_api();
 
-		$rule = new logged_in($this->getSerializer(), $user);
+		$rule = new logged_in($this->getSerializer(), $api);
 		$this->assertNotNull($rule);
 
-		return array($serializer, $user, $rule);
+		return array($serializer, $api, $rule);
 	}
 
 	/**
@@ -28,7 +29,7 @@ class logged_in_test extends rule_test_base
 	 */
 	public function testGetDisplayName($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$display = $rule->getDisplayName();
 		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
@@ -41,7 +42,7 @@ class logged_in_test extends rule_test_base
 	 */
 	public function testGetDisplayUnit($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$display = $rule->getDisplayUnit();
 		$this->assertNotEmpty($display, "DisplayUnit is empty");
 	}
@@ -54,7 +55,7 @@ class logged_in_test extends rule_test_base
 	 */
 	public function testGetType($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$type = $rule->getType();
 		$this->assertThat($type, $this->equalTo('yesno'));
 	}
@@ -67,7 +68,7 @@ class logged_in_test extends rule_test_base
 	 */
 	public function testGetPossibleValues($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$values = $rule->getPossibleValues();
 		$this->assertThat($values, $this->isNull());
 	}
@@ -80,7 +81,7 @@ class logged_in_test extends rule_test_base
 	 */
 	public function testGetAvailableVars($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$vars = $rule->getAvailableVars();
 		$this->assertEquals(0, count($vars));
 	}
@@ -93,7 +94,7 @@ class logged_in_test extends rule_test_base
 	 */
 	public function testGetTemplateVars($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$vars = $rule->getTemplateVars();
 		$this->assertEquals(0, count($vars));
 	}
@@ -155,11 +156,23 @@ class logged_in_test extends rule_test_base
 	public function testRuleConditions($userType, $conditions, $result)
 	{
 		$serializer = $this->getSerializer();
+		/** @var \fq\boardnotices\service\phpbb\functions_interface $functions */
+		$functions = $this->getMockBuilder('\fq\boardnotices\service\phpbb\functions_interface')->getMock();
+
 		/** @var \phpbb\user $user */
 		$user = $this->getUser();
 		$user->data['user_type'] = $userType;
 
-		$rule = new logged_in($serializer, $user);
+		/** @var \phpbb\language\language $language */
+		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
+
+		/** @var \phpbb\request\request $request */
+		$request = $this->getMockBuilder('\phpbb\request\request')
+			->disableOriginalConstructor()
+			->getMock();
+
+		$api = new api($functions, $user, $language, $request);
+		$rule = new logged_in($serializer, $api);
 
 		$this->assertEquals($result, $rule->isTrue($conditions));
 	}

@@ -51,10 +51,8 @@ class in_default_usergroup extends rule_base implements rule_interface
 
 	public function isTrue($conditions)
 	{
-		$valid = false;
 		$group_id = $this->validateUniqueCondition($conditions);
-		$valid = $this->api->getUserDefaultGroupId() == $group_id;
-		return $valid;
+		return $this->api->getUserDefaultGroupId() == $group_id;
 	}
 
 	public function getAvailableVars()

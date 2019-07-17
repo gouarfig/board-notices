@@ -21,6 +21,13 @@ interface api_interface
 	public function isUserRegistered();
 
 	/**
+	 * Returns true if the user is logged in
+	 *
+	 * @return boolean
+	 */
+	public function isUserLoggedIn();
+
+	/**
 	 * Returns user ID or 0
 	 * @return int
 	 */
@@ -115,4 +122,11 @@ interface api_interface
 	 * @return int
 	 */
 	public function getCurrentTopic();
+
+	/**
+	 * Get user language code
+	 *
+	 * @return string
+	 */
+	public function getUserLanguage();
 }

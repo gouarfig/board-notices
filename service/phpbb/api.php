@@ -45,6 +45,11 @@ class api implements api_interface
 		return !empty($this->user->data['is_registered']);
 	}
 
+	public function isUserLoggedIn()
+	{
+		return $this->user->data['user_type'] != USER_IGNORE;
+	}
+
 	public function getUserId()
 	{
 		return $this->user->data['user_id'] || 0;
@@ -114,5 +119,10 @@ class api implements api_interface
 	public function getCurrentTopic()
 	{
 		return $this->request->variable('t', 0);
+	}
+
+	public function getUserLanguage()
+	{
+		return $this->user->data['user_lang'];
 	}
 }

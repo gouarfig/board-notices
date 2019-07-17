@@ -19,6 +19,7 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	/** @var \phpbb\user $user */
 	private $user;
 	private $userRegistered = false;
+	private $userLoggedIn = false;
 	private $userId = null;
 	private $defaultGroupId = null;
 	private $ipAddress = '127.0.0.1';
@@ -30,6 +31,7 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	private $groupNames = array(10 => 'Group Name');
 	private $currentForum = 0;
 	private $currentTopic = 0;
+	private $userLang = 'en';
 
 	public function __construct()
 	{
@@ -85,6 +87,11 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 		}
 	}
 
+	public function setUserLoggedIn($loggedIn)
+	{
+		$this->userLoggedIn = $loggedIn ? true : false;
+	}
+
 	/**
 	 * Please note this method will also set the user registered
 	 */
@@ -113,10 +120,19 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 			$this->currentTopic = $topicId;
 		}
 	}
+	public function setUserLanguage($lang)
+	{
+		$this->userLang = $lang;
+	}
 
 	public function isUserRegistered()
 	{
 		return $this->userRegistered;
+	}
+
+	public function isUserLoggedIn()
+	{
+		return $this->userLoggedIn;
 	}
 
 	public function getUserId()
@@ -188,5 +204,10 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	public function getCurrentTopic()
 	{
 		return $this->currentTopic;
+	}
+
+	public function getUserLanguage()
+	{
+		return $this->userLang;
 	}
 }

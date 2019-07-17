@@ -277,4 +277,29 @@ class api_test extends \phpbb_test_case
 		$api = new api($functions, $user, $language, $request);
 		$this->assertEquals(2002, $api->getCurrentTopic());
 	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
+	public function testGetLanguage()
+	{
+		list($functions, $user, $language, $request) = $this->createDependencies();
+		$user->data['user_lang'] = 'en-test';
+
+		$api = new api($functions, $user, $language, $request);
+		$this->assertEquals('en-test', $api->getUserLanguage());
+	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
+	public function testLoggedInStatus()
+	{
+		list($functions, $user, $language, $request) = $this->createDependencies();
+
+		$api = new api($functions, $user, $language, $request);
+		$user->data['user_type'] = USER_IGNORE;
+
+		$this->assertEquals(false, $api->isUserLoggedIn());
+	}
 }
