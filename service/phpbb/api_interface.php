@@ -79,6 +79,20 @@ interface api_interface
 	public function getUserPostCount();
 
 	/**
+	 * Returns user rank ID or 0
+	 *
+	 * @return int
+	 */
+	public function getUserRankId();
+
+	/**
+	 * Returns user title
+	 *
+	 * @return string
+	 */
+	public function getUserRankTitle();
+
+	/**
 	* Create a \phpbb\datetime object in the context of the current user
 	*
 	* @param string $time String in a format accepted by strtotime().

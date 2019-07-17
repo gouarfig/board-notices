@@ -90,6 +90,19 @@ class api implements api_interface
 		return isset($this->user->data['user_posts']) ? $this->user->data['user_posts'] : 0;
 	}
 
+	public function getUserRankId()
+	{
+		return isset($this->user->data['user_rank']) ? $this->user->data['user_rank'] : 0;
+	}
+
+	public function getUserRankTitle()
+	{
+		return $this->functions->phpbb_get_user_rank(
+			$this->user->data,
+			($this->user->data['user_id'] == ANONYMOUS) ? false : $this->getUserPostCount()
+		);
+	}
+
 	public function createDateTime($time = 'now', \DateTimeZone $timezone = null)
 	{
 		return $this->user->create_datetime($time, $timezone);

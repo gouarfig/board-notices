@@ -66,4 +66,9 @@ class functions implements functions_interface
 	{
 		return get_group_name($group_id);
 	}
+
+	public function phpbb_get_user_rank($user_data, $user_posts)
+	{
+		return phpbb_get_user_rank($user_data, $user_posts);
+	}
 }

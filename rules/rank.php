@@ -15,25 +15,28 @@ use \fq\boardnotices\service\constants;
 
 class rank extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $user */
-	private $user;
 	/** @var \fq\boardnotices\repository\users_interface $data_layer */
 	private $data_layer;
+	/** @var \phpbb\cache\service $cache */
+	private $cache;
 	private $user_rank = null;
 
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\users_interface $data_layer)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api,
+		\fq\boardnotices\repository\users_interface $data_layer,
+		\phpbb\cache\service $cache)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
+		$this->api = $api;
 		$this->data_layer = $data_layer;
+		$this->cache = $cache;
 	}
 
 	private function calculateUserRank($user_posts)
 	{
-		/** @var \phpbb\cache\service $cache */
-		global $cache;
 		$user_rank = 0;
-		$ranks = $cache->obtain_ranks();
+		$ranks = $this->cache->obtain_ranks();
 
 		if (!empty($ranks['normal']))
 		{
@@ -55,11 +58,11 @@ class rank extends rule_base implements rule_interface
 		if (is_null($this->user_rank))
 		{
 			// This is for a special rank
-			$this->user_rank = (int) $this->user->data['user_rank'];
+			$this->user_rank = (int) $this->api->getUserRankId();
 			if ($this->user_rank == 0)
 			{
 				// If no special rank, there might be a calculated one (normal rank)
-				$this->user_rank = $this->calculateUserRank($this->user->data['user_posts']);
+				$this->user_rank = $this->calculateUserRank($this->api->getUserPostCount());
 			}
 		}
 		return $this->user_rank;
@@ -67,7 +70,7 @@ class rank extends rule_base implements rule_interface
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_RANK');
+		return $this->api->lang('RULE_RANK');
 	}
 
 	public function getType()
@@ -113,16 +116,9 @@ class rank extends rule_base implements rule_interface
 
 	public function getTemplateVars()
 	{
-		// @codeCoverageIgnoreStart
-		if (!function_exists('phpbb_get_user_rank'))
-		{
-			$this->includeDisplayFunctions();
-		}
-		// @codeCoverageIgnoreEnd
-		$user_rank = phpbb_get_user_rank($this->user->data, ($this->user->data['user_id'] == ANONYMOUS) ? false : $this->user->data['user_posts']);
 		return array(
 			'RANKID' => $this->getUserRank(),
-			'RANK' => $user_rank['title'],
+			'RANK' => $this->api->getUserRankIdTitle(),
 		);
 	}
 

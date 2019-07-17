@@ -102,4 +102,16 @@ interface functions_interface
 	 * @return string
 	 */
 	public function get_group_name($group_id);
+
+	/**
+	 * Get user rank title and image
+	 *
+	 * @param array $user_data the current stored users data
+	 * @param int $user_posts the users number of posts
+	 *
+	 * @return array An associative array containing the rank title (title), the rank image as full img tag (img) and the rank image source (img_src)
+	 *
+	 * Note: since we do not want to break backwards-compatibility, this function will only properly assign ranks to guests if you call it for them with user_posts == false
+	 */
+	public function phpbb_get_user_rank($user_data, $user_posts);
 }

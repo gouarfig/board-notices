@@ -32,6 +32,8 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	private $currentForum = 0;
 	private $currentTopic = 0;
 	private $userLang = 'en';
+	private $userRankId = 0;
+	private $userRankTitle = '';
 
 	public function __construct()
 	{
@@ -112,6 +114,12 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 		$this->userPostCount = $count;
 	}
 
+	public function setUserRank($rankId, $rankTitle)
+	{
+		$this->userRankId = (int) $rankId;
+		$this->userRankTitle = $rankTitle;
+	}
+
 	public function setCurrentForum($forumId, $topicId = null)
 	{
 		$this->currentForum = $forumId;
@@ -173,6 +181,16 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	public function getUserPostCount()
 	{
 		return $this->userPostCount;
+	}
+
+	public function getUserRankId()
+	{
+		return $this->userRankId;
+	}
+
+	public function getUserRankTitle()
+	{
+		return $this->userRankTitle;
 	}
 
 	public function createDateTime($time = 'now', \DateTimeZone $timezone = null)

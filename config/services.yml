@@ -210,8 +210,9 @@ services:
     class: fq\boardnotices\rules\rank
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
       - '@fq.boardnotices.repository.users'
+      - '@cache'
 
   fq.boardnotices.rules.in_forum:
     class: fq\boardnotices\rules\in_forum

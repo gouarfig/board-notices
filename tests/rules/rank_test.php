@@ -5,6 +5,7 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\rank;
+use fq\boardnotices\tests\mock\mock_api;
 
 class rank_test extends rule_test_base
 {
@@ -19,27 +20,29 @@ class rank_test extends rule_test_base
 	public function testInstance()
 	{
 		$serializer = $this->getSerializer();
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
+		$api = new mock_api();
 
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 
-		$rule = new rank($this->getSerializer(), $user, $datalayer);
+		/** @var \phpbb\cache\service $cache */
+		$cache = $this->getMockBuilder('\phpbb\cache\service')->disableOriginalConstructor()->getMock();
+
+		$rule = new rank($serializer, $api, $datalayer, $cache);
 		$this->assertNotNull($rule);
 
-		return array($serializer, $user, $rule);
+		return array($serializer, $api, $rule);
 	}
 
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param rank $rule
 	 */
 	public function testGetDisplayName($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$display = $rule->getDisplayName();
 		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
@@ -47,12 +50,12 @@ class rank_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param rank $rule
 	 */
 	public function testGetType($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$type = $rule->getType();
 		$this->assertThat($type, $this->equalTo('multiple choice'));
 	}
@@ -60,12 +63,12 @@ class rank_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param rank $rule
 	 */
 	public function testGetPossibleValues($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$values = $rule->getPossibleValues();
 		$this->assertThat($values, $this->isNull());
 	}
@@ -73,12 +76,12 @@ class rank_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param rank $rule
 	 */
 	public function testGetAvailableVars($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$vars = $rule->getAvailableVars();
 		$this->assertEquals(2, count($vars));
 	}
@@ -127,17 +130,16 @@ class rank_test extends rule_test_base
 	public function testRuleConditionsWithSpecialRank($userRank, $conditions, $result)
 	{
 		$serializer = $this->getSerializer();
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$user->data['user_rank'] = $userRank;
+		$api = new mock_api();
+		$api->setUserRank($userRank, '');
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 
-		global $cache;
+		/** @var \phpbb\cache\service $cache */
 		$cache = $this->getMockBuilder('\phpbb\cache\service')->disableOriginalConstructor()->getMock();
 		$cache->method('obtain_ranks')->will($this->returnValue($this->ranks));
 
-		$rule = new rank($serializer, $user, $datalayer);
+		$rule = new rank($serializer, $api, $datalayer, $cache);
 
 		$this->assertEquals($result, $rule->isTrue($conditions));
 		unset($cache);
@@ -205,17 +207,16 @@ class rank_test extends rule_test_base
 	public function testRuleConditionsWithNormalRank($userPosts, $conditions, $result)
 	{
 		$serializer = $this->getSerializer();
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$user->data['user_posts'] = $userPosts;
+		$api = new mock_api();
+		$api->setUserPostCount($userPosts);
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 
-		global $cache;
+		/** @var \phpbb\cache\service $cache */
 		$cache = $this->getMockBuilder('\phpbb\cache\service')->disableOriginalConstructor()->getMock();
 		$cache->method('obtain_ranks')->will($this->returnValue($this->ranks));
 
-		$rule = new rank($serializer, $user, $datalayer);
+		$rule = new rank($serializer, $api, $datalayer, $cache);
 
 		$this->assertEquals($result, $rule->isTrue($conditions));
 		unset($cache);

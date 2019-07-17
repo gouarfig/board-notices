@@ -302,4 +302,28 @@ class api_test extends \phpbb_test_case
 
 		$this->assertEquals(false, $api->isUserLoggedIn());
 	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
+	public function testDefaultUserRankId()
+	{
+		list($functions, $user, $language, $request) = $this->createDependencies();
+
+		$api = new api($functions, $user, $language, $request);
+
+		$this->assertEquals(0, $api->getUserRankId());
+	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
+	public function testDefaultUserRankTitle()
+	{
+		list($functions, $user, $language, $request) = $this->createDependencies();
+
+		$api = new api($functions, $user, $language, $request);
+
+		$this->assertEquals('', $api->getUserRankTitle());
+	}
 }
