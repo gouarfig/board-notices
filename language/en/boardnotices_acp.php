@@ -143,6 +143,7 @@ $lang = array_merge($lang, array(
 	'RULE_IN_TOPIC'							=> "User is currently browsing one of these topic(s)",
 	'RULE_IN_TOPIC_EXPLAIN'					=> "(please input coma separated IDs of topics)",
 	'RULE_RANDOM'							=> "Random - Chances to display the notice is one out of ...",
+
 	// Rules units
 	'RULE_DAY(S)'							=> 'day(s)',
 

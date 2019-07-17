@@ -143,6 +143,7 @@ $lang = array_merge($lang, array(
 	'RULE_REGISTERED_AFTER'					=> "User registered after", //@todo
 	'RULE_IN_TOPIC'							=> "User is currently browsing one of these topic(s)", //@todo
 	'RULE_IN_TOPIC_EXPLAIN'					=> "(please input coma separated IDs of topics)", //@todo
+	'RULE_RANDOM'							=> "Random - Chances to display the notice is one out of ...", //@todo
 
 	// Rules units
 	'RULE_DAY(S)'							=> 'päev(ad)',
