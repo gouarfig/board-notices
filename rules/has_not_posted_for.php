@@ -16,23 +16,22 @@ use \fq\boardnotices\service\constants;
 
 class has_not_posted_for extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $user */
-	private $user;
-
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
+		$this->api = $api;
 	}
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_HAS_NOT_POSTED_FOR_1');
+		return $this->api->lang('RULE_HAS_NOT_POSTED_FOR_1');
 	}
 
 	public function getDisplayUnit()
 	{
-		return $this->user->lang('RULE_HAS_NOT_POSTED_FOR_2');
+		return $this->api->lang('RULE_HAS_NOT_POSTED_FOR_2');
 	}
 
 	public function getType()
@@ -45,18 +44,13 @@ class has_not_posted_for extends rule_base implements rule_interface
 		return 0;
 	}
 
-	public function getPossibleValues()
-	{
-		return null;
-	}
-
 	public function isTrue($conditions)
 	{
 		$valid = false;
 		$days = $this->validateUniqueCondition($conditions);
-		if ($this->user->data['user_lastpost_time'] > 0)
+		if ($this->api->getUserLastPostTime() > 0)
 		{
-			$valid = ((time() - $this->user->data['user_lastpost_time']) >= ($days * 24 * 60 * 60));
+			$valid = ((time() - $this->api->getUserLastPostTime()) >= ($days * 24 * 60 * 60));
 		}
 		return $valid;
 	}

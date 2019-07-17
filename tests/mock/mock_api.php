@@ -24,6 +24,7 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	private $sessionId = 'session_id';
 	private $userRegistrationDate = 0;
 	private $userBirthday = '';
+	private $userLastPostTime = 0;
 
 	public function __construct()
 	{
@@ -83,6 +84,11 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 		return $this;
 	}
 
+	public function setUserLastPostTime($time)
+	{
+		$this->userLastPostTime = $time;
+	}
+
 	public function isUserRegistered()
 	{
 		return $this->userRegistered;
@@ -111,6 +117,11 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	public function getUserBirthday()
 	{
 		return $this->userBirthday;
+	}
+
+	public function getUserLastPostTime()
+	{
+		return $this->userLastPostTime;
 	}
 
 	public function createDateTime($time = 'now', \DateTimeZone $timezone = null)

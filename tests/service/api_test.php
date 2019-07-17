@@ -210,6 +210,37 @@ class api_test extends \phpbb_test_case
 	/**
 	 * @depends testCanInstantiate
 	 */
+	public function testGetLastPostTimeIfNeverPosted()
+	{
+		/** @var \phpbb\user $user */
+		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
+
+		/** @var \phpbb\language\language $language */
+		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
+
+		$api = new api($user, $language);
+		$this->assertEquals(0, $api->getUserLastPostTime());
+	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
+	public function testGetUserLastPostTime()
+	{
+		/** @var \phpbb\user $user */
+		$user = $this->getMockBuilder('\phpbb\user')->disableOriginalConstructor()->getMock();
+		$user->data['user_lastpost_time'] = 11;
+
+		/** @var \phpbb\language\language $language */
+		$language = $this->getMockBuilder('\phpbb\language\language')->disableOriginalConstructor()->getMock();
+
+		$api = new api($user, $language);
+		$this->assertEquals(11, $api->getUserLastPostTime());
+	}
+
+	/**
+	 * @depends testCanInstantiate
+	 */
 	public function testCanLoadLanguageForAdminModule()
 	{
 		/** @var \phpbb\user $user */

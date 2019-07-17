@@ -51,6 +51,13 @@ interface api_interface
 	public function getUserBirthday();
 
 	/**
+	 * Returns user latest post time (as a unix timestamp)
+	 *
+	 * @return int
+	 */
+	public function getUserLastPostTime();
+
+	/**
 	* Create a \phpbb\datetime object in the context of the current user
 	*
 	* @param string $time String in a format accepted by strtotime().
