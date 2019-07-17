@@ -16,21 +16,22 @@ use \fq\boardnotices\service\constants;
 
 class in_usergroup extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $user */
-	private $user;
-	/** @var \fq\boardnotices\repository\users_interface $data_layer */
+	/** @var \fq\boardnotices\repository\apis_interface $data_layer */
 	private $data_layer;
 
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\users_interface $data_layer)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api,
+		\fq\boardnotices\repository\users_interface $data_layer)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
+		$this->api = $api;
 		$this->data_layer = $data_layer;
 	}
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_IN_USERGROUP');
+		return $this->api->lang('RULE_IN_USERGROUP');
 	}
 
 	public function getType()
@@ -63,16 +64,6 @@ class in_usergroup extends rule_base implements rule_interface
 			}
 		}
 		return false;
-	}
-
-	public function getAvailableVars()
-	{
-		return array();
-	}
-
-	public function getTemplateVars()
-	{
-		return array();
 	}
 
 }

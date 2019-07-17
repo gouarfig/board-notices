@@ -147,7 +147,7 @@ services:
     class: fq\boardnotices\rules\in_usergroup
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
       - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.not_in_usergroup:
