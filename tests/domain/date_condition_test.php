@@ -87,4 +87,14 @@ class date_condition_test extends \PHPUnit_Framework_TestCase
 		$this->assertEquals($value, $date->getValue());
 	}
 
+	public function testGeneratingDateTime()
+	{
+		$expected = \DateTime::createFromFormat('!Y-m-d', '2010-03-02');
+		$date = new date_condition(
+			array(2, 3, 2010),
+			getdate()
+		);
+		$this->assertEquals($expected, $date->getDateTime());
+	}
+
 }

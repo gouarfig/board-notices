@@ -162,14 +162,74 @@ class date_range extends rule_base implements rule_interface
 		if ($dates->hasOnlyBothDaysMonths())
 		{
 			// Symmetrical type 4
+			if ($dates->getStartDateCondition()->getMonth() <= $dates->getEndDateCondition()->getMonth())
+			{
+				// Months in order, just need to add the current year
+				$dates->getStartDateCondition()->setCurrentYear();
+				$dates->getEndDateCondition()->setCurrentYear();
+				$comparison = \DateTime::createFromFormat('!Y-m-d', "{$now["year"]}-{$now["mon"]}-{$now["mday"]}");
+				return ($dates->getStartDateCondition()->getDateTime() <= $comparison)
+					&& ($dates->getEndDateCondition()->getDateTime() >= $comparison);
+			}
+			else
+			{
+				# Month in reverse order, doing it in to passes
+				$dates->getStartDateCondition()->setPreviousYear();
+				$dates->getEndDateCondition()->setCurrentYear();
+				$comparison = \DateTime::createFromFormat('!Y-m-d', "{$now["year"]}-{$now["mon"]}-{$now["mday"]}");
+				if (($dates->getStartDateCondition()->getDateTime() <= $comparison)
+				&& ($dates->getEndDateCondition()->getDateTime() >= $comparison))
+				{
+					return true;
+				}
+				$dates->getStartDateCondition()->setCurrentYear();
+				$dates->getEndDateCondition()->setNextYear();
+				$comparison = \DateTime::createFromFormat('!Y-m-d', "{$now["year"]}-{$now["mon"]}-{$now["mday"]}");
+				return ($dates->getStartDateCondition()->getDateTime() <= $comparison)
+					&& ($dates->getEndDateCondition()->getDateTime() >= $comparison);
+			}
 		}
 		if ($dates->hasOnlyBothMonthsYears())
 		{
 			// Symmetrical type 5
+			$start = $dates->getStartDateCondition()->setFirstDay();
+			$end = $dates->getEndDateCondition()->setLastDay();
+			$comparison = \DateTime::createFromFormat('!Y-m-d', "{$now["year"]}-{$now["mon"]}-{$now["mday"]}");
+			return ($start->getDateTime() <= $comparison)
+				&& ($end->getDateTime() >= $comparison);
 		}
 		if ($dates->hasOnlyBothDaysYears())
 		{
 			// Symmetrical type 6
+			// Create a virtual number for comparison
+			$date1 = $dates->getStartDateCondition()->getYear() * 100 + $dates->getStartDateCondition()->getDay();
+			$date2 = $dates->getEndDateCondition()->getYear() * 100 + $dates->getEndDateCondition()->getDay();
+			if ($date1 <= $date2)
+			{
+				// Dates in order
+				$start = $dates->getStartDateCondition()->setCurrentMonth();
+				$end = $dates->getEndDateCondition()->setCurrentMonth();
+				$comparison = \DateTime::createFromFormat('!Y-m-d', "{$now["year"]}-{$now["mon"]}-{$now["mday"]}");
+				return ($start->getDateTime() <= $comparison)
+					&& ($end->getDateTime() >= $comparison);
+			}
+			else
+			{
+				// Reverse order so need to do 2 checks, previous month and next month
+				$dates->getStartDateCondition()->setPreviousMonth();
+				$dates->getEndDateCondition()->setCurrentMonth();
+				$comparison = \DateTime::createFromFormat('!Y-m-d', "{$now["year"]}-{$now["mon"]}-{$now["mday"]}");
+				if (($dates->getStartDateCondition()->getDateTime() <= $comparison)
+				&& ($dates->getEndDateCondition()->getDateTime() >= $comparison))
+				{
+					return true;
+				}
+				$dates->getStartDateCondition()->setCurrentMonth();
+				$dates->getEndDateCondition()->setNextMonth();
+				$comparison = \DateTime::createFromFormat('!Y-m-d', "{$now["year"]}-{$now["mon"]}-{$now["mday"]}");
+				return ($dates->getStartDateCondition()->getDateTime() <= $comparison)
+					&& ($dates->getEndDateCondition()->getDateTime() >= $comparison);
+			}
 		}
 		if ($dates->hasBothFullDate())
 		{

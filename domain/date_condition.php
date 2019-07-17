@@ -8,6 +8,21 @@ class date_condition
 	private $month;
 	private $year;
 
+	private $days_per_month = array(
+		1 => 31,
+		2 => 28,
+		3 => 31,
+		4 => 30,
+		5 => 31,
+		6 => 30,
+		7 => 31,
+		8 => 31,
+		9 => 30,
+		10 => 31,
+		11 => 30,
+		12 => 31,
+	);
+
 	/**
 	 * Parameter $date should be an array of 3 values: (day, month, year)
 	 * A value of zero means "any"
@@ -147,7 +162,7 @@ class date_condition
 	 */
 	public function setDay($day)
 	{
-		$this->day = $day;
+		$this->day = (int) $day;
 		return $this;
 	}
 
@@ -166,8 +181,11 @@ class date_condition
 	 */
 	public function setLastDay()
 	{
-		// Magic value that will be converted into the last day of the month
-		return $this->setDay(32);
+		if (!empty($this->month))
+		{
+			return $this->setDay($this->days_per_month[(int) $this->month]);
+		}
+		return $this->setDay(31);
 	}
 
 	/**
@@ -176,8 +194,41 @@ class date_condition
 	 */
 	public function setMonth($month)
 	{
+		$month = (int) $month;
+		if ($month < 1)
+		{
+			$month = 12;
+		}
+		else if ($month > 12)
+		{
+			$month = 1;
+		}
 		$this->month = $month;
 		return $this;
+	}
+
+	/**
+	 * @return date_condition
+	 */
+	public function setCurrentMonth()
+	{
+		return $this->setMonth($this->now['mon']);
+	}
+
+	/**
+	 * @return date_condition
+	 */
+	public function setPreviousMonth()
+	{
+		return $this->setMonth($this->now['mon'] -1);
+	}
+
+	/**
+	 * @return date_condition
+	 */
+	public function setNextMonth()
+	{
+		return $this->setMonth($this->now['mon'] +1);
 	}
 
 	/**
@@ -205,7 +256,7 @@ class date_condition
 	 */
 	public function setYear($year)
 	{
-		$this->year = $year;
+		$this->year = (int) $year;
 		return $this;
 	}
 
@@ -234,5 +285,19 @@ class date_condition
 	public function setNextYear()
 	{
 		return $this->setYear($this->now['year'] + 1);
+	}
+
+	/**
+	 * Return a \DateTime of the date
+	 *
+	 * @return \DateTime
+	 */
+	public function getDateTime()
+	{
+		if (!$this->isFullDate())
+		{
+			throw new \Exception("Can only convert a full date to DateTime. Current date is day={$this->day}, month={$this->month}, year={$this->year}", 1);
+		}
+		return \DateTime::createFromFormat('!Y-m-d', "{$this->year}-{$this->month}-{$this->day}");
 	}
 }

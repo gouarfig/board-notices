@@ -168,7 +168,7 @@ class date_range_test extends rule_test_base
 		return $now;
 	}
 
-	private function buildConditions(\DateTime $datetime, $start, $end)
+	private function buildConditions(\DateTimeImmutable $datetime, $start, $end)
 	{
 		$conditions = array();
 		$conditions[] = $this->buildDateCondition($datetime, $start[0], $start[1], $start[2]);
@@ -180,56 +180,54 @@ class date_range_test extends rule_test_base
 	 * null values mean "any" and zero values mean "current one"
 	 * @return int[]
 	 */
-	private function buildDateCondition(\DateTime $datetime, $day = null, $month = null, $year = null)
+	private function buildDateCondition(\DateTimeImmutable $datetime, $day = null, $month = null, $year = null)
 	{
+		$computeDatetime = $datetime;
+		if (!empty($day))
+		{
+			if ($day < 0)
+			{
+				$computeDatetime = $computeDatetime->sub(new \DateInterval('P' . abs($day) . 'D'));
+			}
+			else
+			{
+				$computeDatetime = $computeDatetime->add(new \DateInterval("P{$day}D"));
+			}
+		}
+		if (!empty($month))
+		{
+			if ($month < 0)
+			{
+				$computeDatetime = $computeDatetime->sub(new \DateInterval('P' . abs($month) . 'M'));
+			}
+			else
+			{
+				$computeDatetime = $computeDatetime->add(new \DateInterval("P{$month}M"));
+			}
+		}
+		if (!empty($year))
+		{
+			if ($year < 0)
+			{
+				$computeDatetime = $computeDatetime->sub(new \DateInterval('P' . abs($year) . 'Y'));
+			}
+			else
+			{
+				$computeDatetime = $computeDatetime->add(new \DateInterval("P{$year}Y"));
+			}
+		}
 		$conditions = array(0, 0, 0);
 		if (!is_null($day))
 		{
-			$day = intval($day);
-			if ($day == 0)
-			{
-				$conditions[0] = $datetime->format('d');
-			}
-			else
-			{
-				$conditions[0] = $datetime->format('d') + $day;
-				// We can't get to zero, it means "any"
-				if ($conditions[0] == 0)
-				{
-					$conditions[0] = 30;
-				}
-			}
+			$conditions[0] = $computeDatetime->format('d');
 		}
-
 		if (!is_null($month))
 		{
-			$month = intval($month);
-			if ($month == 0)
-			{
-				$conditions[1] = $datetime->format('m');
-			}
-			else
-			{
-				$conditions[1] = $datetime->format('m') + $month;
-				// We can't get to zero, it means "any"
-				if ($conditions[1] == 0)
-				{
-					$conditions[1] = 12;
-				}
-			}
+			$conditions[1] = $computeDatetime->format('m');
 		}
-
 		if (!is_null($year))
 		{
-			$year = intval($year);
-			if ($year == 0)
-			{
-				$conditions[2] = $datetime->format('Y');
-			}
-			else
-			{
-				$conditions[2] = $datetime->format('Y') + $year;
-			}
+			$conditions[2] = $computeDatetime->format('Y');
 		}
 		return $conditions;
 	}
@@ -244,6 +242,10 @@ class date_range_test extends rule_test_base
 				array($timezone[0], '2010-01-01', null, null, null, array(0, 0, 0)),
 				array($timezone[0], '2010-01-01', 0, 0, 0, array(1, 1, 2010)),
 				array($timezone[0], '2011-10-05', 0, 0, 0, array(5, 10, 2011)),
+				array($timezone[0], '2012-10-05', 1, -1, null, array(6, 9, 0)),
+				array($timezone[0], '2012-01-01', -1, 0, 0, array(31, 12, 2011)),
+				array($timezone[0], '2012-12-30', 3, 0, 0, array(2, 1, 2013)),
+				array($timezone[0], '2012-12-30', null, 0, null, array(0, 12, 0)),
 			));
 		}
 		return $data;
@@ -256,7 +258,7 @@ class date_range_test extends rule_test_base
 	{
 		$current_timezone = date_default_timezone_get();
 		date_default_timezone_set($timezone);
-		$datetime = \DateTime::createFromFormat('!Y-m-d', $date, new \DateTimeZone($timezone));
+		$datetime = \DateTimeImmutable::createFromFormat('!Y-m-d', $date, new \DateTimeZone($timezone));
 		$condition = $this->buildDateCondition($datetime, $day, $month, $year);
 		$this->assertEquals($result, $condition);
 
@@ -270,7 +272,7 @@ class date_range_test extends rule_test_base
 		$timezones = $this->getTimezones();
 		foreach ($timezones as $timezone)
 		{
-			foreach (array(null, '2019-01-01', '2018-12-31', '2019-02-28', '2019-03-01') as $now)
+			foreach (array(null, '2019-01-01', '2018-12-31', '2019-02-28', '2019-03-01', '2015-03-30') as $now)
 			{
 				// array(timezone, now, start, end, result)
 				$data = array_merge($data, array(
@@ -286,7 +288,7 @@ class date_range_test extends rule_test_base
 					array($timezone[0], $now, array(null, 0, null), array(null, 0, null), true),			// This month
 					array($timezone[0], $now, array(null, 0, null), array(null, 1, null), true),			// This month and next
 					array($timezone[0], $now, array(null, -1, null), array(null, 0, null), true),			// This month and previous
-					array($timezone[0], $now, array(null, -1, null), array(null, -1, null), false),			// Last month
+					array($timezone[0], $now, array(null, -2, null), array(null, -2, null), false),			// Month before
 					array($timezone[0], $now, array(null, 1, null), array(null, 1, null), false),			// Next month
 					// Symmetrical type 3
 					array($timezone[0], $now, array(null, null, 0), array(null, null, 0), true),			// This year
@@ -295,6 +297,34 @@ class date_range_test extends rule_test_base
 					array($timezone[0], $now, array(null, null, 1), array(null, null, -1), false),			// Years the other way around
 					array($timezone[0], $now, array(null, null, -1), array(null, null, -1), false),			// Last year
 					array($timezone[0], $now, array(null, null, 1), array(null, null, 1), false),			// Next year
+					// Symmetrical type 4
+					array($timezone[0], $now, array(0, 0, null), array(0, 0, null), true),					// From today to today
+					array($timezone[0], $now, array(0, 0, null), array(1, 0, null), true),					// From today to tomorrow
+					array($timezone[0], $now, array(-1, 0, null), array(0, 0, null), true),					// From yesterday to today
+					array($timezone[0], $now, array(-1, 0, null), array(-1, 0, null), false),				// Previous day
+					array($timezone[0], $now, array(1, 0, null), array(1, 0, null), false),					// Next day
+					array($timezone[0], $now, array(-2, -1, null), array(-2, -1, null), false),				// Previous month
+					array($timezone[0], $now, array(0, 1, null), array(0, 1, null), false),					// Next month
+					array($timezone[0], $now, array(0, 1, null), array(0, -1, null), false),				// From next month to previous month
+					// Symmetrical type 5
+					array($timezone[0], $now, array(null, 0, 0), array(null, 0, 0), true),					// This month this year
+					array($timezone[0], $now, array(null, -1, 0), array(null, 0, 0), true),					// Previous month to this month
+					array($timezone[0], $now, array(null, 0, 0), array(null, 1, 0), true),					// This month to next month
+					array($timezone[0], $now, array(null, 1, -1), array(null, -2, 0), false),				// In between last year and this year minus 2 months
+					array($timezone[0], $now, array(null, 1, 0), array(null, -1, 1), false),				// In between this year +1 month and next year
+					array($timezone[0], $now, array(null, 1, -1), array(null, 1, 0), true),					// In between last year and this year plus 1 month
+					array($timezone[0], $now, array(null, -1, 0), array(null, -1, 1), true),				// In between this year -1 month and next year
+					// Symmetrical type 6
+					array($timezone[0], $now, array(0, null, 0), array(0, null, 0), true),					// Today this year
+					array($timezone[0], $now, array(-1, null, 0), array(0, null, 0), true),					// Yesterday/today this year
+					array($timezone[0], $now, array(0, null, 0), array(1, null, 0), true),					// Today/tomorrow this year
+					array($timezone[0], $now, array(-1, null, 0), array(-1, null, 0), false),				// Yesterday this year
+					array($timezone[0], $now, array(1, null, 0), array(1, null, 0), false),					// Tomorrow this year
+					array($timezone[0], $now, array(0, null, -1), array(0, null, 0), true),					// Last year to this year
+					array($timezone[0], $now, array(0, null, 0), array(0, null, 1), true),					// This year to next year
+					// Type 7 = full date
+					array($timezone[0], $now, array(0, 0, -1), array(-1, 0, 0), false),						// Until yesterday
+					array($timezone[0], $now, array(1, 0, 0), array(0, 0, 1), false),						// Starting tomorrow
 				));
 			}
 		}
@@ -321,7 +351,7 @@ class date_range_test extends rule_test_base
 		{
 			$date = date('Y-m-d');
 		}
-		$datetime = \DateTime::createFromFormat('!Y-m-d', $date, new \DateTimeZone($timezone));
+		$datetime = \DateTimeImmutable::createFromFormat('!Y-m-d', $date, new \DateTimeZone($timezone));
 		$conditions = $this->buildConditions($datetime, $start, $end);
 		$this->assertEquals(
 			$result,
