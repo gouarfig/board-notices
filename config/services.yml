@@ -229,7 +229,7 @@ services:
     class: fq\boardnotices\rules\has_never_visited
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
       - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.has_not_visited_for:

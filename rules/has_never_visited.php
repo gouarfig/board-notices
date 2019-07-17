@@ -16,21 +16,22 @@ use \fq\boardnotices\service\constants;
 
 class has_never_visited extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $user */
-	private $user;
 	/** @var \fq\boardnotices\repository\users_interface $repository */
 	private $repository;
 
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \fq\boardnotices\repository\users_interface $repository)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api,
+		\fq\boardnotices\repository\users_interface $repository)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
+		$this->api = $api;
 		$this->repository = $repository;
 	}
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_HAS_NEVER_VISITED');
+		return $this->api->lang('RULE_HAS_NEVER_VISITED');
 	}
 
 	public function getType()
@@ -43,11 +44,6 @@ class has_never_visited extends rule_base implements rule_interface
 		return array(0);
 	}
 
-	public function getPossibleValues()
-	{
-		return null;
-	}
-
 	public function isTrue($conditions)
 	{
 		$forums = $this->validateArrayOfConditions($conditions);
@@ -55,11 +51,11 @@ class has_never_visited extends rule_base implements rule_interface
 		{
 			return false;
 		}
-		if (!$this->user->data['is_registered'])
+		if (!$this->api->isUserRegistered())
 		{
 			return false;
 		}
-		$visits = $this->repository->getForumsLastReadTime($this->user->data['user_id']);
+		$visits = $this->repository->getForumsLastReadTime($this->api->getUserId());
 		if (empty($visits))
 		{
 			return true;
@@ -72,16 +68,6 @@ class has_never_visited extends rule_base implements rule_interface
 			}
 		}
 		return true;
-	}
-
-	public function getAvailableVars()
-	{
-		return array();
-	}
-
-	public function getTemplateVars()
-	{
-		return array();
 	}
 
 }

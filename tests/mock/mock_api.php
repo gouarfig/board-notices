@@ -49,6 +49,31 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	}
 
 	/**
+	 * Please note this function will also set the registration date AND user ID
+	 *
+	 * @param bool $registered
+	 * @return void
+	 */
+	public function setUserRegistered($registered, $userId = null)
+	{
+		$this->userRegistered = $registered ? true : false;
+		if ($this->userRegistered && empty($this->userRegistrationDate))
+		{
+			$this->userRegistrationDate = mktime(12, 11, 00, 3, 2, 2010);
+			$this->userId = $userId;
+			if (empty($this->userId))
+			{
+				$this->userId = 1;
+			}
+		}
+		else if (!$this->userRegistered)
+		{
+			$this->userRegistrationDate = 0;
+			$this->userId = null;
+		}
+	}
+
+	/**
 	 * Please note this method will also set the user registered
 	 */
 	public function setUserBirthday($birthday)

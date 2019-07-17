@@ -4,92 +4,91 @@ namespace fq\boardnotices\tests\rules;
 
 include_once 'phpBB/includes/functions.php';
 
-use \fq\boardnotices\rules\has_never_visited;
+use fq\boardnotices\rules\has_never_visited;
+use fq\boardnotices\tests\mock\mock_api;
 
 class has_never_visited_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$user->data['is_registered'] = true;
-		$user->data['user_id'] = 11;
+		$api = new mock_api();
+		$api->setUserRegistered(true, 11);
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
-		$rule = new has_never_visited($this->getSerializer(), $user, $datalayer);
+		$rule = new has_never_visited($this->getSerializer(), $api, $datalayer);
 		$this->assertNotNull($rule);
 
-		return array($user, $rule);
+		return array($api, $rule);
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param has_never_visited $rule
 	 */
 	public function testHasSingleParameter($args)
 	{
-		list($user, $rule) = $args;
+		list($api, $rule) = $args;
 		$multiple = $rule->hasMultipleParameters();
 		$this->assertFalse($multiple, "This rule should not have multiple parameters");
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param has_never_visited $rule
 	 */
 	public function testGetDisplayName($args)
 	{
-		list($user, $rule) = $args;
+		list($api, $rule) = $args;
 		$display = $rule->getDisplayName();
 		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param has_never_visited $rule
 	 */
 	public function testGetType($args)
 	{
-		list($user, $rule) = $args;
+		list($api, $rule) = $args;
 		$type = $rule->getType();
 		$this->assertEquals('forums', $type);
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param has_never_visited $rule
 	 */
 	public function testGetPossibleValues($args)
 	{
-		list($user, $rule) = $args;
+		list($api, $rule) = $args;
 		$values = $rule->getPossibleValues();
 		$this->assertNull($values);
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param has_never_visited $rule
 	 */
 	public function testGetAvailableVars($args)
 	{
-		list($user, $rule) = $args;
+		list($api, $rule) = $args;
 		$vars = $rule->getAvailableVars();
 		$this->assertEquals(0, count($vars));
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param has_never_visited $rule
 	 */
 	public function testGetTemplateVars($args)
 	{
-		list($user, $rule) = $args;
+		list($api, $rule) = $args;
 		$vars = $rule->getTemplateVars();
 		$this->assertEquals(0, count($vars));
 	}
@@ -124,10 +123,8 @@ class has_never_visited_test extends rule_test_base
 	 */
 	public function testRuleConditions($conditions, $result)
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$user->data['is_registered'] = true;
-		$user->data['user_id'] = 11;
+		$api = new mock_api();
+		$api->setUserRegistered(true, 11);
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 		$datalayer->method('getForumsLastReadTime')->will($this->returnValue(array(
@@ -135,7 +132,7 @@ class has_never_visited_test extends rule_test_base
 			2 => time() - 86400,
 			3 => time() - (2 * 86400)
 		)));
-		$rule = new has_never_visited($this->getSerializer(), $user, $datalayer);
+		$rule = new has_never_visited($this->getSerializer(), $api, $datalayer);
 
 		$this->assertEquals($result, $rule->isTrue($conditions));
 	}
@@ -147,10 +144,8 @@ class has_never_visited_test extends rule_test_base
 	 */
 	public function testRuleConditionsForNonRegisteredUser($conditions, $result)
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$user->data['is_registered'] = false;
-		$user->data['user_id'] = 11;
+		$api = new mock_api();
+		$api->setUserRegistered(false);
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 		$datalayer->method('getForumsLastReadTime')->will($this->returnValue(array(
@@ -158,7 +153,7 @@ class has_never_visited_test extends rule_test_base
 			2 => time() - 86400,
 			3 => time() - (2 * 86400)
 		)));
-		$rule = new has_never_visited($this->getSerializer(), $user, $datalayer);
+		$rule = new has_never_visited($this->getSerializer(), $api, $datalayer);
 
 		$this->assertFalse($rule->isTrue($conditions));
 	}
@@ -170,14 +165,12 @@ class has_never_visited_test extends rule_test_base
 	 */
 	public function testRuleConditionsForUserWithNoData($conditions, $result)
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$user->data['is_registered'] = true;
-		$user->data['user_id'] = 11;
+		$api = new mock_api();
+		$api->setUserRegistered(true, 11);
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 		$datalayer->method('getForumsLastReadTime')->will($this->returnValue(array()));
-		$rule = new has_never_visited($this->getSerializer(), $user, $datalayer);
+		$rule = new has_never_visited($this->getSerializer(), $api, $datalayer);
 
 		// It's always going to be true if the conditions are not empty
 		$this->assertEquals(
