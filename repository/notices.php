@@ -70,12 +70,12 @@ class notices implements notices_interface
 	{
 		$notices = array();
 		$sql_array = array(
-			'SELECT' => 'n.*',
-			'FROM' => array($this->notices_table => 'n'),
-			'WHERE' => $active_only ? 'n.active=1' : '',
+			constants::$SQL_SELECT => 'n.*',
+			constants::$SQL_FROM => array($this->notices_table => 'n'),
+			constants::$SQL_WHERE => $active_only ? 'n.active=1' : '',
 			'ORDER_BY' => 'n.notice_order',
 		);
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$sql = $this->db->sql_build_query(constants::$SQL_SELECT, $sql_array);
 
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
@@ -441,10 +441,10 @@ class notices implements notices_interface
 	{
 		$rules = array();
 		$sql_array = array(
-			'SELECT' => 'r.*',
-			'FROM' => array($this->notices_rules_table => 'r'),
+			constants::$SQL_SELECT => 'r.*',
+			constants::$SQL_FROM => array($this->notices_rules_table => 'r'),
 		);
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$sql = $this->db->sql_build_query(constants::$SQL_SELECT, $sql_array);
 
 		$result = $this->db->sql_query($sql, $this->cache_ttl);
 		while ($row = $this->db->sql_fetchrow($result))

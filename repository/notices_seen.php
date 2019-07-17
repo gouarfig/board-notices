@@ -61,10 +61,10 @@ class notices_seen implements notices_seen_interface
 	{
 		$notices = array();
 		$sql_array = array(
-			'SELECT' => 'n.*',
-			'FROM' => array($this->notices_seen_table => 'n'),
+			constants::$SQL_SELECT => 'n.*',
+			constants::$SQL_FROM => array($this->notices_seen_table => 'n'),
 		);
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$sql = $this->db->sql_build_query(constants::$SQL_SELECT, $sql_array);
 
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))

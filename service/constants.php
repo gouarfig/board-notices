@@ -17,6 +17,10 @@ namespace fq\boardnotices\service;
  */
 class constants
 {
+	public static $SQL_SELECT = 'SELECT';
+	public static $SQL_FROM = 'FROM';
+	public static $SQL_WHERE = 'WHERE';
+
 	public static $CONFIG_SQL_CACHE_TTL = 'boardnotices_sql_cache_ttl';
 	public static $CONFIG_ACTIVE_NOTICES_CACHE_KEY = 'boardnotices_active_notices';
 	public static $CONFIG_ALL_NOTICES_CACHE_KEY = 'boardnotices_all_notices';

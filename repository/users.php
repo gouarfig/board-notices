@@ -13,6 +13,7 @@
 namespace fq\boardnotices\repository;
 
 use fq\boardnotices\repository\users_interface;
+use fq\boardnotices\service\constants;
 
 class users implements users_interface
 {
@@ -57,11 +58,11 @@ class users implements users_interface
 	// {
 	// 	$user = array();
 	// 	$sql_array = array(
-	// 		'SELECT' => 'u.*',
-	// 		'FROM' => array(USERS_TABLE => 'u'),
-	// 		'WHERE' => 'u.user_id=' . (int) $this->user->data['user_id'],
+	// 		constants::$SQL_SELECT => 'u.*',
+	// 		constants::$SQL_FROM => array(USERS_TABLE => 'u'),
+	// 		constants::$SQL_WHERE => 'u.user_id=' . (int) $this->user->data['user_id'],
 	// 	);
-	// 	$sql = $this->db->sql_build_query('SELECT', $sql_array);
+	// 	$sql = $this->db->sql_build_query(constants::$SQL_SELECT, $sql_array);
 
 	// 	$result = $this->db->sql_query($sql);
 	// 	$user = $this->db->sql_fetchrow($result);
@@ -84,13 +85,13 @@ class users implements users_interface
 	{
 		$usergroups = array();
 		$sql_array = array(
-			'SELECT' => 'g.group_id, g.group_name, g.group_type',
-			'FROM' => array(GROUPS_TABLE => 'g', USER_GROUP_TABLE => 'ug'),
-			'WHERE' => 'ug.user_id=' . (int) $this->user->data['user_id']
+			constants::$SQL_SELECT => 'g.group_id, g.group_name, g.group_type',
+			constants::$SQL_FROM => array(GROUPS_TABLE => 'g', USER_GROUP_TABLE => 'ug'),
+			constants::$SQL_WHERE => 'ug.user_id=' . (int) $this->user->data['user_id']
 			. ' AND g.group_id = ug.group_id'
 			. ' AND ug.user_pending = 0',
 		);
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$sql = $this->db->sql_build_query(constants::$SQL_SELECT, $sql_array);
 
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
@@ -120,13 +121,13 @@ class users implements users_interface
 	{
 		$userposts = 0;
 		$sql_array = array(
-			'SELECT' => 'count(p.post_id) AS count',
-			'FROM' => array(POSTS_TABLE => 'p'),
-			'WHERE' => 'p.poster_id=' . (int) $this->user->data['user_id']
+			constants::$SQL_SELECT => 'count(p.post_id) AS count',
+			constants::$SQL_FROM => array(POSTS_TABLE => 'p'),
+			constants::$SQL_WHERE => 'p.poster_id=' . (int) $this->user->data['user_id']
 			. (($include_waiting_for_approval) ? ' AND p.post_visibility < 2' : ' AND p.post_visibility = 1')
 			. ((!empty($in_forums)) ? ' AND p.forum_id IN (' . implode(',', $in_forums) . ')' : ''),
 		);
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$sql = $this->db->sql_build_query(constants::$SQL_SELECT, $sql_array);
 
 		$result = $this->db->sql_query($sql);
 		if ($row = $this->db->sql_fetchrow($result))
@@ -158,12 +159,12 @@ class users implements users_interface
 	{
 		$groups = array();
 		$sql_array = array(
-			'SELECT' => 'g.group_id, g.group_name, g.group_type',
-			'FROM' => array(GROUPS_TABLE => 'g'),
-			'WHERE' => (!$this->config['coppa_enable']) ? "group_name <> 'REGISTERED_COPPA'" : '',
+			constants::$SQL_SELECT => 'g.group_id, g.group_name, g.group_type',
+			constants::$SQL_FROM => array(GROUPS_TABLE => 'g'),
+			constants::$SQL_WHERE => (!$this->config['coppa_enable']) ? "group_name <> 'REGISTERED_COPPA'" : '',
 			'ORDER_BY' => 'g.group_type DESC, g.group_name ASC',
 		);
-		$sql = $this->db->sql_build_query('SELECT', $sql_array);
+		$sql = $this->db->sql_build_query(constants::$SQL_SELECT, $sql_array);
 
 		$result = $this->db->sql_query($sql);
 		while ($row = $this->db->sql_fetchrow($result))
@@ -192,11 +193,11 @@ class users implements users_interface
 	// public function getForumIdFromTopicId($topic_id)
 	// {
 	// 	$sql_array = array(
-	// 		'SELECT' => 't.forum_id',
-	// 		'FROM' => array(TOPICS_TABLE => 't'),
-	// 		'WHERE' => 't.topic_id = ' . (int) $topic_id,
+	// 		constants::$SQL_SELECT => 't.forum_id',
+	// 		constants::$SQL_FROM => array(TOPICS_TABLE => 't'),
+	// 		constants::$SQL_WHERE => 't.topic_id = ' . (int) $topic_id,
 	// 	);
-	// 	$sql = $this->db->sql_build_query('SELECT', $sql_array);
+	// 	$sql = $this->db->sql_build_query(constants::$SQL_SELECT, $sql_array);
 	// 	$result = $db->sql_query($sql);
 	// 	$forum_id = (int) $db->sql_fetchfield('forum_id');
 	// 	$db->sql_freeresult($result);
