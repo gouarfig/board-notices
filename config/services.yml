@@ -174,7 +174,7 @@ services:
     class: fq\boardnotices\rules\has_posted_in_forum
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
       - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.not_logged_in:
@@ -249,13 +249,13 @@ services:
     class: fq\boardnotices\rules\has_posted_less
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
 
   fq.boardnotices.rules.has_posted_more:
     class: fq\boardnotices\rules\has_posted_more
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
 
   fq.boardnotices.rules.on_board_index:
     class: fq\boardnotices\rules\on_board_index

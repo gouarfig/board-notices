@@ -16,18 +16,17 @@ use \fq\boardnotices\service\constants;
 
 class has_posted_more extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $user */
-	private $user;
-
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
+		$this->api = $api;
 	}
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_HAS_POSTED_MORE');
+		return $this->api->lang('RULE_HAS_POSTED_MORE');
 	}
 
 	public function getType()
@@ -40,15 +39,10 @@ class has_posted_more extends rule_base implements rule_interface
 		return 0;
 	}
 
-	public function getPossibleValues()
-	{
-		return null;
-	}
-
 	public function isTrue($conditions)
 	{
 		$posts = $this->validateUniqueCondition($conditions);
-		return ($this->user->data['user_posts'] >= $posts);
+		return ($this->api->getUserPostCount() >= $posts);
 	}
 
 	public function getAvailableVars()
@@ -58,7 +52,7 @@ class has_posted_more extends rule_base implements rule_interface
 
 	public function getTemplateVars()
 	{
-		return array('POSTS' => $this->user->data['user_posts']);
+		return array('POSTS' => $this->api->getUserPostCount());
 	}
 
 }

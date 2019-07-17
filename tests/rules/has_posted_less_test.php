@@ -5,288 +5,117 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use \fq\boardnotices\rules\has_posted_less;
+use fq\boardnotices\tests\mock\mock_api;
 
 class has_posted_less_test extends rule_test_base
 {
 	public function testInstance()
 	{
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$rule = new has_posted_less($this->getSerializer(), $user);
+		$api = new mock_api();
+		$rule = new has_posted_less($this->getSerializer(), $api);
 		$this->assertNotNull($rule);
 
-		return array($user, $rule);
+		return array($api, $rule);
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param has_posted_less $rule
 	 */
 	public function testGetDisplayName($args)
 	{
-		list($user, $rule) = $args;
+		list($api, $rule) = $args;
 		$display = $rule->getDisplayName();
 		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param has_posted_less $rule
 	 */
 	public function testGetType($args)
 	{
-		list($user, $rule) = $args;
+		list($api, $rule) = $args;
 		$type = $rule->getType();
 		$this->assertThat($type, $this->equalTo('int'));
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param has_posted_less $rule
 	 */
 	public function testGetPossibleValues($args)
 	{
-		list($user, $rule) = $args;
+		list($api, $rule) = $args;
 		$values = $rule->getPossibleValues();
 		$this->assertThat($values, $this->isNull());
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param has_posted_less $rule
 	 */
 	public function testGetAvailableVars($args)
 	{
-		list($user, $rule) = $args;
+		list($api, $rule) = $args;
 		$vars = $rule->getAvailableVars();
 		$this->assertContains('POSTS', $vars);
 	}
 
 	/**
 	 * @depends testInstance
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param has_posted_less $rule
 	 */
 	public function testGetTemplateVars($args)
 	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 63;
+		list($api, $rule) = $args;
+		$api->setUserPostCount(63);
 		$vars = $rule->getTemplateVars();
 		$this->assertEquals(63, $vars['POSTS']);
 	}
 
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_posted_less $rule
-	 */
-	public function testRuleEquals($args)
+	public function getTestData()
 	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 63;
-
-		$posts = serialize(array(63));
-		$this->assertTrue($rule->isTrue($posts));
+		$serializer = $this->getSerializer();
+		return array(
+			array(63, 63, true),
+			array(63, serialize(63), true),
+			array(63, serialize(array(63)), true),
+			array(63, $serializer->encode(63), true),
+			array(63, $serializer->encode(array(63)), true),
+			array(53, 63, true),
+			array(53, serialize(63), true),
+			array(53, serialize(array(63)), true),
+			array(53, $serializer->encode(63), true),
+			array(53, $serializer->encode(array(63)), true),
+			array(73, 63, false),
+			array(73, serialize(63), false),
+			array(73, serialize(array(63)), false),
+			array(73, $serializer->encode(63), false),
+			array(73, $serializer->encode(array(63)), false),
+		);
 	}
 
 	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_posted_less $rule
+	 * @dataProvider getTestData
+	 *
+	 * @param int $posts
+	 * @param mixed $condition
+	 * @param bool $result
+	 * @return void
 	 */
-	public function testRuleEquals2($args)
+	public function testRules($posts, $condition, $result)
 	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 63;
+		$api = new mock_api();
+		$rule = new has_posted_less($this->getSerializer(), $api);
 
-		$posts = $this->getSerializer()->encode(array(63));
-		$this->assertTrue($rule->isTrue($posts));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_posted_less $rule
-	 */
-	public function testRuleEqualsNoArray($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 63;
-
-		$posts = serialize(63);
-		$this->assertTrue($rule->isTrue($posts));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_posted_less $rule
-	 */
-	public function testRuleEqualsNoArray2($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 63;
-
-		$posts = $this->getSerializer()->encode(63);
-		$this->assertTrue($rule->isTrue($posts));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_posted_less $rule
-	 */
-	public function testRuleEqualsNoSerialize($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 63;
-
-		$posts = 63;
-		$this->assertTrue($rule->isTrue($posts));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_posted_less $rule
-	 */
-	public function testRuleLessThan($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 53;
-
-		$posts = 63;
-		$this->assertTrue($rule->isTrue($posts));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_posted_less $rule
-	 */
-	public function testRuleLessThanSerialize($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 53;
-
-		$posts = serialize(63);
-		$this->assertTrue($rule->isTrue($posts));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_posted_less $rule
-	 */
-	public function testRuleLessThanSerialize2($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 53;
-
-		$posts = $this->getSerializer()->encode(63);
-		$this->assertTrue($rule->isTrue($posts));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_posted_less $rule
-	 */
-	public function testRuleLessThanSerializeArray($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 53;
-
-		$posts = serialize(array(63));
-		$this->assertTrue($rule->isTrue($posts));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_posted_less $rule
-	 */
-	public function testRuleLessThanSerializeArray2($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 53;
-
-		$posts = $this->getSerializer()->encode(array(63));
-		$this->assertTrue($rule->isTrue($posts));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_posted_less $rule
-	 */
-	public function testRuleMoreThan($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 73;
-
-		$posts = 63;
-		$this->assertFalse($rule->isTrue($posts));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_posted_less $rule
-	 */
-	public function testRuleMoreThanSerialize($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 73;
-
-		$posts = serialize(63);
-		$this->assertFalse($rule->isTrue($posts));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_posted_less $rule
-	 */
-	public function testRuleMoreThanSerialize2($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 73;
-
-		$posts = $this->getSerializer()->encode(63);
-		$this->assertFalse($rule->isTrue($posts));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_posted_less $rule
-	 */
-	public function testRuleMoreThanArraySerialize($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 73;
-
-		$posts = serialize(array(63));
-		$this->assertFalse($rule->isTrue($posts));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \phpbb\user $user
-	 * @param has_posted_less $rule
-	 */
-	public function testRuleMoreThanArraySerialize2($args)
-	{
-		list($user, $rule) = $args;
-		$user->data['user_posts'] = 73;
-
-		$posts = $this->getSerializer()->encode(array(63));
-		$this->assertFalse($rule->isTrue($posts));
+		$api->setUserPostCount($posts);
+		$this->assertEquals($result, $rule->isTrue($condition));
 	}
 
 }
