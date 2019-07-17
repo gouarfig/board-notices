@@ -188,7 +188,7 @@ services:
     class: fq\boardnotices\rules\logged_in
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
 
   fq.boardnotices.rules.style:
     class: fq\boardnotices\rules\style
@@ -203,7 +203,7 @@ services:
     class: fq\boardnotices\rules\language
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
       - '@fq.boardnotices.repository.users'
 
   fq.boardnotices.rules.rank:
