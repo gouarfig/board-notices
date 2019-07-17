@@ -5,33 +5,33 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\on_board_index;
+use fq\boardnotices\tests\mock\mock_api;
 
 class on_board_index_test extends rule_test_base
 {
 	public function testInstance()
 	{
 		$serializer = $this->getSerializer();
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
+		$api = new mock_api();
 
 		/** @var \phpbb\template\template $template */
 		$template = $this->getMockBuilder('\phpbb\template\template')->getMock();
 
-		$rule = new on_board_index($this->getSerializer(), $user, $template);
+		$rule = new on_board_index($this->getSerializer(), $api, $template);
 		$this->assertNotNull($rule);
 
-		return array($serializer, $user, $rule);
+		return array($serializer, $api, $rule);
 	}
 
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param on_board_index $rule
 	 */
 	public function testGetDisplayName($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$display = $rule->getDisplayName();
 		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
@@ -39,12 +39,12 @@ class on_board_index_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param on_board_index $rule
 	 */
 	public function testGetDisplayUnit($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$display = $rule->getDisplayUnit();
 		$this->assertEmpty($display, "DisplayUnit is not empty");
 	}
@@ -52,12 +52,12 @@ class on_board_index_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param on_board_index $rule
 	 */
 	public function testGetType($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$type = $rule->getType();
 		$this->assertThat($type, $this->equalTo('yesno'));
 	}
@@ -65,12 +65,12 @@ class on_board_index_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param on_board_index $rule
 	 */
 	public function testGetPossibleValues($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$values = $rule->getPossibleValues();
 		$this->assertThat($values, $this->isNull());
 	}
@@ -78,12 +78,12 @@ class on_board_index_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param on_board_index $rule
 	 */
 	public function testGetAvailableVars($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$vars = $rule->getAvailableVars();
 		$this->assertEquals(0, count($vars));
 	}
@@ -91,12 +91,12 @@ class on_board_index_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param on_board_index $rule
 	 */
 	public function testGetTemplateVars($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$vars = $rule->getTemplateVars();
 		$this->assertEquals(0, count($vars));
 	}
@@ -158,14 +158,13 @@ class on_board_index_test extends rule_test_base
 	public function testRuleConditions($onBoardIndex, $conditions, $result)
 	{
 		$serializer = $this->getSerializer();
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
+		$api = new mock_api();
 
 		/** @var \phpbb\template\template $template */
 		$template = $this->getMockBuilder('\phpbb\template\template')->getMock();
 		$template->method('retrieve_var')->will($this->returnValue($onBoardIndex));
 
-		$rule = new on_board_index($serializer, $user, $template);
+		$rule = new on_board_index($serializer, $api, $template);
 
 		$this->assertEquals($result, $rule->isTrue($conditions));
 	}

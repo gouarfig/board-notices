@@ -36,7 +36,7 @@ class not_in_usergroup_test extends rule_test_base
 	 */
 	public function testGetDisplayName($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$display = $rule->getDisplayName();
 		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
@@ -49,7 +49,7 @@ class not_in_usergroup_test extends rule_test_base
 	 */
 	public function testGetType($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$type = $rule->getType();
 		$this->assertThat($type, $this->equalTo('multiple choice'));
 	}
@@ -62,7 +62,7 @@ class not_in_usergroup_test extends rule_test_base
 	 */
 	public function testGetPossibleValues($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$values = $rule->getPossibleValues();
 		$this->assertThat($values, $this->isNull());
 	}
@@ -75,7 +75,7 @@ class not_in_usergroup_test extends rule_test_base
 	 */
 	public function testGetAvailableVars($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$vars = $rule->getAvailableVars();
 		$this->assertEquals(0, count($vars));
 	}
@@ -88,7 +88,7 @@ class not_in_usergroup_test extends rule_test_base
 	 */
 	public function testGetTemplateVars($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$vars = $rule->getTemplateVars();
 		$this->assertEquals(0, count($vars));
 	}

@@ -261,7 +261,7 @@ services:
     class: fq\boardnotices\rules\on_board_index
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
+      - '@fq.boardnotices.service.phpbb.api'
       - '@template'
 
   fq.boardnotices.rules.registered_less_than:

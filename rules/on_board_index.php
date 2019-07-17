@@ -16,21 +16,22 @@ use \fq\boardnotices\service\constants;
 
 class on_board_index extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $user */
-	private $user;
 	/** @var \phpbb\template\template $template */
 	private $template;
 
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \phpbb\template\template $template)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api,
+		\phpbb\template\template $template)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
+		$this->api = $api;
 		$this->template = $template;
 	}
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_ON_BOARD_INDEX');
+		return $this->api->lang('RULE_ON_BOARD_INDEX');
 	}
 
 	public function getType()
@@ -43,11 +44,6 @@ class on_board_index extends rule_base implements rule_interface
 		return false;
 	}
 
-	public function getPossibleValues()
-	{
-		return null;
-	}
-
 	public function isTrue($conditions)
 	{
 		$valid = false;
@@ -55,16 +51,6 @@ class on_board_index extends rule_base implements rule_interface
 		$on_board_index = ($this->template->retrieve_var('S_INDEX') === true);
 		$valid = ($on_board_index_conditions && $on_board_index) || (!$on_board_index_conditions && !$on_board_index);
 		return $valid;
-	}
-
-	public function getAvailableVars()
-	{
-		return array();
-	}
-
-	public function getTemplateVars()
-	{
-		return array();
 	}
 
 }
