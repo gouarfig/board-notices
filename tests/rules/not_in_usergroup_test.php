@@ -5,6 +5,7 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\not_in_usergroup;
+use fq\boardnotices\tests\mock\mock_api;
 
 function notInUsergroupTest_isUserInGroupId($group)
 {
@@ -16,22 +17,21 @@ class not_in_usergroup_test extends rule_test_base
 	public function testInstance()
 	{
 		$serializer = $this->getSerializer();
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
+		$api = new mock_api();
 
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 
-		$rule = new not_in_usergroup($this->getSerializer(), $user, $datalayer);
+		$rule = new not_in_usergroup($this->getSerializer(), $api, $datalayer);
 		$this->assertNotNull($rule);
 
-		return array($serializer, $user, $rule);
+		return array($serializer, $api, $rule);
 	}
 
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param not_in_usergroup $rule
 	 */
 	public function testGetDisplayName($args)
@@ -44,7 +44,7 @@ class not_in_usergroup_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param not_in_usergroup $rule
 	 */
 	public function testGetType($args)
@@ -57,7 +57,7 @@ class not_in_usergroup_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param not_in_usergroup $rule
 	 */
 	public function testGetPossibleValues($args)
@@ -70,7 +70,7 @@ class not_in_usergroup_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param not_in_usergroup $rule
 	 */
 	public function testGetAvailableVars($args)
@@ -83,7 +83,7 @@ class not_in_usergroup_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param not_in_usergroup $rule
 	 */
 	public function testGetTemplateVars($args)
@@ -136,14 +136,12 @@ class not_in_usergroup_test extends rule_test_base
 	public function testRuleConditions($conditions, $result)
 	{
 		$serializer = $this->getSerializer();
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$user->data['user_lang'] = 'fr';
+		$api = new mock_api();
 		/** @var \fq\boardnotices\repository\users_interface $datalayer */
 		$datalayer = $this->getMockBuilder('\fq\boardnotices\repository\users_interface')->getMock();
 		$datalayer->method('isUserInGroupId')->will($this->returnCallback('\fq\boardnotices\tests\rules\notInUsergroupTest_isUserInGroupId'));
 
-		$rule = new not_in_usergroup($serializer, $user, $datalayer);
+		$rule = new not_in_usergroup($serializer, $api, $datalayer);
 
 		$this->assertEquals($result, $rule->isTrue($conditions));
 	}
