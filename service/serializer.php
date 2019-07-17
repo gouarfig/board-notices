@@ -9,6 +9,7 @@ use fq\boardnotices\service\serializer_exception;
  */
 class serializer
 {
+	private static $INVALID_SERIALIZED_STRING = "Invalid serialized string";
 	private $lastJsonError = false;
 	private $lastError = false;
 
@@ -112,7 +113,7 @@ class serializer
 				return $this->getArrayValue($string, $pos);
 
 			default:
-				throw new serializer_exception("Invalid serialized string: type code '{$string[$pos]}' unknown at position {$pos}.", 101);
+				throw new serializer_exception(self::$INVALID_SERIALIZED_STRING . ": type code '{$string[$pos]}' unknown at position {$pos}.", 101);
 		}
 	}
 
@@ -123,7 +124,7 @@ class serializer
 		{
 			return substr($string, $start, $end - $start);
 		}
-		throw new serializer_exception("Invalid serialized string", 102);
+		throw new serializer_exception(self::$INVALID_SERIALIZED_STRING, 102);
 	}
 
 	/**
@@ -138,7 +139,7 @@ class serializer
 		{
 			return (int) substr($string, $start, $end - $start);
 		}
-		throw new serializer_exception("Invalid serialized string", 103);
+		throw new serializer_exception(self::$INVALID_SERIALIZED_STRING, 103);
 	}
 
 	/**
@@ -174,7 +175,7 @@ class serializer
 		{
 			return true;
 		}
-		throw new serializer_exception("Invalid serialized string", 111);
+		throw new serializer_exception(self::$INVALID_SERIALIZED_STRING, 111);
 	}
 
 	/**
@@ -195,7 +196,7 @@ class serializer
 	{
 		if (!is_numeric($string))
 		{
-			throw new serializer_exception("Invalid serialized string", 121);
+			throw new serializer_exception(self::$INVALID_SERIALIZED_STRING, 121);
 		}
 		return (int) $string;
 	}
@@ -211,19 +212,19 @@ class serializer
 		$size = $this->getSizeValue($string, $pos);
 		if ($size < 0)
 		{
-			throw new serializer_exception("Invalid serialized string", 141);
+			throw new serializer_exception(self::$INVALID_SERIALIZED_STRING, 141);
 		}
 		$pos += strlen((string) $size) +1;
 		if ($string{$pos} != '"')
 		{
-			throw new serializer_exception("Invalid serialized string", 142);
+			throw new serializer_exception(self::$INVALID_SERIALIZED_STRING, 142);
 		}
 		$pos++;
 		$value = substr($string, $pos, $size);
 		$pos += (int) $size;
 		if ($string{$pos} != '"')
 		{
-			throw new serializer_exception("Invalid serialized string", 143);
+			throw new serializer_exception(self::$INVALID_SERIALIZED_STRING, 143);
 		}
 		$pos+=2;
 		return $value;
@@ -247,7 +248,7 @@ class serializer
 		}
 		if ($size < 0)
 		{
-			throw new serializer_exception("Invalid serialized string", 131);
+			throw new serializer_exception(self::$INVALID_SERIALIZED_STRING, 131);
 		}
 		$pos += strlen((string) $size) +2;
 		for ($element = 0; $element < $size; $element++)
@@ -255,7 +256,7 @@ class serializer
 			$key = $this->getSingleValue($string, $pos);
 			if (!is_scalar($key))
 			{
-				throw new serializer_exception("Invalid serialized string", 132);
+				throw new serializer_exception(self::$INVALID_SERIALIZED_STRING, 132);
 			}
 			$value = $this->getSingleValue($string, $pos);
 			$array[$key] = $value;
