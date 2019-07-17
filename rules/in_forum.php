@@ -16,21 +16,17 @@ use \fq\boardnotices\service\constants;
 
 class in_forum extends rule_base implements rule_interface
 {
-	/** @var \phpbb\user $user */
-	private $user;
-	/** @var \phpbb\request\request $request */
-	private $request;
-
-	public function __construct(\fq\boardnotices\service\serializer $serializer, \phpbb\user $user, \phpbb\request\request $request)
+	public function __construct(
+		\fq\boardnotices\service\serializer $serializer,
+		\fq\boardnotices\service\phpbb\api_interface $api)
 	{
 		$this->serializer = $serializer;
-		$this->user = $user;
-		$this->request = $request;
+		$this->api = $api;
 	}
 
 	public function getDisplayName()
 	{
-		return $this->user->lang('RULE_IN_FORUM');
+		return $this->api->lang('RULE_IN_FORUM');
 	}
 
 	public function getType()
@@ -43,14 +39,9 @@ class in_forum extends rule_base implements rule_interface
 		return array();
 	}
 
-	public function getPossibleValues()
-	{
-		return null;
-	}
-
 	public function isTrue($conditions)
 	{
-		$current_forum_id = $this->request->variable('f', 0);
+		$current_forum_id = $this->api->getCurrentForum();
 
 		$forums = $this->validateArrayOfConditions($conditions);
 		$forums = $this->cleanEmptyStringsFromArray($forums);
@@ -65,16 +56,6 @@ class in_forum extends rule_base implements rule_interface
 			}
 		}
 		return false;
-	}
-
-	public function getAvailableVars()
-	{
-		return array();
-	}
-
-	public function getTemplateVars()
-	{
-		return array();
 	}
 
 }

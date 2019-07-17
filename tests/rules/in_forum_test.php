@@ -5,6 +5,7 @@ namespace fq\boardnotices\tests\rules;
 include_once 'phpBB/includes/functions.php';
 
 use fq\boardnotices\rules\in_forum;
+use fq\boardnotices\tests\mock\mock_api;
 
 class in_forum_test extends rule_test_base
 {
@@ -14,33 +15,23 @@ class in_forum_test extends rule_test_base
 	public function testInstance()
 	{
 		$serializer = $this->getSerializer();
-		/** @var \phpbb\user $user */
-		$user = $this->getUser();
-		$user->data['f'] = $this->current_forum;
+		$api = new mock_api();
 
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue($this->current_forum));
-		// Make sure the mock works
-		$this->assertEquals($this->current_forum, $request->variable('f', 0));
-
-		$rule = new in_forum($this->getSerializer(), $user, $request);
+		$rule = new in_forum($serializer, $api);
 		$this->assertNotNull($rule);
 
-		return array($serializer, $user, $rule);
+		return array($serializer, $api, $rule);
 	}
 
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param in_forum $rule
 	 */
 	public function testGetDisplayName($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$display = $rule->getDisplayName();
 		$this->assertNotEmpty($display, "DisplayName is empty");
 	}
@@ -48,12 +39,12 @@ class in_forum_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param in_forum $rule
 	 */
 	public function testGetType($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$type = $rule->getType();
 		$this->assertThat($type, $this->equalTo('forums'));
 	}
@@ -61,12 +52,12 @@ class in_forum_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param in_forum $rule
 	 */
 	public function testGetPossibleValues($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$values = $rule->getPossibleValues();
 		$this->assertThat($values, $this->isNull());
 	}
@@ -74,12 +65,12 @@ class in_forum_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param in_forum $rule
 	 */
 	public function testGetAvailableVars($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$vars = $rule->getAvailableVars();
 		$this->assertEquals(0, count($vars));
 	}
@@ -87,243 +78,49 @@ class in_forum_test extends rule_test_base
 	/**
 	 * @depends testInstance
 	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
+	 * @param \fq\boardnotices\tests\mock\mock_api $api
 	 * @param in_forum $rule
 	 */
 	public function testGetTemplateVars($args)
 	{
-		list($serializer, $user, $rule) = $args;
+		list($serializer, $api, $rule) = $args;
 		$vars = $rule->getTemplateVars();
 		$this->assertEquals(0, count($vars));
 	}
 
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_forum $rule
-	 */
-	public function testRuleEmpty($args)
+	public function getTestData()
 	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue($this->current_forum));
-
-		$rule = new in_forum($this->getSerializer(), $user, $request);
-
-		$this->assertFalse($rule->isTrue(null));
+		$serializer = $this->getSerializer();
+		return array(
+			array(null, false),
+			array($this->current_forum, true),
+			array($this->another_forum, false),
+			array(serialize(null), false),
+			array(serialize($this->current_forum), true),
+			array(serialize($this->another_forum), false),
+			array(serialize(array($this->current_forum)), true),
+			array(serialize(array($this->another_forum)), false),
+			array($serializer->encode(null), false),
+			array($serializer->encode($this->current_forum), true),
+			array($serializer->encode($this->another_forum), false),
+			array($serializer->encode(array($this->current_forum)), true),
+			array($serializer->encode(array($this->another_forum)), false),
+		);
 	}
 
 	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_forum $rule
+	 * Test all conditions
+	 * @dataProvider getTestData
+	 * @param mixed $condition
+	 * @param bool $result
+	 * @return void
 	 */
-	public function testRuleNotInForumSerialize($args)
+	public function testRule($condition, $result)
 	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue($this->current_forum));
+		$api = new mock_api();
+		$api->setCurrentForum($this->current_forum);
 
-		$rule = new in_forum($this->getSerializer(), $user, $request);
-
-		$forum = serialize(array($this->another_forum));
-		$this->assertFalse($rule->isTrue($forum));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_forum $rule
-	 */
-	public function testRuleNotInForumNewSerialize($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue($this->current_forum));
-
-		$rule = new in_forum($this->getSerializer(), $user, $request);
-
-		$forum = $serializer->encode(array($this->another_forum));
-		$this->assertFalse($rule->isTrue($forum));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_forum $rule
-	 */
-	public function testRuleInForumSerialize($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue($this->current_forum));
-
-		$rule = new in_forum($this->getSerializer(), $user, $request);
-
-		$forum = serialize(array($this->current_forum));
-		$this->assertTrue($rule->isTrue($forum)); ///
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_forum $rule
-	 */
-	public function testRuleInForumNewSerialize($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue($this->current_forum));
-
-		$rule = new in_forum($this->getSerializer(), $user, $request);
-
-		$forum = $serializer->encode(array($this->current_forum));
-		$this->assertTrue($rule->isTrue($forum)); ///
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_forum $rule
-	 */
-	public function testRuleInForumNotArray($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue($this->current_forum));
-
-		$rule = new in_forum($this->getSerializer(), $user, $request);
-
-		$forum = $this->current_forum;
-		$this->assertTrue($rule->isTrue($forum)); ///
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_forum $rule
-	 */
-	public function testRuleNotInForumNotArray($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue($this->current_forum));
-
-		$rule = new in_forum($this->getSerializer(), $user, $request);
-
-		$forum = $this->another_forum;
-		$this->assertFalse($rule->isTrue($forum));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_forum $rule
-	 */
-	public function testRuleInForumNotArraySerialize($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue($this->current_forum));
-
-		$rule = new in_forum($this->getSerializer(), $user, $request);
-
-		$forum = serialize($this->current_forum);
-		$this->assertTrue($rule->isTrue($forum)); ///
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_forum $rule
-	 */
-	public function testRuleInForumNotArrayNewSerialize($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue($this->current_forum));
-
-		$rule = new in_forum($this->getSerializer(), $user, $request);
-
-		$forum = $serializer->encode($this->current_forum);
-		$this->assertTrue($rule->isTrue($forum)); ///
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_forum $rule
-	 */
-	public function testRuleNotInForumNotArraySerialize($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue($this->current_forum));
-
-		$rule = new in_forum($this->getSerializer(), $user, $request);
-
-		$forum = serialize($this->another_forum);
-		$this->assertFalse($rule->isTrue($forum));
-	}
-
-	/**
-	 * @depends testInstance
-	 * @param \fq\boardnotices\service\serializer $serializer
-	 * @param \phpbb\user $user
-	 * @param in_forum $rule
-	 */
-	public function testRuleNotInForumNotArrayNewSerialize($args)
-	{
-		list($serializer, $user, $rule) = $args;
-		/** @var \phpbb\request\request $request */
-		$request = $this->getMockBuilder('\phpbb\request\request')
-			->disableOriginalConstructor()
-			->getMock();
-		$request->method('variable')->will($this->returnValue($this->current_forum));
-
-		$rule = new in_forum($this->getSerializer(), $user, $request);
-
-		$forum = $serializer->encode($this->another_forum);
-		$this->assertFalse($rule->isTrue($forum));
+		$rule = new in_forum($this->getSerializer(), $api);
+		$this->assertEquals($result, $rule->isTrue($condition));
 	}
 }

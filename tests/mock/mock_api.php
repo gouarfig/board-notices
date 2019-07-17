@@ -28,6 +28,8 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	private $userLastPostTime = 0;
 	private $userPostCount = 0;
 	private $groupNames = array(10 => 'Group Name');
+	private $currentForum = 0;
+	private $currentTopic = 0;
 
 	public function __construct()
 	{
@@ -103,6 +105,15 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 		$this->userPostCount = $count;
 	}
 
+	public function setCurrentForum($forumId, $topicId = null)
+	{
+		$this->currentForum = $forumId;
+		if ($topicId !== null)
+		{
+			$this->currentTopic = $topicId;
+		}
+	}
+
 	public function isUserRegistered()
 	{
 		return $this->userRegistered;
@@ -167,5 +178,15 @@ class mock_api extends \phpbb_test_case implements \fq\boardnotices\service\phpb
 	public function getGroupName($groupId)
 	{
 		return !empty($this->groupNames[$groupId]) ? $this->groupNames[$groupId] : null;
+	}
+
+	public function getCurrentForum()
+	{
+		return $this->currentForum;
+	}
+
+	public function getCurrentTopic()
+	{
+		return $this->currentTopic;
 	}
 }

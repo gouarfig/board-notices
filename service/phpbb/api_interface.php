@@ -100,4 +100,19 @@ interface api_interface
 	 * @return string
 	 */
 	public function getGroupName($groupId);
+
+	/**
+	 * Returns ID of current forum (or 0 if not in any forum)
+	 *
+	 * @return int
+	 */
+	public function getCurrentForum();
+
+
+	/**
+	 * Returns ID of current topic (or 0 if not in any forum)
+	 *
+	 * @return int
+	 */
+	public function getCurrentTopic();
 }

@@ -20,10 +20,10 @@ services:
       - '@fq.boardnotices.service.phpbb.functions'
       - '@user'
       - '@language'
+      - '@request'
       - '@cache'
       - '@config'
       - '@template'
-      - '@request'
       - '@controller.helper'
       - '@dbal.conn'
 
@@ -217,8 +217,7 @@ services:
     class: fq\boardnotices\rules\in_forum
     arguments:
       - '@fq.boardnotices.service.serializer'
-      - '@user'
-      - '@request'
+      - '@fq.boardnotices.service.phpbb.api'
 
   fq.boardnotices.rules.has_not_posted_for:
     class: fq\boardnotices\rules\has_not_posted_for

@@ -25,15 +25,19 @@ class api implements api_interface
 	private $user;
 	/** @var \phpbb\language\language $language */
 	private $language;
+	/** @var \phpbb\request\request $request */
+	private $request;
 
 	public function __construct(
 		\fq\boardnotices\service\phpbb\functions_interface $functions,
 		\phpbb\user $user,
-		\phpbb\language\language $language)
+		\phpbb\language\language $language,
+		\phpbb\request\request $request)
 	{
 		$this->functions = $functions;
 		$this->user = $user;
 		$this->language = $language;
+		$this->request = $request;
 	}
 
 	public function isUserRegistered()
@@ -100,5 +104,15 @@ class api implements api_interface
 	public function getGroupName($groupId)
 	{
 		return $this->functions->get_group_name($groupId);
+	}
+
+	public function getCurrentForum()
+	{
+		return $this->request->variable('f', 0);
+	}
+
+	public function getCurrentTopic()
+	{
+		return $this->request->variable('t', 0);
 	}
 }
