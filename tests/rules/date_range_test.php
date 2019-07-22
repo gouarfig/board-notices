@@ -333,6 +333,7 @@ class date_range_test extends rule_test_base
 
 	/**
 	 * @dataProvider getTestData
+	 * @group slow
 	 */
 	public function testConditions($timezone, $date, $start, $end, $result)
 	{
