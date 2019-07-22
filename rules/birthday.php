@@ -69,6 +69,10 @@ class birthday extends rule_base implements rule_interface
 		if ($this->api->isUserRegistered())
 		{
 			$user_birthday = $this->api->getUserBirthday();
+			if (empty($user_birthday))
+			{
+				return false;
+			}
 			list($bday_day, $bday_month, $bday_year) = array_map('intval', explode('-', $user_birthday));
 			$now = $this->api->createDateTime();
 			$now = phpbb_gmgetdate($now->getTimestamp() + $now->getOffset());

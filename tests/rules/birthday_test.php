@@ -98,6 +98,13 @@ class birthday_test extends rule_test_base
 		return array($api, $rule);
 	}
 
+	public function testBirthdayIsFalseIfNotEntered()
+	{
+		$api = new mock_api();
+		$rule = new birthday($this->getSerializer(), $api);
+		$this->assertFalse($rule->isTrue(null));
+	}
+
 	/**
 	 * @dataProvider getTimezones
 	 * @param string $timezone
