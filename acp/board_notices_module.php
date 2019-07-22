@@ -735,7 +735,7 @@ class board_notices_module
 						'notice_rule_id' => $data['notice_rule_id'][$rule_name],
 						'notice_id' => $notice_id,
 						'rule' => $rule_name,
-						'conditions' => $this->serializer->encode($data['notice_rule_conditions'][$rule_name]),
+						'conditions' => $this->getRuleConditions($data, $rule_name),
 					);
 				}
 				else
@@ -743,7 +743,7 @@ class board_notices_module
 					$to_insert[] = array(
 						'notice_id' => $notice_id,
 						'rule' => $rule_name,
-						'conditions' => $this->serializer->encode($data['notice_rule_conditions'][$rule_name]),
+						'conditions' => $this->getRuleConditions($data, $rule_name),
 					);
 				}
 			}
@@ -760,6 +760,15 @@ class board_notices_module
 		{
 			$this->notices_repository->insertRules($to_insert);
 		}
+	}
+
+	private function getRuleConditions(&$data, $ruleName)
+	{
+		if (array_key_exists($ruleName, $data['notice_rule_conditions']))
+		{
+			return $this->serializer->encode($data['notice_rule_conditions'][$ruleName]);
+		}
+		return $this->serializer->encode(null);
 	}
 
 	private function saveNewNotice(&$data)
