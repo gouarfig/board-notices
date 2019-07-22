@@ -60,7 +60,6 @@ script:
   - sh -c "if [ '$SNIFF' != '0' ]; then travis/ext-sniff.sh $DB $TRAVIS_PHP_VERSION $EXTNAME $NOTESTS; fi"
   - sh -c "if [ '$IMAGE_ICC' != '0' ]; then travis/check-image-icc-profiles.sh $DB $TRAVIS_PHP_VERSION $NOTESTS; fi"
   - sh -c "if [ '$EPV' != '0' -a '$NOTESTS' = '1' ]; then phpBB/vendor/bin/EPV.php run --dir='phpBB/ext/$EXTNAME/'; fi"
-  - sh -c "if [ '$NOTESTS' != '1' ]; then phpBB/vendor/bin/phpunit --configuration phpBB/ext/$EXTNAME/travis/phpunit-$DB-coverage.xml --bootstrap ./tests/bootstrap.php --log-junit phpBB/ext/$EXTNAME/phpunit.xml --coverage-clover phpBB/ext/$EXTNAME/phpunit.coverage.xml; fi"
 # exclude long tests - no coverage output
   - sh -c "if [ '$NOTESTS' != '1' -a '$SONAR' != '1' ]; then phpBB/vendor/bin/phpunit --configuration phpBB/ext/$EXTNAME/travis/phpunit-$DB-coverage.xml --bootstrap ./tests/bootstrap.php --exclude-group slow; fi"
 # all tests and coverage for sonar
