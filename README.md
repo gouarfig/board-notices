@@ -1,8 +1,4 @@
-![PHP from Travis config](https://img.shields.io/travis/php-v/gouarfig/board-notices)
 ![phpBB extension](https://img.shields.io/badge/phpBB-3.2-green.svg)
-![GitHub](https://img.shields.io/github/license/gouarfig/board-notices)
-![GitHub Release Date](https://img.shields.io/github/release-date/gouarfig/board-notices)
-![GitHub last commit](https://img.shields.io/github/last-commit/gouarfig/board-notices)
 [![Maintainability Rating](https://sonarcloud.io/api/project_badges/measure?project=gouarfig_board-notices&metric=sqale_rating)](https://sonarcloud.io/dashboard?id=gouarfig_board-notices)
 [![Security Rating](https://sonarcloud.io/api/project_badges/measure?project=gouarfig_board-notices&metric=security_rating)](https://sonarcloud.io/dashboard?id=gouarfig_board-notices)
 [![Reliability Rating](https://sonarcloud.io/api/project_badges/measure?project=gouarfig_board-notices&metric=reliability_rating)](https://sonarcloud.io/dashboard?id=gouarfig_board-notices)
