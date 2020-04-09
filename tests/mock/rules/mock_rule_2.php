@@ -1,15 +1,5 @@
 <?php
 
-/**
- *
- * Board Notices Manager
- *
- * @version 1.0.0
- * @copyright (c) Fred Quointeau
- * @license GNU General Public License, version 2 (GPL-2.0)
- *
- */
-
 namespace fq\boardnotices\tests\mock\rules;
 
 class mock_rule_2 extends \fq\boardnotices\rules\rule_base implements \fq\boardnotices\rules\rule_interface

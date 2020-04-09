@@ -1,15 +1,5 @@
 <?php
 
-/**
- *
- * Board Notices Manager
- *
- * @version 1.0.0
- * @copyright (c) Fred Quointeau
- * @license GNU General Public License, version 2 (GPL-2.0)
- *
- */
-
 namespace fq\boardnotices\migrations;
 
 class create_tables extends \phpbb\db\migration\migration
