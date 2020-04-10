@@ -1,24 +1,23 @@
 <?php
-/**
-*
-* Board Notices extension for the phpBB Forum Software package.
-*
-* @copyright (c) 2015 phpBB Limited <https://www.phpbb.com>
-* @license GNU General Public License, version 2 (GPL-2.0)
-* @traduzione a cura di twm49 (https://lnx.3rotaie.it/forum)
-*
-*/
 
 /**
-* DO NOT CHANGE
-*/
-if (!defined('IN_PHPBB'))
-{
+ *
+ * Board Notices extension for the phpBB Forum Software package.
+ *
+ * @copyright (c) 2015 phpBB Limited <https://www.phpbb.com>
+ * @license GNU General Public License, version 2 (GPL-2.0)
+ * @traduzione a cura di twm49 (https://lnx.3rotaie.it/forum)
+ *
+ */
+
+/**
+ * DO NOT CHANGE
+ */
+if (!defined('IN_PHPBB')) {
 	exit;
 }
 
-if (empty($lang) || !is_array($lang))
-{
+if (empty($lang) || !is_array($lang)) {
 	$lang = array();
 }
 
@@ -44,7 +43,7 @@ $lang = array_merge($lang, array(
 
 	'ACP_BOARD_NOTICES_MANAGER'				=> 'Gestione Avvisi dal Forum',
 	'ACP_BOARD_NOTICES_MANAGER_EXPLAIN'		=> "Aggiunge, modifica o cancella gli Avvisi dal Forum<br />"
-											. "Nota che verrà pubblicata solo un avviso all'utente: sarà quella che per prima supera le condizioni.<br />",
+		. "Nota che verrà pubblicata solo un avviso all'utente: sarà quella che per prima supera le condizioni.<br />",
 
 	'ACP_BOARD_NOTICE_SETTINGS'				=> 'Configurazione Avvisi dal Forum',
 	'ACP_BOARD_NOTICE_SETTINGS_EXPLAIN'		=> 'Si prega di compilare le informazioni di avviso del tabellone',
@@ -92,7 +91,7 @@ $lang = array_merge($lang, array(
 
 	'L_INFORMATION'							=> 'Informazione',
 	'VARIABLES_EXPLAIN'						=> 'Puoi includere le seguenti variabili speciali nel tuo testo:<br />'
-												. '{SESSIONID}, {USERID}, {USERNAME}, {LASTVISIT}, {LASTPOST}, {REGISTERED} ed altre quando attivi una particolare regola. Controlla le regole per vedere quali variabili sono disponibili.',
+		. '{SESSIONID}, {USERID}, {USERNAME}, {LASTVISIT}, {LASTPOST}, {REGISTERED} ed altre quando attivi una particolare regola. Controlla le regole per vedere quali variabili sono disponibili.',
 
 	'BOARD_NOTICE_RULES_CAPTION'			=> 'Rules', // @todo
 	'BOARD_NOTICE_RULE_ACTIVE'				=> '',
@@ -141,10 +140,10 @@ $lang = array_merge($lang, array(
 	'RULE_RANK'								=> "Il rank dell'utente è uno qualsiasi di questi ranghi selezionati",
 	'RULE_REGISTERED_LESS_THAN'				=> "La registrazione dell'utente è inferiore a",
 	'RULE_STYLE'							=> "Lo stile dell'utente è uno di questi stili selezionati",
-	'RULE_REGISTERED_BEFORE'				=> "Utente registrato prima del", 
-	'RULE_REGISTERED_AFTER'					=> "Utente registrato dopo il", 
-	'RULE_IN_TOPIC'							=> "Utente sta visitando uno di questi topic(s)", 
-	'RULE_IN_TOPIC_EXPLAIN'					=> "(inserite ID topic separati dalla virgola)", 
+	'RULE_REGISTERED_BEFORE'				=> "Utente registrato prima del",
+	'RULE_REGISTERED_AFTER'					=> "Utente registrato dopo il",
+	'RULE_IN_TOPIC'							=> "Utente sta visitando uno di questi topic(s)",
+	'RULE_IN_TOPIC_EXPLAIN'					=> "(inserite ID topic separati dalla virgola)",
 
 	// Rules units
 	'RULE_DAY(S)'							=> 'giorno (i) ',
