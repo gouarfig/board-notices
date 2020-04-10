@@ -68,6 +68,7 @@ $lang = array_merge($lang, array(
 	'L_RESET_FORUM_VISITS_EXPLAIN'			=> 'If you disable the forum visit track and re-enable it, some user will have a last visit time much earlier than the real time. It is recommended to reset the tracking after disabling and re-enabling forum visits tracking.',
 
 	'BOARD_NOTICE_TITLE'					=> 'Board Notices',
+	'BOARD_NOTICE_NAME'						=> 'Name',
 	'BOARD_NOTICE_RULES'					=> 'Conditions',
 	'BOARD_NOTICE_ADD'						=> 'Add new notice',
 	'BOARD_NOTICE_RULE_ADD'					=> 'Add new rule',
@@ -92,6 +93,7 @@ $lang = array_merge($lang, array(
 	'VARIABLES_EXPLAIN'						=> 'You may include the following special variables in your text:<br />'
 												. '{SESSIONID}, {USERID}, {USERNAME}, {LASTVISIT}, {LASTPOST}, {REGISTERED} and some other when you activate a particuliar rule. Check the rules to see which variables are available.',
 
+	'BOARD_NOTICE_RULES_CAPTION'			=> 'Rules',
 	'BOARD_NOTICE_RULE_ACTIVE'				=> '',
 	'BOARD_NOTICE_RULE_NAME'				=> 'Rule',
 	'BOARD_NOTICE_RULE_VALUE'				=> 'Conditions',

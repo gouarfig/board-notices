@@ -69,6 +69,7 @@ $lang = array_merge($lang, array(
 	'L_RESET_FORUM_VISITS_EXPLAIN'			=> 'Kui te foorumi külastuse keelate ja selle uuesti sisse lülitate, on mõnel kasutajal viimane külastusaeg palju varem kui reaalajas. Soovitatav on lähtestada jälgimine pärast foorumi külastuste jälgimise keelamist ja uuesti lubamist.',
 
 	'BOARD_NOTICE_TITLE'					=> 'Foorumi teated',
+	'BOARD_NOTICE_NAME'						=> 'Nimi',
 	'BOARD_NOTICE_RULES'					=> 'Tingimused',
 	'BOARD_NOTICE_ADD'						=> 'Lisa uus teade',
 	'BOARD_NOTICE_RULE_ADD'					=> 'Lisa uus reegel',
@@ -93,6 +94,7 @@ $lang = array_merge($lang, array(
 	'VARIABLES_EXPLAIN'						=> 'Te võite teksti lisada järgmised erimuutujad:<br />'
 												. '{SESSIONID}, {USERID}, {USERNAME}, {LASTVISIT}, {LASTPOST}, {REGISTERED} ja mõni muu, kui aktiveerite konkreetse reegli. Kontrollige reegleid, et näha, millised muutujad on saadaval.',
 
+	'BOARD_NOTICE_RULES_CAPTION'			=> 'Rules', // @todo
 	'BOARD_NOTICE_RULE_ACTIVE'				=> '',
 	'BOARD_NOTICE_RULE_NAME'				=> 'Reegel',
 	'BOARD_NOTICE_RULE_VALUE'				=> 'Tingimused',

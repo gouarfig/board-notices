@@ -69,6 +69,7 @@ $lang = array_merge($lang, array(
 	'L_RESET_FORUM_VISITS_EXPLAIN'			=> 'Se disabiliti il tracciamento delle visite al forum e la riabiliti, alcuni utenti avranno un ultimo orario di visita molto prima del tempo reale. Si consiglia di ripristinare il monitoraggio dopo aver disabilitato e riabilitato il monitoraggio delle visite al forum.',
 
 	'BOARD_NOTICE_TITLE'					=> 'Titolo dell’avviso',
+	'BOARD_NOTICE_NAME'						=> 'Name', // @todo
 	'BOARD_NOTICE_RULES'					=> 'Condizioni',
 	'BOARD_NOTICE_ADD'						=> 'Aggiungi nuovi Avvisi',
 	'BOARD_NOTICE_RULE_ADD'					=> 'Aggiungi nuove regole',
@@ -93,6 +94,7 @@ $lang = array_merge($lang, array(
 	'VARIABLES_EXPLAIN'						=> 'Puoi includere le seguenti variabili speciali nel tuo testo:<br />'
 												. '{SESSIONID}, {USERID}, {USERNAME}, {LASTVISIT}, {LASTPOST}, {REGISTERED} ed altre quando attivi una particolare regola. Controlla le regole per vedere quali variabili sono disponibili.',
 
+	'BOARD_NOTICE_RULES_CAPTION'			=> 'Rules', // @todo
 	'BOARD_NOTICE_RULE_ACTIVE'				=> '',
 	'BOARD_NOTICE_RULE_NAME'				=> 'Regole',
 	'BOARD_NOTICE_RULE_VALUE'				=> 'Condizioni',
