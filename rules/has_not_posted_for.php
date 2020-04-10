@@ -38,9 +38,10 @@ class has_not_posted_for extends rule_base implements rule_interface
 	{
 		$valid = false;
 		$days = $this->validateUniqueCondition($conditions);
-		if ($this->api->getUserLastPostTime() > 0)
+		$userLastpostTime = (int) $this->api->getUserLastPostTime();
+		if ($userLastpostTime > 0)
 		{
-			$valid = ((time() - $this->api->getUserLastPostTime()) >= ($days * 24 * 60 * 60));
+			$valid = ((time() - $userLastpostTime) >= ($days * 24 * 60 * 60));
 		}
 		return $valid;
 	}
@@ -62,10 +63,10 @@ class has_not_posted_for extends rule_base implements rule_interface
 		$monthsNoPosts = 0;
 		$yearsNoPosts = 0;
 
-		$user_lastpost_time = (int) $this->user->data['user_lastpost_time'];
-		if ($user_lastpost_time > 0)
+		$userLastpostTime = (int) $this->api->getUserLastPostTime();
+		if ($userLastpostTime > 0)
 		{
-			$noPosts = time() - $user_lastpost_time;
+			$noPosts = time() - $userLastpostTime;
 			$daysNoPosts = floor($noPosts / 86400);
 			$weeksNoPosts = floor($noPosts / 604800);
 			$monthsNoPosts = floor($noPosts / 2592000);
