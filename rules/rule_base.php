@@ -11,6 +11,8 @@ abstract class rule_base
 
 	protected $template_vars = array();
 
+	abstract public function getType();
+
 	/**
 	 * Has the rule multiple entries? like: 'not visited [forum] for [n] days'
 	 */

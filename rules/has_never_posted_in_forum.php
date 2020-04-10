@@ -49,14 +49,4 @@ class has_never_posted_in_forum extends rule_base implements rule_interface
 		return $valid;
 	}
 
-	public function getAvailableVars()
-	{
-		return array();
-	}
-
-	public function getTemplateVars()
-	{
-		return array();
-	}
-
 }
