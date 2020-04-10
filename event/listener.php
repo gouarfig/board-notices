@@ -219,7 +219,7 @@ class listener implements EventSubscriberInterface
 	 */
 	private function getUserId()
 	{
-		return $this->user->data['user_id'] || 0;
+		return isset($this->user->data['user_id']) ? $this->user->data['user_id'] : 0;
 	}
 
 	private function isPreview()

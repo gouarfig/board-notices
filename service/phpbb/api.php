@@ -37,7 +37,7 @@ class api implements api_interface
 
 	public function isUserAnonymous()
 	{
-		return $this->user->data['user_id'] == ANONYMOUS;
+		return $this->getUserId() == ANONYMOUS;
 	}
 
 	public function isUserLoggedIn()
@@ -47,12 +47,12 @@ class api implements api_interface
 
 	public function getUserId()
 	{
-		return $this->user->data['user_id'] || 0;
+		return isset($this->user->data['user_id']) ? $this->user->data['user_id'] : 0;
 	}
 
 	public function getUserDefaultGroupId()
 	{
-		return $this->user->data['group_id'] || 0;
+		return isset($this->user->data['group_id']) ? $this->user->data['group_id'] : 0;
 	}
 
 	public function getUserIpAddress()
@@ -94,7 +94,7 @@ class api implements api_interface
 	{
 		return $this->functions->phpbb_get_user_rank(
 			$this->user->data,
-			($this->user->data['user_id'] == ANONYMOUS) ? false : $this->getUserPostCount()
+			($this->isUserAnonymous()) ? false : $this->getUserPostCount()
 		);
 	}
 
