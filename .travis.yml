@@ -48,7 +48,7 @@ branches:
 
 before_install:
   # thank you phpBB, but I do need xdebug in travis
-  - mv /home/travis/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini /home/travis/.phpenv/versions/$(phpenv version-name)/etc/conf.d/keep-xdebug.ini
+  - cp /home/travis/.phpenv/versions/$(phpenv version-name)/etc/conf.d/xdebug.ini /home/travis/.phpenv/versions/$(phpenv version-name)/etc/conf.d/keep-xdebug.ini
 
 install:
   - travis/prepare-phpbb.sh $EXTNAME $PHPBB_BRANCH
