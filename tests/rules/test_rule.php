@@ -14,6 +14,11 @@ class test_rule extends rule_base
 		$this->serializer = $serializer;
 	}
 
+	public function getType()
+	{
+		return null;
+	}
+
 	public function protectedGetArrayOfConditionsForMultipleIntegers($input)
 	{
 		return $this->getArrayOfConditionsForMultipleIntegers($input);
