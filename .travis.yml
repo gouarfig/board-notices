@@ -46,6 +46,9 @@ branches:
     - master
     - /^\d+(\.\d+)?\.x$/
 
+before_install:
+  - echo "extension = xdebug.so" >> ~/.phpenv/versions/$(phpenv version-name)/etc/php.ini
+
 install:
   - travis/prepare-phpbb.sh $EXTNAME $PHPBB_BRANCH
   - cd ../../phpBB3
