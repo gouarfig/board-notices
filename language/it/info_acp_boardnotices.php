@@ -40,13 +40,13 @@ if (empty($lang) || !is_array($lang))
 
 $lang = array_merge($lang, array(
 	// ACP Module
-	'ACP_BOARD_NOTICES'				=> 'Notizie dal Forum',
+	'ACP_BOARD_NOTICES'				=> 'Avvisi dal Forum',
 	'ACP_BOARD_NOTICES_SETTINGS'	=> 'Configurazione',
-	'ACP_BOARD_NOTICES_MANAGE'		=> 'Gestione Notizie dal Forum',
+	'ACP_BOARD_NOTICES_MANAGE'		=> 'Gestione Avvisi dal Forum',
 
 	// ACP Logs
-	'LOG_BOARD_NOTICE_ERROR'		=> '<strong>Errore durante la creazione della Notizia dal Forum</strong><br />» Errore  %1$s alla linea %2$s: %3$s',
-	'LOG_BOARD_NOTICES_SETTINGS'	=> "<strong>Configurazione Notizie dal Forum aggiornata </strong>",
-	'LOG_BOARD_NOTICES_ADDED'		=> "<strong>Aggiunta la Notizia dal Forum '%s' </strong>",
-	'LOG_BOARD_NOTICES_UPDATED'		=> "<strong>Aggiornata la Notizia dal Forum '%s' </strong>",
+	'LOG_BOARD_NOTICE_ERROR'		=> '<strong>Errore durante la creazione dell’Avviso dal Forum</strong><br />» Errore  %1$s alla linea %2$s: %3$s',
+	'LOG_BOARD_NOTICES_SETTINGS'	=> "<strong>Configurazione Avvisi dal Forum aggiornata </strong>",
+	'LOG_BOARD_NOTICES_ADDED'		=> "<strong>Aggiunto l’Avviso dal Forum '%s' </strong>",
+	'LOG_BOARD_NOTICES_UPDATED'		=> "<strong>Aggiornato l’Avviso dal Forum '%s' </strong>",
 ));

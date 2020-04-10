@@ -39,25 +39,25 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'ACP_BOARD_NOTICES_SETTINGS'			=> 'Configurazione Notizie dal Forum',
-	'ACP_BOARD_NOTICES_SETTINGS_EXPLAIN'	=> 'Configurazione per tutte le Notizie',
+	'ACP_BOARD_NOTICES_SETTINGS'			=> 'Configurazione Avvisi dal Forum',
+	'ACP_BOARD_NOTICES_SETTINGS_EXPLAIN'	=> 'Configurazione per tutti gli Avvisi',
 
-	'ACP_BOARD_NOTICES_MANAGER'				=> 'Gestione Notizie dal Forum',
-	'ACP_BOARD_NOTICES_MANAGER_EXPLAIN'		=> "Aggiunge, modifica o cancella le Notizie dal Forum<br />"
-											. "Nota che verrà pubblicata solo una notizia all'utente: sarà quella che per prima supera le condizioni.<br />",
+	'ACP_BOARD_NOTICES_MANAGER'				=> 'Gestione Avvisi dal Forum',
+	'ACP_BOARD_NOTICES_MANAGER_EXPLAIN'		=> "Aggiunge, modifica o cancella gli Avvisi dal Forum<br />"
+											. "Nota che verrà pubblicata solo un avviso all'utente: sarà quella che per prima supera le condizioni.<br />",
 
-	'ACP_BOARD_NOTICE_SETTINGS'				=> 'Configurazione Notizie dal Forum',
+	'ACP_BOARD_NOTICE_SETTINGS'				=> 'Configurazione Avvisi dal Forum',
 	'ACP_BOARD_NOTICE_SETTINGS_EXPLAIN'		=> 'Si prega di compilare le informazioni di avviso del tabellone',
 
-	'BOARD_NOTICES_SETTINGS_SAVED'			=> 'Configurazione Notizie dal Forum salvata.',
+	'BOARD_NOTICES_SETTINGS_SAVED'			=> 'Configurazione Avvisi dal Forum salvata.',
 
-	'ACP_BOARD_NOTICE_RULES'				=> 'Le Regole di Notizie dal Forum',
-	'ACP_BOARD_NOTICE_RULES_EXPLAIN'		=> 'Modifica le condizioni affinché la Notizia venga pubblicata. Nota che <strong>tutte le condizioni devono essere soddisfatte</strong>.',
+	'ACP_BOARD_NOTICE_RULES'				=> 'Le Regole di Avvisi dal Forum',
+	'ACP_BOARD_NOTICE_RULES_EXPLAIN'		=> 'Modifica le condizioni affinché l’avviso venga pubblicato. Nota che <strong>tutte le condizioni devono essere soddisfatte</strong>.',
 
-	'LABEL_BOARD_NOTICES_ACTIVE'			=> 'Attiva Notizie dal Forum',
+	'LABEL_BOARD_NOTICES_ACTIVE'			=> 'Attiva Avvisi dal Forum',
 	'BOARD_NOTICES_ACTIVE_EXPLAIN'			=> 'Qui puoi disabilitare la visualizzazione di tutte le notifiche mantenendo l’estensione abilitata.',
 
-	'LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR'			=> 'Colore di sfondo delle Notizie',
+	'LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR'			=> 'Colore di sfondo degli Avvisi',
 	'LABEL_BOARD_NOTICE_DEFAULT_BGCOLOR_EXPLAIN'	=> 'Questo è il colore di sfondo di default quando non specificato.(#ECD5D8) Se lasciate in bianco, <strong>nessun</strong> colore di sfondo verrà applicato.',
 
 	'L_FORUMS_VISITS'						=> 'Visite',
@@ -68,25 +68,25 @@ $lang = array_merge($lang, array(
 	'L_RESET_FORUM_VISITS'					=> 'Reset ultima volta che ogni forum è stato visitato',
 	'L_RESET_FORUM_VISITS_EXPLAIN'			=> 'Se disabiliti il tracciamento delle visite al forum e la riabiliti, alcuni utenti avranno un ultimo orario di visita molto prima del tempo reale. Si consiglia di ripristinare il monitoraggio dopo aver disabilitato e riabilitato il monitoraggio delle visite al forum.',
 
-	'BOARD_NOTICE_TITLE'					=> 'Titolo della Notizia',
+	'BOARD_NOTICE_TITLE'					=> 'Titolo dell’avviso',
 	'BOARD_NOTICE_RULES'					=> 'Condizioni',
-	'BOARD_NOTICE_ADD'						=> 'Aggiungi nuove notizie',
+	'BOARD_NOTICE_ADD'						=> 'Aggiungi nuovi Avvisi',
 	'BOARD_NOTICE_RULE_ADD'					=> 'Aggiungi nuove regole',
 
 	'COLUMN_CAN_DISMISS'					=> 'Può essere nascosto',
 
-	'LABEL_BOARD_NOTICE_ACTIVE'				=> 'Le Notizie dal forum sono abilitate ',
-	'LABEL_BOARD_NOTICE_TITLE'				=> 'Titolo della Notizia',
-	'LABEL_BOARD_NOTICE_DISMISSABLE'		=> 'Notizie dal forum può essere nascosto',
-	'LABEL_BOARD_NOTICE_DISMISS_EXPLAIN'	=> 'L’utente ha l’opzione chiudere la notizia (che per default è una croce in alto a destra). La notizia può riapparire dipendentemente dalsettaggio.',
+	'LABEL_BOARD_NOTICE_ACTIVE'				=> 'Le Avvisi dal forum sono abilitati',
+	'LABEL_BOARD_NOTICE_TITLE'				=> 'Titolo dell’avviso',
+	'LABEL_BOARD_NOTICE_DISMISSABLE'		=> 'Avvisi dal forum può essere nascosto',
+	'LABEL_BOARD_NOTICE_DISMISS_EXPLAIN'	=> 'L’utente ha l’opzione chiudere l’avviso (che per default è una croce in alto a destra). L’avviso può riapparire dipendentemente dalsettaggio.',
 	'LABEL_BOARD_NOTICE_RESET_AFTER'		=> 'Reset dopo',
-	'LABEL_BOARD_NOTICE_RESET_EXPLAIN'		=> 'Dopo questi giorni, la notizia verrà mostrata agli utenti che l’abbiano rimossa. Lascia in bianco se non desideri riappaia.',
-	'LABEL_BOARD_NOTICE_PREVIEW'			=> 'Anteprima del messaggio',
-	'LABEL_BOARD_NOTICE_TEXT'				=> 'Il messaggio viene pubblicato quando tutte le condizioni sono soddisfatte',
-	'LABEL_BOARD_NOTICE_BGCOLOR'			=> 'Colore di sfondo della Notizia',
+	'LABEL_BOARD_NOTICE_RESET_EXPLAIN'		=> 'Dopo questi giorni, l’avviso verrà mostrato agli utenti che l’abbiano rimossa. Lascia in bianco se non desideri riappaia.',
+	'LABEL_BOARD_NOTICE_PREVIEW'			=> 'Anteprima dell’avviso',
+	'LABEL_BOARD_NOTICE_TEXT'				=> 'L’avviso viene pubblicato quando tutte le condizioni sono soddisfatte',
+	'LABEL_BOARD_NOTICE_BGCOLOR'			=> 'Colore di sfondo dell’avviso',
 	'LABEL_BOARD_NOTICE_BGCOLOR_EXPLAIN'	=> 'Se non specificato il colore di default è #ECD5D8 (light red), dipendentemente dalla configurazione il campo vuoto comporta nessuno sfondo',
 
-	'LABEL_BOARD_NOTICE_STYLE'				=> '[Utenti avanzati:] Classi CSS del contenitore messaggi',
+	'LABEL_BOARD_NOTICE_STYLE'				=> '[Utenti avanzati:] Classi CSS del contenitore dell’avviso',
 	'LABEL_BOARD_NOTICE_STYLE_EXPLAIN'		=> 'Se è necessario un maggiore controllo su come viene visualizzato avviso, è possibile specificare una classe CSS che verrà aggiunta al DIV generale.',
 
 	'L_INFORMATION'							=> 'Informazione',
@@ -100,7 +100,7 @@ $lang = array_merge($lang, array(
 
 	'NO_GUEST_OR_BOT'						=> ' (Ospiti o Bot)',
 
-	'BOARD_NOTICE_SAVED'					=> 'La Notizia del Forum è stata salvata.',
+	'BOARD_NOTICE_SAVED'					=> 'L’Avviso dal Forum è stata salvata.',
 
 	'ERROR_EMPTY_TITLE'						=> '<strong>Titolo</strong> non può essere vuoto.',
 	'ERROR_EMPTY_MESSAGE'					=> '<strong>Messaggio</strong> non può essere vuoto.',
@@ -113,8 +113,8 @@ $lang = array_merge($lang, array(
 	'RULE_BIRTHDAY'							=> "Compleanno dell'utente",
 	'RULE_DATE'								=> "Alla data del ",
 	'RULE_DATE_ANY'							=> 'Tutti',
-	'RULE_DATE_RANGE_1'						=> 'The date is between', // @todo
-	'RULE_DATE_RANGE_2'						=> '<br />and<br />', // @todo
+	'RULE_DATE_RANGE_1'						=> 'La data è compresa tra',
+	'RULE_DATE_RANGE_2'						=> '<br />e<br />',
 	'RULE_HAS_NEVER_POSTED'					=> "L'utente non ha immesso messaggi in questo forum",
 	'RULE_HAS_NEVER_POSTED_EXPLAIN'			=> "(incluso messaggi in attesa di approvazione)",
 	'RULE_HAS_NEVER_POSTED_IN_FORUM'		=> "L'utente non ha immesso messaggi in questi forum ",
@@ -135,15 +135,14 @@ $lang = array_merge($lang, array(
 	'RULE_LANGUAGE'							=> "La lingua dell'utente è una di queste lingue selezionate",
 	'RULE_LOGGED_IN'						=> "Se l'utente ha fatto Login",
 	'RULE_NOT_IN_USERGROUP'					=> "L'utente non appartiene a nessuno di questi gruppi selezionati",
-	'RULE_ON_BOARD_INDEX'					=> "La Notizia è visibile solo nell'indice del forum",
+	'RULE_ON_BOARD_INDEX'					=> "L’Avviso è visibile solo nell'indice del forum",
 	'RULE_RANK'								=> "Il rank dell'utente è uno qualsiasi di questi ranghi selezionati",
 	'RULE_REGISTERED_LESS_THAN'				=> "La registrazione dell'utente è inferiore a",
 	'RULE_STYLE'							=> "Lo stile dell'utente è uno di questi stili selezionati",
-	'RULE_REGISTERED_BEFORE'				=> "User registered before", //@todo
-	'RULE_REGISTERED_AFTER'					=> "User registered after", //@todo
-	'RULE_IN_TOPIC'							=> "User is currently browsing one of these topic(s)", //@todo
-	'RULE_IN_TOPIC_EXPLAIN'					=> "(please input coma separated IDs of topics)", //@todo
-	'RULE_RANDOM'							=> "Random - Chances to display the notice is one out of ...", //@todo
+	'RULE_REGISTERED_BEFORE'				=> "Utente registrato prima del", 
+	'RULE_REGISTERED_AFTER'					=> "Utente registrato dopo il", 
+	'RULE_IN_TOPIC'							=> "Utente sta visitando uno di questi topic(s)", 
+	'RULE_IN_TOPIC_EXPLAIN'					=> "(inserite ID topic separati dalla virgola)", 
 
 	// Rules units
 	'RULE_DAY(S)'							=> 'giorno (i) ',

@@ -38,5 +38,5 @@ if (empty($lang) || !is_array($lang))
 //
 
 $lang = array_merge($lang, array(
-	'BOARD_NOTICE_CLOSE'		=> 'Chiudi la Notizia',
+	'BOARD_NOTICE_CLOSE'		=> 'Chiudi l’Avviso',
 ));
