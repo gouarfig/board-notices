@@ -41,12 +41,10 @@ class has_posted_in_forum extends rule_base implements rule_interface
 
 	public function isTrue($conditions)
 	{
-		$valid = false;
 		$forums = $this->validateArrayOfConditions($conditions);
 		$forums = $this->cleanEmptyStringsFromArray($forums);
 		$posts = $this->data_layer->approvedUserPosts($forums);
-		$valid = ($posts > 0);
-		return $valid;
+		return ($posts > 0);
 	}
 
 }
